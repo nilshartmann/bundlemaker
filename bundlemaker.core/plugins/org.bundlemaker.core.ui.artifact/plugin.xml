@@ -70,6 +70,7 @@
 			
 			 <menu
 		         id="org.bundlemaker.core.ui.artifact.configuration"
+		         icon="icons/artifact-tree-configuration.png"
 	        	 label="Tree Configuration">
 					<visibleWhen checkEnabled="false">
 						<reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />

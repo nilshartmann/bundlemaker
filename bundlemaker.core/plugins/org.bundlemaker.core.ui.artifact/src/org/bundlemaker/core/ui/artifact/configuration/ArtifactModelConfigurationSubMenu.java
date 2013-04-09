@@ -13,11 +13,13 @@ package org.bundlemaker.core.ui.artifact.configuration;
 
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.ui.artifact.Activator;
+import org.bundlemaker.core.ui.artifact.ArtifactImages;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.actions.CompoundContributionItem;
 
 /**
@@ -35,6 +37,8 @@ public class ArtifactModelConfigurationSubMenu extends CompoundContributionItem 
   private boolean                             _initialized = false;
 
   private HierachicalPackagesAction           _hierachicalPackagesAction;
+
+  private HierachicalPackagesAction           _flatPackagesAction;
 
   private VirtualModuleAction                 _virtualModuleAction;
 
@@ -57,16 +61,19 @@ public class ArtifactModelConfigurationSubMenu extends CompoundContributionItem 
 
     // Refresh enablement and state
     _hierachicalPackagesAction.update();
+    _flatPackagesAction.update();
     _virtualModuleAction.update();
     _sourceContentTypeAction.update();
     _binaryContentTypeAction.update();
 
-    IContributionItem[] result = new IContributionItem[5];
+    IContributionItem[] result = new IContributionItem[7];
     result[0] = new ActionContributionItem(_hierachicalPackagesAction);
-    result[1] = new ActionContributionItem(_virtualModuleAction);
+    result[1] = new ActionContributionItem(_flatPackagesAction);
     result[2] = new Separator();
-    result[3] = new ActionContributionItem(_sourceContentTypeAction);
-    result[4] = new ActionContributionItem(_binaryContentTypeAction);
+    result[3] = new ActionContributionItem(_virtualModuleAction);
+    result[4] = new Separator();
+    result[5] = new ActionContributionItem(_sourceContentTypeAction);
+    result[6] = new ActionContributionItem(_binaryContentTypeAction);
 
     return result;
 
@@ -76,7 +83,11 @@ public class ArtifactModelConfigurationSubMenu extends CompoundContributionItem 
     _artifactModelConfigurationProvider = Activator.getDefault()
         .getArtifactModelConfigurationProvider();
 
-    _hierachicalPackagesAction = new HierachicalPackagesAction();
+    _hierachicalPackagesAction = new HierachicalPackagesAction(true, "Hierarchical Packages",
+        ArtifactImages.ARTIFACT_TREE_CONFIGURATION_HIERARCHICAL_PACKAGES.getImageDescriptor());
+    _flatPackagesAction = new HierachicalPackagesAction(false, "Flat Packages",
+        ArtifactImages.ARTIFACT_TREE_CONFIGURATION_FLAT_PACKAGES.getImageDescriptor());
+
     _virtualModuleAction = new VirtualModuleAction();
     _sourceContentTypeAction = new ContentTypeAction(ProjectContentType.SOURCE, "Sources");
     _binaryContentTypeAction = new ContentTypeAction(ProjectContentType.BINARY, "Binaries");
@@ -102,17 +113,24 @@ public class ArtifactModelConfigurationSubMenu extends CompoundContributionItem 
   }
 
   class HierachicalPackagesAction extends Action {
-    HierachicalPackagesAction() {
-      super("Show hierachical packages", Action.AS_CHECK_BOX);
+
+    private final boolean _hierarchicalPackages;
+
+    HierachicalPackagesAction(boolean hierarchicalPackages, String title, ImageDescriptor imageDescriptor) {
+      super(title, Action.AS_RADIO_BUTTON);
+      this._hierarchicalPackages = hierarchicalPackages;
+
+      setImageDescriptor(imageDescriptor);
     }
 
     protected void update() {
-      setChecked(_artifactModelConfigurationProvider.getArtifactModelConfiguration().isHierarchicalPackages());
+      setChecked(_artifactModelConfigurationProvider.getArtifactModelConfiguration().isHierarchicalPackages() == _hierarchicalPackages);
     }
 
     @Override
     public void run() {
-      _artifactModelConfigurationProvider.getArtifactModelConfiguration().setHierarchicalPackages(isChecked());
+      _artifactModelConfigurationProvider.getArtifactModelConfiguration()
+          .setHierarchicalPackages(_hierarchicalPackages);
 
       // persist change
       saveConfiguration();
