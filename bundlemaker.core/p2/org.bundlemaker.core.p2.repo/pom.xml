@@ -40,6 +40,29 @@
 							<layout>p2</layout>
 						</repository>
 					</source>
+					<ius>
+						<iu>
+							<id>org.bundlemaker.com.db4o.feature.feature.group</id>
+						</iu>
+						<iu>
+							<id>org.bundlemaker.com.db4o.feature.source.feature.group</id>
+						</iu>
+						<iu>
+							<id>org.bundlemaker.com.google.feature.feature.group</id>
+						</iu>
+						<iu>
+							<id>org.bundlemaker.com.google.feature.source.feature.group</id>
+						</iu>
+						<iu>
+							<id>org.bundlemaker.com.tinkerpop.feature.feature.group</id>
+						</iu>
+						<iu>
+							<id>org.bundlemaker.com.tinkerpop.feature.source.feature.group</id>
+						</iu>
+						<iu>
+							<id>org.eclipse.virgo.bundlor.feature.group</id>
+						</iu>
+					</ius>
 					<destination>${project.build.directory}/repository</destination>
 					<append>true</append>
 				</configuration>
