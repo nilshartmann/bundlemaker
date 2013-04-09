@@ -45,9 +45,9 @@ import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.selection.stage.ArtifactStageChangedEvent;
 import org.bundlemaker.core.selection.stage.IArtifactStage;
 import org.bundlemaker.core.selection.stage.IArtifactStageChangeListener;
-import org.bundlemaker.core.ui.ArtifactStageActionHelper;
 import org.bundlemaker.core.ui.artifact.ArtifactImages;
 import org.bundlemaker.core.ui.editor.dependencyviewer.DependencyViewerEditor;
+import org.bundlemaker.core.ui.view.ArtifactStageActionHelper;
 import org.bundlemaker.core.ui.view.dependencytable.ArtifactPathLabelGenerator;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
@@ -113,9 +113,9 @@ public class DependencyViewerGraph {
     _graphComponent = new mxGraphComponent(_graph);
     _graphComponent.setConnectable(false);
     _graphComponent.setToolTips(true);
-		_graphComponent.getViewport().setOpaque(true);
-		_graphComponent.getViewport().setBackground(Color.WHITE);
-		_graphComponent.setTripleBuffered(true);
+    _graphComponent.getViewport().setOpaque(true);
+    _graphComponent.getViewport().setBackground(Color.WHITE);
+    _graphComponent.setTripleBuffered(true);
     _graphComponent.addMouseWheelListener(new ZoomMouseWheelListener());
     if (_autoFit) {
       _graphComponent.addComponentListener(new InitialComponentResizeListener());
@@ -237,7 +237,7 @@ public class DependencyViewerGraph {
     style.put(mxConstants.STYLE_OPACITY, 50);
     style.put(mxConstants.STYLE_FONTCOLOR, "#000000");
     style.put(mxConstants.STYLE_FILLCOLOR, "#FFEAB2");
-		style.put(mxConstants.STYLE_STROKECOLOR, "#C37D64");
+    style.put(mxConstants.STYLE_STROKECOLOR, "#C37D64");
     style.put(mxConstants.STYLE_STROKEWIDTH, "1");
     style.put(mxConstants.STYLE_FONTSIZE, "12");
     stylesheet.putCellStyle("BUNDLEMAKER_VERTEX", style);
@@ -245,7 +245,7 @@ public class DependencyViewerGraph {
     // base style for a uni-directional dependency
     style = new Hashtable<String, Object>();
     style.put(mxConstants.STYLE_FONTCOLOR, "#000000");
-		style.put(mxConstants.STYLE_STROKECOLOR, "#000000"); // #FFEAB2");
+    style.put(mxConstants.STYLE_STROKECOLOR, "#000000"); // #FFEAB2");
     style.put(mxConstants.STYLE_STROKEWIDTH, "1");
     style.put(mxConstants.STYLE_NOLABEL, "1");
     stylesheet.putCellStyle("BUNDLEMAKER_EDGE", style);
