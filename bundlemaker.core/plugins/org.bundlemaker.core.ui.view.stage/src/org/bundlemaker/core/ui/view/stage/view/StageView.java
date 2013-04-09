@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
@@ -59,45 +60,58 @@ public class StageView extends ViewPart {
   /**
    * The ID of the view as specified by the extension.
    */
-  public static final String                 ID                           = "org.bundlemaker.core.ui.stage.StageView";
+  public static final String                   ID                           = "org.bundlemaker.core.ui.stage.StageView";
 
-  protected final List<IBundleMakerArtifact> EMPTY_ARTIFACTS              = Collections.emptyList();
+  protected final List<IBundleMakerArtifact>   EMPTY_ARTIFACTS              = Collections.emptyList();
 
-  private final IArtifactSelectionListener   _artifactSelectionListener   = new IArtifactSelectionListener() {
-                                                                            @Override
-                                                                            public void artifactSelectionChanged(
-                                                                                IArtifactSelection event) {
-                                                                              refreshTreeContent(event);
+  private final IArtifactSelectionListener     _artifactSelectionListener   = new IArtifactSelectionListener() {
+                                                                              @Override
+                                                                              public void artifactSelectionChanged(
+                                                                                  IArtifactSelection event) {
+                                                                                refreshTreeContent(event);
 
-                                                                            }
-                                                                          };
+                                                                              }
+                                                                            };
 
-  private final IArtifactStageChangeListener _artifactStageChangeListener = new IArtifactStageChangeListener() {
+  private final IArtifactStageChangeListener   _artifactStageChangeListener = new IArtifactStageChangeListener() {
 
-                                                                            @Override
-                                                                            public void artifactStateChanged(
-                                                                                ArtifactStageChangedEvent event) {
-                                                                              artifactStageConfigurationChanged();
-                                                                            }
-                                                                          };
+                                                                              @Override
+                                                                              public void artifactStateChanged(
+                                                                                  ArtifactStageChangedEvent event) {
+                                                                                artifactStageConfigurationChanged();
+                                                                              }
+                                                                            };
 
-  private List<IBundleMakerArtifact>         _effectiveSelectedArtifacts  = Collections.emptyList();
+  private final IAnalysisModelModifiedListener _modifiedListener            = new IAnalysisModelModifiedListener() {
 
-  private TreeViewer                         _treeViewer;
+                                                                              @Override
+                                                                              public void analysisModelModified() {
+                                                                                IArtifactSelection selection = Selection
+                                                                                    .instance()
+                                                                                    .getArtifactSelectionService()
+                                                                                    .getSelection(
+                                                                                        Selection.ARTIFACT_STAGE_SELECTION_ID);
+                                                                                refreshTreeContent(selection);
+                                                                              }
+                                                                            };
 
-  private DrillDownAdapter                   drillDownAdapter;
+  private List<IBundleMakerArtifact>           _effectiveSelectedArtifacts  = Collections.emptyList();
 
-  private Action                             _autoExpandAction;
+  private TreeViewer                           _treeViewer;
 
-  private ClearStageAction                   _clearStageAction;
+  private DrillDownAdapter                     drillDownAdapter;
 
-  private RemoveFromStageAction              _removeArtifactsAction;
+  private Action                               _autoExpandAction;
 
-  private boolean                            _autoExpand                  = true;
+  private ClearStageAction                     _clearStageAction;
 
-  private AddModeActionGroup                 _addModeActionGroup;
+  private RemoveFromStageAction                _removeArtifactsAction;
 
-  private ArtifactStageContentProvider       _artifactStageContentProvider;
+  private boolean                              _autoExpand                  = true;
+
+  private AddModeActionGroup                   _addModeActionGroup;
+
+  private ArtifactStageContentProvider         _artifactStageContentProvider;
 
   /**
    * The constructor.
@@ -165,12 +179,14 @@ public class StageView extends ViewPart {
 
   }
 
-  private void refreshTreeContent(IArtifactSelection event) {
-    if (event == null) {
+  private void refreshTreeContent(IArtifactSelection selection) {
+    unregisterArtifactModelModifiedListener();
+    if (selection == null) {
       _effectiveSelectedArtifacts = Collections.emptyList();
     } else {
-      _effectiveSelectedArtifacts = event.getEffectiveSelectedArtifacts();
+      _effectiveSelectedArtifacts = selection.getEffectiveSelectedArtifacts();
     }
+
     //
     // set redraw to false
     _treeViewer.getTree().setRedraw(false);
@@ -244,6 +260,25 @@ public class StageView extends ViewPart {
     _treeViewer.getTree().setRedraw(true);
 
     refreshEnablement();
+
+    registerArtifactModelModifiedListener();
+  }
+
+  /**
+   * 
+   */
+  private void unregisterArtifactModelModifiedListener() {
+    if (_effectiveSelectedArtifacts != null && _effectiveSelectedArtifacts.size() > 0) {
+      IBundleMakerArtifact artifact = _effectiveSelectedArtifacts.get(0);
+      artifact.getRoot().removeAnalysisModelModifiedListener(_modifiedListener);
+    }
+  }
+
+  private void registerArtifactModelModifiedListener() {
+    if (_effectiveSelectedArtifacts != null && _effectiveSelectedArtifacts.size() > 0) {
+      IBundleMakerArtifact artifact = _effectiveSelectedArtifacts.get(0);
+      artifact.getRoot().addAnalysisModelModifiedListener(_modifiedListener);
+    }
   }
 
   private void hookContextMenu() {
