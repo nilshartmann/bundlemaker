@@ -21,7 +21,7 @@
 		<module>plugins/org.bundlemaker.core.ui.artifact</module>
 		<module>plugins/org.bundlemaker.core.ui</module>
 		<module>plugins/org.bundlemaker.core.ui.transformations</module>
-		<module>plugins/org.bundlemaker.core.ui.transformations.history</module>
+		<module>plugins/org.bundlemaker.core.ui.view.transformationhistory</module>
 		<module>plugins/org.bundlemaker.core.ui.view.dependencytable</module>
 		<module>plugins/org.bundlemaker.core.ui.view.dependencytree</module>
 		<module>plugins/org.bundlemaker.core.ui.view.problemview</module>
