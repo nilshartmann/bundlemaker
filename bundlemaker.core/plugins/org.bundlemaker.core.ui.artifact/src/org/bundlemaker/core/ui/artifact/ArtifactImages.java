@@ -137,6 +137,18 @@ public enum ArtifactImages {
    * The <b>disabled</b> icon for <b>Annotation Type</b> artifacts
    */
   ANNOTATION_TYPE_ARTIFACT_DISABLED_ICON("icons/artifacts/type-artifact-disabled-icon.png"),
+
+  // ---- * ----
+  /**
+   * 
+   */
+  ARTIFACT_TREE_CONFIGURATION_FLAT_PACKAGES("icons/artifact-tree-configuration-flat.png"),
+
+  /**
+   * 
+   */
+  ARTIFACT_TREE_CONFIGURATION_HIERARCHICAL_PACKAGES("icons/artifact-tree-configuration-hierarchical.png"),
+
   //
   ;
 
