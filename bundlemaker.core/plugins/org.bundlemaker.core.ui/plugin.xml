@@ -36,11 +36,6 @@
 
 	<!-- additional menus in the project navigator view -->
 	<extension id="org.bundlemaker.core.ui.view.navigator.menus" point="org.eclipse.ui.menus">
-		<menuContribution locationURI="menu:org.eclipse.ui.navigator.ProjectExplorer">
-			<command
-				commandId="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
-				style="push"> </command>
-		</menuContribution>
  		<menuContribution
                   allPopups="false"
                   locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
@@ -118,8 +113,6 @@
 				> </reference>
 			</enabledWhen>
 		</handler>
-		<handler commandId="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
-			class="org.bundlemaker.core.ui.handler.CustomizeDependencyTreeHandler"> </handler>
 		<handler commandId="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
 			class="org.bundlemaker.core.ui.handler.CreateNewGroupHandler">
 			<enabledWhen>
@@ -263,8 +256,6 @@
 		<command id="org.bundlemaker.core.ui.commands.TransformHandler" name="Transform..."/>
 		<command id="org.bundlemaker.core.ui.commands.RunTransformationScript"
 			name="Execute transformation..."/>
-		<command id="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
-			name="Customize Dependency Tree..."/>
 		<command id="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
 			name="New Group..."/>
 		<command id="org.bundlemaker.core.ui.commands.CreateNewModuleCommand"
