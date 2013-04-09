@@ -212,130 +212,68 @@ Each party waives its rights to a jury trial in any resulting
 litigation.
    </license>
 
-   <url>
-      <discovery label="XText-Update-Site" url="http://download.eclipse.org//modeling/tmf/xtext/updates"/>
-      <discovery label="EMF-Update-Site" url="http://download.eclipse.org//modeling/emf/updates/releases/"/>
-   </url>
-
-   <includes
-         id="org.bundlemaker.core.base.feature"
-         version="0.0.0"/>
-
    <requires>
-      <import feature="org.eclipse.jdt" version="3.6.1.r361_v20100714-0800-7z8XFUSFLFlmgLc5z-Bvrt8-HVkH"/>
-      <import feature="org.eclipse.platform" version="3.6.1.r361_v20100909-9gF78GrkFqw7GrsZnvz0JWNTeb6fue6896L"/>
-      <import feature="org.eclipse.pde" version="3.6.1.r361_v20100727-7b7mFL-FET3dhESDgE5_bkJ"/>
+      <import feature="org.bundlemaker.com.db4o.feature" version="8.0.184.15484"/>
+      <import feature="org.bundlemaker.com.google.feature" version="1.0.0"/>
+      <import feature="org.bundlemaker.com.tinkerpop.feature" version="2.2.0"/>
+      <import feature="org.eclipse.virgo.bundlor" version="1.1.2.RELEASE"/>
    </requires>
 
    <plugin
-         id="org.bundlemaker.core.ui"
+         id="org.bundlemaker.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.bundlemaker.core.ui.print"
+         id="org.bundlemaker.core.parser.bytecode"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.bundlemaker.core.ui.artifact"
+         id="org.bundlemaker.core.store.db4o"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.bundlemaker.core.transformations"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.bundlemaker.core.ui.editor.xref"
+         id="org.bundlemaker.core.jdt"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.bundlemaker.core.ui.view.dependencytable"
+         id="org.bundlemaker.core.mvn"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.bundlemaker.core.ui.view.dependencytree"
+         id="org.bundlemaker.core.osgi"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.bundlemaker.core.ui.editor.dsm"
+         id="org.bundlemaker.core.selection"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="org.bundlemaker.core.ui.app.perspective"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bundlemaker.core.ui.event"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bundlemaker.core.ui.projecteditor"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bundlemaker.core.ui.view.problemview"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.bundlemaker.core.ui.mvn"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bundlemaker.core.ui.transformations"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bundlemaker.core.ui.transformations.history"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bundlemaker.core.ui.editor.sourceviewer"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-         
-   <plugin
-         id="org.bundlemaker.core.ui.stage"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>         
 
 </feature>

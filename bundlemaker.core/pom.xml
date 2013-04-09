@@ -34,9 +34,8 @@
 		<module>plugins/org.bundlemaker.core.ui.experimental</module>
 		<module>plugins/org.bundlemaker.core.ui.mvn</module>
 		<module>plugins/org.bundlemaker.core.ui.projecteditor</module>
-		<module>features/org.bundlemaker.core.base.feature</module>
 		<module>features/org.bundlemaker.core.feature</module>
-		<module>features/org.bundlemaker.experimental.feature</module>
+		<module>features/org.bundlemaker.core.ui.feature</module>
 		<module>itests/org.bundlemaker.core.itestframework</module>
 		<module>itests/org.bundlemaker.core.itest</module>
 		<module>p2/org.bundlemaker.core.p2.target</module>
