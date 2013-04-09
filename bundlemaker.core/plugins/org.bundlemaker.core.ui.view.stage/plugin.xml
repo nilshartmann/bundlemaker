@@ -30,7 +30,7 @@
 	<extension point="org.eclipse.ui.menus">
 
 		<menuContribution
-			locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.selectors">
+			locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?before=additions">
 			
 		 <menu
          icon="icons/stage-view.png"
