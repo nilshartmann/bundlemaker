@@ -8,13 +8,13 @@
  * Contributors:
  *     Nils Hartmann - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.transformations.history.view;
+package org.bundlemaker.core.ui.view.transformationhistory.view;
 
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.transformation.ITransformation;
-import org.bundlemaker.core.ui.transformations.history.ITransformationLabelProvider;
+import org.bundlemaker.core.ui.view.transformationhistory.ITransformationLabelProvider;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)

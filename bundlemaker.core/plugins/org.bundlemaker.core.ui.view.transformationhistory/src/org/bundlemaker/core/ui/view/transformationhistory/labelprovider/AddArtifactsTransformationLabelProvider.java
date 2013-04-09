@@ -8,7 +8,7 @@
  * Contributors:
  *     Nils Hartmann - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.transformations.history.labelprovider;
+package org.bundlemaker.core.ui.view.transformationhistory.labelprovider;
 
 import java.util.List;
 

@@ -8,7 +8,7 @@
  * Contributors:
  *     Nils Hartmann - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.transformations.history.labelprovider;
+package org.bundlemaker.core.ui.view.transformationhistory.labelprovider;
 
 import org.bundlemaker.core.modules.transformation.IRenameModuleTransformation;
 import org.eclipse.swt.graphics.Image;

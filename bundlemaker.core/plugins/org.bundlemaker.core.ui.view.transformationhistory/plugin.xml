@@ -8,7 +8,7 @@
             name="Transformation History"
             icon="icons/history-view.png"
             category="org.bundlemaker.core.ui.views"
-            class="org.bundlemaker.core.ui.transformations.history.view.HistoryView"
+            class="org.bundlemaker.core.ui.view.transformationhistory.view.HistoryView"
             id="org.bundlemaker.core.ui.transformations.history.view.HistoryView">
       </view>
    </extension>

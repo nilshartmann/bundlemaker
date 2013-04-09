@@ -8,7 +8,7 @@
  * Contributors:
  *     Nils Hartmann - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.transformations.history.view;
+package org.bundlemaker.core.ui.view.transformationhistory.view;
 
 import java.util.List;
 

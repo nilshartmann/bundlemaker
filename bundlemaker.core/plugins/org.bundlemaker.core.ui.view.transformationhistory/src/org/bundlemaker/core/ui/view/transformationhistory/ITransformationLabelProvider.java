@@ -8,7 +8,7 @@
  * Contributors:
  *     Nils Hartmann - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.transformations.history;
+package org.bundlemaker.core.ui.view.transformationhistory;
 
 import org.bundlemaker.core.modules.transformation.ITransformation;
 import org.eclipse.swt.graphics.Image;

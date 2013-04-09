@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.transformations.history.internal;
+package org.bundlemaker.core.ui.view.transformationhistory.internal;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;

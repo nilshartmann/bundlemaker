@@ -8,11 +8,11 @@
  * Contributors:
  *     Nils Hartmann - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.transformations.history.internal;
+package org.bundlemaker.core.ui.view.transformationhistory.internal;
 
 import org.bundlemaker.core.modules.transformation.ICreateGroupTransformation;
 import org.bundlemaker.core.modules.transformation.ITransformation;
-import org.bundlemaker.core.ui.transformations.history.ITransformationLabelProvider;
+import org.bundlemaker.core.ui.view.transformationhistory.ITransformationLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 /**

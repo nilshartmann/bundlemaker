@@ -8,7 +8,7 @@
  * Contributors:
  *     Nils Hartmann - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.transformations.history.view;
+package org.bundlemaker.core.ui.view.transformationhistory.view;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
@@ -23,12 +23,12 @@ import org.bundlemaker.core.modules.transformation.ITransformation;
 import org.bundlemaker.core.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.event.selection.workbench.view.AbstractArtifactSelectionAwareViewPart;
-import org.bundlemaker.core.ui.transformations.history.ITransformationLabelProvider;
-import org.bundlemaker.core.ui.transformations.history.internal.TransformationHistoryImages;
-import org.bundlemaker.core.ui.transformations.history.labelprovider.AddArtifactsTransformationLabelProvider;
-import org.bundlemaker.core.ui.transformations.history.labelprovider.CreateGroupTransformationLabelProvider;
-import org.bundlemaker.core.ui.transformations.history.labelprovider.CreateModuleTransformationLabelProvider;
-import org.bundlemaker.core.ui.transformations.history.labelprovider.RenameModuleTransformationLabelProvider;
+import org.bundlemaker.core.ui.view.transformationhistory.ITransformationLabelProvider;
+import org.bundlemaker.core.ui.view.transformationhistory.internal.TransformationHistoryImages;
+import org.bundlemaker.core.ui.view.transformationhistory.labelprovider.AddArtifactsTransformationLabelProvider;
+import org.bundlemaker.core.ui.view.transformationhistory.labelprovider.CreateGroupTransformationLabelProvider;
+import org.bundlemaker.core.ui.view.transformationhistory.labelprovider.CreateModuleTransformationLabelProvider;
+import org.bundlemaker.core.ui.view.transformationhistory.labelprovider.RenameModuleTransformationLabelProvider;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
