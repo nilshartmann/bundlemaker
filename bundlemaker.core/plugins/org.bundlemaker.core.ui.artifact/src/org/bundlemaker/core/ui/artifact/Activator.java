@@ -26,14 +26,13 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
-
 /**
  * The activator class controls the plug-in life cycle
  */
 public class Activator extends AbstractUIPlugin {
 
   // The plug-in ID
-  public static final String                  PLUGIN_ID = "org.bundlemaker.core.ui"; //$NON-NLS-1$
+  public static final String                  PLUGIN_ID = "org.bundlemaker.core.ui.artifact"; //$NON-NLS-1$
 
   // The shared instance
   private static Activator                    plugin;
@@ -59,7 +58,7 @@ public class Activator extends AbstractUIPlugin {
     _artifactModelConfigurationProvider = new ArtifactModelConfigurationProvider(getPreferenceStore());
     context.registerService(IArtifactModelConfigurationProvider.class.getName(), _artifactModelConfigurationProvider,
         null);
-    
+
     // Make sure artifact stage get active
     Selection.instance().getArtifactStage();
   }
