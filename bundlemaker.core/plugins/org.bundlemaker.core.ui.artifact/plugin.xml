@@ -62,6 +62,27 @@
                 id="org.bundlemaker.core.ui.artifact.cnf.BundlemakerArtifactActionProvider"/>
 		</navigatorContent>
 	</extension>
+	
+	<extension point="org.eclipse.ui.menus">
+
+		<menuContribution
+			locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?before=additions">
+			
+			 <menu
+		         id="org.bundlemaker.core.ui.artifact.configuration"
+	        	 label="Tree Configuration">
+					<visibleWhen checkEnabled="false">
+						<reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+					</visibleWhen>
+					<dynamic
+	        			id="org.bundlemaker.core.ui.artifact.configuration.ArtifactModelConfigurationSubMenu" 
+	        			class="org.bundlemaker.core.ui.artifact.configuration.ArtifactModelConfigurationSubMenu"
+	        			>
+	         			<visibleWhen checkEnabled="true"/>
+					</dynamic>
+	     		</menu>
+     	</menuContribution>
+     </extension>
 
 	<!-- the navigator content-->
 	<extension point="org.eclipse.ui.navigator.viewer">
