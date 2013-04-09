@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            name="Artifacts Stage"
+            icon="icons/stage-view.png"
+            category="org.bundlemaker.core.ui.views"
+            class="org.bundlemaker.core.ui.view.stage.view.StageView"
+            id="org.bundlemaker.core.ui.stage.StageView">
+      </view>
+   </extension>
+ 	<extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.bundlemaker.core.ui.view.stage.prefs.ArtifactStagePreferenceInitializer">
+    </initializer>
+ 	</extension>   
+ 	<extension
+       point="org.eclipse.ui.preferencePages">
+    <page
+          class="org.bundlemaker.core.ui.view.stage.prefs.ArtifactStagePropertyAndPreferencePage"
+          id="org.bundlemaker.core.ui.stage.preferences"
+          name="Artifact Stage Settings"
+          category="org.bundlemaker.core.ui.preferences.bundlemakerpage" />
+	 </extension>
+   
+	<extension point="org.eclipse.ui.menus">
+
+		<menuContribution
+			locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.selectors">
+			
+		 <menu
+         icon="icons/stage-view.png"
+         id="org.bundlemaker.core.ui.artifactstage"
+         label="Stage">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+				</visibleWhen>
+				<dynamic
+        			id="org.bundlemaker.core.ui.stage.StageSubMenu" class="org.bundlemaker.core.ui.view.stage.actions.StageSubMenu"
+        			
+        			>
+         			<visibleWhen checkEnabled="true"/>
+				</dynamic>
+     		</menu>
+     	</menuContribution>
+     </extension>
+
+	<!-- ===== 'Stage' submenu in Project Explorer ===== -->
+
+	<!--
+	<extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewer viewerId="org.eclipse.ui.navigator.ProjectExplorer"/>
+      <viewerActionBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+         <includes>
+            <actionExtension pattern="org.bundlemaker.core.ui.stage.actionprovider"/>
+         </includes>
+      </viewerActionBinding>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <actionProvider
+            id="org.bundlemaker.core.ui.stage.actionprovider"
+            class="org.bundlemaker.core.ui.stage.handler.ArtifactStageActionProvider">
+         <enablement>
+		   <reference
+		         definitionId="org.bundlemaker.analysis.ui.artifactContentSelected">
+		   </reference>
+         </enablement>
+      </actionProvider>
+   </extension>	
+	-->		
+</plugin>

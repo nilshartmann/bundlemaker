@@ -1,9 +1,9 @@
 package org.bundlemaker.core.ui.app.perspective;
 
-import org.bundlemaker.core.ui.stage.view.StageView;
 import org.bundlemaker.core.ui.view.dependencytable.DependencyTableView;
 import org.bundlemaker.core.ui.view.dependencytree.DependencyTreeView;
 import org.bundlemaker.core.ui.view.problemview.ProblemView;
+import org.bundlemaker.core.ui.view.stage.view.StageView;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
