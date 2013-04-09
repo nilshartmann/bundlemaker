@@ -46,7 +46,7 @@ public class ManipulateStageActionGroup {
   public void fill(List<IContributionItem> items) {
 
     IArtifactSelection selection = Selection.instance().getArtifactSelectionService()
-        .getSelection(Selection.PROJECT_EXLPORER_SELECTION_ID);
+        .getSelection(Selection.PROJECT_EXPLORER_SELECTION_ID);
 
     for (AbstractStageAction action : _actions) {
       action.setArtifactSelection(selection);

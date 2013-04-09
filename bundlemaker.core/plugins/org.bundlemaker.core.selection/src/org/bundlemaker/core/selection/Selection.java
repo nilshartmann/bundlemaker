@@ -22,7 +22,7 @@ public class Selection {
    * 
    * Clients should listen to {@link #ARTIFACT_STAGE_SELECTION_ID} instead.
    */
-  public static final String               PROJECT_EXLPORER_SELECTION_ID  = Selection.class.getPackage().getName()
+  public static final String               PROJECT_EXPLORER_SELECTION_ID  = Selection.class.getPackage().getName()
                                                                               + ".PROJECT_EXPLORER_SELECTION_ID";
 
   /** - */

@@ -44,7 +44,7 @@ public class ArtifactStage implements IArtifactStage {
   public void init() {
     if (!_init) {
       Selection.instance().getArtifactSelectionService()
-          .addArtifactSelectionListener(Selection.PROJECT_EXLPORER_SELECTION_ID, new IArtifactSelectionListener() {
+          .addArtifactSelectionListener(Selection.PROJECT_EXPLORER_SELECTION_ID, new IArtifactSelectionListener() {
 
             @Override
             public void artifactSelectionChanged(IArtifactSelection event) {
@@ -57,7 +57,7 @@ public class ArtifactStage implements IArtifactStage {
         _addMode = ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts;
       }
       IArtifactSelection selection = Selection.instance().getArtifactSelectionService()
-          .getSelection(Selection.PROJECT_EXLPORER_SELECTION_ID);
+          .getSelection(Selection.PROJECT_EXPLORER_SELECTION_ID);
       projectExplorerSelectionChanged(selection);
 
       _init = true;

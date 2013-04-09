@@ -71,7 +71,7 @@ public class ThreewayXRefView extends AbstractArtifactSelectionAwareEditorPart {
 
   @Override
   protected String getArtifactSelectionId() {
-    return Selection.PROJECT_EXLPORER_SELECTION_ID;
+    return Selection.PROJECT_EXPLORER_SELECTION_ID;
   }
 
   @Override

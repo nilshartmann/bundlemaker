@@ -34,7 +34,7 @@ public class ProjectExplorerSelectionForwarder implements ISelectionListener {
     List<IBundleMakerArtifact> artifacts = getSelectedObjects(selection, IBundleMakerArtifact.class);
 
     // notify selection service
-    _artifactSelectionService.setSelection(Selection.PROJECT_EXLPORER_SELECTION_ID, Selection.PROJECT_EXPLORER_VIEW_ID,
+    _artifactSelectionService.setSelection(Selection.PROJECT_EXPLORER_SELECTION_ID, Selection.PROJECT_EXPLORER_VIEW_ID,
         artifacts /* , artifacts.size() == 1 */);
   }
 
