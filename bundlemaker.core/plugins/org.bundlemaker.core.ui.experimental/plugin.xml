@@ -12,14 +12,6 @@
     <extension
           id="bla"
           point="org.eclipse.ui.handlers">
-          <handler class="org.bundlemaker.core.ui.experimental.handlers.CreateNewWorkingCopyHandler"
-                commandId="org.bundlemaker.core.ui.experimental.commands.CreateNewWorkingCopyCommand">
-                <enabledWhen>
-                      <reference
-                            definitionId="org.bundlemaker.analysis.ui.singleRootArtifactSelected"
-                      > </reference>
-                </enabledWhen>
-          </handler>
           
 		    <handler class="org.bundlemaker.core.ui.experimental.editor.xref.threeway.handler.OpenThreewayXRefViewHandler"
 		       commandId="org.bundlemaker.core.ui.experimental.editor.xref.threeway.OpenThreewayXRefViewCommand">
