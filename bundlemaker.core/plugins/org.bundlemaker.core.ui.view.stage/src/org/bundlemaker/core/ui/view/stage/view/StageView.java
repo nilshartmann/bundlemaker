@@ -113,7 +113,7 @@ public class StageView extends ViewPart {
 
     _artifactStageContentProvider = new ArtifactStageContentProvider();
 
-    _treeViewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+    _treeViewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.NONE);
 
     _treeViewer.setUseHashlookup(true);
     _treeViewer.getTree().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
