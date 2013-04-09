@@ -5,14 +5,15 @@
       <category name="BundleMaker"/>
    </feature>
    <feature id="org.bundlemaker.core.feature.source" version="0.10.0.qualifier">
-      <category name="BundleMaker"/>
+      <category name="BundleMaker.Source"/>
    </feature>
    <feature id="org.bundlemaker.core.ui.feature" version="0.10.0.qualifier">
       <category name="BundleMaker"/>
    </feature>
    <feature id="org.bundlemaker.core.ui.feature.source" version="0.10.0.qualifier">
-      <category name="BundleMaker"/>
+      <category name="BundleMaker.Source"/>
    </feature>   
    
    <category-def name="BundleMaker" label="BundleMaker"/>
+   <category-def name="BundleMaker.Source" label="BundleMaker Source"/>
 </site>
