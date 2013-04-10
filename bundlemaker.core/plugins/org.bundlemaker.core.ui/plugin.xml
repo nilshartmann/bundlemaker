@@ -181,20 +181,6 @@
 			</enabledWhen>
 		</handler>
 		
-		<handler class="org.bundlemaker.core.ui.handler.RefreshArtifactTreeHandler"
-			commandId="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand">
-			<activeWhen>
-				<reference
-					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
-				> </reference>
-			</activeWhen>
-			<enabledWhen>
-				<reference
-					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
-				> </reference>
-			</enabledWhen>
-		</handler>
-		
 		<handler class="org.bundlemaker.core.ui.handler.selector.TransitiveClosureSelectorHandler"
 			commandId="org.bundlemaker.core.ui.commands.selector.TransitiveClosureSelectorCommand">
 			<activeWhen><reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"/></activeWhen>
@@ -276,7 +262,6 @@
 			name="Move..."/>
 		<command id="org.bundlemaker.core.ui.commands.RenameArtifactCommand" name="Rename..."/>
 		<command id="org.bundlemaker.core.ui.commands.RemoveArtifactsCommand" name="Remove"/>
-		<command id="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand" name="Refresh"/>
 		
 		<!-- Selectors -->
 		<command id="org.bundlemaker.core.ui.commands.selector.TransitiveClosureSelectorCommand" name="Transitive Closure" />
@@ -317,11 +302,19 @@
          		commandId="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand"
          		icon="icons/etools/bm-parse.png"
          		style="push">
+         		<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="org.bundlemaker.core.ui.bmProjectOrBundleMakerXmlSelected" />
+				</visibleWhen>         		
 			</command>
 			
 			<command
          		commandId="org.bundlemaker.core.ui.commands.CleanParseBundleMakerProjectCommand"
          		style="push">
+         		<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="org.bundlemaker.core.ui.bmProjectOrBundleMakerXmlSelected" />
+				</visibleWhen>
 			</command>
 
 			<!-- Separator for artifact-model-modifying operations -->
@@ -364,13 +357,6 @@
 			</command>	
 			<command commandId="org.bundlemaker.core.ui.commands.RemoveArtifactsCommand"
 				label="Remove" style="push">
-				<visibleWhen checkEnabled="false">
-					<reference
-						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
-				</visibleWhen>
-			</command>
-			<command commandId="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand"
-				label="Refresh" icon="icons/refresh.gif" style="push">
 				<visibleWhen checkEnabled="false">
 					<reference
 						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />

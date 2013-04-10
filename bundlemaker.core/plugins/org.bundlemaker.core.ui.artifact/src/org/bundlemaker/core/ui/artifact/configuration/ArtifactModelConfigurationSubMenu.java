@@ -13,7 +13,6 @@ package org.bundlemaker.core.ui.artifact.configuration;
 
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.ui.artifact.Activator;
-import org.bundlemaker.core.ui.artifact.ArtifactImages;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -84,9 +83,9 @@ public class ArtifactModelConfigurationSubMenu extends CompoundContributionItem 
         .getArtifactModelConfigurationProvider();
 
     _hierachicalPackagesAction = new HierachicalPackagesAction(true, "Hierarchical Packages",
-        ArtifactImages.ARTIFACT_TREE_CONFIGURATION_HIERARCHICAL_PACKAGES.getImageDescriptor());
+        null /* ArtifactImages.ARTIFACT_TREE_CONFIGURATION_HIERARCHICAL_PACKAGES.getImageDescriptor() */);
     _flatPackagesAction = new HierachicalPackagesAction(false, "Flat Packages",
-        ArtifactImages.ARTIFACT_TREE_CONFIGURATION_FLAT_PACKAGES.getImageDescriptor());
+        null /* ArtifactImages.ARTIFACT_TREE_CONFIGURATION_FLAT_PACKAGES.getImageDescriptor() */);
 
     _virtualModuleAction = new VirtualModuleAction();
     _sourceContentTypeAction = new ContentTypeAction(ProjectContentType.SOURCE, "Sources");
