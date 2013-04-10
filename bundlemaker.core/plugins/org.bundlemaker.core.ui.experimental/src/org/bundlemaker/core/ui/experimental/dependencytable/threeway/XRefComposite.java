@@ -2,6 +2,7 @@ package org.bundlemaker.core.ui.experimental.dependencytable.threeway;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -143,6 +144,12 @@ public class XRefComposite extends Composite {
   @Override
   public boolean setFocus() {
     return _centerViewer.getTree().setFocus();
+  }
+
+  protected IRootArtifact getVirtualRoot(TreeViewer treeViewer) {
+    ArtifactTreeContentProvider artifactTreeContentProvider = (ArtifactTreeContentProvider) treeViewer
+        .getContentProvider();
+    return artifactTreeContentProvider.getVirtualRoot();
   }
 
   private Composite createToolBarComposite() {
@@ -370,6 +377,9 @@ public class XRefComposite extends Composite {
       List<IBundleMakerArtifact> selectedArtifacts = Helper.toArtifactList(structuredSelection.toList());
 
       setSelectedCenterArtifacts(selectedArtifacts);
+
+      // don't highlight anything
+      _artifactLabelProvider.setBundleMakerArtifacts(null);
     }
   }
 
@@ -394,21 +404,43 @@ public class XRefComposite extends Composite {
         return;
       }
 
+      // Reset Selection in 'to' Viewer
       _toTreeViewer.setSelection(new StructuredSelection());
 
+      // Detect highlighted artifacts
       List<IBundleMakerArtifact> selectedArtifacts = Helper.toArtifactList(structuredSelection.toList());
+      List<IBundleMakerArtifact> selectedCenterArtifacts = Helper.toArtifactList(_centerViewer.getSelection());
       List<IDependency> dependencies = new LinkedList<IDependency>();
 
       //
       Set<IBundleMakerArtifact> fromArtifacts = new HashSet<IBundleMakerArtifact>();
-      Set<IBundleMakerArtifact> visibleArtifacts = _fromTreeVisibleArtifactsFilter.getArtifacts();
-      for (IBundleMakerArtifact artifact : selectedArtifacts) {
-        for (IDependency dep : artifact.getDependenciesTo()) {
+      // Set<IBundleMakerArtifact> visibleArtifacts = _fromTreeVisibleArtifactsFilter.getArtifacts();
+      for (final IBundleMakerArtifact selectedFromArtifact : selectedArtifacts) {
+
+        Set<IBundleMakerArtifact> referencedArtifacts = new LinkedHashSet<IBundleMakerArtifact>();
+
+        for (IDependency dep : selectedFromArtifact.getDependenciesTo(selectedCenterArtifacts)) {
           dependencies.add(dep);
-          if (visibleArtifacts.contains(dep.getFrom())) {
-            fromArtifacts.add(dep.getTo());
+
+          Collection<IDependency> coreDependencies = dep.getCoreDependencies();
+          for (IDependency coreDependency : coreDependencies) {
+
+            IBundleMakerArtifact toArtifact = coreDependency.getTo();
+            referencedArtifacts.add(toArtifact);
+
+            // hightlight all parents of the referenced artifact up to the selection in the center
+            while (toArtifact != null) {
+              if (selectedCenterArtifacts.contains(toArtifact)) {
+                break;
+              }
+              referencedArtifacts.add(toArtifact);
+              toArtifact = toArtifact.getParent();
+            }
           }
         }
+
+        fromArtifacts.addAll(referencedArtifacts);
+
       }
 
       //
