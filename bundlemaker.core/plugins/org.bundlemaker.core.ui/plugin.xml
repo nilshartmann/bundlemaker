@@ -65,6 +65,15 @@
 	<!-- the handlers -->
 	<!-- ======================================== -->
 	<extension point="org.eclipse.ui.handlers">
+		<handler class="org.bundlemaker.core.ui.handler.CleanParseBundleMakerProjectHandler"
+			commandId="org.bundlemaker.core.ui.commands.CleanParseBundleMakerProjectCommand">
+			<activeWhen>
+				<reference definitionId="org.bundlemaker.core.ui.bmProjectOrBundleMakerXmlSelected"></reference>
+			</activeWhen>
+			<enabledWhen>
+				<reference definitionId="org.bundlemaker.core.ui.bmProjectOrBundleMakerXmlSelected"></reference>
+			</enabledWhen>
+		</handler>
 		<handler class="org.bundlemaker.core.ui.handler.ParseBundleMakerProjectHandler"
 			commandId="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand">
 			<activeWhen>
@@ -246,7 +255,8 @@
 
 	<!-- the commands -->
 	<extension point="org.eclipse.ui.commands">
-		<command id="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand" name="Parse and Open" />
+		<command id="org.bundlemaker.core.ui.commands.CleanParseBundleMakerProjectCommand" name="Parse/Open (Reset Dependency Store)" />
+		<command id="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand" name="Parse/Open" />
 		<command id="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"
 			name="Export PDE plug-in projects..."/>
 		<command id="org.bundlemaker.core.ui.commands.ReportExportHandler"
@@ -304,9 +314,14 @@
 			<separator name="org.bundlemaker.core.ui.project.separator" visible="true"> </separator>
 			
 			<command
-         commandId="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand"
-         icon="icons/etools/bm-parse.png"
-         style="push">
+         		commandId="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand"
+         		icon="icons/etools/bm-parse.png"
+         		style="push">
+			</command>
+			
+			<command
+         		commandId="org.bundlemaker.core.ui.commands.CleanParseBundleMakerProjectCommand"
+         		style="push">
 			</command>
 
 			<!-- Separator for artifact-model-modifying operations -->

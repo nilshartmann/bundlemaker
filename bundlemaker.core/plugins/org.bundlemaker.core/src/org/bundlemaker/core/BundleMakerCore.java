@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
+import org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -54,6 +55,25 @@ public final class BundleMakerCore {
 
   /** the project description path */
   public static final IPath  PROJECT_DESCRIPTION_PATH   = new Path(PROJECT_DESCRIPTION_NAME);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param project
+   * @return
+   * @throws CoreException
+   */
+  public static void clearDependencyStore(IBundleMakerProject bundleMakerProject)
+      throws CoreException {
+
+    //
+    Assert.isNotNull(bundleMakerProject);
+
+    //
+    IPersistentDependencyStoreFactory factory = Activator.getDefault().getPersistentDependencyStoreFactory();
+    factory.resetPersistentDependencyStore(bundleMakerProject);
+  }
 
   /**
    * <p>

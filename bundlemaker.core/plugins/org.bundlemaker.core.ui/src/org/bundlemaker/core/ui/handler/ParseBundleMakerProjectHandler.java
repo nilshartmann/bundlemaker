@@ -51,8 +51,22 @@ public class ParseBundleMakerProjectHandler extends AbstractBundleMakerHandler i
     // get the BundleMaker project
     IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project);
 
+    // clear dependency store
+    if (clearPersistentDependencyStore()) {
+      BundleMakerCore.clearDependencyStore(bundleMakerProject);
+    }
+
     // open the BundleMaker project
     BundleMakerProjectOpener.openProject(bundleMakerProject);
+  }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected boolean clearPersistentDependencyStore() {
+    return false;
   }
 }

@@ -65,7 +65,11 @@ public class PersistentDependencyStoreFactoryComponent implements IPersistentDep
 
     // step 2: delete the existing '.bundlemaker/db4o.store' file
     IFile file = project.getProject().getFile(".bundlemaker/db4o.store");
-    file.delete(true, null);
+    if (!file.getRawLocation().toFile().delete()) {
+      System.out.println();
+      System.out.println(String.format("Could not delete file '%s'", file.getRawLocation().toFile().getAbsolutePath()));
+      System.out.println();
+    }
 
     // step 3: re-init the dependency store
     if (_cache.containsKey(project)) {
@@ -78,8 +82,6 @@ public class PersistentDependencyStoreFactoryComponent implements IPersistentDep
     }
   }
 
-  
-  
   public void releasePersistentDependencyStore(IBundleMakerProject project) {
     // step 1: dispose the cache if necessary
     if (_cache.containsKey(project)) {
@@ -91,11 +93,11 @@ public class PersistentDependencyStoreFactoryComponent implements IPersistentDep
       if (storeImpl.isInitialized()) {
         storeImpl.dispose();
       }
-      
+
       //
       _cache.remove(project);
     }
-    
+
   }
 
   /**
