@@ -376,10 +376,13 @@ public class XRefComposite extends Composite {
       }
       List<IBundleMakerArtifact> selectedArtifacts = Helper.toArtifactList(structuredSelection.toList());
 
-      setSelectedCenterArtifacts(selectedArtifacts);
-
       // don't highlight anything
       _artifactLabelProvider.setBundleMakerArtifacts(null);
+
+      setSelectedCenterArtifacts(selectedArtifacts);
+
+      _centerViewer.refresh();
+
     }
   }
 
@@ -428,7 +431,7 @@ public class XRefComposite extends Composite {
             IBundleMakerArtifact toArtifact = coreDependency.getTo();
             referencedArtifacts.add(toArtifact);
 
-            // hightlight all parents of the referenced artifact up to the selection in the center
+            // highlight all parents of the referenced artifact up to the selection in the center
             while (toArtifact != null) {
               if (selectedCenterArtifacts.contains(toArtifact)) {
                 break;
