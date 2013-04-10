@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.bundlemaker.core.osgi
+Bundle-Name: BundleMaker Core OSGi
 Bundle-SymbolicName: org.bundlemaker.core.osgi
 Bundle-Version: 0.10.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

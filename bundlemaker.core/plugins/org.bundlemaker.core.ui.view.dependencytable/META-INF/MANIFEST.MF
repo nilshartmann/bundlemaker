@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: BundleMaker Dependency Table View
+Bundle-Name: BundleMaker Core UI Dependency Table View
 Bundle-SymbolicName: org.bundlemaker.core.ui.view.dependencytable;singleton:=true
 Bundle-Version: 0.10.0.qualifier
 Require-Bundle: org.eclipse.ui,

@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: BundleMaker Perspective
+Bundle-Name: BundleMaker Core UI Perspective
 Bundle-SymbolicName: org.bundlemaker.core.ui.app.perspective;singleton:=true
 Bundle-Version: 0.10.0.qualifier
 Bundle-Activator: org.bundlemaker.core.ui.app.perspective.Activator

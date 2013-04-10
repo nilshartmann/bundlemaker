@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: BundleMaker Transformation History View
+Bundle-Name: BundleMaker Core UI Transformation History View
 Bundle-SymbolicName: org.bundlemaker.core.ui.view.transformationhistory; singleton:=true
 Bundle-Version: 0.10.0.qualifier
 Bundle-Activator: org.bundlemaker.core.ui.view.transformationhistory.internal.Activator

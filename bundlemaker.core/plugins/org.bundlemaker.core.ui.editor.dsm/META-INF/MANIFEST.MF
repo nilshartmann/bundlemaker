@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: BundleMaker DSM Editor
+Bundle-Name: BundleMaker Core UI DSM Editor
 Bundle-SymbolicName: org.bundlemaker.core.ui.editor.dsm;singleton:=true
 Bundle-Version: 0.10.0.qualifier
 Bundle-ClassPath: .

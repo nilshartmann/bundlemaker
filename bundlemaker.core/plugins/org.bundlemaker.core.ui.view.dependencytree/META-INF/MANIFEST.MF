@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: BundleMaker Dependency Tree View
+Bundle-Name: BundleMaker Core UI Dependency Tree View
 Bundle-SymbolicName: org.bundlemaker.core.ui.view.dependencytree;singleton:=true
 Bundle-Version: 0.10.0.qualifier
 Require-Bundle: org.eclipse.ui,

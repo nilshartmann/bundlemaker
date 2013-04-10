@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: BundleMaker Problem View
+Bundle-Name: BundleMaker Core UI Problem View
 Bundle-SymbolicName: org.bundlemaker.core.ui.view.problemview;singleton:=true
 Bundle-Version: 0.10.0.qualifier
 Bundle-Activator: org.bundlemaker.core.ui.view.problemview.Activator
