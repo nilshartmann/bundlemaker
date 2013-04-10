@@ -126,9 +126,12 @@ public class XRefComposite extends Composite {
     // Make sure selected Artifacts are visible in Center Tree Viewer
     _centerViewer.setSelection(selection, true);
 
-    _fromTreeViewer.setSelection(
-        new StructuredSelection(((ArtifactTreeContentProvider) _fromTreeViewer.getContentProvider()).getVirtualRoot()),
-        true);
+    _fromTreeViewer.setSelection(new StructuredSelection());
+    _toTreeViewer.setSelection(new StructuredSelection());
+
+    // _fromTreeViewer.setSelection(
+    // new StructuredSelection(((ArtifactTreeContentProvider) _fromTreeViewer.getContentProvider()).getVirtualRoot()),
+    // true);
 
     // expand at least to level two, to make sure that more than the root artifact is visible
     _centerViewer.expandToLevel(2);
