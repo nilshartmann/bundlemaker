@@ -235,13 +235,6 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="org.bundlemaker.core.ui.print"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bundlemaker.core.ui.artifact"
          download-size="0"
          install-size="0"
@@ -318,7 +311,7 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="org.bundlemaker.core.ui.transformations.history"
+         id="org.bundlemaker.core.ui.view.transformationhistory"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -330,19 +323,19 @@ litigation.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.bundlemaker.core.ui.view.stage"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>     
+         unpack="false"/>
 
-    <plugin
+   <plugin
          id="org.bundlemaker.core.ui.experimental"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>             
+         unpack="false"/>
 
 </feature>

@@ -29,7 +29,6 @@
 		<module>plugins/org.bundlemaker.core.ui.editor.dsm</module>
 		<module>plugins/org.bundlemaker.core.ui.editor.sourceviewer</module>
 		<module>plugins/org.bundlemaker.core.ui.editor.xref</module>
-		<module>plugins/org.bundlemaker.core.ui.print</module>
 		<module>plugins/org.bundlemaker.core.ui.app.perspective</module>
 		<module>plugins/org.bundlemaker.core.ui.experimental</module>
 		<module>plugins/org.bundlemaker.core.ui.mvn</module>

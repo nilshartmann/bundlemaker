@@ -30,7 +30,6 @@ import org.bundlemaker.core.ui.editor.dsm.figures.sidemarker.HorizontalSideMarke
 import org.bundlemaker.core.ui.editor.dsm.figures.sidemarker.VerticalSideMarker;
 import org.bundlemaker.core.ui.editor.dsm.utils.DsmUtils;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
-import org.bundlemaker.core.ui.print.FigurePrinter;
 import org.bundlemaker.core.ui.utils.EditorHelper;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureUtilities;
@@ -192,7 +191,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     });
 
     // create the context menu
-    createContextMenu(_viewWidget);
+    // createContextMenu(_viewWidget);
 
     //
     setCurrentArtifactSelection(getCurrentArtifactSelection());
@@ -331,104 +330,104 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     return DSM_EDITOR_ID;
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param dsmViewWidget
-   */
-  private void createContextMenu(DsmViewWidget dsmViewWidget) {
-
-    MenuManager menuManager = new MenuManager("#PopupMenu");
-    menuManager.setRemoveAllWhenShown(true);
-    menuManager.addMenuListener(new IMenuListener() {
-
-      private MenuItem _menuItem;
-
-      @Override
-      public void menuAboutToShow(IMenuManager manager) {
-        manager.add(new Separator("edit"));
-        manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-        manager.appendToGroup("edit", new ContributionItem("Test") {
-
-          /**
-           * {@inheritDoc}
-           */
-          @Override
-          public void fill(Menu menu, int index) {
-            _menuItem = new MenuItem(menu, SWT.PUSH);
-            _menuItem.setText("Export...");
-            _menuItem.addSelectionListener(new SelectionListener() {
-
-              @Override
-              public void widgetSelected(SelectionEvent e) {
-
-                final int sideMarkerOffset = FigureUtilities.getTextWidth(
-                    DsmUtils.getLongestString(_viewWidget.getModel().getLabels()), Display.getCurrent().getSystemFont());
-
-                //
-                int matrixWidth = _viewWidget.getModel().getConfiguration().getHorizontalBoxSize()
-                    * _viewWidget.getModel().getItemCount();
-                int matrixHeight = _viewWidget.getModel().getConfiguration().getVerticalBoxSize()
-                    * _viewWidget.getModel().getItemCount();
-                final Matrix matrix = new Matrix(_viewWidget.getModel(), new DependencyLabelProvider(), _viewWidget
-                    .getModel());
-                matrix.setSize(matrixWidth, matrixHeight);
-                matrix.setFont(Display.getCurrent().getSystemFont());
-
-                //
-                final VerticalSideMarker verticalSideMarker = new VerticalSideMarker(_viewWidget.getModel());
-                verticalSideMarker.setSize(sideMarkerOffset, matrixHeight);
-                verticalSideMarker.setFont(Display.getCurrent().getSystemFont());
-
-                //
-                final HorizontalSideMarker horizontalSideMarker = new HorizontalSideMarker(_viewWidget.getModel());
-                horizontalSideMarker.setSize(matrixWidth, sideMarkerOffset);
-                horizontalSideMarker.setFont(Display.getCurrent().getSystemFont());
-
-                IFigure mainFigure = new Figure() {
-
-                  /**
-                   * {@inheritDoc}
-                   */
-                  @Override
-                  public void paint(Graphics graphics) {
-                    super.paint(graphics);
-
-                    graphics.pushState();
-                    graphics.translate(0, sideMarkerOffset);
-                    verticalSideMarker.paint(graphics);
-                    graphics.restoreState();
-
-                    graphics.pushState();
-                    graphics.translate(sideMarkerOffset, sideMarkerOffset);
-                    matrix.paint(graphics);
-                    graphics.restoreState();
-
-                    graphics.pushState();
-                    graphics.translate(sideMarkerOffset, 0);
-                    horizontalSideMarker.paint(graphics);
-                    graphics.restoreState();
-                  }
-                };
-                mainFigure.setSize(matrix.getSize().width + sideMarkerOffset + 1, matrix.getSize().height
-                    + sideMarkerOffset + 1);
-
-                FigurePrinter.save(mainFigure);
-              }
-
-              @Override
-              public void widgetDefaultSelected(SelectionEvent e) {
-              }
-            });
-          }
-        });
-      }
-    });
-
-    Menu menu = menuManager.createContextMenu(dsmViewWidget);
-    dsmViewWidget.setMenu(menu);
-  }
+//  /**
+//   * <p>
+//   * </p>
+//   * 
+//   * @param dsmViewWidget
+//   */
+//  private void createContextMenu(DsmViewWidget dsmViewWidget) {
+//
+//    MenuManager menuManager = new MenuManager("#PopupMenu");
+//    menuManager.setRemoveAllWhenShown(true);
+//    menuManager.addMenuListener(new IMenuListener() {
+//
+//      private MenuItem _menuItem;
+//
+//      @Override
+//      public void menuAboutToShow(IMenuManager manager) {
+//        manager.add(new Separator("edit"));
+//        manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+//        manager.appendToGroup("edit", new ContributionItem("Test") {
+//
+//          /**
+//           * {@inheritDoc}
+//           */
+//          @Override
+//          public void fill(Menu menu, int index) {
+//            _menuItem = new MenuItem(menu, SWT.PUSH);
+//            _menuItem.setText("Export...");
+//            _menuItem.addSelectionListener(new SelectionListener() {
+//
+//              @Override
+//              public void widgetSelected(SelectionEvent e) {
+//
+//                final int sideMarkerOffset = FigureUtilities.getTextWidth(
+//                    DsmUtils.getLongestString(_viewWidget.getModel().getLabels()), Display.getCurrent().getSystemFont());
+//
+//                //
+//                int matrixWidth = _viewWidget.getModel().getConfiguration().getHorizontalBoxSize()
+//                    * _viewWidget.getModel().getItemCount();
+//                int matrixHeight = _viewWidget.getModel().getConfiguration().getVerticalBoxSize()
+//                    * _viewWidget.getModel().getItemCount();
+//                final Matrix matrix = new Matrix(_viewWidget.getModel(), new DependencyLabelProvider(), _viewWidget
+//                    .getModel());
+//                matrix.setSize(matrixWidth, matrixHeight);
+//                matrix.setFont(Display.getCurrent().getSystemFont());
+//
+//                //
+//                final VerticalSideMarker verticalSideMarker = new VerticalSideMarker(_viewWidget.getModel());
+//                verticalSideMarker.setSize(sideMarkerOffset, matrixHeight);
+//                verticalSideMarker.setFont(Display.getCurrent().getSystemFont());
+//
+//                //
+//                final HorizontalSideMarker horizontalSideMarker = new HorizontalSideMarker(_viewWidget.getModel());
+//                horizontalSideMarker.setSize(matrixWidth, sideMarkerOffset);
+//                horizontalSideMarker.setFont(Display.getCurrent().getSystemFont());
+//
+//                IFigure mainFigure = new Figure() {
+//
+//                  /**
+//                   * {@inheritDoc}
+//                   */
+//                  @Override
+//                  public void paint(Graphics graphics) {
+//                    super.paint(graphics);
+//
+//                    graphics.pushState();
+//                    graphics.translate(0, sideMarkerOffset);
+//                    verticalSideMarker.paint(graphics);
+//                    graphics.restoreState();
+//
+//                    graphics.pushState();
+//                    graphics.translate(sideMarkerOffset, sideMarkerOffset);
+//                    matrix.paint(graphics);
+//                    graphics.restoreState();
+//
+//                    graphics.pushState();
+//                    graphics.translate(sideMarkerOffset, 0);
+//                    horizontalSideMarker.paint(graphics);
+//                    graphics.restoreState();
+//                  }
+//                };
+//                mainFigure.setSize(matrix.getSize().width + sideMarkerOffset + 1, matrix.getSize().height
+//                    + sideMarkerOffset + 1);
+//
+//                FigurePrinter.save(mainFigure);
+//              }
+//
+//              @Override
+//              public void widgetDefaultSelected(SelectionEvent e) {
+//              }
+//            });
+//          }
+//        });
+//      }
+//    });
+//
+//    Menu menu = menuManager.createContextMenu(dsmViewWidget);
+//    dsmViewWidget.setMenu(menu);
+//  }
 
   // /** Paints the figure onto the given graphics */
   // public static void paintDiagram(Graphics g, IFigure figure) {
