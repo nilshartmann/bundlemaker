@@ -1,7 +1,9 @@
 package org.bundlemaker.core.ui.view.dependencytree;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -11,6 +13,8 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
  * <p>
@@ -225,4 +229,28 @@ public class Helper {
     //
     return result;
   }
+  
+  public static List<IBundleMakerArtifact> toArtifactList(ISelection selection) {
+    
+    if (!(selection instanceof IStructuredSelection)) {
+      return Collections.emptyList();
+    }
+
+    //
+    //
+    List<IBundleMakerArtifact> result = new LinkedList<IBundleMakerArtifact>();
+
+    //
+    Iterator<?> it = ((IStructuredSelection)selection).iterator();
+    while (it.hasNext()) {
+      Object object = it.next();
+      if (object instanceof IBundleMakerArtifact) {
+        result.add((IBundleMakerArtifact) object);
+      }
+    }
+
+    //
+    return result;
+  }
+
 }
