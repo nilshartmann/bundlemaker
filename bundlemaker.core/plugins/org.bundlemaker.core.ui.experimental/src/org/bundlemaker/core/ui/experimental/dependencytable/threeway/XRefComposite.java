@@ -381,6 +381,10 @@ public class XRefComposite extends Composite {
       // don't highlight anything
       _artifactLabelProvider.setBundleMakerArtifacts(null);
 
+      // reset selections in from and to viewer
+      _fromTreeViewer.setSelection(new StructuredSelection());
+      _toTreeViewer.setSelection(new StructuredSelection());
+
       setSelectedCenterArtifacts(selectedArtifacts);
 
       _centerViewer.refresh();
