@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.experimental.dependencytable.threeway;
+package org.bundlemaker.core.ui.editor.xref3;
 
 import java.util.Collection;
 import java.util.HashSet;
