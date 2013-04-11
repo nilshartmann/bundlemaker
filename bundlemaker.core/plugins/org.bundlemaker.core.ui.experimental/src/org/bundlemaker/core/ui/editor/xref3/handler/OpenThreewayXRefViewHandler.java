@@ -8,9 +8,9 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.experimental.editor.xref.threeway.handler;
+package org.bundlemaker.core.ui.editor.xref3.handler;
 
-import org.bundlemaker.core.ui.experimental.editor.xref.threeway.ThreewayXRefView;
+import org.bundlemaker.core.ui.editor.xref3.ThreewayXRefView;
 import org.bundlemaker.core.ui.handler.AbstractOpenEditorHandler;
 import org.eclipse.ui.IEditorPart;
 
