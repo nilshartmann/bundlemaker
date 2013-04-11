@@ -8,7 +8,7 @@ import java.util.Date;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.itestframework.utils.BundleMakerTestUtils;
-import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,7 +22,7 @@ import org.junit.Before;
 public abstract class AbstractModularizedSystemTest {
 
   /** - */
-  private IModifiableModularizedSystem _modularizedSystem;
+  private IModularizedSystem _modularizedSystem;
 
   /**
    * <p>
@@ -38,7 +38,7 @@ public abstract class AbstractModularizedSystemTest {
    * 
    * @return
    */
-  public IModifiableModularizedSystem getModularizedSystem() {
+  public IModularizedSystem getModularizedSystem() {
     return _modularizedSystem;
   }
 

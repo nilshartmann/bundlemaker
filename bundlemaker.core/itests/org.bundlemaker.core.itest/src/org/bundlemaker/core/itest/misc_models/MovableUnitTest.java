@@ -5,9 +5,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
+import org.bundlemaker.core.modules.IMovableUnit;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.modifiable.IMovableUnit;
-import org.bundlemaker.core.modules.modifiable.MovableUnit;
+import org.bundlemaker.core.modules.MovableUnit;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;

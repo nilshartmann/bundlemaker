@@ -1,4 +1,4 @@
-package org.bundlemaker.core.modules.modifiable;
+package org.bundlemaker.core.internal.modules.modifiable;
 
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;

@@ -1,8 +1,8 @@
-package org.bundlemaker.core.modules.event;
+package org.bundlemaker.core.internal.modules.event;
 
 import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.modifiable.IMovableUnit;
+import org.bundlemaker.core.modules.IMovableUnit;
 
 public class MovableUnitMovedEvent {
 

@@ -8,8 +8,8 @@ import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterUtils;
-import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
-import org.bundlemaker.core.modules.modifiable.IMovableUnit;
+import org.bundlemaker.core.internal.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.modules.IMovableUnit;
 
 /**
  * <p>

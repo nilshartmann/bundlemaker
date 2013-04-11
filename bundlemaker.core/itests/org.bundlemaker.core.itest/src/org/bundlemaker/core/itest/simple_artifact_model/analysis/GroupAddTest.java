@@ -6,7 +6,6 @@ import static org.bundlemaker.core.itestframework.simple_artifact_model.SimpleAr
 import org.bundlemaker.core.analysis.AnalysisModelException;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
-import org.bundlemaker.core.modules.modifiable.IModifiableModule;
 import org.eclipse.core.runtime.Path;
 import org.junit.Assert;
 import org.junit.Test;
@@ -154,68 +153,68 @@ public class GroupAddTest extends AbstractSimpleArtifactModelTest {
     getBinModel().getGroup2Artifact().addArtifact(getBinModel().getRootArtifact());
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @throws Exception
-   */
-  @Test
-  public void changeResourceModuleClassification() throws Exception {
-
-    assertDeps_mainModuleInGroup2();
-
-    // 'move' model to group 1
-    ((IModifiableModule) getBinModel().getMainModuleArtifact().getAssociatedModule()).setClassification(new Path(
-        "group1"));
-
-    // test dependencies: main module is in group 1
-    assertDeps_mainModuleInGroup1();
-
-    // assert module parent in src model
-    Assert.assertEquals(getSrcModel().getGroup1Artifact(), getSrcModel().getMainModuleArtifact().getParent());
-    getSrcModel().assertGroupCount(2);
-    Assert.assertEquals(getBinModel().getGroup1Artifact(), getBinModel().getMainModuleArtifact().getParent());
-    getBinModel().assertGroupCount(2);
-
-    // 'move' model to root
-    ((IModifiableModule) getBinModel().getMainModuleArtifact().getAssociatedModule()).setClassification(null);
-
-    // test dependencies: main module is in root
-    assertDeps_mainModuleInRoot();
-
-    // assert module parent in src model
-    Assert.assertEquals(getSrcModel().getRootArtifact(), getSrcModel().getMainModuleArtifact().getParent());
-    getSrcModel().assertGroupCount(2);
-    Assert.assertEquals(getBinModel().getRootArtifact(), getBinModel().getMainModuleArtifact().getParent());
-    getBinModel().assertGroupCount(2);
-
-    // 'move' model to group 1
-    ((IModifiableModule) getBinModel().getMainModuleArtifact().getAssociatedModule()).setClassification(new Path(
-        "group1"));
-
-    // test dependencies: main module is in group 1
-    assertDeps_mainModuleInGroup1();
-
-    // assert module parent in src model
-    Assert.assertEquals(getSrcModel().getGroup1Artifact(), getSrcModel().getMainModuleArtifact().getParent());
-    getSrcModel().assertGroupCount(2);
-    Assert.assertEquals(getBinModel().getGroup1Artifact(), getBinModel().getMainModuleArtifact().getParent());
-    getBinModel().assertGroupCount(2);
-
-    // 'move' model to group 2
-    ((IModifiableModule) getBinModel().getMainModuleArtifact().getAssociatedModule()).setClassification(new Path(
-        "group1/group2"));
-
-    // test dependencies: main module is in group 2
-    assertDeps_mainModuleInGroup2();
-
-    // assert module parent in src model
-    Assert.assertEquals(getSrcModel().getGroup2Artifact(), getSrcModel().getMainModuleArtifact().getParent());
-    getSrcModel().assertGroupCount(2);
-    Assert.assertEquals(getBinModel().getGroup2Artifact(), getBinModel().getMainModuleArtifact().getParent());
-    getBinModel().assertGroupCount(2);
-  }
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @throws Exception
+  // */
+  // @Test
+  // public void changeResourceModuleClassification() throws Exception {
+  //
+  // assertDeps_mainModuleInGroup2();
+  //
+  // // 'move' model to group 1
+  // ((IModifiableModule) getBinModel().getMainModuleArtifact().getAssociatedModule()).setClassification(new Path(
+  // "group1"));
+  //
+  // // test dependencies: main module is in group 1
+  // assertDeps_mainModuleInGroup1();
+  //
+  // // assert module parent in src model
+  // Assert.assertEquals(getSrcModel().getGroup1Artifact(), getSrcModel().getMainModuleArtifact().getParent());
+  // getSrcModel().assertGroupCount(2);
+  // Assert.assertEquals(getBinModel().getGroup1Artifact(), getBinModel().getMainModuleArtifact().getParent());
+  // getBinModel().assertGroupCount(2);
+  //
+  // // 'move' model to root
+  // ((IModifiableModule) getBinModel().getMainModuleArtifact().getAssociatedModule()).setClassification(null);
+  //
+  // // test dependencies: main module is in root
+  // assertDeps_mainModuleInRoot();
+  //
+  // // assert module parent in src model
+  // Assert.assertEquals(getSrcModel().getRootArtifact(), getSrcModel().getMainModuleArtifact().getParent());
+  // getSrcModel().assertGroupCount(2);
+  // Assert.assertEquals(getBinModel().getRootArtifact(), getBinModel().getMainModuleArtifact().getParent());
+  // getBinModel().assertGroupCount(2);
+  //
+  // // 'move' model to group 1
+  // ((IModifiableModule) getBinModel().getMainModuleArtifact().getAssociatedModule()).setClassification(new Path(
+  // "group1"));
+  //
+  // // test dependencies: main module is in group 1
+  // assertDeps_mainModuleInGroup1();
+  //
+  // // assert module parent in src model
+  // Assert.assertEquals(getSrcModel().getGroup1Artifact(), getSrcModel().getMainModuleArtifact().getParent());
+  // getSrcModel().assertGroupCount(2);
+  // Assert.assertEquals(getBinModel().getGroup1Artifact(), getBinModel().getMainModuleArtifact().getParent());
+  // getBinModel().assertGroupCount(2);
+  //
+  // // 'move' model to group 2
+  // ((IModifiableModule) getBinModel().getMainModuleArtifact().getAssociatedModule()).setClassification(new Path(
+  // "group1/group2"));
+  //
+  // // test dependencies: main module is in group 2
+  // assertDeps_mainModuleInGroup2();
+  //
+  // // assert module parent in src model
+  // Assert.assertEquals(getSrcModel().getGroup2Artifact(), getSrcModel().getMainModuleArtifact().getParent());
+  // getSrcModel().assertGroupCount(2);
+  // Assert.assertEquals(getBinModel().getGroup2Artifact(), getBinModel().getMainModuleArtifact().getParent());
+  // getBinModel().assertGroupCount(2);
+  // }
 
   /**
    * <p>

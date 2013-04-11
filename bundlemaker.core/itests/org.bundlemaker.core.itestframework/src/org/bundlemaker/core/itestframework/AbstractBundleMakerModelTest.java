@@ -7,7 +7,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.itestframework.internal.TestProjectCreator;
-import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.After;
 import org.junit.Assert;
@@ -28,7 +28,7 @@ public abstract class AbstractBundleMakerModelTest {
   private IBundleMakerProject                     _bundleMakerProject;
 
   /** - */
-  private IModifiableModularizedSystem            _modularizedSystem;
+  private IModularizedSystem                      _modularizedSystem;
 
   /** has been set up? */
   private static Map<String, IBundleMakerProject> _initializedBundleMakerProjects = new HashMap<String, IBundleMakerProject>();
@@ -56,7 +56,7 @@ public abstract class AbstractBundleMakerModelTest {
     _bundleMakerProject = TestProjectCreator.getBundleMakerProject(getTestProjectName());
 
     //
-    _modularizedSystem = (IModifiableModularizedSystem) _bundleMakerProject.getModularizedSystemWorkingCopy();
+    _modularizedSystem = _bundleMakerProject.getModularizedSystemWorkingCopy();
 
     // assert the test module
     Assert.assertNotNull(_modularizedSystem.getModule(getTestProjectName(), getTestProjectVersion()));
@@ -109,7 +109,7 @@ public abstract class AbstractBundleMakerModelTest {
    * 
    * @return
    */
-  public final IModifiableModularizedSystem getModularizedSystem() {
+  public final IModularizedSystem getModularizedSystem() {
     return _modularizedSystem;
   }
 

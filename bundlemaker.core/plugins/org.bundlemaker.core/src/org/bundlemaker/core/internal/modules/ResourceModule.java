@@ -18,14 +18,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.internal.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.internal.modules.query.IQueryFilter;
+import org.bundlemaker.core.internal.modules.query.ReferenceQueryFilters.ReferenceFilter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModuleIdentifier;
+import org.bundlemaker.core.modules.IMovableUnit;
 import org.bundlemaker.core.modules.IResourceContainer;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
-import org.bundlemaker.core.modules.modifiable.IMovableUnit;
-import org.bundlemaker.core.modules.query.IQueryFilter;
-import org.bundlemaker.core.modules.query.ReferenceQueryFilters.ReferenceFilter;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;

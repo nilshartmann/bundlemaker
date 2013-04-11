@@ -1,9 +1,9 @@
 package org.bundlemaker.core.internal.modules;
 
+import org.bundlemaker.core.internal.modules.event.ClassificationChangedEvent;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
 import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.event.ClassificationChangedEvent;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;

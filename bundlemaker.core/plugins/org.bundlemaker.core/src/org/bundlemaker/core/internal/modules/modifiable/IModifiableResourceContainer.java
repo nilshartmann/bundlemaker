@@ -8,22 +8,16 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.modules.query;
+package org.bundlemaker.core.internal.modules.modifiable;
+
+import org.bundlemaker.core.modules.IResourceContainer;
 
 /**
- * @param <T>
+ * <p>
+ * </p>
  * 
- * @deprecated use AnalysisModel instead
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-@Deprecated
-public interface IQueryFilter<T> {
+public interface IModifiableResourceContainer extends IResourceContainer, IModifiableTypeContainer {
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param content
-   * @return
-   */
-  boolean matches(T content);
 }

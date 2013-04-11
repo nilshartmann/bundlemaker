@@ -10,11 +10,11 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.modules;
 
+import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ITypeContainer;
-import org.bundlemaker.core.modules.modifiable.IModifiableModule;
 
 /**
  * <p>
