@@ -37,8 +37,6 @@ public class CreateModuleFromPackageSelectionHandler extends AbstractArtifactBas
       return;
     }
 
-    // todo make sure only packages, types or resources are selected
-
     IRootArtifact rootArtifact = null;
 
     String preselectedModuleName = null;
@@ -48,21 +46,21 @@ public class CreateModuleFromPackageSelectionHandler extends AbstractArtifactBas
         rootArtifact = artifact.getRoot();
       }
 
-        String packageName = (artifact instanceof IPackageArtifact) ? artifact.getQualifiedName() : artifact.getParent(
+      String packageName = (artifact instanceof IPackageArtifact) ? artifact.getQualifiedName() : artifact.getParent(
           IPackageArtifact.class).getQualifiedName();
 
-        if (preselectedModuleName == null) {
-          preselectedModuleName = packageName;
-        } else {
-          StringBuilder b = new StringBuilder();
-          for (int i = 0, j = 0; i < preselectedModuleName.length() && j < packageName.length(); i++, j++) {
-            if (preselectedModuleName.charAt(i) == packageName.charAt(j)) {
-              b.append(preselectedModuleName.charAt(i));
+      if (preselectedModuleName == null) {
+        preselectedModuleName = packageName;
+      } else {
+        StringBuilder b = new StringBuilder();
+        for (int i = 0, j = 0; i < preselectedModuleName.length() && j < packageName.length(); i++, j++) {
+          if (preselectedModuleName.charAt(i) == packageName.charAt(j)) {
+            b.append(preselectedModuleName.charAt(i));
           } else {
             break;
-            }
           }
-          preselectedModuleName = b.toString();
+        }
+        preselectedModuleName = b.toString();
       }
     }
 
