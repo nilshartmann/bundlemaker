@@ -17,9 +17,7 @@ import org.bundlemaker.core.ui.artifact.tree.VisibleArtifactsFilter;
 import org.bundlemaker.core.ui.view.dependencytree.DefaultExpandStrategy;
 import org.bundlemaker.core.ui.view.dependencytree.Helper;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -235,12 +233,6 @@ public class XRefComposite extends Composite {
 
   }
 
-  class AbcAction extends Action {
-    public AbcAction(String l) {
-      super(l, IAction.AS_PUSH_BUTTON);
-    }
-  }
-
   private void fillContextMenu(IMenuManager manager) {
     manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
   }
@@ -434,6 +426,7 @@ public class XRefComposite extends Composite {
 
       Collection<IDependency> dependencies = (to ? selectedArtifact.getDependenciesTo(selectedCenterArtifacts)
           : selectedArtifact.getDependenciesFrom(selectedCenterArtifacts));
+
       for (IDependency dep : dependencies) {
         selectedDpendencies.add(dep);
 
