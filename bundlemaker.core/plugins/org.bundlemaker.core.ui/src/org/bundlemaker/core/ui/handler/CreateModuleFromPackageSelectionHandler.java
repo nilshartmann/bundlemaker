@@ -10,7 +10,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.handler;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
@@ -40,10 +42,17 @@ public class CreateModuleFromPackageSelectionHandler extends AbstractArtifactBas
     IRootArtifact rootArtifact = null;
 
     String preselectedModuleName = null;
+    Set<String> selectedModuleVersions = new HashSet<String>();
 
     for (IBundleMakerArtifact artifact : selectedArtifacts) {
       if (rootArtifact == null) {
         rootArtifact = artifact.getRoot();
+      }
+
+      IModuleArtifact module = (artifact instanceof IModuleArtifact ? (IModuleArtifact) artifact : artifact
+          .getParent(IModuleArtifact.class));
+      if (module != null) {
+        selectedModuleVersions.add(module.getModuleVersion());
       }
 
       String packageName = (artifact instanceof IPackageArtifact) ? artifact.getQualifiedName() : artifact.getParent(
@@ -75,13 +84,17 @@ public class CreateModuleFromPackageSelectionHandler extends AbstractArtifactBas
       preselectedModuleName = "NewModule";
     }
 
+    // Pre-select Version with version number of selected modules
+    String preSelectedModuleVersion = (selectedModuleVersions.size() == 1 ? selectedModuleVersions.iterator().next()
+        : "1.0.0");
+
     IBundleMakerArtifact artifact = selectedArtifacts.get(0);
 
     // Retrieve shell from Event
     Shell shell = HandlerUtil.getActiveShell(event);
 
     CreateModuleFromPackageSelectionDialog dialog = new CreateModuleFromPackageSelectionDialog(shell,
-        artifact.getRoot(), preselectedModuleName, "1.0.0");
+        artifact.getRoot(), preselectedModuleName, preSelectedModuleVersion);
     if (dialog.open() == Window.OK) {
 
       IGroupAndModuleContainer groupAndModuleContainer = dialog.getParent();
