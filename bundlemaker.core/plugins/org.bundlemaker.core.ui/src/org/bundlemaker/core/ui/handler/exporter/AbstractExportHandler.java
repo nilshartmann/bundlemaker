@@ -20,10 +20,10 @@ import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.IModuleExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
+import org.bundlemaker.core.exporter.IModuleFilter;
 import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.ui.handler.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.ui.internal.Activator;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -123,7 +123,7 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
     return adapter;
   }
 
-  protected IQueryFilter<IModule> createModuleFilter(List<IBundleMakerArtifact> artifacts) {
+  protected IModuleFilter createModuleFilter(List<IBundleMakerArtifact> artifacts) {
     ListBasedModuleQueryFilter moduleFilter = new ListBasedModuleQueryFilter();
 
     for (IBundleMakerArtifact iArtifact : artifacts) {
@@ -200,7 +200,7 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
     return ResourcesPlugin.getWorkspace().getRoot().getRawLocation().toFile();
   }
 
-  class ListBasedModuleQueryFilter implements IQueryFilter<IModule> {
+  class ListBasedModuleQueryFilter implements IModuleFilter {
 
     private final HashSet<String> _moduleNames = new HashSet<String>();
 

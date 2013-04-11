@@ -13,8 +13,7 @@ package org.bundlemaker.core.modules;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core.modules.modifiable.IMovableUnit;
-import org.bundlemaker.core.modules.query.IQueryFilter;
+import org.bundlemaker.core.internal.modules.query.IQueryFilter;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;

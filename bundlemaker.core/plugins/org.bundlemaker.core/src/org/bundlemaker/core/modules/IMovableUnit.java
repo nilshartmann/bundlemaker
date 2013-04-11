@@ -1,8 +1,7 @@
-package org.bundlemaker.core.modules.modifiable;
+package org.bundlemaker.core.modules;
 
 import java.util.List;
 
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 
@@ -38,6 +37,7 @@ public interface IMovableUnit {
    * 
    * @return
    */
+  @Deprecated
   boolean hasAssociatedTypes();
 
   /**
@@ -47,6 +47,7 @@ public interface IMovableUnit {
    * 
    * @return the list of types that are associated with this movable unit.
    */
+  @Deprecated
   List<IType> getAssociatedTypes();
 
   /**

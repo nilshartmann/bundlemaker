@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Gerd Wuetherich (gerd@gerd-wuetherich.de).
+ * Copyright (c) 2013 Gerd Wuetherich (gerd@gerd-wuetherich.de).
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,23 +8,20 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.modules.modifiable;
+package org.bundlemaker.core.exporter;
 
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 
 /**
- * <p>
- * </p>
- * 
- * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IModifiableResourceModule extends IResourceModule, IModifiableModule {
+public interface IModuleFilter {
 
   /**
    * <p>
    * </p>
    * 
+   * @param content
    * @return
    */
-  IModifiableResourceContainer getModifiableSelfResourceContainer();
+  boolean matches(IModule content);
 }

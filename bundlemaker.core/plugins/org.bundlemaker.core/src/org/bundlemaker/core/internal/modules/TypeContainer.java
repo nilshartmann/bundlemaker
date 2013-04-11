@@ -17,12 +17,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.internal.modules.modifiable.IModifiableTypeContainer;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
+import org.bundlemaker.core.internal.modules.query.IQueryFilter;
 import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.modifiable.IModifiableTypeContainer;
-import org.bundlemaker.core.modules.modifiable.IMovableUnit;
-import org.bundlemaker.core.modules.query.IQueryFilter;
+import org.bundlemaker.core.modules.IMovableUnit;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 

@@ -16,9 +16,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.bundlemaker.core.internal.modules.query.ReferenceQueryFilters;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeSelector;
-import org.bundlemaker.core.modules.query.ReferenceQueryFilters;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IType;

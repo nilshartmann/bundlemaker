@@ -18,7 +18,7 @@ import java.util.Set;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.modules.event.IModularizedSystemChangedListener;
+import org.bundlemaker.core.internal.modules.event.IModularizedSystemChangedListener;
 import org.bundlemaker.core.modules.transformation.ITransformation;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.resource.IReference;

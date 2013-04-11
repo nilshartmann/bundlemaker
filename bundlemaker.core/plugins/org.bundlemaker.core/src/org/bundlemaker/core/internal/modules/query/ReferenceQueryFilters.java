@@ -1,4 +1,4 @@
-package org.bundlemaker.core.modules.query;
+package org.bundlemaker.core.internal.modules.query;
 
 import java.util.HashSet;
 import java.util.Set;

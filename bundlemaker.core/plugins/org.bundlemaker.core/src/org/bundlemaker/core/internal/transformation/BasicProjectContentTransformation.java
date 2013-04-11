@@ -11,9 +11,9 @@
 package org.bundlemaker.core.internal.transformation;
 
 import org.bundlemaker.core.internal.modules.ResourceContainer;
+import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.internal.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
-import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.eclipse.core.runtime.IProgressMonitor;

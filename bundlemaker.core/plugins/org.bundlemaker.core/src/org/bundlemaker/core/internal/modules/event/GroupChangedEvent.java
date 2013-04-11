@@ -1,4 +1,4 @@
-package org.bundlemaker.core.modules.event;
+package org.bundlemaker.core.internal.modules.event;
 
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.modules.ChangeAction;

@@ -13,9 +13,7 @@ package org.bundlemaker.core.exporter;
 import java.io.File;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -42,7 +40,7 @@ public class ModularizedSystemExporterAdapter implements IModularizedSystemExpor
   private IModuleExporterContext _currentContext;
 
   /** - */
-  private IQueryFilter<IModule>  _moduleFilter;
+  private IModuleFilter          _moduleFilter;
 
   /**
    * <p>
@@ -63,7 +61,7 @@ public class ModularizedSystemExporterAdapter implements IModularizedSystemExpor
    * 
    * @param moduleFilter
    */
-  public void setModuleFilter(IQueryFilter<IModule> moduleFilter) {
+  public void setModuleFilter(IModuleFilter moduleFilter) {
     _moduleFilter = moduleFilter;
   }
 

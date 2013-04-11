@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.modifiable.IMovableUnit;
-import org.bundlemaker.core.modules.modifiable.MovableUnit;
+import org.bundlemaker.core.modules.IMovableUnit;
+import org.bundlemaker.core.modules.MovableUnit;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;

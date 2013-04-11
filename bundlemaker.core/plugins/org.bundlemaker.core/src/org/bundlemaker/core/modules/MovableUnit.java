@@ -1,12 +1,9 @@
-package org.bundlemaker.core.modules.modifiable;
+package org.bundlemaker.core.modules;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
