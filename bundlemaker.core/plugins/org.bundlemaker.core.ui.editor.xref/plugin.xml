@@ -25,6 +25,8 @@
 
    <!-- XRef Submenu -->
    <extension point="org.eclipse.ui.menus">
+      <!-- Replaced with 3-Way Xref -->
+      <!--
       <menuContribution
          locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.editor.separator">
          <command commandId="org.bundlemaker.core.ui.editor.xref.OpenXRefViewCommand" style="push">
@@ -40,7 +42,8 @@
                         icon="icons/XRef.png"
                         style="push">
                   </command>
-            </menuContribution>      
+            </menuContribution>
+            -->      
    </extension>
 
    <!-- XREF EDITOR -->
