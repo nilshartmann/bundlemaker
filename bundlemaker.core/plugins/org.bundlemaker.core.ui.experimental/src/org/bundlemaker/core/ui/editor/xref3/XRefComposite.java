@@ -276,18 +276,18 @@ public class XRefComposite extends Composite {
     TreeItem fromTreeTopItem = _fromTreeViewer.getTree().getTopItem();
 
     //
-    Set<IBundleMakerArtifact> toArtifacts = new HashSet<IBundleMakerArtifact>();
-    for (IBundleMakerArtifact artifact : selectedArtifacts) {
-      for (IDependency dep : artifact.getDependenciesTo()) {
-        toArtifacts.add(dep.getTo());
-      }
-    }
-
-    //
     Set<IBundleMakerArtifact> fromArtifacts = new HashSet<IBundleMakerArtifact>();
     for (IBundleMakerArtifact artifact : selectedArtifacts) {
       for (IDependency dep : artifact.getDependenciesFrom()) {
         fromArtifacts.add(dep.getFrom());
+      }
+    }
+
+    //
+    Set<IBundleMakerArtifact> toArtifacts = new HashSet<IBundleMakerArtifact>();
+    for (IBundleMakerArtifact artifact : selectedArtifacts) {
+      for (IDependency dep : artifact.getDependenciesTo()) {
+        toArtifacts.add(dep.getTo());
       }
     }
 
@@ -306,6 +306,8 @@ public class XRefComposite extends Composite {
     detailsString += ", Referencing: " + toSize + " " + (toSize > 1 ? "Artifacts" : "Artifact");
 
     _detailsLabel.setText(detailsString);
+
+    setSelectedDependencies(null);
 
     // set the top item again
     if (toTreeTopItem != null && !toTreeTopItem.isDisposed()) {

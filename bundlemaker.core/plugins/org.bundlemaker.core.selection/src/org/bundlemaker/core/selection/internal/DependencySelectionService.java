@@ -61,11 +61,10 @@ public class DependencySelectionService extends AbstractSelectionService<IDepend
   public void setSelection(String selectionId, String providerId, Collection<IDependency> selectedArtifacts) {
     Assert.isNotNull(selectionId, "The parameter 'selectionId' must not be null");
     Assert.isNotNull(providerId, "The parameter 'providerId' must not be null");
-    Assert.isNotNull(selectedArtifacts, "The parameter 'selectedArtifacts' must not be null");
 
     // Create selection
     DependencySelection dependencySelection = new DependencySelection(selectionId, providerId,
-        new LinkedList<IDependency>(selectedArtifacts));
+        (selectedArtifacts == null ? new LinkedList<IDependency>() : new LinkedList<IDependency>(selectedArtifacts)));
 
     // register selection and inform listener
     setSelection(selectionId, providerId, dependencySelection);
