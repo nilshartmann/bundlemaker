@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: BundleMaker Core UI Experimental
-Bundle-SymbolicName: org.bundlemaker.core.ui.experimental;singleton:=true
+Bundle-SymbolicName: org.bundlemaker.core.ui.editor.xref3;singleton:=true
 Bundle-Version: 0.10.0.qualifier
-Bundle-Activator: org.bundlemaker.core.ui.experimental.internal.Activator
+Bundle-Activator: org.bundlemaker.core.ui.editor.xref3.internal.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.bundlemaker.core.ui;bundle-version="0.10.0",

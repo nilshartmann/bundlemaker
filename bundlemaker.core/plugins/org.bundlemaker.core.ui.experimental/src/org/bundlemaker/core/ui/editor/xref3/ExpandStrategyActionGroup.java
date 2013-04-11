@@ -9,7 +9,7 @@
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
 
-package org.bundlemaker.core.ui.experimental.dependencytable.threeway;
+package org.bundlemaker.core.ui.editor.xref3;
 
 import static org.bundlemaker.core.ui.view.dependencytree.UIDependencyTreeImages.AUTO_EXPAND_FROM_GROUPS;
 import static org.bundlemaker.core.ui.view.dependencytree.UIDependencyTreeImages.AUTO_EXPAND_FROM_MODULES;

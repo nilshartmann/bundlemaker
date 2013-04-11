@@ -332,7 +332,7 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="org.bundlemaker.core.ui.experimental"
+         id="org.bundlemaker.core.ui.editor.xref3"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.experimental.dependencytable.threeway;
+package org.bundlemaker.core.ui.editor.xref3;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,7 +8,6 @@ import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -22,13 +21,10 @@ import org.eclipse.swt.widgets.Display;
  */
 public class XRefTreeArtifactLabelProvider extends ArtifactTreeLabelProvider implements IColorProvider, IFontProvider {
 
-  private final TreeViewer          _treeViewer;
-
   /** - */
   private Set<IBundleMakerArtifact> _bundleMakerArtifacts;
 
-  public XRefTreeArtifactLabelProvider(TreeViewer treeViewer) {
-    _treeViewer = treeViewer;
+  public XRefTreeArtifactLabelProvider() {
   }
 
   /**
