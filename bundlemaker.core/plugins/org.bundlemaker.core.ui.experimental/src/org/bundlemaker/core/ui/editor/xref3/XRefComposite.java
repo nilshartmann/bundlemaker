@@ -51,9 +51,6 @@ public class XRefComposite extends Composite {
   /** the from tree viewer */
   private TreeViewer                    _fromTreeViewer;
 
-  /** - */
-  private VisibleArtifactsFilter        _fromTreeVisibleArtifactsFilter;
-
   /** the to tree viewer */
   private TreeViewer                    _centerViewer;
 
@@ -62,9 +59,6 @@ public class XRefComposite extends Composite {
 
   /** Label that displays details about the current selection */
   private Label                         _detailsLabel;
-
-  /** - */
-  private VisibleArtifactsFilter        _toTreeVisibleArtifactsFilter;
 
   /** - */
   private String                        _providerId;
@@ -199,7 +193,7 @@ public class XRefComposite extends Composite {
 
     //
     _fromTreeViewer.setLabelProvider(new ArtifactTreeLabelProvider());
-    _artifactLabelProvider = new XRefTreeArtifactLabelProvider(_centerViewer);
+    _artifactLabelProvider = new XRefTreeArtifactLabelProvider();
     _centerViewer.setLabelProvider(_artifactLabelProvider);
     _toTreeViewer.setLabelProvider(new ArtifactTreeLabelProvider());
 
@@ -220,7 +214,6 @@ public class XRefComposite extends Composite {
     // menuMgr.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     Menu menu = menuMgr.createContextMenu(_centerViewer.getControl());
     _centerViewer.getControl().setMenu(menu);
-    String id = _site.getId();
     _site.registerContextMenu(menuMgr, _centerViewer);
     _site.setSelectionProvider(_centerViewer);
 
@@ -304,8 +297,8 @@ public class XRefComposite extends Composite {
     }
 
     //
-    _toTreeVisibleArtifactsFilter = setVisibleArtifacts(_toTreeViewer, toArtifacts);
-    _fromTreeVisibleArtifactsFilter = setVisibleArtifacts(_fromTreeViewer, fromArtifacts);
+    setVisibleArtifacts(_toTreeViewer, toArtifacts);
+    setVisibleArtifacts(_fromTreeViewer, fromArtifacts);
 
     _expandStrategy.exandTreeViewer();
 
