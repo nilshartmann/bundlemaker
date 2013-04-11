@@ -127,6 +127,9 @@ public class XRefComposite extends Composite {
 
     // expand at least to level two, to make sure that more than the root artifact is visible
     _centerViewer.expandToLevel(2);
+    if (selectedArtifacts.length == 1) {
+      _centerViewer.expandToLevel(selectedArtifacts[0], 1);
+    }
     _centerViewer.getTree().setFocus();
   }
 
