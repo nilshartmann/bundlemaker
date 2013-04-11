@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.experimental.internal;
+package org.bundlemaker.core.ui.editor.xref3.internal;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
