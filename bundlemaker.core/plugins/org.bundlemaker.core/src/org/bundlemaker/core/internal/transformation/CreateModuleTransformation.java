@@ -6,7 +6,7 @@ import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.internal.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.transformation.ICreateModuleTransformation;
@@ -139,7 +139,7 @@ public class CreateModuleTransformation extends
     if (moduleArtifact == null) {
 
       // create the module
-      IModifiableResourceModule resourceModule = ((IModifiableModularizedSystem) config.getGroupAndModuleContainer()
+      IModifiableModule resourceModule = ((IModifiableModularizedSystem) config.getGroupAndModuleContainer()
           .getRoot()
           .getModularizedSystem()).createResourceModule(moduleIdentifier);
 

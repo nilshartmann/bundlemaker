@@ -5,8 +5,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IMovableUnit;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.MovableUnit;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
@@ -25,7 +25,7 @@ import org.junit.Test;
 public class MovableUnitTest extends AbstractBundleMakerModelTest {
 
   // the resource module
-  private IResourceModule _resourceModule;
+  private IModule _resourceModule;
 
   @Before
   public void initResourceModule() throws CoreException {

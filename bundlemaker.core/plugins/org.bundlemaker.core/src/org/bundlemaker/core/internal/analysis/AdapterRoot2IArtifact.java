@@ -21,8 +21,8 @@ import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.cache.TypeKey;
 import org.bundlemaker.core.internal.analysis.cache.impl.ModuleSubCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.TypeSubCache;
-import org.bundlemaker.core.internal.modules.AbstractModule;
 import org.bundlemaker.core.internal.modules.Group;
+import org.bundlemaker.core.internal.modules.Module;
 import org.bundlemaker.core.internal.modules.event.ClassificationChangedEvent;
 import org.bundlemaker.core.internal.modules.event.GroupChangedEvent;
 import org.bundlemaker.core.internal.modules.event.IModularizedSystemChangedListener;
@@ -508,7 +508,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
             module));
 
     //
-    Group classification = ((AbstractModule<?, ?>) module).getClassificationGroup();
+    Group classification = ((Module) module).getClassificationGroup();
 
     if (classification != null) {
       IGroupAndModuleContainer groupArtifact = _artifactCache.getGroupCache().getOrCreate(classification);

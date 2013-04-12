@@ -10,8 +10,14 @@
  ******************************************************************************/
 package org.bundlemaker.core.modules;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.bundlemaker.core.internal.modules.query.IQueryFilter;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.resource.IReference;
+import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.IPath;
 
 /**
@@ -77,4 +83,67 @@ public interface IModule extends ITypeContainer {
    * @return the user attributes.
    */
   Map<String, Object> getUserAttributes();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  @Deprecated
+  boolean isResourceModule();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean containsSources();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param path
+   * @param contentType
+   * @return
+   */
+  boolean containsResource(String path, ProjectContentType contentType);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param path
+   * @param conentType
+   * @return
+   */
+  IResource getResource(String path, ProjectContentType conentType);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param conentType
+   * @return
+   */
+  Set<IResource> getResources(ProjectContentType conentType);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  List<IMovableUnit> getMovableUnits();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param excludeContainedTypes
+   * @return
+   */
+  Set<IReference> getReferences(IQueryFilter<IReference> filter);
 }

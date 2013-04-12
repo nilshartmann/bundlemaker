@@ -26,16 +26,6 @@ public interface ITypeContainer {
 
   /**
    * <p>
-   * Returns the containing {@link IModule}. If the {@link ITypeContainer} is a {@link IModule}, the {@link IModule}
-   * itself will be returned.
-   * </p>
-   * 
-   * @return
-   */
-  IModule getModule();
-
-  /**
-   * <p>
    * Returns the {@link IType} with the specified fully qualified name or <code>null</code> if no {@link IType} with the
    * specified name exists.
    * </p>

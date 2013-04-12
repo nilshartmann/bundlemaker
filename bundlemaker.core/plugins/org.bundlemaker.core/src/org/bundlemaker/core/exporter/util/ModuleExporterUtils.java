@@ -14,8 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.bundlemaker.core.modules.IResourceContainer;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
@@ -39,19 +38,19 @@ public class ModuleExporterUtils {
    * @param resourceStandins
    * @return
    */
-  public static boolean requiresRepackaging(IResourceModule resourceModule, File currentModuleTemplateDirectory,
+  public static boolean requiresRepackaging(IModule resourceModule, File currentModuleTemplateDirectory,
       ProjectContentType contentType) {
 
     Assert.isNotNull(resourceModule, "Parameter 'resourceModule' has to be set!");
     Assert.isNotNull(contentType, "Parameter 'type' has to be set!");
 
-    // step 1: requires repackaging if contained containers not empty
-    if (!resourceModule.getContainedResourceContainers().isEmpty()) {
-      return true;
-    }
+    // // step 1: requires repackaging if contained containers not empty
+    // if (!resourceModule.getContainedResourceContainers().isEmpty()) {
+    // return true;
+    // }
 
     // step 3: get the root file (or return true)
-    return requiresRepackaging(resourceModule.getSelfResourceContainer(), contentType);
+    return requiresRepackaging(resourceModule, contentType);
   }
 
   /**
@@ -62,7 +61,7 @@ public class ModuleExporterUtils {
    * @param contentType
    * @return
    */
-  public static boolean requiresRepackaging(IResourceContainer resourceContainer, ProjectContentType contentType) {
+  public static boolean requiresRepackaging(IModule resourceContainer, ProjectContentType contentType) {
 
     Assert.isNotNull(resourceContainer, "Parameter 'resourceContainer' has to be set!");
     Assert.isNotNull(contentType, "Parameter 'type' has to be set!");
@@ -117,7 +116,7 @@ public class ModuleExporterUtils {
    * @return
    * @throws IOException
    */
-  public static File getRootFile(IResourceModule resourceModule, ProjectContentType contentType) {
+  public static File getRootFile(IModule resourceModule, ProjectContentType contentType) {
 
     //
     Assert.isNotNull(resourceModule);

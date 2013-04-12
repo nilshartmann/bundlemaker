@@ -3,7 +3,7 @@ package org.bundlemaker.core.internal.modules.query;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IReference;
 
 /**
@@ -68,25 +68,25 @@ public class ReferenceQueryFilters {
   public static class ReferenceFilter implements IQueryFilter<IReference> {
 
     /** - */
-    private IResourceModule resourceModule;
+    private IModule     resourceModule;
 
     /** - */
-    private boolean         exludeContainedTypes      = true;
+    private boolean     exludeContainedTypes      = true;
 
     /** - */
-    private boolean         includeSourceReferences   = true;
+    private boolean     includeSourceReferences   = true;
 
     /** - */
-    private boolean         includeBinaryReferences   = true;
+    private boolean     includeBinaryReferences   = true;
 
     /** - */
-    private boolean         includeIndirectReferences = true;
+    private boolean     includeIndirectReferences = true;
 
     /** - */
-    private boolean         includeDirectReferences   = true;
+    private boolean     includeDirectReferences   = true;
 
     /** - */
-    private Set<String>     _containedTypeNames;
+    private Set<String> _containedTypeNames;
 
     /**
      * <p>
@@ -94,7 +94,7 @@ public class ReferenceQueryFilters {
      * 
      * @param resourceModule
      */
-    public void setResourceModule(IResourceModule resourceModule) {
+    public void setResourceModule(IModule resourceModule) {
       this.resourceModule = resourceModule;
     }
 

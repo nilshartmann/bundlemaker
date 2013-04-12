@@ -17,12 +17,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableTypeContainer;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
 import org.bundlemaker.core.internal.modules.query.IQueryFilter;
 import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IMovableUnit;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 
@@ -61,7 +61,6 @@ public class TypeContainer implements IModifiableTypeContainer {
     _containedTypes = new HashMap<String, IType>();
   }
 
-  @Override
   public IModule getModule() {
     return _module;
   }
@@ -188,7 +187,7 @@ public class TypeContainer implements IModifiableTypeContainer {
 
       // notify
       if (getModule().hasModularizedSystem()) {
-        ((AbstractCachingModularizedSystem) getModule().getModularizedSystem()).typeChanged(type, getModule(),
+        ((IModifiableModularizedSystem) getModule().getModularizedSystem()).typeChanged(type, getModule(),
             ChangeAction.ADDED);
       }
     }
@@ -208,18 +207,6 @@ public class TypeContainer implements IModifiableTypeContainer {
             ChangeAction.REMOVED);
       }
     }
-  }
-
-  @Override
-  public void addMovableUnit(IMovableUnit movableUnit) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void removeMovableUnit(IMovableUnit movableUnit) {
-    // TODO Auto-generated method stub
-
   }
 
   public void setModule(IModule module) {

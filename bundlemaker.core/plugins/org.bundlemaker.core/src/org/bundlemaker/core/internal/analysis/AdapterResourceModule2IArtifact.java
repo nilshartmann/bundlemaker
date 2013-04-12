@@ -6,7 +6,7 @@ import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 
 /**
  * <p>
@@ -21,7 +21,7 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
    * Creates a new instance of type {@link AdapterResourceModule2IArtifact}.
    * </p>
    */
-  public AdapterResourceModule2IArtifact(IResourceModule resourceModule, IBundleMakerArtifact parent) {
+  public AdapterResourceModule2IArtifact(IModule resourceModule, IBundleMakerArtifact parent) {
     super(resourceModule, parent);
   }
 
@@ -54,7 +54,7 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
     IModuleArtifact moduleArtifact = (IModuleArtifact) artifact.getParent(IModuleArtifact.class);
 
     // TODO
-    if (moduleArtifact != null && !(moduleArtifact.getAssociatedModule() instanceof IResourceModule)) {
+    if (moduleArtifact != null && !(moduleArtifact.getAssociatedModule().isResourceModule())) {
       return "Can not add packages, types or resources from a non-resource module.";
     }
     return null;

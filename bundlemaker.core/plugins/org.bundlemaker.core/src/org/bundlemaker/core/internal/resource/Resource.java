@@ -18,7 +18,7 @@ import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -263,7 +263,7 @@ public class Resource extends ResourceKey implements IModifiableResource {
   }
 
   @Override
-  public IResourceModule getAssociatedResourceModule(IModularizedSystem modularizedSystem) {
+  public IModule getAssociatedResourceModule(IModularizedSystem modularizedSystem) {
 
     //
     if (_resourceStandin == null) {

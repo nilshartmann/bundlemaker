@@ -17,7 +17,7 @@ import java.util.Set;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -53,7 +53,7 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
   }
 
   @Override
-  public IResourceModule getAssociatedResourceModule(IModularizedSystem modularizedSystem) {
+  public IModule getAssociatedResourceModule(IModularizedSystem modularizedSystem) {
 
     //
     return ((ModularizedSystem) modularizedSystem).getAssociatedResourceModule(this);

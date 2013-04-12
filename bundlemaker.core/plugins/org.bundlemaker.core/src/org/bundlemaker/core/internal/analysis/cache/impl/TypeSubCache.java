@@ -9,8 +9,6 @@ import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.cache.ModulePackageKey;
 import org.bundlemaker.core.internal.analysis.cache.TypeKey;
 import org.bundlemaker.core.internal.analysis.virtual.VirtualType2IArtifact;
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -124,22 +122,23 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, ITypeArtifact> {
     resource = getArtifactCache().getConfiguration().getContentType().equals(ProjectContentType.SOURCE)
         && type.hasSourceResource() ? type.getSourceResource() : type.getBinaryResource();
 
-    // get the associated module
-    IModule module = resource != null ? resource.getAssociatedResourceModule(getArtifactCache().getModularizedSystem())
-        : type.getModule(getArtifactCache().getModularizedSystem());
+    // // get the associated module
+    // IModule module = resource != null ?
+    // resource.getAssociatedResourceModule(getArtifactCache().getModularizedSystem())
+    // : type.getModule(getArtifactCache().getModularizedSystem());
+    //
+    // if (module.isResourceModule()) {
 
-    if (module instanceof IResourceModule) {
+    // force cast
+    return (AbstractArtifactContainer) getArtifactCache().getResourceCache().getOrCreate(resource);
 
-      // force cast
-      return (AbstractArtifactContainer) getArtifactCache().getResourceCache().getOrCreate(resource);
-
-    } else {
-
-      // get the module package
-      ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(module), type.getPackageName());
-
-      // get the parent
-      return getArtifactCache().getPackageCache().getOrCreate(modulePackageKey);
-    }
+    // } else {
+    //
+    // // get the module package
+    // ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(module), type.getPackageName());
+    //
+    // // get the parent
+    // return getArtifactCache().getPackageCache().getOrCreate(modulePackageKey);
+    // }
   }
 }

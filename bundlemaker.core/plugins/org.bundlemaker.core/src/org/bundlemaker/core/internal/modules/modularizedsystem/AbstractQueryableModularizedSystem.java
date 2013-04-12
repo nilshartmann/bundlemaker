@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.modules.query.ReferenceQueryFilters;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ITypeSelector;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.resource.IReference;
@@ -77,7 +77,7 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
    * {@inheritDoc}
    */
   @Override
-  public IType getType(String fullyQualifiedName, IResourceModule referencingModule) {
+  public IType getType(String fullyQualifiedName, IModule referencingModule) {
 
     // assert
     Assert.isNotNull(fullyQualifiedName);
@@ -123,7 +123,7 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
   }
 
   @Override
-  public Set<IType> getTypes(String fullyQualifiedName, IResourceModule referencingModule) {
+  public Set<IType> getTypes(String fullyQualifiedName, IModule referencingModule) {
     //
     Assert.isNotNull(fullyQualifiedName);
     Assert.isTrue(fullyQualifiedName.trim().length() > 0);
@@ -137,7 +137,7 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
   }
 
   @Override
-  public Set<IReference> getUnsatisfiedReferences(IResourceModule resourceModule) {
+  public Set<IReference> getUnsatisfiedReferences(IModule resourceModule) {
 
     //
     Set<IReference> result = new HashSet<IReference>();

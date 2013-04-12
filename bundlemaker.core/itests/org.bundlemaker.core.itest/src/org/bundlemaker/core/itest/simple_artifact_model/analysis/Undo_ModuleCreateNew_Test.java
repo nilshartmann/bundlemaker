@@ -36,9 +36,9 @@ public class Undo_ModuleCreateNew_Test extends AbstractSimpleArtifactModelTest {
       @Override
       public void prePostCondition() {
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-        assertResourceModuleCount(getBinModel(), 1);
-        assertResourceModuleCount(getSrcModel(), 1);
+        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
+        assertResourceModuleCount(getBinModel(), 2);
+        assertResourceModuleCount(getSrcModel(), 2);
         Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
       }
 
@@ -54,9 +54,9 @@ public class Undo_ModuleCreateNew_Test extends AbstractSimpleArtifactModelTest {
 
         // assert that we two groups and two modules
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
-        assertResourceModuleCount(getBinModel(), 2);
-        assertResourceModuleCount(getSrcModel(), 2);
+        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 3);
+        assertResourceModuleCount(getBinModel(), 3);
+        assertResourceModuleCount(getSrcModel(), 3);
 
         //
         Assert.assertEquals(3, getModularizedSystem().getTransformations().size());
@@ -83,9 +83,9 @@ public class Undo_ModuleCreateNew_Test extends AbstractSimpleArtifactModelTest {
       public void prePostCondition() {
         //
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-        assertResourceModuleCount(getBinModel(), 1);
-        assertResourceModuleCount(getSrcModel(), 1);
+        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
+        assertResourceModuleCount(getBinModel(), 2);
+        assertResourceModuleCount(getSrcModel(), 2);
         Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
       }
 
@@ -101,9 +101,9 @@ public class Undo_ModuleCreateNew_Test extends AbstractSimpleArtifactModelTest {
 
         // assert that we two groups and two modules
         Assert.assertEquals(3, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
-        assertResourceModuleCount(getBinModel(), 2);
-        assertResourceModuleCount(getSrcModel(), 2);
+        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 3);
+        assertResourceModuleCount(getBinModel(), 3);
+        assertResourceModuleCount(getSrcModel(), 3);
 
         // We have 2 (!) transformations here, as the "CreateGroupTRansformation" is
         // implemented as an inner transformation
@@ -131,9 +131,9 @@ public class Undo_ModuleCreateNew_Test extends AbstractSimpleArtifactModelTest {
       @Override
       public void prePostCondition() {
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-        assertResourceModuleCount(getBinModel(), 1);
-        assertResourceModuleCount(getSrcModel(), 1);
+        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
+        assertResourceModuleCount(getBinModel(), 2);
+        assertResourceModuleCount(getSrcModel(), 2);
       }
 
       /**
@@ -146,9 +146,9 @@ public class Undo_ModuleCreateNew_Test extends AbstractSimpleArtifactModelTest {
         Assert.assertEquals("NewModule_1.0.0", newModuleArtifact.getQualifiedName());
         //
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
-        assertResourceModuleCount(getBinModel(), 2);
-        assertResourceModuleCount(getSrcModel(), 2);
+        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 3);
+        assertResourceModuleCount(getBinModel(), 3);
+        assertResourceModuleCount(getSrcModel(), 3);
       }
     });
   }

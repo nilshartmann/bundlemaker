@@ -11,7 +11,7 @@
 package org.bundlemaker.core.exporter;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -42,7 +42,7 @@ public interface IModuleExporter {
    * 
    * @return <code>true</code> if this {@link IModuleExporter} can export the specified {@link IResourceModule}.
    */
-  boolean canExport(IModularizedSystem modularizedSystem, IResourceModule module, IModuleExporterContext context);
+  boolean canExport(IModularizedSystem modularizedSystem, IModule module, IModuleExporterContext context);
 
   /**
    * <p>
@@ -61,6 +61,6 @@ public interface IModuleExporter {
    * 
    * @throws CoreException
    */
-  void export(IModularizedSystem modularizedSystem, IResourceModule module, IModuleExporterContext context,
+  void export(IModularizedSystem modularizedSystem, IModule module, IModuleExporterContext context,
       IProgressMonitor progressMonitor) throws CoreException;
 }

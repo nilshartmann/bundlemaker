@@ -30,7 +30,6 @@ import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.manifest.IManifestConstants;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
@@ -77,7 +76,7 @@ public class ManifestUtils {
     return result;
   }
 
-  public static boolean isHostForResourceModule(IModule exportingHostModule, IResourceModule resourceModule) {
+  public static boolean isHostForResourceModule(IModule exportingHostModule, IModule resourceModule) {
     return (ManifestUtils.isFragment(resourceModule) && ManifestUtils.getFragmentHost(resourceModule).equals(
         exportingHostModule));
   }
@@ -89,7 +88,7 @@ public class ManifestUtils {
    * @param module
    * @return
    */
-  public static boolean isFragment(IResourceModule module) {
+  public static boolean isFragment(IModule module) {
 
     //
     return !module.equals(getFragmentHost(module));

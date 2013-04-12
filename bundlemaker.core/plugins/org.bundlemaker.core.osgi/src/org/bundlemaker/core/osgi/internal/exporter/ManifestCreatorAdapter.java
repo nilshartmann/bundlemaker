@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ITemplateProvider;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
@@ -25,7 +25,7 @@ public class ManifestCreatorAdapter {
   private IModularizedSystem                  _modularizedSystem;
 
   /** the current module */
-  private IResourceModule                     _module;
+  private IModule                     _module;
 
   /** - */
   private ManifestContents                    _manifestContents;
@@ -62,7 +62,7 @@ public class ManifestCreatorAdapter {
    * @param moduleTemplateDirectory
    * @param hostManifestContents
    */
-  public ManifestCreatorAdapter(IModularizedSystem modularizedSystem, IResourceModule module,
+  public ManifestCreatorAdapter(IModularizedSystem modularizedSystem, IModule module,
       IModuleExporterContext context, ITemplateProvider templateProvider, ManifestContents hostManifestContents,
       IBundleManifestCreator bundleManifestCreator, IManifestPreferences manifestPreferences) {
 
@@ -102,7 +102,7 @@ public class ManifestCreatorAdapter {
    * @param module
    * @param context
    */
-  public ManifestCreatorAdapter(IModularizedSystem modularizedSystem, IResourceModule module,
+  public ManifestCreatorAdapter(IModularizedSystem modularizedSystem, IModule module,
       IModuleExporterContext context, IBundleManifestCreator bundleManifestCreator) {
 
     //
@@ -184,7 +184,7 @@ public class ManifestCreatorAdapter {
    * 
    * @return the {@link IResourceModule}
    */
-  protected IResourceModule getModule() {
+  protected IModule getModule() {
     return _module;
   }
 

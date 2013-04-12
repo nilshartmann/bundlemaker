@@ -85,7 +85,7 @@ public class MovableUnit implements IMovableUnit {
           String typeName = JavaTypeUtils.getEnclosingNonLocalAndNonAnonymousTypeName(type.getFullyQualifiedName());
 
           // TODO!!
-          IResourceModule resourceModule = resource.getAssociatedResourceModule(modularizedSystem);
+          IModule resourceModule = resource.getAssociatedResourceModule(modularizedSystem);
           IResource nonAnonymousResource = resourceModule.getResource(typeName.replace('.', '/') + ".class",
               ProjectContentType.BINARY);
 
@@ -169,22 +169,22 @@ public class MovableUnit implements IMovableUnit {
    * 
    * @return
    */
-  public IResourceModule getContainingResourceModule() {
+  public IModule getContainingResourceModule() {
 
     init();
 
-    IResourceModule resourceModule = null;
+    IModule resourceModule = null;
 
     //
     if (!_associatedTypes.isEmpty()) {
       IModule module = _associatedTypes.get(0).getModule(_modularizedSystem);
-      if (module instanceof IResourceModule) {
-        resourceModule = (IResourceModule) module;
+      if (module instanceof IModule) {
+        resourceModule = (IModule) module;
       }
     } else if (!_binaryResources.isEmpty()) {
       IModule module = _binaryResources.get(0).getAssociatedResourceModule(_modularizedSystem);
-      if (module instanceof IResourceModule) {
-        resourceModule = (IResourceModule) module;
+      if (module instanceof IModule) {
+        resourceModule = (IModule) module;
       }
     } else {
       resourceModule = _sourceResource.getAssociatedResourceModule(_modularizedSystem);
@@ -241,7 +241,7 @@ public class MovableUnit implements IMovableUnit {
       } else {
 
         //
-        IResourceModule resourceModule = _mainResource.getAssociatedResourceModule(_modularizedSystem);
+        IModule resourceModule = _mainResource.getAssociatedResourceModule(_modularizedSystem);
 
         //
         _sourceResource = resourceModule.getResource(_mainResource.getPath(), ProjectContentType.SOURCE);

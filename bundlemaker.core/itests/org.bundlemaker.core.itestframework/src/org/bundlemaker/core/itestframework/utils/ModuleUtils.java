@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -14,7 +14,7 @@ import org.bundlemaker.core.resource.IType;
 
 public class ModuleUtils {
 
-  public static final String dump(IResourceModule module) {
+  public static final String dump(IModule module) {
 
     IModularizedSystem modularizedSystem = module.getModularizedSystem();
 

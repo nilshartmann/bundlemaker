@@ -33,8 +33,8 @@ import org.bundlemaker.core.analysis.spi.ReferencedArtifactTrait;
 import org.bundlemaker.core.analysis.spi.ReferencingArtifactTrait;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IMovableUnit;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.MovableUnit;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -248,7 +248,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     return false;
   }
 
-  public IResourceModule getContainingResourceModule() {
+  public IModule getContainingResourceModule() {
     return _movableUnit.getContainingResourceModule();
   }
 
@@ -267,7 +267,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
     //
     if (!(artifact instanceof IModuleArtifact)
-        && ((IModuleArtifact) artifact).getAssociatedModule() instanceof IResourceModule) {
+        && ((IModuleArtifact) artifact).getAssociatedModule().isResourceModule()) {
       return false;
     }
 

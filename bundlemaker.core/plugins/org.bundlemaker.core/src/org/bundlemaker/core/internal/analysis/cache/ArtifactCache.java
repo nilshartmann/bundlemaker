@@ -24,10 +24,10 @@ import org.bundlemaker.core.internal.analysis.cache.impl.ResourceSubCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.TypeSubCache;
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractModularizedSystem;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -188,6 +188,7 @@ public class ArtifactCache {
       }
     } catch (Exception e) {
       e.printStackTrace();
+      System.out.println(type);
       throw new RuntimeException(e.getMessage(), e);
     }
   }
@@ -307,8 +308,8 @@ public class ArtifactCache {
     int count = 0;
     for (IModule module : modules) {
       count = count + module.getContainedTypes().size();
-      if (module instanceof IResourceModule) {
-        IResourceModule resourceModule = (IResourceModule) module;
+      if (module instanceof IModifiableModule) {
+        IModifiableModule resourceModule = (IModifiableModule) module;
         count = count + resourceModule.getResources(getConfiguration().getContentType()).size();
       }
     }
@@ -323,8 +324,8 @@ public class ArtifactCache {
 
       // add the
       for (IModule module : modules) {
-        if (module instanceof IResourceModule) {
-          for (IReference iReference : getModularizedSystem().getUnsatisfiedReferences((IResourceModule) module)) {
+        if (module instanceof IModifiableModule) {
+          for (IReference iReference : getModularizedSystem().getUnsatisfiedReferences((IModifiableModule) module)) {
             getTypeCache().getOrCreate(new TypeKey(iReference.getFullyQualifiedName()));
           }
         }
@@ -353,10 +354,10 @@ public class ArtifactCache {
       }
 
       // cast to 'IResourceModule'
-      if (module instanceof IResourceModule) {
+      if (module instanceof IModifiableModule) {
 
         // get the resource module
-        IResourceModule resourceModule = (IResourceModule) module;
+        IModifiableModule resourceModule = (IModifiableModule) module;
 
         // iterate over all contained resources
         for (IResource resource : resourceModule.getResources(getConfiguration().getContentType())) {

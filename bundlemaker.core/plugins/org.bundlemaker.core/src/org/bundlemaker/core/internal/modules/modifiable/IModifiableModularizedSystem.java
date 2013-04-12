@@ -13,12 +13,15 @@ package org.bundlemaker.core.internal.modules.modifiable;
 import java.util.Collection;
 import java.util.List;
 
+import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.transformation.ITransformation;
+import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -39,7 +42,7 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
    *          the module identifier
    * @return
    */
-  IModifiableResourceModule createResourceModule(IModuleIdentifier moduleIdentifier);
+  IModifiableModule createResourceModule(IModuleIdentifier moduleIdentifier);
 
   /**
    * <p>
@@ -49,7 +52,7 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
    * @param path
    * @return
    */
-  IModifiableResourceModule createResourceModule(ModuleIdentifier moduleIdentifier, IPath path);
+  IModifiableModule createResourceModule(ModuleIdentifier moduleIdentifier, IPath path);
 
   /**
    * <p>
@@ -88,7 +91,7 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
    * @param moduleIdentifier
    * @return
    */
-  IModifiableResourceModule getModifiableResourceModule(IModuleIdentifier moduleIdentifier);
+  IModifiableModule getModifiableResourceModule(IModuleIdentifier moduleIdentifier);
 
   /**
    * <p>
@@ -97,7 +100,7 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
    * 
    * @return
    */
-  Collection<IModifiableResourceModule> getModifiableResourceModules();
+  Collection<IModifiableModule> getModifiableResourceModules();
 
   /**
    * <p>
@@ -172,4 +175,8 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
    * @param transformation
    */
   void applyTransformations(IProgressMonitor monitor, ITransformation... transformation);
+
+  void resourcesChanged(Collection<? extends IResource> resources, IModule module, ChangeAction added);
+
+  void typeChanged(IType type, IModule module, ChangeAction added);
 }

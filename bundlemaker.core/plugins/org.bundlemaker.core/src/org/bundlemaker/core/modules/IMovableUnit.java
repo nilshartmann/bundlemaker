@@ -21,7 +21,7 @@ public interface IMovableUnit {
    * 
    * @return
    */
-  IResourceModule getContainingResourceModule();
+  IModule getContainingResourceModule();
 
   /**
    * <p>

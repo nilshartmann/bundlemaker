@@ -13,7 +13,7 @@ package org.bundlemaker.core.resource;
 import java.util.Set;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.eclipse.core.runtime.CoreException;
 
 /**
@@ -118,7 +118,7 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
    * @param modularizedSystem
    * @return the {@link IResourceModule} that contains this {@link IResource}.
    */
-  IResourceModule getAssociatedResourceModule(IModularizedSystem modularizedSystem);
+  IModule getAssociatedResourceModule(IModularizedSystem modularizedSystem);
 
   /**
    * <p>

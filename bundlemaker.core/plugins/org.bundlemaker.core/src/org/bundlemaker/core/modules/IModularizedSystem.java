@@ -236,7 +236,7 @@ public interface IModularizedSystem {
    * @param identifier
    * @return
    */
-  IResourceModule getResourceModule(IModuleIdentifier identifier);
+  IModule getResourceModule(IModuleIdentifier identifier);
 
   /**
    * <p>
@@ -253,16 +253,7 @@ public interface IModularizedSystem {
    * @param version
    * @return
    */
-  IResourceModule getResourceModule(String name, String version);
-
-  /**
-   * <p>
-   * Returns all contained {@link IModule ITypeModules}.
-   * </p>
-   * 
-   * @return
-   */
-  Collection<IModule> getNonResourceModules();
+  IModule getResourceModule(String name, String version);
 
   /**
    * <p>
@@ -271,7 +262,7 @@ public interface IModularizedSystem {
    * 
    * @return
    */
-  Collection<IResourceModule> getResourceModules();
+  Collection<IModule> getResourceModules();
 
   /**
    * <p>
@@ -301,7 +292,7 @@ public interface IModularizedSystem {
    * @return
    */
   @Deprecated
-  Set<IType> getTypes(String fullyQualifiedName, IResourceModule referencingModule);
+  Set<IType> getTypes(String fullyQualifiedName, IModule referencingModule);
 
   /**
    * <p>
@@ -324,7 +315,7 @@ public interface IModularizedSystem {
    * @throws AmbiguousElementException
    */
   @Deprecated
-  IType getType(String fullyQualifiedName, IResourceModule referencingModule) throws AmbiguousElementException;
+  IType getType(String fullyQualifiedName, IModule referencingModule) throws AmbiguousElementException;
 
   /******************************************************************************/
 
@@ -338,7 +329,7 @@ public interface IModularizedSystem {
   public List<ITypeSelector> getTypeSelectors();
 
   @Deprecated
-  Set<IReference> getUnsatisfiedReferences(IResourceModule resourceModule);
+  Set<IReference> getUnsatisfiedReferences(IModule resourceModule);
 
   @Deprecated
   Map<String, Set<IType>> getReferencedTypes();

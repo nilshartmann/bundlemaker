@@ -9,7 +9,6 @@ import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -86,7 +85,7 @@ public class AdapterPackage2IArtifact extends AbstractPackageFilteringArtifact i
 
     //
     return artifact instanceof IModuleArtifact
-        && ((IModuleArtifact) artifact).getAssociatedModule() instanceof IResourceModule;
+        && ((IModuleArtifact) artifact).getAssociatedModule().isResourceModule();
   }
 
   /**

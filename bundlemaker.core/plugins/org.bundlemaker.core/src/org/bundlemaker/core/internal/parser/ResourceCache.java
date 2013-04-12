@@ -79,6 +79,26 @@ public class ResourceCache implements IResourceCache {
 
   /**
    * <p>
+   * Creates a new instance of type {@link ResourceCache}.
+   * </p>
+   */
+  public ResourceCache() {
+
+    //
+    _storedResourcesMap = new HashMap<IResourceKey, Resource>();
+
+    // set the element map
+    _newResourceMap = new HashMap<IResourceKey, Resource>();
+
+    //
+    _typeMap = new HashMap<String, Type>();
+
+    //
+    _flyWeightCache = new FlyWeightCache();
+  }
+
+  /**
+   * <p>
    * </p>
    */
   public synchronized void clear() throws CoreException {
@@ -94,6 +114,8 @@ public class ResourceCache implements IResourceCache {
    * @throws CoreException
    */
   public synchronized void commit(IProgressMonitor progressMonitor) throws CoreException {
+
+    Assert.isNotNull(_dependencyStore, "Dependency store must not be null.");
 
     //
     if (progressMonitor != null) {
