@@ -136,7 +136,10 @@ public class DefaultExpandStrategy implements IExpandStrategy {
 
     //
     if (contentProvider instanceof IVirtualRootContentProvider) {
-      manuallyExpandedElements.add(((IVirtualRootContentProvider) contentProvider).getVirtualRoot());
+      IRootArtifact virtualRoot = ((IVirtualRootContentProvider) contentProvider).getVirtualRoot();
+      if (virtualRoot != null) {
+      manuallyExpandedElements.add(virtualRoot);
+      }
     }
   }
 
