@@ -390,11 +390,13 @@
 				<visibleWhen checkEnabled="true"/>
 			</command>
 			
+			<!--
 			<command
 				commandId="org.bundlemaker.core.ui.commands.JdtProjectExportHandler"
 				style="push">
 				<visibleWhen checkEnabled="true"/>
 			</command>
+			-->
 			
 			<command commandId="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler"
 				style="push">
