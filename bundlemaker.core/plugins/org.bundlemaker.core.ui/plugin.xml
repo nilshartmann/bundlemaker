@@ -96,6 +96,19 @@
 				> </reference>
 			</enabledWhen>
 		</handler>
+		<handler class="org.bundlemaker.core.ui.handler.exporter.JdtProjectExportHandler"
+			commandId="org.bundlemaker.core.ui.commands.JdtProjectExportHandler">
+			<activeWhen>
+				<reference
+					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+				> </reference>
+			</activeWhen>
+			<enabledWhen>
+				<reference
+					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+				> </reference>
+			</enabledWhen>
+		</handler>
 		<handler class="org.bundlemaker.core.ui.handler.exporter.ReportExportHandler"
 			commandId="org.bundlemaker.core.ui.commands.ReportExportHandler">
 			<activeWhen>
@@ -245,6 +258,8 @@
 		<command id="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand" name="Parse/Open" />
 		<command id="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"
 			name="Export PDE plug-in projects..."/>
+		<command id="org.bundlemaker.core.ui.commands.JdtProjectExportHandler"
+			name="Export Java projects..." />
 		<command id="org.bundlemaker.core.ui.commands.ReportExportHandler"
 			name="Export Simple Report"/>
 		<command id="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler"
@@ -374,6 +389,15 @@
 				style="push">
 				<visibleWhen checkEnabled="true"/>
 			</command>
+			
+			<!--
+			<command
+				commandId="org.bundlemaker.core.ui.commands.JdtProjectExportHandler"
+				style="push">
+				<visibleWhen checkEnabled="true"/>
+			</command>
+			-->
+			
 			<command commandId="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler"
 				style="push">
 				<visibleWhen checkEnabled="true"/>

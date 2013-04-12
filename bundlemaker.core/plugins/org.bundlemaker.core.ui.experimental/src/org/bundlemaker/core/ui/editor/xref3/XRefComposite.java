@@ -9,6 +9,7 @@ import java.util.Set;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
@@ -443,10 +444,22 @@ public class XRefComposite extends Composite {
 
     for (final IBundleMakerArtifact selectedArtifact : selectedArtifacts) {
 
-      Collection<IDependency> dependencies = (to ? selectedArtifact.getDependenciesTo(selectedCenterArtifacts)
-          : selectedArtifact.getDependenciesFrom(selectedCenterArtifacts));
-
-      Collection<IDependency> dependenciesTo = selectedArtifact.getDependenciesTo();
+      Collection<IDependency> dependencies;
+      if (selectedArtifact instanceof ITypeArtifact) {
+        // TODO: WORKAROUND BM-369
+        Collection<IDependency> tempDependencies = (to ? selectedArtifact.getDependenciesTo() : selectedArtifact
+            .getDependenciesFrom());
+        dependencies = new HashSet<IDependency>();
+        for (IDependency iDependency : tempDependencies) {
+          IBundleMakerArtifact candidate = (to ? iDependency.getFrom() : iDependency.getTo());
+          if (candidate.equals(selectedArtifact)) {
+            dependencies.add(iDependency);
+          }
+        }
+      } else {
+        dependencies = (to ? selectedArtifact.getDependenciesTo(selectedCenterArtifacts) : selectedArtifact
+            .getDependenciesFrom(selectedCenterArtifacts));
+      }
 
       for (IDependency dep : dependencies) {
         selectedDpendencies.add(dep);
