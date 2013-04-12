@@ -200,8 +200,8 @@ public Class<? extends IBundleMakerArtifact> getToViewerExpandToType() {
 }
 
 public void exandTreeViewer() {
-  expandFromTreeViewer(true);
-  expandToTreeViewer(true);
+  expandFromTreeViewer(false);
+  expandToTreeViewer(false);
 }
   /**
    * <p>

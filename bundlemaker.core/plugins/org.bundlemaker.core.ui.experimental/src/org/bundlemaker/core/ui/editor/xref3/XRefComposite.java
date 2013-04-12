@@ -17,9 +17,7 @@ import org.bundlemaker.core.ui.artifact.tree.VisibleArtifactsFilter;
 import org.bundlemaker.core.ui.view.dependencytree.DefaultExpandStrategy;
 import org.bundlemaker.core.ui.view.dependencytree.Helper;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -129,6 +127,9 @@ public class XRefComposite extends Composite {
 
     // expand at least to level two, to make sure that more than the root artifact is visible
     _centerViewer.expandToLevel(2);
+    if (selectedArtifacts.length == 1) {
+      _centerViewer.expandToLevel(selectedArtifacts[0], 1);
+    }
     _centerViewer.getTree().setFocus();
   }
 
@@ -235,12 +236,6 @@ public class XRefComposite extends Composite {
 
   }
 
-  class AbcAction extends Action {
-    public AbcAction(String l) {
-      super(l, IAction.AS_PUSH_BUTTON);
-    }
-  }
-
   private void fillContextMenu(IMenuManager manager) {
     manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
   }
@@ -281,18 +276,18 @@ public class XRefComposite extends Composite {
     TreeItem fromTreeTopItem = _fromTreeViewer.getTree().getTopItem();
 
     //
-    Set<IBundleMakerArtifact> toArtifacts = new HashSet<IBundleMakerArtifact>();
-    for (IBundleMakerArtifact artifact : selectedArtifacts) {
-      for (IDependency dep : artifact.getDependenciesTo()) {
-        toArtifacts.add(dep.getTo());
-      }
-    }
-
-    //
     Set<IBundleMakerArtifact> fromArtifacts = new HashSet<IBundleMakerArtifact>();
     for (IBundleMakerArtifact artifact : selectedArtifacts) {
       for (IDependency dep : artifact.getDependenciesFrom()) {
         fromArtifacts.add(dep.getFrom());
+      }
+    }
+
+    //
+    Set<IBundleMakerArtifact> toArtifacts = new HashSet<IBundleMakerArtifact>();
+    for (IBundleMakerArtifact artifact : selectedArtifacts) {
+      for (IDependency dep : artifact.getDependenciesTo()) {
+        toArtifacts.add(dep.getTo());
       }
     }
 
@@ -311,6 +306,8 @@ public class XRefComposite extends Composite {
     detailsString += ", Referencing: " + toSize + " " + (toSize > 1 ? "Artifacts" : "Artifact");
 
     _detailsLabel.setText(detailsString);
+
+    setSelectedDependencies(null);
 
     // set the top item again
     if (toTreeTopItem != null && !toTreeTopItem.isDisposed()) {
@@ -434,6 +431,7 @@ public class XRefComposite extends Composite {
 
       Collection<IDependency> dependencies = (to ? selectedArtifact.getDependenciesTo(selectedCenterArtifacts)
           : selectedArtifact.getDependenciesFrom(selectedCenterArtifacts));
+
       for (IDependency dep : dependencies) {
         selectedDpendencies.add(dep);
 
