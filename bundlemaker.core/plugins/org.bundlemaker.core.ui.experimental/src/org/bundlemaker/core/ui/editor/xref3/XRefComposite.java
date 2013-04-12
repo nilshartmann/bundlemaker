@@ -278,15 +278,29 @@ public class XRefComposite extends Composite {
     //
     Set<IBundleMakerArtifact> fromArtifacts = new HashSet<IBundleMakerArtifact>();
     for (IBundleMakerArtifact artifact : selectedArtifacts) {
-      for (IDependency dep : artifact.getDependenciesFrom()) {
-        fromArtifacts.add(dep.getFrom());
+
+      if ("<< Missing Types >>".equals(artifact.getName())) {
+        // TODO WORKAROUND!!! BM-374
+        Collection<IDependency> missingTypesDependencies = artifact.getRoot().getDependenciesTo(artifact);
+        for (IDependency iDependency : missingTypesDependencies) {
+          Collection<IDependency> coreDependencies = iDependency.getCoreDependencies();
+          for (IDependency coreDependency : coreDependencies) {
+            fromArtifacts.add(coreDependency.getFrom());
+          }
+        }
+      } else {
+        Collection<IDependency> fromDependencies = artifact.getDependenciesFrom();
+        for (IDependency dep : fromDependencies) {
+          fromArtifacts.add(dep.getFrom());
+        }
       }
     }
 
     //
     Set<IBundleMakerArtifact> toArtifacts = new HashSet<IBundleMakerArtifact>();
     for (IBundleMakerArtifact artifact : selectedArtifacts) {
-      for (IDependency dep : artifact.getDependenciesTo()) {
+      Collection<IDependency> toDependencies = artifact.getDependenciesTo();
+      for (IDependency dep : toDependencies) {
         toArtifacts.add(dep.getTo());
       }
     }
@@ -431,6 +445,8 @@ public class XRefComposite extends Composite {
 
       Collection<IDependency> dependencies = (to ? selectedArtifact.getDependenciesTo(selectedCenterArtifacts)
           : selectedArtifact.getDependenciesFrom(selectedCenterArtifacts));
+
+      Collection<IDependency> dependenciesTo = selectedArtifact.getDependenciesTo();
 
       for (IDependency dep : dependencies) {
         selectedDpendencies.add(dep);
