@@ -238,6 +238,12 @@ public class XRefComposite extends Composite {
   }
 
   private void fillContextMenu(IMenuManager manager) {
+
+    CreateModuleFromReferencedArtifactsAction action = new CreateModuleFromReferencedArtifactsAction(
+        _artifactLabelProvider.getBundleMakerArtifacts());
+
+    manager.add(action);
+
     manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
   }
 
