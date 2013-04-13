@@ -67,7 +67,6 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
   /**
    * {@inheritDoc}
    */
-  @Override
   public IType getType(String fullyQualifiedName) {
     return getType(fullyQualifiedName, null);
   }
@@ -75,7 +74,6 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
   /**
    * {@inheritDoc}
    */
-  @Override
   public IType getType(String fullyQualifiedName, IModule referencingModule) {
 
     // assert
@@ -116,12 +114,10 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
   /**
    * {@inheritDoc}
    */
-  @Override
   public Set<IType> getTypes(String fullyQualifiedName) {
     return getTypes(fullyQualifiedName, null);
   }
 
-  @Override
   public Set<IType> getTypes(String fullyQualifiedName, IModule referencingModule) {
     //
     Assert.isNotNull(fullyQualifiedName);
@@ -135,7 +131,6 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
     return Collections.unmodifiableSet(types);
   }
 
-  @Override
   public Set<IReference> getUnsatisfiedReferences(IModule resourceModule) {
 
     //

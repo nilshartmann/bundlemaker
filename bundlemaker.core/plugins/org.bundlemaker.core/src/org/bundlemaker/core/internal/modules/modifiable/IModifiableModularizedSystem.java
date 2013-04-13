@@ -12,7 +12,9 @@ package org.bundlemaker.core.internal.modules.modifiable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
+import org.bundlemaker.core.internal.modules.event.IModularizedSystemChangedListener;
 import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModularizedSystem;
@@ -20,6 +22,7 @@ import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.transformation.ITransformation;
+import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.IPath;
@@ -32,6 +35,22 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public interface IModifiableModularizedSystem extends IModularizedSystem {
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param listener
+   */
+  void addModularizedSystemChangedListener(IModularizedSystemChangedListener listener);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param listener
+   */
+  void removeModularizedSystemChangedListener(IModularizedSystemChangedListener listener);
 
   /**
    * <p>
@@ -179,4 +198,8 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
   void resourcesChanged(Collection<? extends IResource> resources, IModule module, ChangeAction added);
 
   void typeChanged(IType type, IModule module, ChangeAction added);
+
+  IType getType(String fullyQualifiedName);
+
+  Set<IReference> getUnsatisfiedReferences(IModule resourceModule);
 }

@@ -94,7 +94,7 @@ public class ModularizedSystemExporterAdapter implements IModularizedSystemExpor
     try {
       // simply call export() for each contained
       int counter = 0;
-      for (IModule resourceModule : _currentModularizedSystem.getResourceModules()) {
+      for (IModule resourceModule : _currentModularizedSystem.getModules()) {
 
         if (_moduleFilter == null || _moduleFilter.matches(resourceModule)) {
 
@@ -144,7 +144,7 @@ public class ModularizedSystemExporterAdapter implements IModularizedSystemExpor
    */
   private int countModulesToExport() {
     int modulesToExport = 0;
-    for (IModule resourceModule : _currentModularizedSystem.getResourceModules()) {
+    for (IModule resourceModule : _currentModularizedSystem.getModules()) {
 
       if (_moduleFilter == null || _moduleFilter.matches(resourceModule)) {
         modulesToExport++;

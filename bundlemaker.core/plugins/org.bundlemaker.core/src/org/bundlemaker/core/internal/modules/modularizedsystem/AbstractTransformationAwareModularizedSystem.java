@@ -437,7 +437,6 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * {@inheritDoc}
    */
 
-  @SuppressWarnings("rawtypes")
   @Override
   public void removeModule(IModuleIdentifier identifier) {
     Assert.isNotNull(identifier);
@@ -445,7 +444,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     if (hasResourceModule(identifier)) {
 
       // remove the entry
-      Module resourceModule = (Module) getResourceModule(identifier);
+      Module resourceModule = (Module) getModule(identifier);
       getModifiableResourceModules().remove(resourceModule);
       resourceModule.detach();
 

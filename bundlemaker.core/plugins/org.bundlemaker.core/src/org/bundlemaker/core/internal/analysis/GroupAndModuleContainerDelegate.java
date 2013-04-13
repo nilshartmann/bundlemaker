@@ -69,7 +69,7 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
 
       // check if module already exists
       IPath simpleName = new Path(qualifiedModuleName);
-      IModule resourceModule = _groupAndModuleContainer.getModularizedSystem().getResourceModule(
+      IModule resourceModule = _groupAndModuleContainer.getModularizedSystem().getModule(
           simpleName.lastSegment(), moduleVersion);
 
       //

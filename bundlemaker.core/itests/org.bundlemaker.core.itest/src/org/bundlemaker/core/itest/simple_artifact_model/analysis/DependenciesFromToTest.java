@@ -21,30 +21,30 @@ import org.junit.Test;
  */
 public class DependenciesFromToTest extends AbstractSimpleArtifactModelTest {
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @throws Exception
-   */
-  @Test
-  public void testModularizedSystem_getReferencedTypes() throws Exception {
-
-    //
-    Map<String, Set<IType>> referencedTypes = getModularizedSystem().getReferencedTypes();
-
-    //
-    Assert.assertEquals(2, referencedTypes.size());
-
-    //
-    Set<IType> referencedBy = referencedTypes.get("de.test.Test");
-    Assert.assertEquals(1, referencedBy.size());
-    Assert.assertEquals("de.test.Klasse", referencedBy.toArray(new IType[0])[0].getFullyQualifiedName());
-
-    referencedBy = referencedTypes.get("javax.activation.DataHandler");
-    Assert.assertEquals(1, referencedBy.size());
-    Assert.assertEquals("de.test.Klasse", referencedBy.toArray(new IType[0])[0].getFullyQualifiedName());
-  }
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @throws Exception
+  // */
+  // @Test
+  // public void testModularizedSystem_getReferencedTypes() throws Exception {
+  //
+  // //
+  // Map<String, Set<IType>> referencedTypes = getModularizedSystem().getReferencedTypes();
+  //
+  // //
+  // Assert.assertEquals(2, referencedTypes.size());
+  //
+  // //
+  // Set<IType> referencedBy = referencedTypes.get("de.test.Test");
+  // Assert.assertEquals(1, referencedBy.size());
+  // Assert.assertEquals("de.test.Klasse", referencedBy.toArray(new IType[0])[0].getFullyQualifiedName());
+  //
+  // referencedBy = referencedTypes.get("javax.activation.DataHandler");
+  // Assert.assertEquals(1, referencedBy.size());
+  // Assert.assertEquals("de.test.Klasse", referencedBy.toArray(new IType[0])[0].getFullyQualifiedName());
+  // }
 
   /**
    * <p>

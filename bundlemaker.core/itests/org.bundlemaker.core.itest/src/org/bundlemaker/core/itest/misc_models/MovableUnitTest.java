@@ -30,7 +30,7 @@ public class MovableUnitTest extends AbstractBundleMakerModelTest {
 
   @Before
   public void initResourceModule() throws CoreException {
-    _resourceModule = getModularizedSystem().getResourceModule("InnerClassTest", "1.0.0");
+    _resourceModule = getModularizedSystem().getModule("InnerClassTest", "1.0.0");
   }
 
   /**
@@ -66,14 +66,14 @@ public class MovableUnitTest extends AbstractBundleMakerModelTest {
   public void testMovableUnit() {
 
     //
-    assertMovableUnit(MovableUnit.createFromType(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A"),
-        getModularizedSystem()));
-    assertMovableUnit(MovableUnit.createFromType(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A$AA"),
-        getModularizedSystem()));
-    assertMovableUnit(MovableUnit.createFromType(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.B"),
-        getModularizedSystem()));
-    assertMovableUnit(MovableUnit.createFromType(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.B$BB"),
-        getModularizedSystem()));
+    assertMovableUnit(MovableUnit.createFromType(
+        _resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A"), getModularizedSystem()));
+    assertMovableUnit(MovableUnit.createFromType(
+        _resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A$AA"), getModularizedSystem()));
+    assertMovableUnit(MovableUnit.createFromType(
+        _resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.B"), getModularizedSystem()));
+    assertMovableUnit(MovableUnit.createFromType(
+        _resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.B$BB"), getModularizedSystem()));
 
     //
     assertMovableUnit(MovableUnit.createFromResource(
@@ -104,13 +104,15 @@ public class MovableUnitTest extends AbstractBundleMakerModelTest {
   @Test
   public void testAssertEquals() {
 
-    Assert.assertEquals(
-        MovableUnit.createFromType(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A"), getModularizedSystem()),
-        MovableUnit.createFromType(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A$AA"), getModularizedSystem()));
+    Assert.assertEquals(MovableUnit.createFromType(
+        _resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A"), getModularizedSystem()),
+        MovableUnit.createFromType(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A$AA"),
+            getModularizedSystem()));
 
-    Assert.assertEquals(
-        MovableUnit.createFromType(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A"), getModularizedSystem()),
-        MovableUnit.createFromType(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.B"), getModularizedSystem()));
+    Assert.assertEquals(MovableUnit.createFromType(
+        _resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A"), getModularizedSystem()),
+        MovableUnit.createFromType(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.B"),
+            getModularizedSystem()));
   }
 
   /**

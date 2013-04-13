@@ -162,7 +162,7 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
   /**
    * {@inheritDoc}
    */
-  public final Set<IModule> getAllModules() {
+  public final Set<IModule> getModules() {
 
     // return an unmodifiable copy
     return Collections.unmodifiableSet(new HashSet<IModule>(_resourceModules));
@@ -217,32 +217,6 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
   @Override
   public IModule getModule(String name, String version) {
     return getModule(new ModuleIdentifier(name, version));
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public IModule getResourceModule(String name, String version) {
-    return getResourceModule(new ModuleIdentifier(name, version));
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public final IModule getResourceModule(IModuleIdentifier identifier) {
-    return getModifiableResourceModule(identifier);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public final Collection<IModule> getResourceModules() {
-
-    // return the unmodifiable collection
-    return Collections.unmodifiableCollection((Collection<? extends IModule>) _resourceModules);
   }
 
   @Override

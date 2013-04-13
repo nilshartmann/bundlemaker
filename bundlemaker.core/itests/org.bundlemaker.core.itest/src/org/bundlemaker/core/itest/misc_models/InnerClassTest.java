@@ -36,7 +36,7 @@ public class InnerClassTest extends AbstractBundleMakerModelTest {
   public void testInnerClass() throws CoreException, AmbiguousElementException {
 
     //
-    IModule resourceModule = getModularizedSystem().getResourceModule("InnerClassTest", "1.0.0");
+    IModule resourceModule = getModularizedSystem().getModule("InnerClassTest", "1.0.0");
     IType aType = resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A");
     IType bType = resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.B");
 

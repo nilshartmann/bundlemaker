@@ -150,7 +150,7 @@ public class ArtifactCache {
     }
 
     // transform the modularized system
-    return transform(_modularizedSystem.getAllModules().toArray(new IModule[0]), progressMonitor);
+    return transform(_modularizedSystem.getModules().toArray(new IModule[0]), progressMonitor);
   }
 
   /**
@@ -222,7 +222,7 @@ public class ArtifactCache {
   public final ITypeArtifact getTypeArtifact(String fullyQualifiedName, boolean createIfMissing) {
 
     //
-    IType targetType = getModularizedSystem().getType(fullyQualifiedName);
+    IType targetType = ((IModifiableModularizedSystem) getModularizedSystem()).getType(fullyQualifiedName);
 
     //
     if (targetType == null) {
@@ -326,7 +326,8 @@ public class ArtifactCache {
       // add the
       for (IModule module : modules) {
         if (module instanceof IModifiableModule) {
-          for (IReference iReference : getModularizedSystem().getUnsatisfiedReferences((IModifiableModule) module)) {
+          for (IReference iReference : ((IModifiableModularizedSystem) getModularizedSystem())
+              .getUnsatisfiedReferences((IModifiableModule) module)) {
             getTypeCache().getOrCreate(new TypeKey(iReference.getFullyQualifiedName()));
           }
         }
