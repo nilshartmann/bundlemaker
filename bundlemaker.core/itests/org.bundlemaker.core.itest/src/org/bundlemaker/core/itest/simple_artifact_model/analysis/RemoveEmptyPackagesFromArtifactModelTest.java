@@ -29,9 +29,9 @@ public class RemoveEmptyPackagesFromArtifactModelTest extends AbstractSimpleArti
   public void createNewModuleBelowExistingGroup() throws Exception {
 
     //
-    assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-    assertResourceModuleCount(getBinModel(), 1);
-    assertResourceModuleCount(getSrcModel(), 1);
+    assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
+    assertResourceModuleCount(getBinModel(), 2);
+    assertResourceModuleCount(getSrcModel(), 2);
 
     // create a new group
     IModuleArtifact newModuleArtifact = getBinModel().getGroup2Artifact().getOrCreateModule("NewModule", "1.0.0");

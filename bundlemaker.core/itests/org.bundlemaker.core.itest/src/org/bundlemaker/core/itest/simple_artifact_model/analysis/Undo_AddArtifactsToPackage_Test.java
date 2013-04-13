@@ -105,9 +105,9 @@ public class Undo_AddArtifactsToPackage_Test extends AbstractSimpleArtifactModel
       @Override
       public void prePostCondition() {
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-        assertResourceModuleCount(getBinModel(), 1);
-        assertResourceModuleCount(getSrcModel(), 1);
+        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
+        assertResourceModuleCount(getBinModel(), 2);
+        assertResourceModuleCount(getSrcModel(), 2);
         Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
       }
 
@@ -123,9 +123,9 @@ public class Undo_AddArtifactsToPackage_Test extends AbstractSimpleArtifactModel
 
         // assert that we two groups and two modules
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
-        assertResourceModuleCount(getBinModel(), 2);
-        assertResourceModuleCount(getSrcModel(), 2);
+        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 3);
+        assertResourceModuleCount(getBinModel(), 3);
+        assertResourceModuleCount(getSrcModel(), 3);
 
         newModuleArtifact.addArtifact(getBinModel().getKlasseResource());
         IPackageArtifact newPackageArtifact = getBinModel().getKlasseResource().getParent(IPackageArtifact.class);

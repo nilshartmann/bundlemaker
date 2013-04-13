@@ -98,6 +98,12 @@ public class JdkModuleCreator {
       for (String child : children) {
 
         //
+        if (child.equalsIgnoreCase("META-INF/MANIFEST.MF") || child.endsWith("JCE_RSA.RSA")
+            || child.endsWith("JCE_RSA.SF")) {
+          continue;
+        }
+
+        //
         Resource resource = new Resource(DefaultTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER,
             root.getAbsolutePath(), child, resourceCache);
 
@@ -118,6 +124,12 @@ public class JdkModuleCreator {
           typeName = typeName.replace('\\', '.');
 
           Type type = resource.getOrCreateType(typeName, TypeEnum.CLASS, false);
+
+          //
+          if (type.isLocalOrAnonymousType()) {
+            continue;
+          }
+
           type.setBinaryResource(resource);
 
           Assert.isNotNull(type.getBinaryResource());

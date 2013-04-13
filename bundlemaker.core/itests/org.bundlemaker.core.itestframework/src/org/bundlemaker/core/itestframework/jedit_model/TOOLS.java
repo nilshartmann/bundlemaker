@@ -54,29 +54,6 @@ public class TOOLS {
    */
   public static void assertTypeCount(IModularizedSystem modularizedSystem, int typeCountWithoutJdkTypes) {
 
-    Set<IType> s1 = new HashSet<IType>();
-
-    for (IModule module : modularizedSystem.getAllModules()) {
-      System.out.println(module);
-      System.out.println(module.adaptAs(ITypeModule.class).getContainedTypes().size());
-      s1.addAll(module.adaptAs(ITypeModule.class).getContainedTypes());
-    }
-
-    System.out.println(modularizedSystem.getTypes().size());
-    System.out.println(s1.size());
-
-    Set<IType> intersection = new HashSet<IType>(s1);
-    intersection.retainAll(modularizedSystem.getTypes());
-
-    System.out.println();
-    
-    Set<IType> types = new HashSet<IType>(modularizedSystem.getTypes());
-    types.removeAll(intersection);
-
-    for (IType iType : types) {
-      System.out.println(" - " + iType);
-    }
-
     // assert the specified number of types
     Assert.assertEquals("Expected: "
         + typeCountWithoutJdkTypes
