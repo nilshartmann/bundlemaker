@@ -13,7 +13,6 @@ package org.bundlemaker.core.modules;
 import java.util.Collection;
 import java.util.Set;
 
-import org.bundlemaker.core.internal.modules.query.IQueryFilter;
 import org.bundlemaker.core.resource.IType;
 
 /**
@@ -56,32 +55,12 @@ public interface ITypeModule {
 
   /**
    * <p>
-   * Returns a collection with all contained {@link IType ITypes} that match the specified {@link IQueryFilter}.
-   * </p>
-   * 
-   * @return a collection with all contained {@link IType ITypes} that match the specified {@link IQueryFilter}.
-   */
-  Collection<IType> getContainedTypes(IQueryFilter<IType> filter);
-
-  /**
-   * <p>
    * Returns a collection with the names of all contained types.
    * </p>
    * 
    * @return a collection with the names of all contained types.
    */
   Collection<String> getContainedTypeNames();
-
-  /**
-   * <p>
-   * Returns a collection with the names of all contained types that match the specified {@link IQueryFilter}.
-   * </p>
-   * 
-   * @param filter
-   *          the {@link IQueryFilter}
-   * @return a collection with the names of all contained types that match the specified {@link IQueryFilter}.
-   */
-  Collection<String> getContainedTypeNames(IQueryFilter<String> filter);
 
   /**
    * <p>

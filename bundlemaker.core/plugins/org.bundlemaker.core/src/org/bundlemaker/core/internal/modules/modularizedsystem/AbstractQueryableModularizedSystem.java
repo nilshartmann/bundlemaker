@@ -16,7 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core.internal.modules.query.ReferenceQueryFilters;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ITypeSelector;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
@@ -144,7 +143,7 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
 
     //
     Set<IReference> references = resourceModule
-        .getReferences(ReferenceQueryFilters.ALL_DIRECT_EXTERNAL_REFERENCES_QUERY_FILTER);
+        .getReferences();
 
     for (IReference iReference : references) {
       if (getType(iReference.getFullyQualifiedName(), resourceModule) == null) {

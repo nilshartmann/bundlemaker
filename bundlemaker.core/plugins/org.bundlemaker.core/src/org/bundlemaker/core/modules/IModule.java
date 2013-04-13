@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.IGenericAdaptable;
-import org.bundlemaker.core.internal.modules.query.IQueryFilter;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -146,5 +145,5 @@ public interface IModule extends IGenericAdaptable {
    * @param excludeContainedTypes
    * @return
    */
-  Set<IReference> getReferences(IQueryFilter<IReference> filter);
+  Set<IReference> getReferences();
 }

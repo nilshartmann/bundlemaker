@@ -25,8 +25,6 @@ import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractTransformationAwareModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
-import org.bundlemaker.core.internal.modules.query.IQueryFilter;
-import org.bundlemaker.core.internal.modules.query.ReferenceQueryFilters.ReferenceFilter;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IModularizedSystem;
@@ -403,37 +401,28 @@ public class Module implements IModifiableModule {
    * {@inheritDoc}
    */
   @Override
-  public Set<IReference> getReferences(IQueryFilter<IReference> filter) {
+  public Set<IReference> getReferences() {
 
-    if (filter instanceof ReferenceFilter) {
-      ((ReferenceFilter) filter).setResourceModule(this);
-    }
-
+    //
     Set<IReference> result = new HashSet<IReference>();
 
     // iterate over all resources
     for (IResource resource : getResources(ProjectContentType.BINARY)) {
       for (IReference reference : resource.getReferences()) {
-        if (filter.matches(reference)) {
-          result.add(reference);
-        }
+        result.add(reference);
       }
     }
 
     for (IResource resource : getResources(ProjectContentType.SOURCE)) {
       for (IReference reference : resource.getReferences()) {
-        if (filter.matches(reference)) {
-          result.add(reference);
-        }
+        result.add(reference);
       }
     }
 
     //
     for (IType type : _typeContainer.getContainedTypes()) {
       for (IReference reference : type.getReferences()) {
-        if (filter.matches(reference)) {
-          result.add(reference);
-        }
+        result.add(reference);
       }
     }
 

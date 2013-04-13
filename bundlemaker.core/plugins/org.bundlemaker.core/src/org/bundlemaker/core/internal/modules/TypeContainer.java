@@ -13,13 +13,11 @@ package org.bundlemaker.core.internal.modules;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
-import org.bundlemaker.core.internal.modules.query.IQueryFilter;
 import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ITypeModule;
@@ -113,28 +111,6 @@ public class TypeContainer implements ITypeModule {
     return Collections.unmodifiableCollection(_containedTypes.values());
   }
 
-  public Collection<IType> getContainedTypes(IQueryFilter<IType> filter) {
-
-    // assert
-    Assert.isNotNull(filter);
-
-    // create the result
-    Set<IType> result = new HashSet<IType>();
-
-    //
-    for (IType containedType : _containedTypes.values()) {
-
-      if (!result.contains(containedType) && filter.matches(containedType)) {
-
-        // add the result
-        result.add(containedType);
-      }
-    }
-
-    // return result
-    return Collections.unmodifiableSet(result);
-  }
-
   /**
    * {@inheritDoc}
    */
@@ -142,31 +118,6 @@ public class TypeContainer implements ITypeModule {
 
     // return an unmodifiable copy
     return Collections.unmodifiableSet(_containedTypes.keySet());
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public Set<String> getContainedTypeNames(IQueryFilter filter) {
-
-    // assert
-    Assert.isNotNull(filter);
-
-    // create the result
-    Set<String> result = new HashSet<String>();
-
-    //
-    for (String containedType : _containedTypes.keySet()) {
-
-      if (!result.contains(containedType) && filter.matches(containedType)) {
-
-        // add the result
-        result.add(containedType);
-      }
-    }
-
-    // return result
-    return Collections.unmodifiableSet(result);
   }
 
   /**
