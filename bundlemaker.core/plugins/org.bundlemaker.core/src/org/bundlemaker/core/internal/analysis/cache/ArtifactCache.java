@@ -28,6 +28,7 @@ import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractModularizedSystem;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -307,7 +308,7 @@ public class ArtifactCache {
     //
     int count = 0;
     for (IModule module : modules) {
-      count = count + module.getContainedTypes().size();
+      count = count + module.adaptAs(ITypeModule.class).getContainedTypes().size();
       if (module instanceof IModifiableModule) {
         IModifiableModule resourceModule = (IModifiableModule) module;
         count = count + resourceModule.getResources(getConfiguration().getContentType()).size();
@@ -339,7 +340,7 @@ public class ArtifactCache {
       this.getModuleArtifact(module);
 
       // add all types
-      for (IType type : module.getContainedTypes()) {
+      for (IType type : ((ITypeModule) module.getAdapter(ITypeModule.class)).getContainedTypes()) {
 
         if (progressMonitor != null) {
           progressMonitor.worked(1);

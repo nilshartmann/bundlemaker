@@ -7,6 +7,7 @@ import java.util.List;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IMovableUnit;
+import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.modules.MovableUnit;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
@@ -48,12 +49,12 @@ public class MovableUnitTest extends AbstractBundleMakerModelTest {
   public void testResourceModuleTypes() {
 
     // test the resource module
-    Assert.assertNotNull(_resourceModule.getType("de.test.innertypes.A"));
-    Assert.assertNotNull(_resourceModule.getType("de.test.innertypes.A$AA"));
-    Assert.assertNotNull(_resourceModule.getType("de.test.innertypes.B"));
-    Assert.assertNotNull(_resourceModule.getType("de.test.innertypes.B$BB"));
-    Assert.assertNull(_resourceModule.getType("de.test.innertypes.A$1"));
-    Assert.assertNull(_resourceModule.getType("de.test.innertypes.B$1"));
+    Assert.assertNotNull(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A"));
+    Assert.assertNotNull(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A$AA"));
+    Assert.assertNotNull(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.B"));
+    Assert.assertNotNull(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.B$BB"));
+    Assert.assertNull(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A$1"));
+    Assert.assertNull(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.B$1"));
   }
 
   /**
@@ -65,13 +66,13 @@ public class MovableUnitTest extends AbstractBundleMakerModelTest {
   public void testMovableUnit() {
 
     //
-    assertMovableUnit(MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.A"),
+    assertMovableUnit(MovableUnit.createFromType(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A"),
         getModularizedSystem()));
-    assertMovableUnit(MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.A$AA"),
+    assertMovableUnit(MovableUnit.createFromType(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A$AA"),
         getModularizedSystem()));
-    assertMovableUnit(MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.B"),
+    assertMovableUnit(MovableUnit.createFromType(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.B"),
         getModularizedSystem()));
-    assertMovableUnit(MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.B$BB"),
+    assertMovableUnit(MovableUnit.createFromType(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.B$BB"),
         getModularizedSystem()));
 
     //
@@ -104,12 +105,12 @@ public class MovableUnitTest extends AbstractBundleMakerModelTest {
   public void testAssertEquals() {
 
     Assert.assertEquals(
-        MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.A"), getModularizedSystem()),
-        MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.A$AA"), getModularizedSystem()));
+        MovableUnit.createFromType(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A"), getModularizedSystem()),
+        MovableUnit.createFromType(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A$AA"), getModularizedSystem()));
 
     Assert.assertEquals(
-        MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.A"), getModularizedSystem()),
-        MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.B"), getModularizedSystem()));
+        MovableUnit.createFromType(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A"), getModularizedSystem()),
+        MovableUnit.createFromType(_resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.B"), getModularizedSystem()));
   }
 
   /**
@@ -138,7 +139,7 @@ public class MovableUnitTest extends AbstractBundleMakerModelTest {
     Assert.assertEquals("B$BB", types.get(3).getName());
 
     // assert binary resources
-    List<IResource> binaryResources = movableUnit.getAssociatedBinaryResources();
+    List<? extends IResource> binaryResources = movableUnit.getAssociatedBinaryResources();
     Collections.sort(binaryResources, new Comparator<IResource>() {
       public int compare(IResource o1, IResource o2) {
         return o1.getName().compareTo(o2.getName());

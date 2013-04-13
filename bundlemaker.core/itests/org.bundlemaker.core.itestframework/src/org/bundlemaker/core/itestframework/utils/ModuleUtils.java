@@ -24,7 +24,7 @@ public class ModuleUtils {
     builder.append("\n");
     builder.append("Source-Content: \n");
 
-    for (IResource resource : asSortedList(module.getResources(ProjectContentType.SOURCE))) {
+    for (IResource resource : asSortedList((Set<IResource>)module.getResources(ProjectContentType.SOURCE))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : asSortedList(resource.getReferences())) {
@@ -42,14 +42,14 @@ public class ModuleUtils {
 
     builder.append("\n");
     builder.append("Binary-Content: \n");
-    for (IResource resource : asSortedList(module.getResources(ProjectContentType.BINARY))) {
+    for (IResource resource : asSortedList((Set<IResource>)module.getResources(ProjectContentType.BINARY))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : asSortedList(resource.getReferences())) {
         builder.append(" * " + reference.toString() + "\n");
       }
 
-      for (IResource stickyResources : asSortedList(resource.getStickyResources())) {
+      for (IResource stickyResources : asSortedList((Set<IResource>)resource.getStickyResources())) {
         builder.append(" ~sticky~ " + stickyResources.getPath() + "\n");
       }
 

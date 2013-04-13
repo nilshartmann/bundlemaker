@@ -22,7 +22,7 @@ import org.bundlemaker.core.resource.IType;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface ITypeContainer {
+public interface ITypeModule {
 
   /**
    * <p>
@@ -92,4 +92,6 @@ public interface ITypeContainer {
    * @return
    */
   boolean containsAll(Set<String> typeNames);
+
+  void add(IType type2);
 }

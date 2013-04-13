@@ -1,11 +1,15 @@
 package org.bundlemaker.core.framework;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.bundlemaker.core.internal.parser.ResourceCache;
+import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.internal.resource.Resource;
+import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.util.FileUtils;
@@ -20,7 +24,7 @@ public class ResourceFactory {
    * @return
    * @throws CoreException
    */
-  public static List<IResource> getResources() throws CoreException {
+  public static Set<IResourceStandin> getResources() throws CoreException {
 
     //
     File testDir = new File(System.getProperty("user.dir"), "test-data/com.example/classes");
@@ -29,7 +33,7 @@ public class ResourceFactory {
     List<String> children = FileUtils.getAllChildren(testDir);
 
     //
-    List<IResource> result = new LinkedList<IResource>();
+    Set<IResourceStandin> result = new HashSet<IResourceStandin>();
 
     //
     ResourceCache resourceCache = new ResourceCache();
@@ -39,7 +43,7 @@ public class ResourceFactory {
 
       //
       Resource resource = new Resource("01", testDir.getAbsolutePath(), child, resourceCache);
-
+      
       //
       if (child.endsWith(".class")) {
         String typeName = child.substring(0, child.length() - ".class".length());
@@ -52,7 +56,7 @@ public class ResourceFactory {
       }
 
       //
-      result.add(resource);
+      result.add(new ResourceStandin(resource));
     }
 
     //

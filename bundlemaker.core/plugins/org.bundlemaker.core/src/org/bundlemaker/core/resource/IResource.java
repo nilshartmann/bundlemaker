@@ -126,5 +126,5 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
    * 
    * @return
    */
-  Set<IResource> getStickyResources();
+  Set<? extends IResource> getStickyResources();
 }

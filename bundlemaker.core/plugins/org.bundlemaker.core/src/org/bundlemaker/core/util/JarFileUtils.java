@@ -48,7 +48,7 @@ public final class JarFileUtils {
    * @param archiveFile
    *          the archive file to create
    */
-  public static void createJarArchive(Set<IResource> resources, Manifest manifest,
+  public static void createJarArchive(Set<? extends IResource> resources, Manifest manifest,
       Set<IReadableResource> additionalContent, OutputStream outputStream) {
 
     Assert.isNotNull(resources);

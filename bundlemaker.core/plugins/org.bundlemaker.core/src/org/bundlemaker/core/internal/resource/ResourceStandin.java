@@ -22,6 +22,7 @@ import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.ResourceKey;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
 /**
@@ -37,6 +38,21 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
 
   /** - */
   private Set<IResource> _stickyResourceStandins;
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link ResourceStandin}.
+   * </p>
+   * 
+   * @param resource
+   */
+  public ResourceStandin(Resource resource) {
+
+    this(nullCheck(resource).getProjectContentEntryId(), nullCheck(resource).getRoot(), nullCheck(resource).getPath());
+
+    resource.setResourceStandin(this);
+    setResource(resource);
+  }
 
   /**
    * <p>
@@ -189,5 +205,17 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
     }
 
     return _stickyResourceStandins;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resource
+   * @return
+   */
+  private static Resource nullCheck(Resource resource) {
+    Assert.isNotNull(resource, "Parameter resource must not be null.");
+    return resource;
   }
 }

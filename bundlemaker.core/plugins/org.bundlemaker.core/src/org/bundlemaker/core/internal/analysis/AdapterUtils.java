@@ -373,7 +373,7 @@ public class AdapterUtils {
     Assert.isNotNull(movableUnit);
 
     //
-    IModifiableModule module = (IModifiableModule) movableUnit.getContainingResourceModule();
+    IModifiableModule module = (IModifiableModule) movableUnit.getModule();
 
     if (module != null) {
       module.removeMovableUnit(movableUnit);

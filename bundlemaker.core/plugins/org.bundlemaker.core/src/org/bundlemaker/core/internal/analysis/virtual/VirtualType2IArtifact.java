@@ -150,7 +150,7 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public IModule getContainingResourceModule() {
+  public IModule getModule() {
     return null;
   }
 
@@ -196,7 +196,7 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
     return false;
   }
 
-  public boolean hasContainingResourceModule() {
+  public boolean hasModule() {
     return false;
   }
 

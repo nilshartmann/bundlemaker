@@ -248,12 +248,12 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     return false;
   }
 
-  public IModule getContainingResourceModule() {
-    return _movableUnit.getContainingResourceModule();
+  public IModule getModule() {
+    return _movableUnit.getModule();
   }
 
-  public boolean hasContainingResourceModule() {
-    return _movableUnit.hasContainingResourceModule();
+  public boolean hasModule() {
+    return _movableUnit.hasModule();
   }
 
   /**
@@ -289,7 +289,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    * {@inheritDoc}
    */
   @Override
-  public List<IResource> getAssociatedBinaryResources() {
+  public List<? extends IResource> getAssociatedBinaryResources() {
     return _movableUnit.getAssociatedBinaryResources();
   }
 

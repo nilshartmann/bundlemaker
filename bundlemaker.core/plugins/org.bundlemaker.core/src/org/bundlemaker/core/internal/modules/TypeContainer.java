@@ -18,11 +18,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.internal.modules.modifiable.IModifiableTypeContainer;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
 import org.bundlemaker.core.internal.modules.query.IQueryFilter;
 import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 
@@ -32,7 +32,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class TypeContainer implements IModifiableTypeContainer {
+public class TypeContainer implements ITypeModule {
 
   /** the contained type names */
   private Map<String, IType> _containedTypes;
@@ -68,7 +68,6 @@ public class TypeContainer implements IModifiableTypeContainer {
   /**
    * {@inheritDoc}
    */
-  @Override
   public IType getType(String fullyQualifiedName) {
     //
     return _containedTypes.get(fullyQualifiedName);
@@ -77,7 +76,6 @@ public class TypeContainer implements IModifiableTypeContainer {
   /**
    * {@inheritDoc}
    */
-  @Override
   public boolean containsType(String fullyQualifiedName) {
     return _containedTypes.containsKey(fullyQualifiedName);
   }
@@ -109,14 +107,12 @@ public class TypeContainer implements IModifiableTypeContainer {
   /**
    * {@inheritDoc}
    */
-  @Override
   public Collection<IType> getContainedTypes() {
 
     // return an unmodifiable copy
     return Collections.unmodifiableCollection(_containedTypes.values());
   }
 
-  @Override
   public Collection<IType> getContainedTypes(IQueryFilter<IType> filter) {
 
     // assert
@@ -142,7 +138,6 @@ public class TypeContainer implements IModifiableTypeContainer {
   /**
    * {@inheritDoc}
    */
-  @Override
   public Set<String> getContainedTypeNames() {
 
     // return an unmodifiable copy
@@ -152,7 +147,6 @@ public class TypeContainer implements IModifiableTypeContainer {
   /**
    * {@inheritDoc}
    */
-  @Override
   public Set<String> getContainedTypeNames(IQueryFilter filter) {
 
     // assert
@@ -178,6 +172,7 @@ public class TypeContainer implements IModifiableTypeContainer {
   /**
    * {@inheritDoc}
    */
+  @Override
   public void add(IType type) {
 
     if (!type.isLocalOrAnonymousType()) {

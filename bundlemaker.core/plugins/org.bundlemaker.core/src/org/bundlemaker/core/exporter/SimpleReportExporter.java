@@ -64,7 +64,7 @@ public class SimpleReportExporter extends AbstractExporter {
     builder.append("\n");
     builder.append("Source-Content: \n");
 
-    for (IResource resource : asSortedList(getCurrentModule().getResources(ProjectContentType.SOURCE))) {
+    for (IResource resource : asSortedList((Set<IResource>) getCurrentModule().getResources(ProjectContentType.SOURCE))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : resource.getReferences()) {
@@ -83,7 +83,7 @@ public class SimpleReportExporter extends AbstractExporter {
 
     builder.append("\n");
     builder.append("Binary-Content: \n");
-    for (IResource resource : asSortedList(getCurrentModule().getResources(ProjectContentType.BINARY))) {
+    for (IResource resource : asSortedList((Set<IResource>) getCurrentModule().getResources(ProjectContentType.BINARY))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : resource.getReferences()) {

@@ -12,12 +12,14 @@ package org.bundlemaker.core.internal;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bundlemaker.core.internal.modules.Module;
 import org.bundlemaker.core.internal.modules.modularizedsystem.DefaultTypeSelector;
 import org.bundlemaker.core.internal.parser.ResourceCache;
+import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.resource.Type;
@@ -25,7 +27,6 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.util.FileUtils;
 import org.bundlemaker.core.util.JdkCreator;
@@ -80,7 +81,7 @@ public class JdkModuleCreator {
     virtualModule.setResourceModule(true);
 
     //
-    List<IResource> resources = new LinkedList<IResource>();
+    Set<IResourceStandin> resources = new HashSet<IResourceStandin>();
 
     //
     for (LibraryLocation libraryLocation : JavaRuntime.getLibraryLocations(vmInstall)) {
@@ -100,11 +101,7 @@ public class JdkModuleCreator {
         Resource resource = new Resource(DefaultTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER,
             root.getAbsolutePath(), child, resourceCache);
 
-        ResourceStandin resourceStandin = new ResourceStandin(
-            DefaultTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER,
-            root.getAbsolutePath(), child);
-        resource.setResourceStandin(resourceStandin);
-        resourceStandin.setResource(resource);
+        ResourceStandin resourceStandin = new ResourceStandin(resource);
 
         // TODO: Parsing!! ITYPE
         if (child.endsWith(".class")) {

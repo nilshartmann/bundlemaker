@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.resource.IReference;
 
 /**
@@ -172,7 +173,8 @@ public class ReferenceQueryFilters {
     private Set<String> containedTypeNames() {
 
       if (_containedTypeNames == null) {
-        _containedTypeNames = new HashSet<String>(resourceModule.getContainedTypeNames());
+        _containedTypeNames = new HashSet<String>(
+            resourceModule.adaptAs(ITypeModule.class).getContainedTypeNames());
       }
 
       return _containedTypeNames;

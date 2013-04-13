@@ -27,10 +27,12 @@ import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractTransform
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.modules.query.IQueryFilter;
 import org.bundlemaker.core.internal.modules.query.ReferenceQueryFilters.ReferenceFilter;
+import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IMovableUnit;
+import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.MovableUnit;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
@@ -50,31 +52,31 @@ import org.eclipse.core.runtime.IPath;
 public class Module implements IModifiableModule {
 
   /** the module identifier */
-  private IModuleIdentifier   _moduleIdentifier;
+  private IModuleIdentifier     _moduleIdentifier;
 
   /** the classification */
-  private Group               _classification;
+  private Group                 _classification;
 
   /** the user attributes */
-  private Map<String, Object> _userAttributes;
+  private Map<String, Object>   _userAttributes;
 
   /** the self container */
-  private TypeContainer       _typeContainer;
+  private TypeContainer         _typeContainer;
 
   /** the modularized system the module belongs to */
-  private IModularizedSystem  _modularizedSystem;
+  private IModularizedSystem    _modularizedSystem;
 
   /** specified whether or not the module is attached to a modularized system */
-  private boolean             _isDetached;
+  private boolean               _isDetached;
 
   /** the binary resources */
-  private Set<IResource>      _binaryResources;
+  private Set<IResourceStandin> _binaryResources;
 
   /** the source resources */
-  private Set<IResource>      _sourceResources;
+  private Set<IResourceStandin> _sourceResources;
 
   /** - */
-  private boolean             _isResourceModule;
+  private boolean               _isResourceModule;
 
   /**
    * <p>
@@ -98,12 +100,29 @@ public class Module implements IModifiableModule {
     _userAttributes = new HashMap<String, Object>();
 
     // create the resource sets
-    _binaryResources = new HashSet<IResource>();
-    _sourceResources = new HashSet<IResource>();
+    _binaryResources = new HashSet<IResourceStandin>();
+    _sourceResources = new HashSet<IResourceStandin>();
 
     //
     _typeContainer = new TypeContainer(this);
     _isResourceModule = true;
+  }
+
+  @Override
+  public Object getAdapter(Class adapter) {
+    return adaptAs(adapter);
+  }
+
+  @Override
+  public <T> T adaptAs(Class<T> clazz) {
+
+    //
+    if (clazz == ITypeModule.class) {
+      return (T) _typeContainer;
+    }
+
+    //
+    return null;
   }
 
   /**
@@ -171,18 +190,18 @@ public class Module implements IModifiableModule {
     return _userAttributes;
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Set<String> getContainedTypeNames() {
-    return getContainedTypeNames(new IQueryFilter<String>() {
-      @Override
-      public boolean matches(String content) {
-        return true;
-      }
-    });
-  }
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Override
+  // public Set<String> getContainedTypeNames() {
+  // return getContainedTypeNames(new IQueryFilter<String>() {
+  // @Override
+  // public boolean matches(String content) {
+  // return true;
+  // }
+  // });
+  // }
 
   public Group getClassificationGroup() {
     return _classification;
@@ -206,37 +225,37 @@ public class Module implements IModifiableModule {
     }
   }
 
-  public IType getType(String fullyQualifiedName) {
-    return _typeContainer.getType(fullyQualifiedName);
-  }
-
-  public boolean containsType(String fullyQualifiedName) {
-    return _typeContainer.containsType(fullyQualifiedName);
-  }
-
-  public boolean containsAll(Set<String> typeNames) {
-    return _typeContainer.containsAll(typeNames);
-  }
-
-  public Collection<IType> getContainedTypes() {
-    return _typeContainer.getContainedTypes();
-  }
-
-  public Collection<IType> getContainedTypes(IQueryFilter<IType> filter) {
-    return _typeContainer.getContainedTypes(filter);
-  }
-
-  public Set<String> getContainedTypeNames(IQueryFilter filter) {
-    return _typeContainer.getContainedTypeNames(filter);
-  }
-
-  public void add(IType type) {
-    _typeContainer.add(type);
-  }
-
-  public void remove(IType type) {
-    _typeContainer.remove(type);
-  }
+  // public IType getType(String fullyQualifiedName) {
+  // return _typeContainer.getType(fullyQualifiedName);
+  // }
+  //
+  // public boolean containsType(String fullyQualifiedName) {
+  // return _typeContainer.containsType(fullyQualifiedName);
+  // }
+  //
+  // public boolean containsAll(Set<String> typeNames) {
+  // return _typeContainer.containsAll(typeNames);
+  // }
+  //
+  // public Collection<IType> getContainedTypes() {
+  // return _typeContainer.getContainedTypes();
+  // }
+  //
+  // public Collection<IType> getContainedTypes(IQueryFilter<IType> filter) {
+  // return _typeContainer.getContainedTypes(filter);
+  // }
+  //
+  // public Set<String> getContainedTypeNames(IQueryFilter filter) {
+  // return _typeContainer.getContainedTypeNames(filter);
+  // }
+  //
+  // public void add(IType type) {
+  // _typeContainer.add(type);
+  // }
+  //
+  // public void remove(IType type) {
+  // _typeContainer.remove(type);
+  // }
 
   /**
    * <p>
@@ -354,10 +373,10 @@ public class Module implements IModifiableModule {
    * {@inheritDoc}
    */
   @Override
-  public IResource getResource(String path, ProjectContentType contentType) {
+  public IResourceStandin getResource(String path, ProjectContentType contentType) {
 
     //
-    for (IResource resourceStandin : getModifiableResourcesSet(contentType)) {
+    for (IResourceStandin resourceStandin : getModifiableResourcesSet(contentType)) {
 
       //
       if (resourceStandin.getPath().equalsIgnoreCase(path)) {
@@ -373,11 +392,11 @@ public class Module implements IModifiableModule {
    * {@inheritDoc}
    */
   @Override
-  public Set<IResource> getResources(ProjectContentType contentType) {
+  public Set<IResourceStandin> getResources(ProjectContentType contentType) {
 
     //
-    Set<? extends IResource> result = getModifiableResourcesSet(contentType);
-    return Collections.unmodifiableSet(new HashSet<IResource>(result));
+    Set<IResourceStandin> result = getModifiableResourcesSet(contentType);
+    return Collections.unmodifiableSet(result);
   }
 
   /**
@@ -410,7 +429,7 @@ public class Module implements IModifiableModule {
     }
 
     //
-    for (IType type : getContainedTypes()) {
+    for (IType type : _typeContainer.getContainedTypes()) {
       for (IReference reference : type.getReferences()) {
         if (filter.matches(reference)) {
           result.add(reference);
@@ -432,7 +451,7 @@ public class Module implements IModifiableModule {
     List<IMovableUnit> result = new LinkedList<IMovableUnit>();
 
     // iterate over all types
-    for (IType type : getContainedTypes()) {
+    for (IType type : _typeContainer.getContainedTypes()) {
 
       //
       IMovableUnit movableUnit = MovableUnit.createFromType(type, getModularizedSystem());
@@ -535,7 +554,7 @@ public class Module implements IModifiableModule {
   /**
    * {@inheritDoc}
    */
-  private void add(IResource resource, ProjectContentType contentType) {
+  private void add(IResourceStandin resource, ProjectContentType contentType) {
 
     Assert.isNotNull(resource);
     Assert.isNotNull(contentType);
@@ -545,7 +564,7 @@ public class Module implements IModifiableModule {
 
     // ... and add all contained types to the cache
     for (IType type : resource.getContainedTypes()) {
-      add(type);
+      _typeContainer.add(type);
     }
 
     // notify
@@ -559,7 +578,8 @@ public class Module implements IModifiableModule {
    * {@inheritDoc}
    */
   @Deprecated
-  public void addAll(List<? extends IResource> resources, ProjectContentType contentType) {
+  @Override
+  public void addAll(Set<IResourceStandin> resources, ProjectContentType contentType) {
 
     Assert.isNotNull(resources);
     Assert.isNotNull(contentType);
@@ -570,7 +590,7 @@ public class Module implements IModifiableModule {
     // ... and add all contained types to the cache
     for (IResource resource : resources) {
       for (IType type : resource.getContainedTypes()) {
-        add(type);
+        _typeContainer.add(type);
       }
     }
 
@@ -642,15 +662,18 @@ public class Module implements IModifiableModule {
 
     // add all types
     for (IType type : movableUnit.getAssociatedTypes()) {
-      add(type);
+      _typeContainer.add(type);
     }
 
     // add binary resources
-    addAll(movableUnit.getAssociatedBinaryResources(), ProjectContentType.BINARY);
+    @SuppressWarnings("unchecked")
+    Set<IResourceStandin> resourceStandins = new HashSet<IResourceStandin>(
+        (List<IResourceStandin>) movableUnit.getAssociatedBinaryResources());
+    addAll(resourceStandins, ProjectContentType.BINARY);
 
     // add source resources
     if (movableUnit.hasAssociatedSourceResource()) {
-      add(movableUnit.getAssociatedSourceResource(), ProjectContentType.SOURCE);
+      add((IResourceStandin) movableUnit.getAssociatedSourceResource(), ProjectContentType.SOURCE);
     }
 
     //
@@ -666,7 +689,7 @@ public class Module implements IModifiableModule {
 
     // add all types
     for (IType type : movableUnit.getAssociatedTypes()) {
-      remove(type);
+      _typeContainer.remove(type);
     }
 
     // add binary resources
@@ -688,7 +711,7 @@ public class Module implements IModifiableModule {
    * @param contentType
    * @return
    */
-  private Set<IResource> getModifiableResourcesSet(ProjectContentType contentType) {
+  private Set<IResourceStandin> getModifiableResourcesSet(ProjectContentType contentType) {
     Assert.isNotNull(contentType);
 
     // return the resource set

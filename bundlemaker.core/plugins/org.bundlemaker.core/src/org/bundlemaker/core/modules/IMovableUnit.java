@@ -21,7 +21,7 @@ public interface IMovableUnit {
    * 
    * @return
    */
-  IModule getContainingResourceModule();
+  IModule getModule();
 
   /**
    * <p>
@@ -29,7 +29,41 @@ public interface IMovableUnit {
    * 
    * @return
    */
-  public boolean hasContainingResourceModule();
+  public boolean hasModule();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean hasAssociatedBinaryResources();
+
+  /**
+   * <p>
+   * Returns the list of binary resources that are associated with this movable unit.
+   * </p>
+   * 
+   * @return the list of binary resources that are associated with this movable unit.
+   */
+  List<? extends IResource> getAssociatedBinaryResources();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean hasAssociatedSourceResource();
+
+  /**
+   * <p>
+   * Returns the source resource that is associated with this movable type.
+   * </p>
+   * 
+   * @return the source resource that is associated with this movable type.
+   */
+  IResource getAssociatedSourceResource();
 
   /**
    * <p>
@@ -49,38 +83,4 @@ public interface IMovableUnit {
    */
   @Deprecated
   List<IType> getAssociatedTypes();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  boolean hasAssociatedBinaryResources();
-
-  /**
-   * <p>
-   * Returns the list of binary resources that are associated with this movable unit.
-   * </p>
-   * 
-   * @return the list of binary resources that are associated with this movable unit.
-   */
-  List<IResource> getAssociatedBinaryResources();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  boolean hasAssociatedSourceResource();
-
-  /**
-   * <p>
-   * Returns the source resource that is associated with this movable type.
-   * </p>
-   * 
-   * @return the source resource that is associated with this movable type.
-   */
-  IResource getAssociatedSourceResource();
 }

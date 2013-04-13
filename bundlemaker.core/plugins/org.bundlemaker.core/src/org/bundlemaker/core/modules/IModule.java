@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.IGenericAdaptable;
 import org.bundlemaker.core.internal.modules.query.IQueryFilter;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IReference;
@@ -26,7 +27,7 @@ import org.eclipse.core.runtime.IPath;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IModule extends ITypeContainer {
+public interface IModule extends IGenericAdaptable {
 
   /**
    * <p>
@@ -128,7 +129,7 @@ public interface IModule extends ITypeContainer {
    * @param conentType
    * @return
    */
-  Set<IResource> getResources(ProjectContentType conentType);
+  Set<? extends IResource> getResources(ProjectContentType conentType);
 
   /**
    * <p>

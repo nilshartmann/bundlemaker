@@ -3,7 +3,9 @@ package org.bundlemaker.core.modules;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
+import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -21,31 +23,31 @@ import org.eclipse.core.runtime.CoreException;
 public class MovableUnit implements IMovableUnit {
 
   /** EMPTY_RESOURCE_LIST */
-  private static final List<IResource> EMPTY_RESOURCE_LIST = Collections.emptyList();
+  private static final List<IResourceStandin> EMPTY_RESOURCE_LIST = Collections.emptyList();
 
   /** EMPTY_TYPE_LIST */
-  private static final List<IType>     EMPTY_TYPE_LIST     = Collections.emptyList();
+  private static final List<IType>            EMPTY_TYPE_LIST     = Collections.emptyList();
 
   /** the main type */
-  private IType                        _mainType;
+  private IType                               _mainType;
 
   /** the main resource */
-  private IResource                    _mainResource;
+  private IResource                           _mainResource;
 
   /** the modularized system */
-  private IModularizedSystem           _modularizedSystem;
+  private IModularizedSystem                  _modularizedSystem;
 
   /** the associated types */
-  private List<IType>                  _associatedTypes;
+  private List<IType>                         _associatedTypes;
 
   /** the source resource */
-  private IResource                    _sourceResource;
+  private IResource                           _sourceResource;
 
   /** the binary resource */
-  private List<IResource>              _binaryResources;
+  private List<IResourceStandin>              _binaryResources;
 
   /** - */
-  private boolean                      _isInitialized      = false;
+  private boolean                             _isInitialized      = false;
 
   // private IResourceModule _resourceModule;
 
@@ -123,7 +125,7 @@ public class MovableUnit implements IMovableUnit {
    * {@inheritDoc}
    */
   @Override
-  public List<IResource> getAssociatedBinaryResources() {
+  public List<IResourceStandin> getAssociatedBinaryResources() {
 
     init();
 
@@ -169,7 +171,7 @@ public class MovableUnit implements IMovableUnit {
    * 
    * @return
    */
-  public IModule getContainingResourceModule() {
+  public IModule getModule() {
 
     init();
 
@@ -182,7 +184,8 @@ public class MovableUnit implements IMovableUnit {
         resourceModule = (IModule) module;
       }
     } else if (!_binaryResources.isEmpty()) {
-      IModule module = _binaryResources.get(0).getAssociatedResourceModule(_modularizedSystem);
+      IModule module = _binaryResources.toArray(new IResourceStandin[0])[0]
+          .getAssociatedResourceModule(_modularizedSystem);
       if (module instanceof IModule) {
         resourceModule = (IModule) module;
       }
@@ -194,9 +197,9 @@ public class MovableUnit implements IMovableUnit {
     return resourceModule;
   }
 
-  public boolean hasContainingResourceModule() {
+  public boolean hasModule() {
     //
-    return getContainingResourceModule() != null;
+    return getModule() != null;
   }
 
   /**
@@ -214,7 +217,7 @@ public class MovableUnit implements IMovableUnit {
     Assert.isTrue((_mainType == null && _mainResource != null) || (_mainType != null && _mainResource == null));
 
     // create the binary result list
-    _binaryResources = new LinkedList<IResource>();
+    _binaryResources = new LinkedList<IResourceStandin>();
     _associatedTypes = new LinkedList<IType>();
 
     // process type...
@@ -249,7 +252,7 @@ public class MovableUnit implements IMovableUnit {
         //
         IResource binaryResource = resourceModule.getResource(_mainResource.getPath(), ProjectContentType.BINARY);
         if (binaryResource != null) {
-          _binaryResources.add(binaryResource);
+          _binaryResources.add((IResourceStandin) binaryResource);
         }
       }
     }
@@ -289,8 +292,8 @@ public class MovableUnit implements IMovableUnit {
     //
     if (type.hasBinaryResource()) {
       IResource binaryResource = type.getBinaryResource();
-      _binaryResources.add(binaryResource);
-      _binaryResources.addAll(binaryResource.getStickyResources());
+      _binaryResources.add((IResourceStandin) binaryResource);
+      _binaryResources.addAll((Set<IResourceStandin>) binaryResource.getStickyResources());
     }
   }
 

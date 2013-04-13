@@ -184,7 +184,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
         additionalResources.addAll(resourceKeys);
         
         // add sources
-        Set<IResource> sources = getCurrentModule().getResources(ProjectContentType.SOURCE);
+        Set<? extends IResource> sources = getCurrentModule().getResources(ProjectContentType.SOURCE);
         additionalResources.addAll(wrapSourceResources(sources));
       } else {
         
@@ -215,7 +215,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
    * @param sources
    * @return
    */
-  private Collection<? extends IReadableResource> wrapSourceResources(Set<IResource> sources) {
+  private Collection<? extends IReadableResource> wrapSourceResources(Set<? extends IResource> sources) {
     
     Set<IReadableResource> movedSources = new HashSet<IReadableResource>();
     

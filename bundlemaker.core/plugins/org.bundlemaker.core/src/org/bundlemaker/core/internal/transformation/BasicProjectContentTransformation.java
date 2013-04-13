@@ -10,14 +10,12 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.transformation;
 
-import java.util.LinkedList;
-
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
+import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public class BasicProjectContentTransformation implements IInternalTransformation {
@@ -37,11 +35,11 @@ public class BasicProjectContentTransformation implements IInternalTransformatio
         module.getUserAttributes().putAll(fileBasedContent.getUserAttributes());
 
         // add all the binary content
-        module.addAll(new LinkedList<IResource>(fileBasedContent.getBinaryResources()),
+        module.addAll(((ProjectContentEntry) fileBasedContent).getBinaryResourceStandins(),
             ProjectContentType.BINARY);
 
         // add all the source content
-        module.addAll(new LinkedList<IResource>(fileBasedContent.getSourceResources()),
+        module.addAll(((ProjectContentEntry) fileBasedContent).getSourceResourceStandins(),
             ProjectContentType.SOURCE);
       }
     }

@@ -72,7 +72,7 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     return _movableUnit.getAssociatedTypes();
   }
 
-  public List<IResource> getAssociatedBinaryResources() {
+  public List<? extends IResource> getAssociatedBinaryResources() {
     return _movableUnit.getAssociatedBinaryResources();
   }
 
@@ -96,12 +96,12 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     return _movableUnit.getAssociatedSourceResource();
   }
 
-  public IModule getContainingResourceModule() {
-    return _movableUnit.getContainingResourceModule();
+  public IModule getModule() {
+    return _movableUnit.getModule();
   }
 
-  public boolean hasContainingResourceModule() {
-    return _movableUnit.hasContainingResourceModule();
+  public boolean hasModule() {
+    return _movableUnit.hasModule();
   }
 
   @Override

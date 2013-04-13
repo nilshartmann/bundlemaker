@@ -30,6 +30,7 @@ import org.bundlemaker.core.internal.transformation.IUndoableTransformation;
 import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
+import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.transformation.ITransformation;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
@@ -573,7 +574,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
           // type2.setTypeModule(typeModule);
 
-          typeModule.add(type2);
+          typeModule.adaptAs(ITypeModule.class).add(type2);
         }
 
       } catch (IOException e) {
