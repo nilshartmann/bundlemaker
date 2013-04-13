@@ -13,11 +13,20 @@ package org.bundlemaker.core.jdt.exporter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.exporter.AbstractExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.util.Helper;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
@@ -123,11 +132,19 @@ public class JdtProjectExporter extends AbstractExporter {
 		// 'clean' the java project
 		IJavaProject javaProject = JavaCore.create(project);
 		
+		List<IClasspathEntry> classpathEntries = new LinkedList<IClasspathEntry>();
+		classpathEntries.add(JavaRuntime.getDefaultJREContainerEntry());
+		classpathEntries.add(JavaCore.newSourceEntry(new Path(project.getName()).makeAbsolute().append(SRC_DIRECTORY_NAME)) );
 		
-		javaProject.setRawClasspath(new IClasspathEntry[] { //
-				JavaRuntime.getDefaultJREContainerEntry(), //
-				JavaCore.newSourceEntry(new Path(project.getName()).makeAbsolute().append(SRC_DIRECTORY_NAME)) //
-				}//
+		if (_referencedModules != null) {
+		  for (IModuleArtifact referencedModuleArtifact : _referencedModules) {
+		    IModule referencedModule = referencedModuleArtifact.getAssociatedModule();
+		    classpathEntries.add(JavaCore.newProjectEntry(new Path(referencedModule.getModuleIdentifier().getName()).makeAbsolute()));
+        
+      }
+		}
+		
+		javaProject.setRawClasspath(classpathEntries.toArray(new IClasspathEntry[classpathEntries.size()])
 		, null);
 		javaProject.save(null, true);
 
@@ -161,4 +178,22 @@ public class JdtProjectExporter extends AbstractExporter {
 		// Refresh source-folder to make Eclipse aware of new copied files
 		srcFolder.refreshLocal(1, progressMonitor);
 	}
+	
+	private List<IModuleArtifact> _referencedModules;
+
+  /**
+   * @param referencedModules
+   */
+  public void setReferencedModules(Collection<IModuleArtifact> referencedModules) {
+
+    _referencedModules = new LinkedList<IModuleArtifact>(referencedModules);
+    Collections.sort(_referencedModules, new Comparator<IModuleArtifact>() {
+      @Override
+      public int compare(IModuleArtifact module1, IModuleArtifact module2) {
+        return module1.getName().compareTo(module2.getName());
+      }
+      
+    });
+    
+  }
 }

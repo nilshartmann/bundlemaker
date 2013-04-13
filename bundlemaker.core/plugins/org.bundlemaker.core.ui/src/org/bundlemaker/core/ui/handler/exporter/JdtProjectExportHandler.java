@@ -11,13 +11,17 @@
 package org.bundlemaker.core.ui.handler.exporter;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.IModuleExporter;
-import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.jdt.exporter.JdtProjectExporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
@@ -66,10 +70,25 @@ public class JdtProjectExportHandler extends AbstractExportHandler {
             }
 
             IModuleArtifact module = (IModuleArtifact) iBundleMakerArtifact;
+            final IModuleArtifact jdkModule = AnalysisModelQueries.getJreModuleArtifact(module);
+
             IModule associatedModule = module.getAssociatedModule();
             if (associatedModule instanceof IResourceModule) {
               IResourceModule resourceModule = (IResourceModule) associatedModule;
               if (jdtProjectExporter.canExport(modularizedSystem, resourceModule, exporterContext)) {
+
+                Collection<IDependency> dependenciesTo = module.getDependenciesTo();
+
+                Set<IModuleArtifact> referencedModules = new HashSet<IModuleArtifact>();
+
+                for (IDependency dependency : dependenciesTo) {
+                  IModuleArtifact refModule = dependency.getTo().getParent(IModuleArtifact.class);
+                  if (refModule != null && !module.equals(refModule) && !jdkModule.equals(refModule)) {
+                    referencedModules.add(refModule);
+                  }
+                }
+
+                jdtProjectExporter.setReferencedModules(referencedModules);
                 jdtProjectExporter.export(modularizedSystem, resourceModule, exporterContext, subMonitor.newChild(1));
               }
             }
@@ -94,12 +113,6 @@ public class JdtProjectExportHandler extends AbstractExportHandler {
     //
     // pdeExporter.setManifestPreferences(manifestPreferences);
 
-    // create the adapter
-    ModularizedSystemExporterAdapter adapter = createModularizedSystemExporterAdapter(jdtProjectExporter,
-        selectedArtifacts);
-
-    // do the export
-    doExport(adapter, modularizedSystem, exporterContext);
   }
 
   @Override

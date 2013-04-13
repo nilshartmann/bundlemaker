@@ -215,6 +215,49 @@ public class AnalysisModelQueries {
    * <p>
    * </p>
    * 
+   * @return
+   */
+  public static List<IBundleMakerArtifact> getReferencingArtifacts(IBundleMakerArtifact artifact) {
+
+    //
+    List<IBundleMakerArtifact> result = new LinkedList<IBundleMakerArtifact>();
+
+    //
+    for (IDependency dependency : artifact.getDependenciesFrom()) {
+
+      result.add(dependency.getTo());
+    }
+
+    //
+    return result;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public static List<IBundleMakerArtifact> getReferencingArtifactsFrom(IBundleMakerArtifact artifact,
+      IBundleMakerArtifact from) {
+
+    //
+    List<IBundleMakerArtifact> result = new LinkedList<IBundleMakerArtifact>();
+
+    //
+    for (IDependency dependency : artifact.getDependenciesFrom(from)) {
+
+      result.add(dependency.getTo());
+    }
+
+    //
+    return result;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @param artifact
    * @return
    */
@@ -434,6 +477,39 @@ public class AnalysisModelQueries {
     // return result
     return result;
   }
+
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param root
+  // * @param fullyQualifiedName
+  // * @return
+  // */
+  // public static List<IPackageArtifact> findPackageArtifactsByQualifiedName(IBundleMakerArtifact root,
+  // final String fullyQualifiedName, boolean include subpackages) {
+  //
+  // // create the result array
+  // final List<IPackageArtifact> result = new LinkedList<IPackageArtifact>();
+  //
+  // // visit
+  // root.accept(new IAnalysisModelVisitor.Adapter() {
+  // @Override
+  // public boolean visit(IPackageArtifact packageArtifact) {
+  //
+  // //
+  // if (packageArtifact.getQualifiedName().equals(fullyQualifiedName)) {
+  // result.add(packageArtifact);
+  // }
+  //
+  // //
+  // return true;
+  // }
+  // });
+  //
+  // // return result
+  // return result;
+  // }
 
   /**
    * <p>
