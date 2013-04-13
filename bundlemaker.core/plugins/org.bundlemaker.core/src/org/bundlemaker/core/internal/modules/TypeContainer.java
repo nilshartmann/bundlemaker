@@ -18,7 +18,6 @@ import java.util.Set;
 
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
-import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.resource.IType;

@@ -20,7 +20,6 @@ import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.transformation.ITransformation;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -205,7 +204,7 @@ public interface IModularizedSystem {
    */
   @Deprecated
   public List<ITypeSelector> getTypeSelectors();
-  
+
   /**
    * <p>
    * </p>

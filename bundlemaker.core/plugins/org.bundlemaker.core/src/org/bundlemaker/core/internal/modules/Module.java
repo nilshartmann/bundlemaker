@@ -26,7 +26,6 @@ import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingMo
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractTransformationAwareModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
-import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IMovableUnit;

@@ -8,7 +8,6 @@ import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
 import org.bundlemaker.core.itestframework.utils.ArtifactTestUtil;
-import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.resource.IResource;
@@ -30,10 +29,9 @@ public class InnerClassTest extends AbstractBundleMakerModelTest {
    * </p>
    * 
    * @throws CoreException
-   * @throws AmbiguousElementException
    */
   @Test
-  public void testInnerClass() throws CoreException, AmbiguousElementException {
+  public void testInnerClass() throws CoreException {
 
     //
     IModule resourceModule = getModularizedSystem().getModule("InnerClassTest", "1.0.0");

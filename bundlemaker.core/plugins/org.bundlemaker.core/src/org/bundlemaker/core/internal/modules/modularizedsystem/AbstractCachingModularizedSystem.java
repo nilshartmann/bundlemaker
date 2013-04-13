@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.internal.modules.event.ClassificationChangedEvent;
 import org.bundlemaker.core.internal.modules.event.GroupChangedEvent;
 import org.bundlemaker.core.internal.modules.event.IModularizedSystemChangedListener;
@@ -27,7 +28,6 @@ import org.bundlemaker.core.internal.modules.event.ModuleMovedEvent;
 import org.bundlemaker.core.internal.modules.event.MovableUnitMovedEvent;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
 import org.bundlemaker.core.internal.resource.Resource;
-import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IMovableUnit;
