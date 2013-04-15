@@ -17,7 +17,10 @@ import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
 import org.bundlemaker.core.ui.artifact.tree.VisibleArtifactsFilter;
 import org.bundlemaker.core.ui.view.dependencytree.DefaultExpandStrategy;
 import org.bundlemaker.core.ui.view.dependencytree.Helper;
+import org.bundlemaker.core.util.history.History;
+import org.bundlemaker.core.util.history.IHistoryChangedListener;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -68,6 +71,8 @@ public class XRefComposite extends Composite {
   private XRefTreeArtifactLabelProvider _artifactLabelProvider;
 
   private IWorkbenchPartSite            _site;
+
+  private SelectionHistory              _selectionHistory;
 
   /**
    * <p>
@@ -186,6 +191,8 @@ public class XRefComposite extends Composite {
     _centerViewer = ArtifactTreeViewerFactory.createDefaultArtifactTreeViewer(this);
     _toTreeViewer = ArtifactTreeViewerFactory.createDefaultArtifactTreeViewer(this);
 
+    _selectionHistory = new SelectionHistory(_fromTreeViewer, _centerViewer, _toTreeViewer);
+
     _expandStrategy = new DefaultExpandStrategy();
     _expandStrategy.init(_fromTreeViewer, _toTreeViewer);
 
@@ -228,6 +235,9 @@ public class XRefComposite extends Composite {
     mgr1.createControl(fromToolBarComposite);
 
     ToolBarManager mgr2 = new ToolBarManager();
+    mgr2.add(new BackInHistoryAction(_selectionHistory));
+    // mgr2.add(new ResetHistoryAction(_selectionHistory));
+    mgr2.add(new ForwadInHistoryAction(_selectionHistory));
     mgr2.createControl(centerToolBarComposite);
 
     ToolBarManager mgr3 = new ToolBarManager();
@@ -542,4 +552,148 @@ public class XRefComposite extends Composite {
 
     }
   }
+
+  class BackInHistoryAction extends Action implements IHistoryChangedListener<TreeSelectionSnapshot> {
+    private final SelectionHistory _history;
+
+    public BackInHistoryAction(SelectionHistory history) {
+      super("Back");
+      _history = history;
+      setToolTipText("Go back in Selection History");
+      setImageDescriptor(XRefViewImages.NAV_BACKWARD_ENABLED.getImageDescriptor());
+      setDisabledImageDescriptor(XRefViewImages.NAV_BACKWARD_DISABLED.getImageDescriptor());
+
+      history.addHistoryChangedListener(this);
+    }
+
+    @Override
+    public void run() {
+      _history.goBack();
+    }
+
+    @Override
+    public void historyChanged(History<TreeSelectionSnapshot> history) {
+      setEnabled(history.canGoBack());
+    }
+  }
+
+  class ForwadInHistoryAction extends Action implements IHistoryChangedListener<TreeSelectionSnapshot> {
+    private final SelectionHistory _history;
+
+    public ForwadInHistoryAction(SelectionHistory history) {
+      super("Forward");
+
+      setToolTipText("Go forward in Selection History");
+      setImageDescriptor(XRefViewImages.NAV_FORWARD_ENABLED.getImageDescriptor());
+      setDisabledImageDescriptor(XRefViewImages.NAV_FORWARD_DISABLED.getImageDescriptor());
+      _history = history;
+
+      history.addHistoryChangedListener(this);
+    }
+
+    @Override
+    public void run() {
+      _history.goForward();
+    }
+
+    @Override
+    public void historyChanged(History<TreeSelectionSnapshot> history) {
+      setEnabled(history.canGoForward());
+    }
+  }
+
+  class SelectionHistory extends History<TreeSelectionSnapshot> implements ISelectionChangedListener {
+
+    boolean _mute = false;
+
+    public SelectionHistory(TreeViewer... viewers) {
+      for (TreeViewer treeViewer : viewers) {
+        treeViewer.addSelectionChangedListener(this);
+      }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent
+     * )
+     */
+    @Override
+    public void selectionChanged(SelectionChangedEvent event) {
+      TreeViewer in = (TreeViewer) event.getSource();
+      if (_mute) {
+        System.out.println("Ignore Request from " + in);
+        return;
+      }
+
+      IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+
+      if (selection.isEmpty()) {
+        System.out.println("Ignore empty Selection");
+        return;
+      }
+
+      TreeSelectionSnapshot userSelection = new TreeSelectionSnapshot();
+      userSelection.addSelection(_fromTreeViewer, _fromTreeViewer == in);
+      userSelection.addSelection(_centerViewer, _centerViewer == in);
+      userSelection.addSelection(_toTreeViewer, _toTreeViewer == in);
+
+      add(userSelection);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bundlemaker.core.util.history.History#goBack()
+     */
+    @Override
+    public void goBack() {
+      super.goBack();
+
+      reselect(getCurrent());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bundlemaker.core.util.history.History#goForward()
+     */
+    @Override
+    public void goForward() {
+      super.goForward();
+
+      reselect(getCurrent());
+    }
+
+    public void reselect(TreeSelectionSnapshot userSelection) {
+      _mute = true;
+      try {
+        userSelection.reselect();
+      } finally {
+        _mute = false;
+      }
+    }
+  }
+
+  // class ResetHistoryAction extends Action implements ISelectionHistoryChangedListener {
+  // private final SelectionHistory _history;
+  //
+  // public ResetHistoryAction(SelectionHistory history) {
+  // super("Reset");
+  // _history = history;
+  //
+  // history.addSelectionHistoryChangedListener(this);
+  // }
+  //
+  // @Override
+  // public void run() {
+  // _history.reset();
+  // }
+  //
+  // @Override
+  // public void historyChanged(SelectionHistory history) {
+  // setEnabled(history.canReset());
+  // }
+  // }
 }
