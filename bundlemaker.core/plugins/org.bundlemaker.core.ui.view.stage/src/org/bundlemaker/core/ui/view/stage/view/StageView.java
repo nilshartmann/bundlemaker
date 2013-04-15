@@ -157,6 +157,7 @@ public class StageView extends ViewPart {
     Transfer[] transferTypes = new Transfer[] { LocalSelectionTransfer.getTransfer() };
     // _tre|eViewer.addDragSupport(operations, transferTypes, new ArtifactTreeDragAdapter(treeViewer));
     _treeViewer.addDropSupport(operations, transferTypes, new ArtifactStageTreeDropAdapter(_treeViewer));
+    getSite().setSelectionProvider(_treeViewer);
 
     // viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL |
     // SWT.V_SCROLL);

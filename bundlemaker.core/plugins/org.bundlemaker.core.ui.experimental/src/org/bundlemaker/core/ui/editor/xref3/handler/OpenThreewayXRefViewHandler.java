@@ -10,6 +10,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.editor.xref3.handler;
 
+import java.util.List;
+
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.editor.xref3.ThreewayXRefView;
 import org.bundlemaker.core.ui.handler.AbstractOpenEditorHandler;
 import org.eclipse.ui.IEditorPart;
@@ -36,9 +39,9 @@ public class OpenThreewayXRefViewHandler extends AbstractOpenEditorHandler {
    * @see org.bundlemaker.core.ui.handler.AbstractOpenEditorHandler#editorOpened(org.eclipse.ui.IEditorPart)
    */
   @Override
-  protected void editorOpened(IEditorPart editor) {
+  protected void editorOpened(IEditorPart editor, List<IBundleMakerArtifact> selectedArtifacts) {
     ThreewayXRefView threewayXRefView = (ThreewayXRefView) editor;
-    threewayXRefView.refreshFromCurrentArtifactSelection();
+    threewayXRefView.refreshFromCurrentArtifactSelection(selectedArtifacts);
   }
 
 }

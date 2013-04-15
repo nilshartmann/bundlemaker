@@ -152,7 +152,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     });
     Menu menu = menuMgr.createContextMenu(_viewer.getControl());
     _viewer.getControl().setMenu(menu);
-    getSite().registerContextMenu(menuMgr, _viewer);
+//    getSite().registerContextMenu(menuMgr, _viewer);
 
     contributeToActionBars();
 
