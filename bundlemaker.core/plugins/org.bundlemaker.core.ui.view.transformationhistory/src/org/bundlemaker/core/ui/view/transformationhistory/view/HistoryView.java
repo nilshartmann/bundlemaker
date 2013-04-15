@@ -341,6 +341,8 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
 
     CommonNavigatorUtils.refresh(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
 
+    _viewer.refresh();
+
     refreshEnablement();
 
   }
