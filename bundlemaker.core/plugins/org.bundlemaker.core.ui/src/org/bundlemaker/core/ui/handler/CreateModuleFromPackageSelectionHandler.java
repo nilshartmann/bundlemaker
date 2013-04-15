@@ -13,6 +13,7 @@ package org.bundlemaker.core.ui.handler;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.ui.operations.CreateModuleWithArtifactsOperation;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -30,8 +31,8 @@ public class CreateModuleFromPackageSelectionHandler extends AbstractArtifactBas
     // Retrieve shell from Event
     Shell shell = HandlerUtil.getActiveShell(event);
 
-    ModuleFromArtifactListCreator creator = new ModuleFromArtifactListCreator();
-    creator.execute(shell, selectedArtifacts);
+    CreateModuleWithArtifactsOperation operation = new CreateModuleWithArtifactsOperation(shell, selectedArtifacts);
+    operation.run();
 
   }
 

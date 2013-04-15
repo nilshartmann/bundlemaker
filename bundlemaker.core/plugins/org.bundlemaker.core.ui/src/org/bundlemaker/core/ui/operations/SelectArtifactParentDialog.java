@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.handler;
+package org.bundlemaker.core.ui.operations;
 
 import java.util.List;
 

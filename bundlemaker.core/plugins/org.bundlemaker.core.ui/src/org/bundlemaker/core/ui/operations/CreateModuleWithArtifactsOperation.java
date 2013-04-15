@@ -9,7 +9,7 @@
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
 
-package org.bundlemaker.core.ui.handler;
+package org.bundlemaker.core.ui.operations;
 
 import java.util.HashSet;
 import java.util.List;
@@ -27,9 +27,24 @@ import org.eclipse.swt.widgets.Shell;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class ModuleFromArtifactListCreator {
-  public void execute(Shell shell, List<IBundleMakerArtifact> selectedArtifacts) throws Exception {
-    if (selectedArtifacts.isEmpty()) {
+public class CreateModuleWithArtifactsOperation extends AbstractUiOperation {
+
+  /**
+   * @param shell
+   * @param artifacts
+   */
+  public CreateModuleWithArtifactsOperation(Shell shell, List<IBundleMakerArtifact> artifacts) {
+    super(shell, artifacts);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.ui.operations.AbstractUiOperation#doRun()
+   */
+  @Override
+  protected void doRun() {
+    if (!hasArtifacts()) {
       // nothing selected. Shouldn't happen anyway...
       return;
     }
@@ -39,7 +54,7 @@ public class ModuleFromArtifactListCreator {
     String preselectedModuleName = null;
     Set<String> selectedModuleVersions = new HashSet<String>();
 
-    for (IBundleMakerArtifact artifact : selectedArtifacts) {
+    for (IBundleMakerArtifact artifact : getArtifacts()) {
       if (rootArtifact == null) {
         rootArtifact = artifact.getRoot();
       }
@@ -83,9 +98,9 @@ public class ModuleFromArtifactListCreator {
     String preSelectedModuleVersion = (selectedModuleVersions.size() == 1 ? selectedModuleVersions.iterator().next()
         : "1.0.0");
 
-    IBundleMakerArtifact artifact = selectedArtifacts.get(0);
+    IBundleMakerArtifact artifact = getArtifacts().get(0);
 
-    CreateModuleFromPackageSelectionDialog dialog = new CreateModuleFromPackageSelectionDialog(shell,
+    CreateModuleFromPackageSelectionDialog dialog = new CreateModuleFromPackageSelectionDialog(getShell(),
         artifact.getRoot(), preselectedModuleName, preSelectedModuleVersion);
     if (dialog.open() == Window.OK) {
 
@@ -93,7 +108,7 @@ public class ModuleFromArtifactListCreator {
       IModuleArtifact newModuleArtifact = groupAndModuleContainer.getOrCreateModule(dialog.getModuleName(),
           dialog.getModuleVersion());
 
-      newModuleArtifact.addArtifacts(selectedArtifacts);
+      newModuleArtifact.addArtifacts(getArtifacts());
 
     }
 
