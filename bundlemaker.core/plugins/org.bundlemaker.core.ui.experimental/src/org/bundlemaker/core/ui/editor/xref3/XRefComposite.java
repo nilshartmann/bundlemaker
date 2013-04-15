@@ -623,14 +623,12 @@ public class XRefComposite extends Composite {
     public void selectionChanged(SelectionChangedEvent event) {
       TreeViewer in = (TreeViewer) event.getSource();
       if (_mute) {
-        System.out.println("Ignore Request from " + in);
         return;
       }
 
       IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 
       if (selection.isEmpty()) {
-        System.out.println("Ignore empty Selection");
         return;
       }
 
