@@ -279,6 +279,6 @@ public class DefaultFileBasedContentInfoResolver implements IFileBasedProjectCon
       }
     }
 
-    return version;
+    return "0.0.0";
   }
 }
