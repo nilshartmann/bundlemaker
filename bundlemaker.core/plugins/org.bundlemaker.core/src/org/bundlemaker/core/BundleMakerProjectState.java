@@ -14,11 +14,13 @@ package org.bundlemaker.core;
  * <p>
  * </p>
  * <ul>
- * <li><b><i>NEW:</i></b> The project has been created, but no project description has been set up yet.</li>
+ * <li><b><i>CREATED:</i></b> The project has been created, but no project description has been set up yet.</li>
  * <li><b><i>INITIALIZED:</i></b> The project description has been set up.</li>
- * <li><b><i>PARSED:</i></b> The project has been parsed. Note that the parsing of a project has to be started manually
+ * <li><b><i>READY:</i></b> The project has been parsed. Note that the parsing of a project has to be started manually
  * by the user as it's a long-running operation.</li>
- * <li><b><i>OPENED:</i></b> The project is opened and ready to use.</li>
+ * <li><b><i>DIRTY:</i></b> The project is dirty (because the project description has changed) and needs to be reparsed.
+ * </li>
+ * <li><b><i>DISPOSED:</i></b> The project has been disposed.</li>
  * </ul>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -33,12 +35,12 @@ public enum BundleMakerProjectState {
   /** the INITIALIZED state */
   INITIALIZED,
 
-  /** the OPENED state */
+  /** the READY state */
   READY,
 
   /** the DIRTY state */
   DIRTY,
 
-  /** - */
+  /** the DISPOSED state */
   DISPOSED;
 }
