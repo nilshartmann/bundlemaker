@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.editor.dsm;
+package org.bundlemaker.core.ui.editor.dsm.widget;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.ColorConstants;
@@ -10,7 +10,7 @@ import org.eclipse.swt.graphics.Color;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class DefaultDsmViewConfiguration implements IDsmViewConfiguration {
+public class DefaultMatrixColorScheme implements IDsmColorScheme {
 
   // ##### Color Palette by Color Scheme Designer
   // ##### Palette URL: http://colorschemedesigner.com/#1611ThWs0g0g0
@@ -30,7 +30,7 @@ public class DefaultDsmViewConfiguration implements IDsmViewConfiguration {
   // var. 4 = #E79476 = rgb(231,148,118)
   // var. 5 = #E79E83 = rgb(231,158,131)
 
-  private final Color VAR_1_MEDIUM             = getColor("FFDE8A");
+  // private final Color VAR_1_MEDIUM = getColor("FFDE8A");
 
   private final Color VAR_2_DARK_MEDIUM        = getColor("DEC585");
 
@@ -40,8 +40,6 @@ public class DefaultDsmViewConfiguration implements IDsmViewConfiguration {
 
   private final Color VAR_5_LIGHT              = getColor("FFF3D3");
 
-  private final Color CYCLE_VAR_1_MEDIUM       = getColor("DF8462");
-
   private final Color CYCLE_VAR_2_DARK_MEDIUM  = getColor("C37D64");
 
   private final Color CYCLE_VAR_3_DARK         = getColor("B85E3D");
@@ -49,23 +47,6 @@ public class DefaultDsmViewConfiguration implements IDsmViewConfiguration {
   private final Color CYCLE_VAR_4_LIGHT_MEDIUM = getColor("E79476");
 
   private final Color CYCLE_VAR_5_LIGHT        = getColor("E79E83");
-
-  private int         _horizontalBoxSize       = 20;
-
-  @Override
-  public int getVerticalBoxSize() {
-    return 20;
-  }
-
-  @Override
-  public int getHorizontalBoxSize() {
-    return _horizontalBoxSize;
-  }
-
-  @Override
-  public void setHorizontalBoxSize(int size) {
-    _horizontalBoxSize = size > getVerticalBoxSize() ? size : getVerticalBoxSize();
-  }
 
   @Override
   public Color getSideMarkerBackgroundColor() {

@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.editor.dsm.utils;
+package org.bundlemaker.core.ui.editor.dsm.widget.internal.util;
 
 public class DsmUtils {
 

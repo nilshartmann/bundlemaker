@@ -1,6 +1,6 @@
-package org.bundlemaker.core.ui.editor.dsm.figures;
+package org.bundlemaker.core.ui.editor.dsm.widget;
 
-public interface IMatrixContentProvider {
+public interface IDsmContentProvider {
 
   int getItemCount();
 

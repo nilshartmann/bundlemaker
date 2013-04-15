@@ -1,11 +1,9 @@
-package org.bundlemaker.core.ui.editor.dsm.utils;
+package org.bundlemaker.core.ui.editor.dsm.widget.internal.demo;
 
 import java.util.Collection;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.editor.dsm.AbstractDsmViewModel;
-import org.bundlemaker.core.ui.editor.dsm.DefaultDsmViewConfiguration;
-import org.bundlemaker.core.ui.editor.dsm.IDsmViewConfiguration;
 
 /**
  * <p>
@@ -85,10 +83,10 @@ public class DemoDsmViewModel extends AbstractDsmViewModel {
     return _labels;
   }
 
-  @Override
-  protected IDsmViewConfiguration createConfiguration() {
-    return new DefaultDsmViewConfiguration();
-  }
+  // @Override
+  // protected IDsmViewConfiguration createConfiguration() {
+  // return new DefaultDsmViewConfiguration();
+  // }
 
   /**
    * {@inheritDoc}
@@ -123,5 +121,10 @@ public class DemoDsmViewModel extends AbstractDsmViewModel {
 @Override
 protected String[] doGetDisplayLabels() {
 	return createLabels();
+}
+
+@Override
+public int getItemCount() {
+  return 0;
 }
 }

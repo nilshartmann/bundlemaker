@@ -1,8 +1,8 @@
-package org.bundlemaker.core.ui.editor.dsm.figures;
+package org.bundlemaker.core.ui.editor.dsm.widget;
 
 import org.eclipse.swt.graphics.Color;
 
-public interface IMatrixColorScheme {
+public interface IDsmColorScheme {
 
   Color getSideMarkerBackgroundColor();
 

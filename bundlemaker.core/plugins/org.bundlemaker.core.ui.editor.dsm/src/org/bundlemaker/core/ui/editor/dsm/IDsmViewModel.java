@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Observer;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.ui.editor.dsm.figures.IMatrixContentProvider;
-import org.bundlemaker.core.ui.editor.dsm.figures.IMatrixCycleDetector;
+import org.bundlemaker.core.ui.editor.dsm.widget.IDsmContentProvider;
+import org.bundlemaker.core.ui.editor.dsm.widget.IDsmCycleDetector;
 
 /**
  * <p>
@@ -13,54 +13,23 @@ import org.bundlemaker.core.ui.editor.dsm.figures.IMatrixCycleDetector;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IDsmViewModel extends IMatrixContentProvider,
-		IMatrixCycleDetector {
+public interface IDsmViewModel extends IDsmContentProvider, IDsmCycleDetector {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	IDsmViewConfiguration getConfiguration();
+  void refresh(Collection<IBundleMakerArtifact> artifacts);
 
-	void refresh(Collection<IBundleMakerArtifact> artifacts);
+  @Override
+  int getItemCount();
 
-	@Override
-	int getItemCount();
+  String[] getLabels();
 
-	String[] getLabels();
+  /**
+   * @return the labels according to the user-selected presentation mode
+   */
+  String[] getDisplayLabels();
 
-	/**
-	 * @return the labels according to the user-selected presentation mode
-	 */
-	String[] getDisplayLabels();
+  String[][] getValues();
 
-	String[][] getValues();
+  void addObserver(Observer observer);
 
-	void addObserver(Observer observer);
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	@Override
-	int[][] getCycles();
-
-	@Override
-	boolean isInCycle(int i);
-
-	@Override
-	boolean isInCycle(int i, int j);
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	@Override
-	boolean isToggled();
+  LabelPresentationMode getLabelPresentationMode();
 }

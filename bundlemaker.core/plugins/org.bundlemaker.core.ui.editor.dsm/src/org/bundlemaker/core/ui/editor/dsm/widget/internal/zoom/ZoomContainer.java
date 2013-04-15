@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.bundlemaker.core.ui.editor.dsm.figures.zoom;
+package org.bundlemaker.core.ui.editor.dsm.widget.internal.zoom;
 
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
@@ -78,8 +78,8 @@ public class ZoomContainer extends Figure {
 
     //
     for (Object child : getChildren()) {
-      if (child instanceof IZoomAware) {
-        ((IZoomAware) child).setZoom(this.zoom);
+      if (child instanceof ZoomContainer) {
+        ((ZoomContainer) child).setZoom(this.zoom);
       }
     }
 

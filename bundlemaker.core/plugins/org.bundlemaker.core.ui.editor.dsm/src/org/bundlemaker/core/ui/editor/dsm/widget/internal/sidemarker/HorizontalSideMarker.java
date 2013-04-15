@@ -1,10 +1,14 @@
-package org.bundlemaker.core.ui.editor.dsm.figures.sidemarker;
+package org.bundlemaker.core.ui.editor.dsm.widget.internal.sidemarker;
 
-import org.bundlemaker.core.ui.editor.dsm.IDsmViewModel;
+import org.bundlemaker.core.ui.editor.dsm.widget.IDsmColorScheme;
+import org.bundlemaker.core.ui.editor.dsm.widget.IDsmContentProvider;
+import org.bundlemaker.core.ui.editor.dsm.widget.IDsmCycleDetector;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.jface.viewers.ILabelProvider;
 
 /**
  * <p>
@@ -12,7 +16,7 @@ import org.eclipse.draw2d.geometry.Point;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class HorizontalSideMarker extends AbstractSideMarker implements ISideMarker {
+public class HorizontalSideMarker extends AbstractSideMarker {
 
   private boolean _rotateText = true;
 
@@ -21,10 +25,13 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
    * Creates a new instance of type {@link HorizontalSideMarker}.
    * </p>
    * 
-   * @param model
+   * @param contentProvider
+   * @param matrixCycleDetector
+   * @param colorScheme
    */
-  public HorizontalSideMarker(IDsmViewModel model) {
-    super(model);
+  public HorizontalSideMarker(IDsmContentProvider contentProvider, IDsmCycleDetector matrixCycleDetector,
+      ILabelProvider labelProvider, IDsmColorScheme colorScheme) {
+    super(contentProvider, matrixCycleDetector, labelProvider, colorScheme);
   }
 
   /**
@@ -36,6 +43,12 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
    */
   public final void setRotateText(boolean rotateText) {
     _rotateText = rotateText;
+  }
+
+  @Override
+  protected void onMouseReleased(MouseEvent me) {
+    int value = (int) Math.floor(me.getLocation().x / (double) getBoxSize().getHorizontalBoxSize());
+    // System.out.println("wert: " + getModel().getLabels()[value]);
   }
 
   /**
@@ -52,16 +65,16 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
     graphics.pushState();
 
     // draw the background ("odd marker")
-    graphics.setBackgroundColor(getModel().getConfiguration().getSideMarkerBackgroundColor());
+    graphics.setBackgroundColor(getColorScheme().getSideMarkerBackgroundColor());
 
-    graphics.fillRectangle(0, 0, getModel().getItemCount() * getModel().getConfiguration().getHorizontalBoxSize(),
+    graphics.fillRectangle(0, 0, getContentProvider().getItemCount() * getBoxSize().getHorizontalBoxSize(),
         getSize().height + 1);
 
     // draw the makers
-    for (int i = 0; i < getModel().getItemCount(); i++) {
+    for (int i = 0; i < getContentProvider().getItemCount(); i++) {
 
       //
-      boolean isInCycle = getModel().isInCycle(i);
+      boolean isInCycle = getCycleDetector().isInCycle(i);
 
       // draw the "even" marker
       if (isInCycle || getMarkedItem() == i || i % 2 == 0) {
@@ -69,15 +82,15 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
         // set the background
         if (i == getMarkedItem()) {
           if (isInCycle) {
-            graphics.setBackgroundColor(getModel().getConfiguration().getCycleSideMarkerMarkedColor());
+            graphics.setBackgroundColor(getColorScheme().getCycleSideMarkerMarkedColor());
           } else {
-            graphics.setBackgroundColor(getModel().getConfiguration().getSideMarkerMarkedColor());
+            graphics.setBackgroundColor(getColorScheme().getSideMarkerMarkedColor());
           }
         } else {
           if (isInCycle) {
-            graphics.setBackgroundColor(getModel().getConfiguration().getCycleSideMarkerColor());
+            graphics.setBackgroundColor(getColorScheme().getCycleSideMarkerColor());
           } else {
-            graphics.setBackgroundColor(getModel().getConfiguration().getSideMarkerEvenColor());
+            graphics.setBackgroundColor(getColorScheme().getSideMarkerEvenColor());
           }
         }
 
@@ -86,11 +99,11 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
             + 1, getSize().height + 1);
       }
 
-      if (isInCycle && getModel().isInCycle(i - 1)) {
-        graphics.setForegroundColor(getModel().getConfiguration().getCycleSideMarkerSeparatorColor());
+      if (isInCycle && getCycleDetector().isInCycle(i - 1)) {
+        graphics.setForegroundColor(getColorScheme().getCycleSideMarkerSeparatorColor());
       } else {
         // draw the separator lines
-        graphics.setForegroundColor(getModel().getConfiguration().getSideMarkerSeparatorColor());
+        graphics.setForegroundColor(getColorScheme().getSideMarkerSeparatorColor());
       }
       graphics.drawLine(getHorizontalSliceSize(i), 0, getHorizontalSliceSize(i), getSize().height);
 
@@ -102,29 +115,28 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
     // rotate
     if (_rotateText) {
 
-      graphics.translate(getModel().getItemCount() * getModel().getConfiguration().getHorizontalBoxSize(), 0);
+      graphics.translate(getContentProvider().getItemCount() * getBoxSize().getHorizontalBoxSize(), 0);
       graphics.rotate(90f);
       // compute the text offset (to make the text centered)
-      int offset = (getModel().getConfiguration().getHorizontalBoxSize() - getFontHeight()) / 2;
-      for (int i = 0; i < getModel().getItemCount(); i++) {
+      int offset = (getBoxSize().getHorizontalBoxSize() - getFontHeight()) / 2;
+      for (int i = 0; i < getContentProvider().getItemCount(); i++) {
 
-        graphics.setForegroundColor(getModel().getConfiguration().getSideMarkerTextColor());
+        graphics.setForegroundColor(getColorScheme().getSideMarkerTextColor());
 
-        graphics.drawString(getModel().getDisplayLabels()[i],
-            new Point(10, (((getModel().getItemCount() - (i + 1)) * getModel().getConfiguration()
-                .getHorizontalBoxSize())) + offset));
+        graphics.drawString(getLabelProvider().getText(getContentProvider().getNodes()[i]), new Point(10, (((getContentProvider()
+            .getItemCount() - (i + 1)) * getBoxSize().getHorizontalBoxSize())) + offset));
       }
     }
 
     // don't rotate
     else {
-      graphics.setForegroundColor(getModel().getConfiguration().getSideMarkerTextColor());
+      graphics.setForegroundColor(getColorScheme().getSideMarkerTextColor());
 
-      int centerOffset = (getModel().getConfiguration().getHorizontalBoxSize() / 2);
+      int centerOffset = (getBoxSize().getHorizontalBoxSize() / 2);
       int fontHeight = getFont().getFontData()[0].getHeight() + 2;
-      int horizontalBoxSize = getModel().getConfiguration().getHorizontalBoxSize();
-      for (int i = 0; i < getModel().getItemCount(); i++) {
-        String label = getModel().getDisplayLabels()[i];
+      int horizontalBoxSize = getBoxSize().getHorizontalBoxSize();
+      for (int i = 0; i < getContentProvider().getItemCount(); i++) {
+        String label = getLabelProvider().getText(getContentProvider().getNodes()[i]);
         int offset = i * horizontalBoxSize + centerOffset;
         for (int j = 0; j < label.length(); j++) {
           String currentChar = label.substring(j, j + 1);
@@ -146,8 +158,8 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
   @Override
   public void resetSize() {
 
-    Dimension dimension = new Dimension(getModel().getConfiguration().getHorizontalBoxSize()
-        * getModel().getItemCount(), getSize().height);
+    Dimension dimension = new Dimension(getBoxSize().getHorizontalBoxSize() * getContentProvider().getItemCount(),
+        getSize().height);
 
     // reset the size
     if (!getSize().equals(dimension)) {

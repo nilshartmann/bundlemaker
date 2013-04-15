@@ -18,22 +18,13 @@ public abstract class AbstractDsmViewModel extends Observable implements
 
 	private String[][] _values;
 
-	private IDsmViewConfiguration _configuration;
-
 	private String[] _displayLabels;
 
 	private LabelPresentationMode _labelPresentationMode = LabelPresentationMode.qualifiedName;
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	@Override
-	public final int getItemCount() {
-		return getLabels().length;
-	}
+	public LabelPresentationMode getLabelPresentationMode() {
+    return _labelPresentationMode;
+  }
 
 	/**
 	 * <p>
@@ -145,33 +136,7 @@ public abstract class AbstractDsmViewModel extends Observable implements
 		return _values;
 	}
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	@Override
-	public final IDsmViewConfiguration getConfiguration() {
-
-		// create
-		if (_configuration == null) {
-			_configuration = createConfiguration();
-		}
-
-		// return configuration
-		return _configuration;
-	}
-	
 	protected abstract String[] doGetDisplayLabels();
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	protected abstract IDsmViewConfiguration createConfiguration();
 
 	/**
 	 * <p>

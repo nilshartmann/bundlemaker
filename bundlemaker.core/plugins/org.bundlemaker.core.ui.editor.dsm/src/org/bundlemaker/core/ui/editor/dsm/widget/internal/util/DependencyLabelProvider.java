@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.editor.dsm;
+package org.bundlemaker.core.ui.editor.dsm.widget.internal.util;
 
 import org.bundlemaker.core.analysis.IDependency;
 import org.eclipse.jface.viewers.LabelProvider;

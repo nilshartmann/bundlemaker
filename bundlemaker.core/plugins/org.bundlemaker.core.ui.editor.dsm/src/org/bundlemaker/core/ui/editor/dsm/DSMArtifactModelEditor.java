@@ -15,43 +15,24 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
-import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.selection.IArtifactSelection;
 import org.bundlemaker.core.selection.Selection;
-import org.bundlemaker.core.ui.editor.dsm.figures.matrix.IMatrixListener;
-import org.bundlemaker.core.ui.editor.dsm.figures.matrix.Matrix;
-import org.bundlemaker.core.ui.editor.dsm.figures.matrix.MatrixEvent;
-import org.bundlemaker.core.ui.editor.dsm.figures.sidemarker.HorizontalSideMarker;
-import org.bundlemaker.core.ui.editor.dsm.figures.sidemarker.VerticalSideMarker;
-import org.bundlemaker.core.ui.editor.dsm.utils.DsmUtils;
+import org.bundlemaker.core.ui.editor.dsm.widget.DsmViewWidget;
+import org.bundlemaker.core.ui.editor.dsm.widget.internal.matrix.IMatrixListener;
+import org.bundlemaker.core.ui.editor.dsm.widget.internal.matrix.MatrixEvent;
+import org.bundlemaker.core.ui.editor.dsm.widget.internal.util.DependencyLabelProvider;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
 import org.bundlemaker.core.ui.utils.EditorHelper;
-import org.eclipse.draw2d.Figure;
-import org.eclipse.draw2d.FigureUtilities;
-import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.jface.action.ContributionItem;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.internal.part.NullEditorInput;
 
 /**
@@ -124,7 +105,9 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     parent.setLayout(gridLayout);
 
     //
-    _viewWidget = new DsmViewWidget(new DsmViewModel(), parent);
+
+    DsmViewModel model = new DsmViewModel();
+    _viewWidget = new DsmViewWidget(model, new ArtifactLabelProvider(model), new DependencyLabelProvider(), parent);
     GridDataFactory.swtDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(_viewWidget);
     _viewWidget.setZoom((50 + 10) * 0.02f);
 
@@ -452,8 +435,8 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    * @return
    */
   private boolean isCellSelected(MatrixEvent event) {
-    return event.getX() <= _viewWidget.getModel().getLabels().length && event.getX() >= 0
-        && event.getY() <= _viewWidget.getModel().getLabels().length && event.getY() >= 0;
+    return event.getX() <= _viewWidget.getModel().getItemCount() && event.getX() >= 0
+        && event.getY() <= _viewWidget.getModel().getItemCount() && event.getY() >= 0;
   }
 
   /**

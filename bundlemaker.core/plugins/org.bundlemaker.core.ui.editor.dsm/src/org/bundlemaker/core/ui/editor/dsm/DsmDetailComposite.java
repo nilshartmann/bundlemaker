@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.bundlemaker.core.ui.editor.dsm.widget.DsmViewWidget;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;

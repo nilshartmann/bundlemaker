@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.editor.dsm.figures.zoom;
+package org.bundlemaker.core.ui.editor.dsm.widget.internal.zoom;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.IFigure;
@@ -11,7 +11,7 @@ import org.eclipse.draw2d.ScrollPane;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ZoomableScrollPane extends ScrollPane implements IZoomAware {
+public class ZoomableScrollPane extends ScrollPane {
 
   /** the internal zoom container */
   private ZoomContainer _zoomContainer;
@@ -48,7 +48,6 @@ public class ZoomableScrollPane extends ScrollPane implements IZoomAware {
   /**
    * {@inheritDoc}
    */
-  @Override
   public void setZoom(float zoom) {
     _zoomContainer.setZoom(zoom);
   }
@@ -56,7 +55,6 @@ public class ZoomableScrollPane extends ScrollPane implements IZoomAware {
   /**
    * {@inheritDoc}
    */
-  @Override
   public float getZoom() {
     return _zoomContainer.zoom;
   }
