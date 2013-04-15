@@ -10,17 +10,10 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.handler;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
-import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.analysis.IPackageArtifact;
-import org.bundlemaker.core.analysis.IRootArtifact;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
@@ -34,76 +27,11 @@ public class CreateModuleFromPackageSelectionHandler extends AbstractArtifactBas
 
   @Override
   protected void execute(ExecutionEvent event, List<IBundleMakerArtifact> selectedArtifacts) throws Exception {
-    if (selectedArtifacts.isEmpty()) {
-      // nothing selected. Shouldn't happen anyway...
-      return;
-    }
-
-    IRootArtifact rootArtifact = null;
-
-    String preselectedModuleName = null;
-    Set<String> selectedModuleVersions = new HashSet<String>();
-
-    for (IBundleMakerArtifact artifact : selectedArtifacts) {
-      if (rootArtifact == null) {
-        rootArtifact = artifact.getRoot();
-      }
-
-      IModuleArtifact module = (artifact instanceof IModuleArtifact ? (IModuleArtifact) artifact : artifact
-          .getParent(IModuleArtifact.class));
-      if (module != null) {
-        selectedModuleVersions.add(module.getModuleVersion());
-      }
-
-      String packageName = (artifact instanceof IPackageArtifact) ? artifact.getQualifiedName() : artifact.getParent(
-          IPackageArtifact.class).getQualifiedName();
-
-      if (preselectedModuleName == null) {
-        preselectedModuleName = packageName;
-      } else {
-        StringBuilder b = new StringBuilder();
-        for (int i = 0, j = 0; i < preselectedModuleName.length() && j < packageName.length(); i++, j++) {
-          if (preselectedModuleName.charAt(i) == packageName.charAt(j)) {
-            b.append(preselectedModuleName.charAt(i));
-          } else {
-            break;
-          }
-        }
-        preselectedModuleName = b.toString();
-      }
-    }
-
-    if (preselectedModuleName.endsWith(".")) {
-      if (preselectedModuleName.length() > 1) {
-        preselectedModuleName = preselectedModuleName.substring(0, preselectedModuleName.length() - 1);
-      } else
-        preselectedModuleName = "";
-    }
-
-    if (preselectedModuleName.isEmpty()) {
-      preselectedModuleName = "NewModule";
-    }
-
-    // Pre-select Version with version number of selected modules
-    String preSelectedModuleVersion = (selectedModuleVersions.size() == 1 ? selectedModuleVersions.iterator().next()
-        : "1.0.0");
-
-    IBundleMakerArtifact artifact = selectedArtifacts.get(0);
-
     // Retrieve shell from Event
     Shell shell = HandlerUtil.getActiveShell(event);
 
-    CreateModuleFromPackageSelectionDialog dialog = new CreateModuleFromPackageSelectionDialog(shell,
-        artifact.getRoot(), preselectedModuleName, preSelectedModuleVersion);
-    if (dialog.open() == Window.OK) {
-
-      IGroupAndModuleContainer groupAndModuleContainer = dialog.getParent();
-      IModuleArtifact newModuleArtifact = groupAndModuleContainer.getOrCreateModule(dialog.getModuleName(),
-          dialog.getModuleVersion());
-
-      newModuleArtifact.addArtifacts(selectedArtifacts);
-
-    }
+    ModuleFromArtifactListCreator creator = new ModuleFromArtifactListCreator();
+    creator.execute(shell, selectedArtifacts);
 
   }
 

@@ -71,8 +71,13 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
           modularizedSystem, selectedArtifacts);
 
     } catch (Exception ex) {
-      reportError(Activator.PLUGIN_ID, "Error during export: " + ex, ex);
-      MessageDialog.openError(new Shell(), "Export failed", "Error during export: " + ex);
+      Throwable cause = ex;
+      if (ex instanceof InvocationTargetException) {
+        InvocationTargetException ite = (InvocationTargetException) ex;
+        cause = ite.getCause();
+      }
+      reportError(Activator.PLUGIN_ID, "Error during export: " + cause, cause);
+      MessageDialog.openError(new Shell(), "Export failed", "Error during export: " + cause);
     }
 
   }

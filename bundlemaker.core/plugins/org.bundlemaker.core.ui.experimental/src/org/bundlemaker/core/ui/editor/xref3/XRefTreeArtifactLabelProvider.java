@@ -49,6 +49,13 @@ public class XRefTreeArtifactLabelProvider extends ArtifactTreeLabelProvider imp
     }
   }
 
+  /**
+   * @return the bundleMakerArtifacts
+   */
+  public Set<IBundleMakerArtifact> getBundleMakerArtifacts() {
+    return _bundleMakerArtifacts;
+  }
+
   @Override
   public Color getForeground(Object element) {
     if (_bundleMakerArtifacts != null && _bundleMakerArtifacts.contains(element)) {
