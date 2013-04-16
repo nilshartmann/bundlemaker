@@ -43,18 +43,11 @@
 
 				    <!-- Artifact Editor-actions -->
 				    <menuContribution
-		         locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.editor.separator">
+		         locationURI="popup:org.eclipse.ui.popup.any?after=org.bundlemaker.core.ui.editor.separator">
 				         <command commandId="org.bundlemaker.core.ui.editor.xref3.OpenThreewayXRefViewCommand" style="push" icon="icons/XRef.png">
             			<visibleWhen checkEnabled="true"/>
          				</command>
          				</menuContribution>
-         				
-         			<menuContribution
-                  locationURI="popup:org.bundlemaker.core.ui.editor.xref3.ThreewayXRefView?after=additions">
-         					<command commandId="org.bundlemaker.core.ui.commands.CreateModuleFromPackageSelectionCommand" 
-								label="Create Module from Selection..." style="push">
-							</command>
-      				</menuContribution>
       </extension>
 
    <extension point="org.eclipse.ui.editors">

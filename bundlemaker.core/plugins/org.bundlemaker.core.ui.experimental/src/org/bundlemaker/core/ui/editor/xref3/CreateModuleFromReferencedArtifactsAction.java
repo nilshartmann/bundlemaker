@@ -17,9 +17,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.ui.ErrorDialogUtil;
-import org.bundlemaker.core.ui.editor.xref3.internal.Activator;
-import org.bundlemaker.core.ui.handler.ModuleFromArtifactListCreator;
+import org.bundlemaker.core.ui.operations.CreateModuleWithArtifactsOperation;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Display;
 
@@ -47,12 +45,9 @@ public class CreateModuleFromReferencedArtifactsAction extends Action {
       }
     }
 
-    ModuleFromArtifactListCreator creator = new ModuleFromArtifactListCreator();
-    try {
-      creator.execute(Display.getCurrent().getActiveShell(), resources);
-    } catch (Exception e) {
-      ErrorDialogUtil.errorDialogWithStackTrace("Creation of Module failed", e.getMessage(), Activator.PLUGIN_ID, e);
-    }
-  }
+    CreateModuleWithArtifactsOperation operation = new CreateModuleWithArtifactsOperation(Display.getCurrent()
+        .getActiveShell(), resources);
+    operation.run();
 
+  }
 }

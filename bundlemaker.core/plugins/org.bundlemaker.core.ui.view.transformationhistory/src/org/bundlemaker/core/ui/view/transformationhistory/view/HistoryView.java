@@ -219,7 +219,8 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
     });
     Menu menu = menuMgr.createContextMenu(_viewer.getControl());
     _viewer.getControl().setMenu(menu);
-    getSite().registerContextMenu(menuMgr, _viewer);
+    // Do not register for now
+    // getSite().registerContextMenu(menuMgr, _viewer);
   }
 
   private void contributeToActionBars() {
@@ -340,6 +341,8 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
     modularizedSystem.undoLastTransformation();
 
     CommonNavigatorUtils.refresh(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
+
+    _viewer.refresh();
 
     refreshEnablement();
 

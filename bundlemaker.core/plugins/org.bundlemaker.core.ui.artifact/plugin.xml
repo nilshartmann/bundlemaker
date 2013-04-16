@@ -66,7 +66,7 @@
 	<extension point="org.eclipse.ui.menus">
 
 		<menuContribution
-			locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?before=additions">
+			locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer?before=additions">
 			
 			 <menu
 		         id="org.bundlemaker.core.ui.artifact.configuration"

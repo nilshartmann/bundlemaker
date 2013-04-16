@@ -9,7 +9,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.editor.xref3;
 
-import org.bundlemaker.core.selection.IArtifactSelection;
+import java.util.List;
+
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
 import org.eclipse.swt.widgets.Composite;
@@ -50,21 +52,25 @@ public class ThreewayXRefView extends AbstractArtifactSelectionAwareEditorPart {
    */
   @Override
   public void analysisModelModified() {
-    setCurrentArtifactSelection(getCurrentArtifactSelection());
+    // setCurrentArtifactSelection(getCurrentArtifactSelection());
+    //
+    // IArtifactSelection selection = Selection.instance().getArtifactSelectionService()
+    // .getSelection(getArtifactSelectionId());
+    //
+    // if (selection != null) {
+    // refreshFromCurrentArtifactSelection(selection.getSelectedArtifacts());
+    // }
 
-    refreshFromCurrentArtifactSelection();
+    _composite.refresh();
+
   }
 
-  public void refreshFromCurrentArtifactSelection() {
-    IArtifactSelection selection = Selection.instance().getArtifactSelectionService()
-        .getSelection(getArtifactSelectionId());
+  public void refreshFromCurrentArtifactSelection(List<IBundleMakerArtifact> selectedArtifacts) {
 
-    if (selection != null && _composite != null) {
+    if (selectedArtifacts != null && _composite != null && selectedArtifacts.size() > 0) {
 
       //
-      if (selection.hasSelectedArtifacts()) {
-        _composite.setSelectedArtifacts(selection.getSelectedArtifacts());
-      }
+      _composite.setSelectedArtifacts(selectedArtifacts);
     }
   }
 

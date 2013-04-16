@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.handler;
+package org.bundlemaker.core.ui.operations;
 
 import java.util.Collection;
 
