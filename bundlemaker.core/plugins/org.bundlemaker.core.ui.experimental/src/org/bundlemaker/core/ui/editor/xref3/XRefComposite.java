@@ -25,6 +25,7 @@ import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -249,12 +250,13 @@ public class XRefComposite extends Composite {
 
   private void fillContextMenu(IMenuManager manager) {
 
+    manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
     CreateModuleFromReferencedArtifactsAction action = new CreateModuleFromReferencedArtifactsAction(
         _artifactLabelProvider.getBundleMakerArtifacts());
 
-    manager.add(action);
+    manager.add(new Separator("artifactsGroup"));
+    manager.appendToGroup("artifactsGroup", action);
 
-    manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
   }
 
   /**
@@ -623,14 +625,12 @@ public class XRefComposite extends Composite {
     public void selectionChanged(SelectionChangedEvent event) {
       TreeViewer in = (TreeViewer) event.getSource();
       if (_mute) {
-        System.out.println("Ignore Request from " + in);
         return;
       }
 
       IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 
       if (selection.isEmpty()) {
-        System.out.println("Ignore empty Selection");
         return;
       }
 
@@ -674,6 +674,15 @@ public class XRefComposite extends Composite {
         _mute = false;
       }
     }
+  }
+
+  /**
+   * 
+   */
+  public void refresh() {
+    _centerViewer.refresh();
+    _fromTreeViewer.refresh();
+    _toTreeViewer.refresh();
   }
 
   // class ResetHistoryAction extends Action implements ISelectionHistoryChangedListener {

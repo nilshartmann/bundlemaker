@@ -290,7 +290,7 @@
 	<extension point="org.eclipse.ui.menus">
 
 		<menuContribution
-			locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
+			locationURI="popup:org.eclipse.ui.popup.any?after=additions">
      <!-- menu
            id="org.bundlemaker.core.ui.tools"
            label="Tools">
@@ -333,7 +333,12 @@
 			</command>
 
 			<!-- Separator for artifact-model-modifying operations -->
-			<separator name="org.bundlemaker.core.ui.artifacts.separator" visible="true"> </separator>
+			<separator name="artifactsGroup" visible="true" ></separator>
+			<separator name="org.bundlemaker.core.ui.additions" visible="true"> </separator>
+			
+		</menuContribution>
+		
+		<menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=artifactsGroup">
 			<command commandId="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
 				label="New Group..." style="push">
 				<visibleWhen checkEnabled="false">
@@ -377,10 +382,14 @@
 						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
 				</visibleWhen>
 			</command>
-			
+		
+		</menuContribution>
+		
+		<menuContribution
+			locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.additions">
+ 			
 			<!-- Separator for Transformation-Script-related operations -->
 			<separator name="org.bundlemaker.core.ui.transformations" visible="true"> </separator>
-			
 		
 			<!-- Exporter section -->
 			<separator name="org.bundlemaker.core.ui.separator.exporter" visible="true"> </separator>

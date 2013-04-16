@@ -19,6 +19,7 @@ import org.bundlemaker.core.selection.stage.ArtifactStageAddMode;
 import org.bundlemaker.core.selection.stage.ArtifactStageChangedEvent;
 import org.bundlemaker.core.selection.stage.IArtifactStageChangeListener;
 import org.bundlemaker.core.ui.artifact.ArtifactImages;
+import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerSorter;
 import org.bundlemaker.core.ui.view.stage.actions.AddModeActionGroup;
@@ -48,6 +49,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
@@ -107,6 +109,8 @@ public class StageView extends ViewPart {
 
   private RemoveFromStageAction                _removeArtifactsAction;
 
+  private RevealInProjectExplorerAction        _revealInProjectExplorerAction;
+
   private boolean                              _autoExpand                  = true;
 
   private AddModeActionGroup                   _addModeActionGroup;
@@ -153,6 +157,7 @@ public class StageView extends ViewPart {
     Transfer[] transferTypes = new Transfer[] { LocalSelectionTransfer.getTransfer() };
     // _tre|eViewer.addDragSupport(operations, transferTypes, new ArtifactTreeDragAdapter(treeViewer));
     _treeViewer.addDropSupport(operations, transferTypes, new ArtifactStageTreeDropAdapter(_treeViewer));
+    getSite().setSelectionProvider(_treeViewer);
 
     // viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL |
     // SWT.V_SCROLL);
@@ -319,6 +324,7 @@ public class StageView extends ViewPart {
 
     refreshEnablement();
 
+    manager.add(_revealInProjectExplorerAction);
     manager.add(_removeArtifactsAction);
 
     // manager.add(action1);
@@ -344,6 +350,7 @@ public class StageView extends ViewPart {
     _autoExpandAction = new AutoExpandAction();
 
     _clearStageAction = new ClearStageAction();
+    _revealInProjectExplorerAction = new RevealInProjectExplorerAction();
     _removeArtifactsAction = new RemoveFromStageAction();
 
     _addModeActionGroup = new AddModeActionGroup();
@@ -373,6 +380,7 @@ public class StageView extends ViewPart {
     boolean autoAddMode = Selection.instance().getArtifactStage().getAddMode().isAutoAddMode();
     _removeArtifactsAction.setEnabled(!(autoAddMode || selection.isEmpty()));
     _clearStageAction.setEnabled(!_effectiveSelectedArtifacts.isEmpty());
+    _revealInProjectExplorerAction.setEnabled(!selection.isEmpty());
   }
 
   /**
@@ -455,6 +463,25 @@ public class StageView extends ViewPart {
     @Override
     public void run() {
       Selection.instance().getArtifactStage().setStagedArtifacts(null);
+    }
+  }
+
+  class RevealInProjectExplorerAction extends Action {
+    public RevealInProjectExplorerAction() {
+      super("Reveal in Project Explorer", IAction.AS_PUSH_BUTTON);
+    }
+
+    @Override
+    public void run() {
+      IStructuredSelection selection = (IStructuredSelection) _treeViewer.getSelection();
+      if (selection == null || selection.isEmpty()) {
+        return;
+      }
+      CommonNavigator projectExplorer = CommonNavigatorUtils
+          .findCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
+      if (projectExplorer != null) {
+        projectExplorer.getCommonViewer().setSelection(selection, true);
+      }
     }
   }
 
