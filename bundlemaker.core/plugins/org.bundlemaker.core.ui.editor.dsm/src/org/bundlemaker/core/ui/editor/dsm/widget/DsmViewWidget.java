@@ -5,7 +5,6 @@ import java.beans.PropertyChangeListener;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.bundlemaker.core.ui.editor.dsm.ArtifactLabelProvider;
 import org.bundlemaker.core.ui.editor.dsm.DsmViewModel;
 import org.bundlemaker.core.ui.editor.dsm.IDsmViewModel;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.matrix.IMatrixListener;
@@ -14,7 +13,6 @@ import org.bundlemaker.core.ui.editor.dsm.widget.internal.matrix.MatrixEvent;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.sidemarker.HorizontalSideMarker;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.sidemarker.VerticalSideMarker;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.util.BoxSize;
-import org.bundlemaker.core.ui.editor.dsm.widget.internal.util.DependencyLabelProvider;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.util.DsmUtils;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.zoom.ZoomableScrollPane;
 import org.eclipse.core.runtime.Assert;
@@ -51,7 +49,7 @@ public class DsmViewWidget extends Canvas implements Observer {
   float                        _zoom                   = 1.0f;
 
   /** the {@link DsmViewModel} */
-  private IDsmViewModel        _dsmContentProvider;
+  private IDsmViewModel  _dsmContentProvider;
 
   /** the main figure */
   private Figure               _mainFigure;
@@ -391,16 +389,6 @@ public class DsmViewWidget extends Canvas implements Observer {
 
     // _zoomScrollBar.setValue(40);
     // _useShortendLabelsCheckBox.setSelected(_model.isUseShortendLabels());
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return the model
-   */
-  public IDsmViewModel getModel() {
-    return _dsmContentProvider;
   }
 
   public void addMatrixListener(IMatrixListener listener) {

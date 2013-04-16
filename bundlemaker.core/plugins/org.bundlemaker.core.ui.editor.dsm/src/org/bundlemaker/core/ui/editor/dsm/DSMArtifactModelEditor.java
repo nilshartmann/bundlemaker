@@ -71,6 +71,8 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
 
   private ArtifactLabelProvider _artifactLabelProvider;
 
+  private DsmViewModel          _model;
+
   /**
    * Opens the DSM View.
    * 
@@ -135,17 +137,17 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
         //
         if (isCellSelected(event)) {
           _detailComposite.getSelectionCountLabel().setText(
-              getNullSafeString(_viewWidget.getModel().getValues()[event.getX()][event.getY()], "0"));
-          _detailComposite.getFromLabel().setText(_viewWidget.getModel().getLabels()[event.getY()]);
-          _detailComposite.getToLabel().setText(_viewWidget.getModel().getLabels()[event.getX()]);
+              getNullSafeString(_model.getValues()[event.getX()][event.getY()], "0"));
+          _detailComposite.getFromLabel().setText(_model.getLabels()[event.getY()]);
+          _detailComposite.getToLabel().setText(_model.getLabels()[event.getX()]);
         }
 
         //
         else if (_selectedCell != null) {
           _detailComposite.getSelectionCountLabel().setText(
-              getNullSafeString(_viewWidget.getModel().getValues()[_selectedCell[0]][_selectedCell[1]], "0"));
-          _detailComposite.getFromLabel().setText(_viewWidget.getModel().getLabels()[_selectedCell[1]]);
-          _detailComposite.getToLabel().setText(_viewWidget.getModel().getLabels()[_selectedCell[0]]);
+              getNullSafeString(_model.getValues()[_selectedCell[0]][_selectedCell[1]], "0"));
+          _detailComposite.getFromLabel().setText(_model.getLabels()[_selectedCell[1]]);
+          _detailComposite.getToLabel().setText(_model.getLabels()[_selectedCell[0]]);
         }
 
         //
@@ -163,15 +165,14 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
 
           _selectedCell = new int[] { event.getX(), event.getY() };
 
-          IDependency dependency = _viewWidget.getModel().isToggled() ? ((DsmViewModel) _viewWidget.getModel())
-              .getDependency(event.getY(), event.getX()) : ((DsmViewModel) _viewWidget.getModel()).getDependency(
-              event.getX(), event.getY());
+          IDependency dependency = _model.isToggled() ? ((DsmViewModel) _model).getDependency(event.getY(),
+              event.getX()) : ((DsmViewModel) _model).getDependency(event.getX(), event.getY());
 
           Selection.instance().getDependencySelectionService()
               .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DSMArtifactModelEditor.DSM_EDITOR_ID, dependency);
 
-          _fromArtifact = (IBundleMakerArtifact) _viewWidget.getModel().getNodes()[event.getX()];
-          _toArtifact = (IBundleMakerArtifact) _viewWidget.getModel().getNodes()[event.getY()];
+          _fromArtifact = (IBundleMakerArtifact) _model.getNodes()[event.getX()];
+          _toArtifact = (IBundleMakerArtifact) _model.getNodes()[event.getY()];
         }
       }
     });
@@ -228,11 +229,10 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
 
       //
 
-      // set the model
-      DsmViewModel model = new DsmViewModel(selection.getEffectiveSelectedArtifacts());
-      model.setLabelPresentationMode(_detailComposite.getLabelPresentationMode());
-      _artifactLabelProvider.setModel(model);
-      _viewWidget.setModel(model);
+      _model = new DsmViewModel(selection.getEffectiveSelectedArtifacts());
+      _model.setLabelPresentationMode(_detailComposite.getLabelPresentationMode());
+      _artifactLabelProvider.setModel(_model);
+      _viewWidget.setModel(_model);
 
       // clear the dependency selection
       resetDependencySelection();
@@ -271,7 +271,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   private void resetDependencySelection() {
 
     //
-    DsmViewModel dsmViewModel = (DsmViewModel) _viewWidget.getModel();
+    DsmViewModel dsmViewModel = (DsmViewModel) _model;
 
     //
     List<?> artifacts = Arrays.asList(dsmViewModel.getNodes());
@@ -290,9 +290,8 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
       //
       _selectedCell = new int[] { artifacts.indexOf(_fromArtifact), artifacts.indexOf(_toArtifact) };
 
-      IDependency dependency = _viewWidget.getModel().isToggled() ? ((DsmViewModel) _viewWidget.getModel())
-          .getDependency(_selectedCell[1], _selectedCell[0]) : ((DsmViewModel) _viewWidget.getModel()).getDependency(
-          _selectedCell[0], _selectedCell[1]);
+      IDependency dependency = _model.isToggled() ? ((DsmViewModel) _model).getDependency(_selectedCell[1],
+          _selectedCell[0]) : ((DsmViewModel) _model).getDependency(_selectedCell[0], _selectedCell[1]);
 
       Selection.instance().getDependencySelectionService()
           .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DSMArtifactModelEditor.DSM_EDITOR_ID, dependency);
@@ -437,8 +436,8 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    * @return
    */
   private boolean isCellSelected(MatrixEvent event) {
-    return event.getX() <= _viewWidget.getModel().getItemCount() && event.getX() >= 0
-        && event.getY() <= _viewWidget.getModel().getItemCount() && event.getY() >= 0;
+    return event.getX() <= _model.getItemCount() && event.getX() >= 0 && event.getY() <= _model.getItemCount()
+        && event.getY() >= 0;
   }
 
   /**
