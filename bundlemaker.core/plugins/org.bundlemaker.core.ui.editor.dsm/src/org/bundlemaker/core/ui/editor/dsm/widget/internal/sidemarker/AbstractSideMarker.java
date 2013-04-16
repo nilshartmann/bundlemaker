@@ -2,7 +2,6 @@ package org.bundlemaker.core.ui.editor.dsm.widget.internal.sidemarker;
 
 import org.bundlemaker.core.ui.editor.dsm.widget.IDsmColorScheme;
 import org.bundlemaker.core.ui.editor.dsm.widget.IDsmContentProvider;
-import org.bundlemaker.core.ui.editor.dsm.widget.IDsmCycleDetector;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.util.BoxSize;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Figure;
@@ -29,14 +28,8 @@ import org.eclipse.swt.graphics.FontMetrics;
  */
 public abstract class AbstractSideMarker extends Figure {
 
-  // /** the model */
-  // private IDsmViewModel _model;
-
   /** - */
   private IDsmContentProvider _contentProvider;
-
-  /** - */
-  private IDsmCycleDetector   _cycleDetector;
 
   /** - */
   private ILabelProvider      _labelProvider;
@@ -63,18 +56,16 @@ public abstract class AbstractSideMarker extends Figure {
    * @param labelProvider
    * @param colorScheme
    */
-  public AbstractSideMarker(IDsmContentProvider contentProvider, IDsmCycleDetector cycleDetector,
+  public AbstractSideMarker(IDsmContentProvider contentProvider, 
       ILabelProvider labelProvider, IDsmColorScheme colorScheme) {
 
     //
     Assert.isNotNull(contentProvider);
-    Assert.isNotNull(cycleDetector);
     Assert.isNotNull(labelProvider);
     Assert.isNotNull(colorScheme);
 
     //
     _contentProvider = contentProvider;
-    _cycleDetector = cycleDetector;
     _labelProvider = labelProvider;
     _colorScheme = colorScheme;
 
@@ -152,16 +143,6 @@ public abstract class AbstractSideMarker extends Figure {
    */
   public IDsmContentProvider getContentProvider() {
     return _contentProvider;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public IDsmCycleDetector getCycleDetector() {
-    return _cycleDetector;
   }
 
   /**

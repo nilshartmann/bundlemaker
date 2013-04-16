@@ -11,4 +11,10 @@ public interface IDsmContentProvider {
   Object[][] getDependencies();
 
   Object[] getNodes();
+  
+  int[][] getCycles();
+
+  boolean isInCycle(int x, int y);
+
+  boolean isInCycle(int i);
 }

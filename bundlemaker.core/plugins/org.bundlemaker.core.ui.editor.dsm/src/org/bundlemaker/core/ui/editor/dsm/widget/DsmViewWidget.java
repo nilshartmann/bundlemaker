@@ -176,17 +176,17 @@ public class DsmViewWidget extends Canvas implements Observer {
 
     _colorScheme = new DefaultMatrixColorScheme();
 
-    _matrixFigure = new Matrix(_model, _dependencyLabelProvider, _model, _colorScheme);
+    _matrixFigure = new Matrix(_model, _dependencyLabelProvider, _colorScheme);
     _matrixFigure.addMouseMotionListener(motionListener);
     _matrixFigure.addMouseListener(motionListener);
 
     _zoomableScrollpane = new ZoomableScrollPane(_matrixFigure, ScrollPane.ALWAYS, ScrollPane.ALWAYS);
 
-    _verticalListFigure = new VerticalSideMarker(_model, _model, _artifactLabelProvider, _colorScheme);
+    _verticalListFigure = new VerticalSideMarker(_model, _artifactLabelProvider, _colorScheme);
     _verticalListFigure.addMouseMotionListener(motionListener);
     _zoomableScrollpaneVerticalBar = new ZoomableScrollPane(_verticalListFigure, ScrollPane.NEVER, ScrollPane.NEVER);
 
-    _horizontalListFigure = new HorizontalSideMarker(_model, _model, _artifactLabelProvider, _colorScheme);
+    _horizontalListFigure = new HorizontalSideMarker(_model, _artifactLabelProvider, _colorScheme);
     _horizontalListFigure.addMouseMotionListener(motionListener);
     _zoomableScrollpaneHorizontalBar = new ZoomableScrollPane(_horizontalListFigure, ScrollPane.NEVER, ScrollPane.NEVER);
 

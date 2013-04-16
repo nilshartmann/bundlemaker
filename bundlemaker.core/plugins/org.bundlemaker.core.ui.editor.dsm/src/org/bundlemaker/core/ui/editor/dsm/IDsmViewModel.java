@@ -5,7 +5,6 @@ import java.util.Observer;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.editor.dsm.widget.IDsmContentProvider;
-import org.bundlemaker.core.ui.editor.dsm.widget.IDsmCycleDetector;
 
 /**
  * <p>
@@ -13,7 +12,7 @@ import org.bundlemaker.core.ui.editor.dsm.widget.IDsmCycleDetector;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IDsmViewModel extends IDsmContentProvider, IDsmCycleDetector {
+public interface IDsmViewModel extends IDsmContentProvider {
 
   void refresh(Collection<IBundleMakerArtifact> artifacts);
 

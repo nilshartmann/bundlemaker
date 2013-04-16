@@ -2,7 +2,6 @@ package org.bundlemaker.core.ui.editor.dsm.widget.internal.sidemarker;
 
 import org.bundlemaker.core.ui.editor.dsm.widget.IDsmColorScheme;
 import org.bundlemaker.core.ui.editor.dsm.widget.IDsmContentProvider;
-import org.bundlemaker.core.ui.editor.dsm.widget.IDsmCycleDetector;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.MouseEvent;
@@ -29,9 +28,9 @@ public class HorizontalSideMarker extends AbstractSideMarker {
    * @param matrixCycleDetector
    * @param colorScheme
    */
-  public HorizontalSideMarker(IDsmContentProvider contentProvider, IDsmCycleDetector matrixCycleDetector,
+  public HorizontalSideMarker(IDsmContentProvider contentProvider, 
       ILabelProvider labelProvider, IDsmColorScheme colorScheme) {
-    super(contentProvider, matrixCycleDetector, labelProvider, colorScheme);
+    super(contentProvider, labelProvider, colorScheme);
   }
 
   /**
@@ -74,7 +73,7 @@ public class HorizontalSideMarker extends AbstractSideMarker {
     for (int i = 0; i < getContentProvider().getItemCount(); i++) {
 
       //
-      boolean isInCycle = getCycleDetector().isInCycle(i);
+      boolean isInCycle = getContentProvider().isInCycle(i);
 
       // draw the "even" marker
       if (isInCycle || getMarkedItem() == i || i % 2 == 0) {
@@ -99,7 +98,7 @@ public class HorizontalSideMarker extends AbstractSideMarker {
             + 1, getSize().height + 1);
       }
 
-      if (isInCycle && getCycleDetector().isInCycle(i - 1)) {
+      if (isInCycle && getContentProvider().isInCycle(i - 1)) {
         graphics.setForegroundColor(getColorScheme().getCycleSideMarkerSeparatorColor());
       } else {
         // draw the separator lines

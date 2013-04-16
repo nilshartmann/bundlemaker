@@ -87,11 +87,11 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   public void analysisModelModified() {
     Display.getDefault().syncExec(new Runnable() {
       @Override
-	public void run() {
-         initSelection(getCurrentArtifactSelection());
+      public void run() {
+        initSelection(getCurrentArtifactSelection());
       }
-   });
-    
+    });
+
   }
 
   /**
@@ -114,12 +114,12 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     //
     _detailComposite = new DsmDetailComposite(parent, _viewWidget);
     _detailComposite.addPropertyChangeListener(new PropertyChangeListener() {
-		
-		@Override
-		public void propertyChange(PropertyChangeEvent evt) {
-			initSelection(getCurrentArtifactSelection());
-		}
-	});
+
+      @Override
+      public void propertyChange(PropertyChangeEvent evt) {
+        initSelection(getCurrentArtifactSelection());
+      }
+    });
     GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).applyTo(_detailComposite);
     setDefaultDependencyDescription();
 
@@ -161,8 +161,8 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
           _selectedCell = new int[] { event.getX(), event.getY() };
 
           IDependency dependency = _viewWidget.getModel().isToggled() ? ((DsmViewModel) _viewWidget.getModel())
-              .getDependency(event.getY(),
-                  event.getX()) : ((DsmViewModel) _viewWidget.getModel()).getDependency(event.getX(), event.getY());
+              .getDependency(event.getY(), event.getX()) : ((DsmViewModel) _viewWidget.getModel()).getDependency(
+              event.getX(), event.getY());
 
           Selection.instance().getDependencySelectionService()
               .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DSMArtifactModelEditor.DSM_EDITOR_ID, dependency);
@@ -214,30 +214,29 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     initSelection(selection);
   }
 
-//  private boolean isResourceOrResourceContent(IArtifactSelection selection) {
-//    return selection.getEffectiveSelectedArtifacts().get(0) instanceof IResourceArtifact
-//        || selection.getEffectiveSelectedArtifacts().get(0).getParent(IResourceArtifact.class) != null;
-//  }
+  // private boolean isResourceOrResourceContent(IArtifactSelection selection) {
+  // return selection.getEffectiveSelectedArtifacts().get(0) instanceof IResourceArtifact
+  // || selection.getEffectiveSelectedArtifacts().get(0).getParent(IResourceArtifact.class) != null;
+  // }
 
   private void initSelection(IArtifactSelection selection) {
 
     if (_viewWidget != null && _detailComposite != null) {
 
       //
-      
-      // set the model
-        DsmViewModel model = new DsmViewModel(selection.getEffectiveSelectedArtifacts());
-        model.setLabelPresentationMode(_detailComposite.getLabelPresentationMode());
-		_viewWidget.setModel(model);
 
-        // clear the dependency selection
-        resetDependencySelection();
+      // set the model
+      DsmViewModel model = new DsmViewModel(selection.getEffectiveSelectedArtifacts());
+      model.setLabelPresentationMode(_detailComposite.getLabelPresentationMode());
+      _viewWidget.setModel(model);
+
+      // clear the dependency selection
+      resetDependencySelection();
 
       setDefaultDependencyDescription();
     }
-    
+
   }
-  
 
   /**
    * {@inheritDoc}
@@ -288,9 +287,8 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
       _selectedCell = new int[] { artifacts.indexOf(_fromArtifact), artifacts.indexOf(_toArtifact) };
 
       IDependency dependency = _viewWidget.getModel().isToggled() ? ((DsmViewModel) _viewWidget.getModel())
-          .getDependency(_selectedCell[1],
-              _selectedCell[0]) : ((DsmViewModel) _viewWidget.getModel()).getDependency(_selectedCell[0],
-          _selectedCell[1]);
+          .getDependency(_selectedCell[1], _selectedCell[0]) : ((DsmViewModel) _viewWidget.getModel()).getDependency(
+          _selectedCell[0], _selectedCell[1]);
 
       Selection.instance().getDependencySelectionService()
           .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DSMArtifactModelEditor.DSM_EDITOR_ID, dependency);
@@ -313,104 +311,104 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     return DSM_EDITOR_ID;
   }
 
-//  /**
-//   * <p>
-//   * </p>
-//   * 
-//   * @param dsmViewWidget
-//   */
-//  private void createContextMenu(DsmViewWidget dsmViewWidget) {
-//
-//    MenuManager menuManager = new MenuManager("#PopupMenu");
-//    menuManager.setRemoveAllWhenShown(true);
-//    menuManager.addMenuListener(new IMenuListener() {
-//
-//      private MenuItem _menuItem;
-//
-//      @Override
-//      public void menuAboutToShow(IMenuManager manager) {
-//        manager.add(new Separator("edit"));
-//        manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-//        manager.appendToGroup("edit", new ContributionItem("Test") {
-//
-//          /**
-//           * {@inheritDoc}
-//           */
-//          @Override
-//          public void fill(Menu menu, int index) {
-//            _menuItem = new MenuItem(menu, SWT.PUSH);
-//            _menuItem.setText("Export...");
-//            _menuItem.addSelectionListener(new SelectionListener() {
-//
-//              @Override
-//              public void widgetSelected(SelectionEvent e) {
-//
-//                final int sideMarkerOffset = FigureUtilities.getTextWidth(
-//                    DsmUtils.getLongestString(_viewWidget.getModel().getLabels()), Display.getCurrent().getSystemFont());
-//
-//                //
-//                int matrixWidth = _viewWidget.getModel().getConfiguration().getHorizontalBoxSize()
-//                    * _viewWidget.getModel().getItemCount();
-//                int matrixHeight = _viewWidget.getModel().getConfiguration().getVerticalBoxSize()
-//                    * _viewWidget.getModel().getItemCount();
-//                final Matrix matrix = new Matrix(_viewWidget.getModel(), new DependencyLabelProvider(), _viewWidget
-//                    .getModel());
-//                matrix.setSize(matrixWidth, matrixHeight);
-//                matrix.setFont(Display.getCurrent().getSystemFont());
-//
-//                //
-//                final VerticalSideMarker verticalSideMarker = new VerticalSideMarker(_viewWidget.getModel());
-//                verticalSideMarker.setSize(sideMarkerOffset, matrixHeight);
-//                verticalSideMarker.setFont(Display.getCurrent().getSystemFont());
-//
-//                //
-//                final HorizontalSideMarker horizontalSideMarker = new HorizontalSideMarker(_viewWidget.getModel());
-//                horizontalSideMarker.setSize(matrixWidth, sideMarkerOffset);
-//                horizontalSideMarker.setFont(Display.getCurrent().getSystemFont());
-//
-//                IFigure mainFigure = new Figure() {
-//
-//                  /**
-//                   * {@inheritDoc}
-//                   */
-//                  @Override
-//                  public void paint(Graphics graphics) {
-//                    super.paint(graphics);
-//
-//                    graphics.pushState();
-//                    graphics.translate(0, sideMarkerOffset);
-//                    verticalSideMarker.paint(graphics);
-//                    graphics.restoreState();
-//
-//                    graphics.pushState();
-//                    graphics.translate(sideMarkerOffset, sideMarkerOffset);
-//                    matrix.paint(graphics);
-//                    graphics.restoreState();
-//
-//                    graphics.pushState();
-//                    graphics.translate(sideMarkerOffset, 0);
-//                    horizontalSideMarker.paint(graphics);
-//                    graphics.restoreState();
-//                  }
-//                };
-//                mainFigure.setSize(matrix.getSize().width + sideMarkerOffset + 1, matrix.getSize().height
-//                    + sideMarkerOffset + 1);
-//
-//                FigurePrinter.save(mainFigure);
-//              }
-//
-//              @Override
-//              public void widgetDefaultSelected(SelectionEvent e) {
-//              }
-//            });
-//          }
-//        });
-//      }
-//    });
-//
-//    Menu menu = menuManager.createContextMenu(dsmViewWidget);
-//    dsmViewWidget.setMenu(menu);
-//  }
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param dsmViewWidget
+  // */
+  // private void createContextMenu(DsmViewWidget dsmViewWidget) {
+  //
+  // MenuManager menuManager = new MenuManager("#PopupMenu");
+  // menuManager.setRemoveAllWhenShown(true);
+  // menuManager.addMenuListener(new IMenuListener() {
+  //
+  // private MenuItem _menuItem;
+  //
+  // @Override
+  // public void menuAboutToShow(IMenuManager manager) {
+  // manager.add(new Separator("edit"));
+  // manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+  // manager.appendToGroup("edit", new ContributionItem("Test") {
+  //
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Override
+  // public void fill(Menu menu, int index) {
+  // _menuItem = new MenuItem(menu, SWT.PUSH);
+  // _menuItem.setText("Export...");
+  // _menuItem.addSelectionListener(new SelectionListener() {
+  //
+  // @Override
+  // public void widgetSelected(SelectionEvent e) {
+  //
+  // final int sideMarkerOffset = FigureUtilities.getTextWidth(
+  // DsmUtils.getLongestString(_viewWidget.getModel().getLabels()), Display.getCurrent().getSystemFont());
+  //
+  // //
+  // int matrixWidth = _viewWidget.getModel().getConfiguration().getHorizontalBoxSize()
+  // * _viewWidget.getModel().getItemCount();
+  // int matrixHeight = _viewWidget.getModel().getConfiguration().getVerticalBoxSize()
+  // * _viewWidget.getModel().getItemCount();
+  // final Matrix matrix = new Matrix(_viewWidget.getModel(), new DependencyLabelProvider(), _viewWidget
+  // .getModel());
+  // matrix.setSize(matrixWidth, matrixHeight);
+  // matrix.setFont(Display.getCurrent().getSystemFont());
+  //
+  // //
+  // final VerticalSideMarker verticalSideMarker = new VerticalSideMarker(_viewWidget.getModel());
+  // verticalSideMarker.setSize(sideMarkerOffset, matrixHeight);
+  // verticalSideMarker.setFont(Display.getCurrent().getSystemFont());
+  //
+  // //
+  // final HorizontalSideMarker horizontalSideMarker = new HorizontalSideMarker(_viewWidget.getModel());
+  // horizontalSideMarker.setSize(matrixWidth, sideMarkerOffset);
+  // horizontalSideMarker.setFont(Display.getCurrent().getSystemFont());
+  //
+  // IFigure mainFigure = new Figure() {
+  //
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Override
+  // public void paint(Graphics graphics) {
+  // super.paint(graphics);
+  //
+  // graphics.pushState();
+  // graphics.translate(0, sideMarkerOffset);
+  // verticalSideMarker.paint(graphics);
+  // graphics.restoreState();
+  //
+  // graphics.pushState();
+  // graphics.translate(sideMarkerOffset, sideMarkerOffset);
+  // matrix.paint(graphics);
+  // graphics.restoreState();
+  //
+  // graphics.pushState();
+  // graphics.translate(sideMarkerOffset, 0);
+  // horizontalSideMarker.paint(graphics);
+  // graphics.restoreState();
+  // }
+  // };
+  // mainFigure.setSize(matrix.getSize().width + sideMarkerOffset + 1, matrix.getSize().height
+  // + sideMarkerOffset + 1);
+  //
+  // FigurePrinter.save(mainFigure);
+  // }
+  //
+  // @Override
+  // public void widgetDefaultSelected(SelectionEvent e) {
+  // }
+  // });
+  // }
+  // });
+  // }
+  // });
+  //
+  // Menu menu = menuManager.createContextMenu(dsmViewWidget);
+  // dsmViewWidget.setMenu(menu);
+  // }
 
   // /** Paints the figure onto the given graphics */
   // public static void paintDiagram(Graphics g, IFigure figure) {

@@ -1,9 +1,7 @@
 package org.bundlemaker.core.ui.editor.dsm.widget.internal.sidemarker;
 
-import org.bundlemaker.core.ui.editor.dsm.IDsmViewModel;
 import org.bundlemaker.core.ui.editor.dsm.widget.IDsmColorScheme;
 import org.bundlemaker.core.ui.editor.dsm.widget.IDsmContentProvider;
-import org.bundlemaker.core.ui.editor.dsm.widget.IDsmCycleDetector;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -28,9 +26,9 @@ public class VerticalSideMarker extends AbstractSideMarker {
    * @param matrixCycleDetector
    * @param colorScheme
    */
-  public VerticalSideMarker(IDsmContentProvider contentProvider, IDsmCycleDetector matrixCycleDetector,
-      ILabelProvider labelProvider, IDsmColorScheme colorScheme) {
-    super(contentProvider, matrixCycleDetector, labelProvider, colorScheme);
+  public VerticalSideMarker(IDsmContentProvider contentProvider, ILabelProvider labelProvider,
+      IDsmColorScheme colorScheme) {
+    super(contentProvider, labelProvider, colorScheme);
   }
 
   @Override
@@ -79,7 +77,7 @@ public class VerticalSideMarker extends AbstractSideMarker {
     for (int i = 0; i < getContentProvider().getItemCount(); i++) {
 
       //
-      boolean isInCycle = getCycleDetector().isInCycle(i);
+      boolean isInCycle = getContentProvider().isInCycle(i);
 
       // set new background color
       if (isInCycle || i == getMarkedItem() || i % 2 == 0) {
@@ -111,11 +109,11 @@ public class VerticalSideMarker extends AbstractSideMarker {
 
       // draw text
       graphics.setForegroundColor(getColorScheme().getSideMarkerTextColor());
-      graphics.drawString(getLabelProvider().getText(getContentProvider().getNodes()[i]), new Point(10,
-          (getBoxSize().getVerticalBoxSize() * i) + offset));
+      graphics.drawString(getLabelProvider().getText(getContentProvider().getNodes()[i]), new Point(10, (getBoxSize()
+          .getVerticalBoxSize() * i) + offset));
 
       // draw
-      if (isInCycle && getCycleDetector().isInCycle(i - 1)) {
+      if (isInCycle && getContentProvider().isInCycle(i - 1)) {
         graphics.setForegroundColor(getColorScheme().getCycleSideMarkerSeparatorColor());
       } else {
         // draw the separator lines

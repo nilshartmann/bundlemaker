@@ -4,7 +4,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bundlemaker.core.ui.editor.dsm.widget.IDsmColorScheme;
 import org.bundlemaker.core.ui.editor.dsm.widget.IDsmContentProvider;
-import org.bundlemaker.core.ui.editor.dsm.widget.IDsmCycleDetector;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.util.BoxSize;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.zoom.ZoomContainer;
 import org.eclipse.core.runtime.Assert;
@@ -29,16 +28,13 @@ import org.eclipse.swt.widgets.Display;
 public class Matrix extends Figure {
 
   /** the model */
-  protected IDsmContentProvider                   _model;
+  protected IDsmContentProvider                   _dsmContentProvider;
 
   /** - */
   private IDsmColorScheme                         _matrixColorScheme;
 
   /** - */
   private ILabelProvider                          _matrixLabelProvider;
-
-  /** - */
-  private IDsmCycleDetector                       _matrixCycleDetector;
 
   /** - */
   protected CopyOnWriteArrayList<IMatrixListener> _matrixListeners;
@@ -62,20 +58,17 @@ public class Matrix extends Figure {
    * @param labelProvider
    * @param matrixCycleDetector
    */
-  public Matrix(IDsmContentProvider model, ILabelProvider labelProvider, IDsmCycleDetector matrixCycleDetector,
-      IDsmColorScheme colorScheme) {
+  public Matrix(IDsmContentProvider model, ILabelProvider labelProvider, IDsmColorScheme colorScheme) {
 
     //
     Assert.isNotNull(model);
     Assert.isNotNull(labelProvider);
-    Assert.isNotNull(matrixCycleDetector);
     Assert.isNotNull(colorScheme);
 
     // set the model
-    _model = model;
+    _dsmContentProvider = model;
     _matrixColorScheme = colorScheme;
     _matrixLabelProvider = labelProvider;
-    _matrixCycleDetector = matrixCycleDetector;
 
     //
     _matrixListeners = new CopyOnWriteArrayList<IMatrixListener>();
@@ -116,14 +109,11 @@ public class Matrix extends Figure {
    * @return
    */
   public IDsmContentProvider getModel() {
-    return _model;
+    return _dsmContentProvider;
   }
 
   public void setModel(IDsmContentProvider model) {
-
-    // TODO
-    _model = model;
-    _matrixCycleDetector = (IDsmCycleDetector) model;
+    _dsmContentProvider = model;
   }
 
   /**
@@ -134,10 +124,6 @@ public class Matrix extends Figure {
    */
   protected final IDsmColorScheme getMatrixConfiguration() {
     return _matrixColorScheme;
-  }
-
-  protected IDsmCycleDetector getMatrixCycleDetector() {
-    return _matrixCycleDetector;
   }
 
   /**
@@ -159,13 +145,13 @@ public class Matrix extends Figure {
 
     // draw the diagonal
     graphics.setBackgroundColor(_matrixColorScheme.getMatrixDiagonalColor());
-    for (int i = 0; i < _model.getItemCount(); i++) {
+    for (int i = 0; i < _dsmContentProvider.getItemCount(); i++) {
       graphics.fillRectangle(getHorizontalSliceSize(i), getVerticalSliceSize(i), getHorizontalSliceSize(i + 1)
           - getHorizontalSliceSize(i) + 1, getVerticalSliceSize(i + 1) - getVerticalSliceSize(i) + 1);
     }
 
     // draw the cycles
-    for (int[] cycle : _matrixCycleDetector.getCycles()) {
+    for (int[] cycle : _dsmContentProvider.getCycles()) {
       graphics.setBackgroundColor(_matrixColorScheme.getCycleSideMarkerColor());
       int lenght = cycle[cycle.length - 1] - cycle[0] + 1;
       graphics.fillRectangle(getHorizontalSliceSize(cycle[0]), getVerticalSliceSize(cycle[0]),
@@ -187,10 +173,10 @@ public class Matrix extends Figure {
     graphics.setForegroundColor(_matrixColorScheme.getMatrixTextColor());
     int[] visibleSlices = getVisibleSlices();
     for (int i = visibleSlices[0]; (i <= visibleSlices[1]); i++) {
-      for (int j = visibleSlices[2]; j < _model.getItemCount(); j++) {
+      for (int j = visibleSlices[2]; j < _dsmContentProvider.getItemCount(); j++) {
         if (i != j) {
-          String value = _model.isToggled() ? _matrixLabelProvider.getText(_model.getDependency(j, i))
-              : _matrixLabelProvider.getText(_model.getDependency(i, j));
+          String value = _dsmContentProvider.isToggled() ? _matrixLabelProvider.getText(_dsmContentProvider
+              .getDependency(j, i)) : _matrixLabelProvider.getText(_dsmContentProvider.getDependency(i, j));
           if (value != null) {
             graphics.drawString(value, getHorizontalSliceSize(i) + 4, getVerticalSliceSize(j));
           }
@@ -200,16 +186,16 @@ public class Matrix extends Figure {
 
     // draw the separator lines
     graphics.setForegroundColor(_matrixColorScheme.getMatrixSeparatorColor());
-    for (int i = 0; i <= _model.getItemCount(); i++) {
-      graphics.drawLine(new Point(0, getVerticalSliceSize(i)),
-          new Point(getBoxSize().getHorizontalBoxSize() * _model.getItemCount(), getVerticalSliceSize(i)));
+    for (int i = 0; i <= _dsmContentProvider.getItemCount(); i++) {
+      graphics.drawLine(new Point(0, getVerticalSliceSize(i)), new Point(getBoxSize().getHorizontalBoxSize()
+          * _dsmContentProvider.getItemCount(), getVerticalSliceSize(i)));
       graphics.drawLine(new Point(getHorizontalSliceSize(i), 0), new Point(getHorizontalSliceSize(i), getBoxSize()
-          .getVerticalBoxSize() * _model.getItemCount()));
+          .getVerticalBoxSize() * _dsmContentProvider.getItemCount()));
     }
 
     // draw the cycle separator lines
     graphics.setForegroundColor(_matrixColorScheme.getCycleSideMarkerSeparatorColor());
-    for (int[] cycle : _matrixCycleDetector.getCycles()) {
+    for (int[] cycle : _dsmContentProvider.getCycles()) {
       int current = 0;
       for (int i : cycle) {
         current = i;
@@ -232,7 +218,7 @@ public class Matrix extends Figure {
   private int[] getVisibleSlices() {
 
     if (!(this.getParent() instanceof ZoomContainer)) {
-      return new int[] { 0, _model.getItemCount() - 1, 0, _model.getItemCount() - 1 };
+      return new int[] { 0, _dsmContentProvider.getItemCount() - 1, 0, _dsmContentProvider.getItemCount() - 1 };
     }
 
     ZoomContainer zoomContainer = (ZoomContainer) this.getParent();
@@ -247,11 +233,11 @@ public class Matrix extends Figure {
 
     return new int[] {
         horMin,
-        horMin + horVisibleSlicesCount > _model.getItemCount() - 1 ? _model.getItemCount() - 1 : horMin
-            + horVisibleSlicesCount,
+        horMin + horVisibleSlicesCount > _dsmContentProvider.getItemCount() - 1 ? _dsmContentProvider.getItemCount() - 1
+            : horMin + horVisibleSlicesCount,
         verMin,
-        verMin + verVisibleSlicesCount > _model.getItemCount() - 1 ? _model.getItemCount() - 1 : verMin
-            + verVisibleSlicesCount };
+        verMin + verVisibleSlicesCount > _dsmContentProvider.getItemCount() - 1 ? _dsmContentProvider.getItemCount() - 1
+            : verMin + verVisibleSlicesCount };
   }
 
   /**
@@ -261,8 +247,8 @@ public class Matrix extends Figure {
   public void resetSize() {
 
     //
-    Dimension dimension = new Dimension(getBoxSize().getHorizontalBoxSize() * _model.getItemCount() + 1, getBoxSize()
-        .getVerticalBoxSize() * _model.getItemCount() + 1);
+    Dimension dimension = new Dimension(getBoxSize().getHorizontalBoxSize() * _dsmContentProvider.getItemCount() + 1,
+        getBoxSize().getVerticalBoxSize() * _dsmContentProvider.getItemCount() + 1);
 
     //
     if (!getSize().equals(dimension)) {
@@ -314,7 +300,7 @@ public class Matrix extends Figure {
     if (_x != -1 && _y != -1) {
 
       // draw column
-      if (getMatrixCycleDetector().isInCycle(_x, _y)) {
+      if (_dsmContentProvider.isInCycle(_x, _y)) {
         graphics.setBackgroundColor(getMatrixConfiguration().getCycleMatrixMarkedColumnRowColor());
       } else {
         graphics.setBackgroundColor(getMatrixConfiguration().getMatrixMarkedColumnRowColor());
@@ -339,7 +325,7 @@ public class Matrix extends Figure {
       // }
 
       // draw marked cell
-      if (getMatrixCycleDetector().isInCycle(_x, _y)) {
+      if (_dsmContentProvider.isInCycle(_x, _y)) {
         graphics.setBackgroundColor(getMatrixConfiguration().getCycleMatrixMarkedCellColor());
       } else {
         graphics.setBackgroundColor(getMatrixConfiguration().getMatrixMarkedCellColor());
@@ -376,7 +362,7 @@ public class Matrix extends Figure {
       if (x != _x || y != _y) {
 
         //
-        if (x >= _model.getItemCount() || y >= _model.getItemCount()) {
+        if (x >= _dsmContentProvider.getItemCount() || y >= _dsmContentProvider.getItemCount()) {
 
           _x = -1;
           _y = -1;
