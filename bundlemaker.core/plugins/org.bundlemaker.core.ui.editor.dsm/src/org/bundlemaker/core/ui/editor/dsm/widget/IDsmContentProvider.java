@@ -1,7 +1,13 @@
 package org.bundlemaker.core.ui.editor.dsm.widget;
 
+import java.util.Observer;
+
 public interface IDsmContentProvider {
 
+  void addObserver(Observer observer);
+
+  void deleteObserver(Observer dsmViewWidget);
+  
   int getItemCount();
 
   boolean isToggled();

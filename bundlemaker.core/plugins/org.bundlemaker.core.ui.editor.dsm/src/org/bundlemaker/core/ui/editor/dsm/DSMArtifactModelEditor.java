@@ -46,28 +46,30 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   /**
    * This is used as the DSMView's providerId for the xxxSelectionServices
    */
-  public static String         DSM_EDITOR_ID   = DSMArtifactModelEditor.class.getName();
+  public static String          DSM_EDITOR_ID   = DSMArtifactModelEditor.class.getName();
 
   /**
    * Dummy input used for this editor
    */
   @SuppressWarnings("restriction")
-  private static IEditorInput  nullInputEditor = new NullEditorInput();
+  private static IEditorInput   nullInputEditor = new NullEditorInput();
 
   /** - */
-  private DsmViewWidget        _viewWidget;
+  private DsmViewWidget         _viewWidget;
 
   /** - */
-  private DsmDetailComposite   _detailComposite;
+  private DsmDetailComposite    _detailComposite;
 
   /** - */
-  private int[]                _selectedCell;
+  private int[]                 _selectedCell;
 
   /** - */
-  private IBundleMakerArtifact _fromArtifact;
+  private IBundleMakerArtifact  _fromArtifact;
 
   /** - */
-  private IBundleMakerArtifact _toArtifact;
+  private IBundleMakerArtifact  _toArtifact;
+
+  private ArtifactLabelProvider _artifactLabelProvider;
 
   /**
    * Opens the DSM View.
@@ -107,7 +109,8 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     //
 
     DsmViewModel model = new DsmViewModel();
-    _viewWidget = new DsmViewWidget(model, new ArtifactLabelProvider(model), new DependencyLabelProvider(), parent);
+    _artifactLabelProvider = new ArtifactLabelProvider(model);
+    _viewWidget = new DsmViewWidget(model, _artifactLabelProvider, new DependencyLabelProvider(), parent);
     GridDataFactory.swtDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(_viewWidget);
     _viewWidget.setZoom((50 + 10) * 0.02f);
 
@@ -228,6 +231,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
       // set the model
       DsmViewModel model = new DsmViewModel(selection.getEffectiveSelectedArtifacts());
       model.setLabelPresentationMode(_detailComposite.getLabelPresentationMode());
+      _artifactLabelProvider.setModel(model);
       _viewWidget.setModel(model);
 
       // clear the dependency selection

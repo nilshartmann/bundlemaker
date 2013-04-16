@@ -51,7 +51,7 @@ public class DsmViewWidget extends Canvas implements Observer {
   float                        _zoom                   = 1.0f;
 
   /** the {@link DsmViewModel} */
-  private IDsmViewModel        _model;
+  private IDsmViewModel        _dsmContentProvider;
 
   /** the main figure */
   private Figure               _mainFigure;
@@ -104,14 +104,14 @@ public class DsmViewWidget extends Canvas implements Observer {
     Assert.isNotNull(dependencyLabelProvider);
 
     // set model and canvas
-    this._model = model;
+    this._dsmContentProvider = model;
 
     //
     _artifactLabelProvider = artifactLabelProvider;
     _dependencyLabelProvider = dependencyLabelProvider;
 
     // set this view as an observer
-    this._model.addObserver(this);
+    this._dsmContentProvider.addObserver(this);
 
     // init
     init();
@@ -176,17 +176,17 @@ public class DsmViewWidget extends Canvas implements Observer {
 
     _colorScheme = new DefaultMatrixColorScheme();
 
-    _matrixFigure = new Matrix(_model, _dependencyLabelProvider, _colorScheme);
+    _matrixFigure = new Matrix(_dsmContentProvider, _dependencyLabelProvider, _colorScheme);
     _matrixFigure.addMouseMotionListener(motionListener);
     _matrixFigure.addMouseListener(motionListener);
 
     _zoomableScrollpane = new ZoomableScrollPane(_matrixFigure, ScrollPane.ALWAYS, ScrollPane.ALWAYS);
 
-    _verticalListFigure = new VerticalSideMarker(_model, _artifactLabelProvider, _colorScheme);
+    _verticalListFigure = new VerticalSideMarker(_dsmContentProvider, _artifactLabelProvider, _colorScheme);
     _verticalListFigure.addMouseMotionListener(motionListener);
     _zoomableScrollpaneVerticalBar = new ZoomableScrollPane(_verticalListFigure, ScrollPane.NEVER, ScrollPane.NEVER);
 
-    _horizontalListFigure = new HorizontalSideMarker(_model, _artifactLabelProvider, _colorScheme);
+    _horizontalListFigure = new HorizontalSideMarker(_dsmContentProvider, _artifactLabelProvider, _colorScheme);
     _horizontalListFigure.addMouseMotionListener(motionListener);
     _zoomableScrollpaneHorizontalBar = new ZoomableScrollPane(_horizontalListFigure, ScrollPane.NEVER, ScrollPane.NEVER);
 
@@ -323,7 +323,7 @@ public class DsmViewWidget extends Canvas implements Observer {
   private int getTextExtend(final Matrix matrixFigure, final ZoomableScrollPane zoomableScrollpane) {
 
     //
-    int testExtend = FigureUtilities.getTextWidth(DsmUtils.getLongestString(_model.getDisplayLabels()),
+    int testExtend = FigureUtilities.getTextWidth(DsmUtils.getLongestString(_dsmContentProvider.getDisplayLabels()),
         matrixFigure.getFont());
     return (testExtend + 10/* * zoomableScrollpane.getZoom() */);
   }
@@ -368,15 +368,17 @@ public class DsmViewWidget extends Canvas implements Observer {
   }
 
   private int computeSize() {
-    String value = DsmUtils.getLongestString(_model.getValues());
+    String value = DsmUtils.getLongestString(_dsmContentProvider.getValues());
     return FigureUtilities.getTextWidth(value, _matrixFigure.getFont()) + 6;
   }
 
   public void setModel(DsmViewModel model) {
-    _model = model;
 
-    // TODO: HACK!!
-    ((ArtifactLabelProvider) _artifactLabelProvider).setModel(model);
+    if (_dsmContentProvider != null) {
+      _dsmContentProvider.deleteObserver(this);
+    }
+
+    _dsmContentProvider = model;
 
     _matrixFigure.setModel(model);
     _verticalListFigure.setModel(model);
@@ -398,7 +400,7 @@ public class DsmViewWidget extends Canvas implements Observer {
    * @return the model
    */
   public IDsmViewModel getModel() {
-    return _model;
+    return _dsmContentProvider;
   }
 
   public void addMatrixListener(IMatrixListener listener) {

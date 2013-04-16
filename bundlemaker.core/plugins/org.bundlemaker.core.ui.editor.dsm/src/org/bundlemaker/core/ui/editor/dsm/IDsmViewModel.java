@@ -28,7 +28,5 @@ public interface IDsmViewModel extends IDsmContentProvider {
 
   String[][] getValues();
 
-  void addObserver(Observer observer);
-
   LabelPresentationMode getLabelPresentationMode();
 }
