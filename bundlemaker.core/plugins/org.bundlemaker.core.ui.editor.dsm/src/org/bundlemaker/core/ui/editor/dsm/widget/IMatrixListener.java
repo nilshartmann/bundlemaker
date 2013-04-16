@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.editor.dsm.widget.internal.matrix;
+package org.bundlemaker.core.ui.editor.dsm.widget;
 
 /**
  * <p>

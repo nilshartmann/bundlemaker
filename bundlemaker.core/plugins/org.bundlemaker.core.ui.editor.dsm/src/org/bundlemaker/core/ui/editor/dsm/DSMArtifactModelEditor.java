@@ -23,8 +23,8 @@ import org.bundlemaker.core.selection.IArtifactSelection;
 import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.ui.editor.dsm.widget.DsmViewWidget;
 import org.bundlemaker.core.ui.editor.dsm.widget.IDsmContentProvider;
-import org.bundlemaker.core.ui.editor.dsm.widget.internal.matrix.IMatrixListener;
-import org.bundlemaker.core.ui.editor.dsm.widget.internal.matrix.MatrixEvent;
+import org.bundlemaker.core.ui.editor.dsm.widget.IMatrixListener;
+import org.bundlemaker.core.ui.editor.dsm.widget.MatrixEvent;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
 import org.bundlemaker.core.ui.utils.EditorHelper;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -41,6 +41,7 @@ import org.eclipse.ui.internal.part.NullEditorInput;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
+@SuppressWarnings("restriction")
 public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditorPart {
 
   /**
@@ -51,7 +52,6 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   /**
    * Dummy input used for this editor
    */
-  @SuppressWarnings("restriction")
   private static IEditorInput          nullInputEditor = new NullEditorInput();
 
   /** - */

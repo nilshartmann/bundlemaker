@@ -5,9 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.bundlemaker.core.ui.editor.dsm.widget.internal.matrix.IMatrixListener;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.matrix.Matrix;
-import org.bundlemaker.core.ui.editor.dsm.widget.internal.matrix.MatrixEvent;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.sidemarker.HorizontalSideMarker;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.sidemarker.VerticalSideMarker;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.util.BoxSize;
@@ -43,8 +41,8 @@ import org.eclipse.swt.widgets.Display;
  */
 public class DsmViewWidget extends Canvas implements Observer {
 
-  @Deprecated
-  float                        _zoom                   = 1.0f;
+  /** - */
+  private float                        _zoom                   = 1.0f;
 
   /** the content provider */
   private IDsmContentProvider  _dsmContentProvider;
@@ -546,7 +544,7 @@ public class DsmViewWidget extends Canvas implements Observer {
   
           //
           if (me.getSource().equals(_dsmViewWidget._matrixFigure)) {
-            float newZoom = me.getLocation().x / (float) _dsmViewWidget._verticalFigureWidth;
+            // float newZoom = me.getLocation().x / (float) _dsmViewWidget._verticalFigureWidth;
           }
           //
           else if (me.getSource().equals(_dsmViewWidget._mainFigure)) {

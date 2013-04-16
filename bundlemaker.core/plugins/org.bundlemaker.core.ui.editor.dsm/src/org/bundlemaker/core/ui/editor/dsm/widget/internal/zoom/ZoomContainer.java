@@ -63,7 +63,7 @@ public class ZoomContainer extends Figure {
     ScaledGraphics g = new ScaledGraphics(graphics);
 
     if (!optimizeClip)
-      g.clipRect(getBounds().getCropped(getInsets()));
+      g.clipRect(getBounds().getShrinked(getInsets()));
     g.translate(getBounds().x + getInsets().left, getBounds().y + getInsets().top);
     g.scale(zoom);
     g.pushState();

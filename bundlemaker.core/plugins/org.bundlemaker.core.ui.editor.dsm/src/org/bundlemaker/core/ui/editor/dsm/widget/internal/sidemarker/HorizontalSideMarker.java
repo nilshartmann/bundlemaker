@@ -46,7 +46,7 @@ public class HorizontalSideMarker extends AbstractSideMarker {
 
   @Override
   protected void onMouseReleased(MouseEvent me) {
-    int value = (int) Math.floor(me.getLocation().x / (double) getBoxSize().getHorizontalBoxSize());
+    // int value = (int) Math.floor(me.getLocation().x / (double) getBoxSize().getHorizontalBoxSize());
     // System.out.println("wert: " + getModel().getLabels()[value]);
   }
 

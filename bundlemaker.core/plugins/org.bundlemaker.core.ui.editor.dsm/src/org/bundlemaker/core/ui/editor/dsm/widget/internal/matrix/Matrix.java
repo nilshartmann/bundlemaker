@@ -4,6 +4,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bundlemaker.core.ui.editor.dsm.widget.IDsmColorScheme;
 import org.bundlemaker.core.ui.editor.dsm.widget.IDsmContentProvider;
+import org.bundlemaker.core.ui.editor.dsm.widget.IMatrixListener;
+import org.bundlemaker.core.ui.editor.dsm.widget.MatrixEvent;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.util.BoxSize;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.zoom.ZoomContainer;
 import org.eclipse.core.runtime.Assert;

@@ -33,7 +33,7 @@ public class VerticalSideMarker extends AbstractSideMarker {
 
   @Override
   protected void onMouseReleased(MouseEvent me) {
-    int value = (int) Math.floor(me.getLocation().y / (double) getBoxSize().getVerticalBoxSize());
+    // int value = (int) Math.floor(me.getLocation().y / (double) getBoxSize().getVerticalBoxSize());
     // System.out.println("wert: " + getModel().getLabels()[value]);
   }
 
