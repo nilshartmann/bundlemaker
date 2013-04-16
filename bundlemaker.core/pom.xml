@@ -28,9 +28,8 @@
 		<module>plugins/org.bundlemaker.core.ui.view.stage</module>
 		<module>plugins/org.bundlemaker.core.ui.editor.dsm</module>
 		<module>plugins/org.bundlemaker.core.ui.editor.sourceviewer</module>
-		<module>plugins/org.bundlemaker.core.ui.editor.xref</module>
+		<module>plugins/org.bundlemaker.core.ui.editor.xref3</module>
 		<module>plugins/org.bundlemaker.core.ui.app.perspective</module>
-		<module>plugins/org.bundlemaker.core.ui.experimental</module>
 		<module>plugins/org.bundlemaker.core.ui.mvn</module>
 		<module>plugins/org.bundlemaker.core.ui.projecteditor</module>
 		<module>features/org.bundlemaker.core.feature</module>
