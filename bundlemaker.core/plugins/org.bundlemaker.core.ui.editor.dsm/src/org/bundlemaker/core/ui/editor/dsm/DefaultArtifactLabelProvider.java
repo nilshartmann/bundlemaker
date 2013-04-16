@@ -10,19 +10,19 @@ import org.eclipse.jface.viewers.LabelProvider;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ArtifactLabelProvider extends LabelProvider {
+public class DefaultArtifactLabelProvider extends LabelProvider {
 
   /** - */
   private DsmViewModel _model;
 
   /**
    * <p>
-   * Creates a new instance of type {@link ArtifactLabelProvider}.
+   * Creates a new instance of type {@link DefaultArtifactLabelProvider}.
    * </p>
    * 
    * @param labelPresentationMode
    */
-  public ArtifactLabelProvider(DsmViewModel model) {
+  public DefaultArtifactLabelProvider(DsmViewModel model) {
     _model = model;
   }
   

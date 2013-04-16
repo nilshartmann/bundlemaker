@@ -1,9 +1,9 @@
-package org.bundlemaker.core.ui.editor.dsm.widget.internal.util;
+package org.bundlemaker.core.ui.editor.dsm;
 
 import org.bundlemaker.core.analysis.IDependency;
 import org.eclipse.jface.viewers.LabelProvider;
 
-public class DependencyLabelProvider extends LabelProvider {
+public class DefaultDependencyLabelProvider extends LabelProvider {
 
   @Override
   public String getText(Object element) {

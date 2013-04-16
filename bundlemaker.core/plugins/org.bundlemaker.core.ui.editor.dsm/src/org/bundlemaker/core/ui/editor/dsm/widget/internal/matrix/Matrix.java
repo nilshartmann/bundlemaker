@@ -224,12 +224,12 @@ public class Matrix extends Figure {
     ZoomContainer zoomContainer = (ZoomContainer) this.getParent();
     Viewport viewport = ((Viewport) this.getParent().getParent());
 
-    int horMin = (int) (viewport.getViewLocation().x / getBoxSize().getHorizontalBoxSize() * zoomContainer.zoom);
-    int horVisibleSlicesCount = (int) (viewport.getSize().width / getBoxSize().getHorizontalBoxSize() * zoomContainer.zoom);
+    int horMin = (int) (viewport.getViewLocation().x / (getBoxSize().getHorizontalBoxSize() * zoomContainer.zoom));
+    int horVisibleSlicesCount = (int) (viewport.getSize().width / (getBoxSize().getHorizontalBoxSize() * zoomContainer.zoom));
 
     //
-    int verMin = (int) (viewport.getViewLocation().y / getBoxSize().getVerticalBoxSize() * zoomContainer.zoom);
-    int verVisibleSlicesCount = (int) (viewport.getSize().height / getBoxSize().getVerticalBoxSize() * zoomContainer.zoom);
+    int verMin = (int) (viewport.getViewLocation().y / (getBoxSize().getVerticalBoxSize() * zoomContainer.zoom));
+    int verVisibleSlicesCount = (int) (viewport.getSize().height / (getBoxSize().getVerticalBoxSize() * zoomContainer.zoom));
 
     return new int[] {
         horMin,

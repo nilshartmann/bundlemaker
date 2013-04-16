@@ -35,6 +35,7 @@ public class DsmDetailComposite extends Composite {
   /** - */
   private Button _shortendNamesButton;
   
+  /** - */
   private LabelPresentationMode _labelPresentationMode;
 
   /**
@@ -72,7 +73,7 @@ public class DsmDetailComposite extends Composite {
     _fromLabel = createFieldWithLabel(composite, "from");
     _toLabel = createFieldWithLabel(composite, "to");
 
-    Composite presentationModeComposite = new Composite(this, SWT.BORDER);
+    Composite presentationModeComposite = new Composite(this, SWT.NONE);
     gridLayout = new GridLayout(1, false);
     gridLayout.marginHeight = 0;
     gridLayout.marginWidth = 0;

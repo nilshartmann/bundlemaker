@@ -62,7 +62,7 @@ public class DsmViewModel extends AbstractDsmViewModel {
   public int getItemCount() {
     return _artifacts.length;
   }
-  
+
   /**
    * <p>
    * Creates a new instance of type {@link DsmViewModel}.
@@ -157,67 +157,59 @@ public class DsmViewModel extends AbstractDsmViewModel {
   // protected IDsmViewConfiguration createConfiguration() {
   // return new DefaultDsmViewConfiguration();
   // }
+  //
+  // @Override
+  // protected String[][] createValues() {
+  //
+  // String[][] result = new String[_artifacts.length][_artifacts.length];
+  // for (int i = 0; i < result.length; i++) {
+  // for (int j = 0; j < result.length; j++) {
+  // if (_dependencies[i][j] != null) {
+  // result[i][j] = "" + _dependencies[i][j].getWeight();
+  // }
+  // }
+  // }
+  //
+  // //
+  // return result;
+  // }
+//
+//  /**
+//   * {@inheritDoc}
+//   */
+//  @Override
+//  protected String[] createLabels() {
+//
+//    //
+//    String[] result = new String[_artifacts.length];
+//
+//    //
+//    for (int i = 0; i < _artifacts.length; i++) {
+//      result[i] = _artifacts[i].getQualifiedName();
+//    }
+//
+//    //
+//    return result;
+//  }
 
-  @Override
-  protected String[][] createValues() {
-
-    String[][] result = new String[_artifacts.length][_artifacts.length];
-    for (int i = 0; i < result.length; i++) {
-      for (int j = 0; j < result.length; j++) {
-        if (_dependencies[i][j] != null) {
-          result[i][j] = "" + _dependencies[i][j].getWeight();
-        }
-      }
-    }
-
-    //
-    return result;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected String[] createLabels() {
-
-    //
-    String[] result = new String[_artifacts.length];
-
-    //
-    for (int i = 0; i < _artifacts.length; i++) {
-      result[i] = _artifacts[i].getQualifiedName();
-    }
-
-    //
-    return result;
-  }
-
-  @Override
-  protected String[] doGetDisplayLabels() {
-    //
-    String[] result = new String[_artifacts.length];
-
-    //
-    for (int i = 0; i < _artifacts.length; i++) {
-      result[i] = getDisplayLabel(_artifacts[i]);
-    }
-
-    //
-    return result;
-  }
+  // @Override
+  // protected String[] doGetDisplayLabels() {
+  // //
+  // String[] result = new String[_artifacts.length];
+  //
+  // //
+  // for (int i = 0; i < _artifacts.length; i++) {
+  // result[i] = getDisplayLabel(_artifacts[i]);
+  // }
+  //
+  // //
+  // return result;
+  // }
 
   @Override
   public String getToolTip(int x, int y) {
     System.out.println("Tooltip: " + x + ", " + y);
     return null;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void refresh(Collection<IBundleMakerArtifact> unorderedArtifacts) {
-    initialize(unorderedArtifacts);
   }
 
   private void initialize(Collection<? extends IBundleMakerArtifact> unorderedArtifacts) {

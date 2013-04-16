@@ -84,6 +84,10 @@ public class DsmViewWidget extends Canvas implements Observer {
 
   private boolean              _drawToolTip            = false;
 
+  private String[]             _nodesAsStrings;
+
+  private String[][]           _dependenciesAsStrings;
+
   /**
    * <p>
    * Creates a new instance of type {@link DsmViewWidget}.
@@ -127,6 +131,84 @@ public class DsmViewWidget extends Canvas implements Observer {
         _mainFigure.repaint();
       }
     });
+  }
+
+  public void setZoom(float value) {
+    // float z = (value + 10) * 0.02f;
+    _zoomableScrollpane.setZoom(value);
+    _zoomableScrollpaneVerticalBar.setZoom(value);
+    _zoomableScrollpaneHorizontalBar.setZoom(value);
+    _zoom = value;
+    //
+    // _mainFigure.repaint();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return the zoom
+   */
+  public float getZoom() {
+    return _zoom;
+  }
+
+  public void setModel(IDsmContentProvider contentProvider) {
+  
+    if (_dsmContentProvider != null) {
+      _dsmContentProvider.deleteObserver(this);
+    }
+  
+    _nodesAsStrings = null;
+    _dependenciesAsStrings = null;
+  
+    _dsmContentProvider = contentProvider;
+  
+    _matrixFigure.setModel(contentProvider);
+    _verticalListFigure.setModel(contentProvider);
+    _horizontalListFigure.setModel(contentProvider);
+  
+    _verticalFigureWidth = getTextExtend(_matrixFigure, _zoomableScrollpane);
+  
+    _mainFigure.revalidate();
+    _mainFigure.repaint();
+  }
+
+  public void addMatrixListener(IMatrixListener listener) {
+    _matrixFigure.addMatrixListener(listener);
+  }
+
+  public void removeMatrixLIstener(IMatrixListener listener) {
+    _matrixFigure.removeMatrixLIstener(listener);
+  }
+
+  public String[] getNodesAsStrings() {
+  
+    if (_nodesAsStrings == null) {
+      _nodesAsStrings = new String[_dsmContentProvider.getNodes().length];
+      for (int i = 0; i < _dsmContentProvider.getNodes().length; i++) {
+        _nodesAsStrings[i] = _artifactLabelProvider.getText(_dsmContentProvider.getNodes()[i]);
+      }
+    }
+    //
+    return _nodesAsStrings;
+  }
+
+  public String[][] getDependenciesAsStrings() {
+  
+    if (_dependenciesAsStrings == null) {
+      _dependenciesAsStrings = new String[_dsmContentProvider.getNodes().length][_dsmContentProvider.getNodes().length];
+      for (int i = 0; i < _dependenciesAsStrings.length; i++) {
+        for (int j = 0; j < _dependenciesAsStrings.length; j++) {
+          if (_dsmContentProvider.getDependencies()[i][j] != null) {
+            _dependenciesAsStrings[i][j] = _dependencyLabelProvider
+                .getText(_dsmContentProvider.getDependencies()[i][j]);
+          }
+        }
+      }
+    }
+    //
+    return _dependenciesAsStrings;
   }
 
   /**
@@ -284,30 +366,10 @@ public class DsmViewWidget extends Canvas implements Observer {
 
       @Override
       public boolean layout(IFigure container) {
-        layoutF(container);
+        layoutFigures(container);
         return true;
       }
     });
-  }
-
-  public void setZoom(float value) {
-    // float z = (value + 10) * 0.02f;
-    _zoomableScrollpane.setZoom(value);
-    _zoomableScrollpaneVerticalBar.setZoom(value);
-    _zoomableScrollpaneHorizontalBar.setZoom(value);
-    _zoom = value;
-    //
-    // _mainFigure.repaint();
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return the zoom
-   */
-  public float getZoom() {
-    return _zoom;
   }
 
   /**
@@ -322,11 +384,12 @@ public class DsmViewWidget extends Canvas implements Observer {
   private int getTextExtend(final Matrix matrixFigure, final ZoomableScrollPane zoomableScrollpane) {
 
     //
-    int testExtend = FigureUtilities.getTextWidth(DsmUtils.getLongestString(getLabels()), matrixFigure.getFont());
+    int testExtend = FigureUtilities.getTextWidth(DsmUtils.getLongestString(getNodesAsStrings()),
+        matrixFigure.getFont());
     return (testExtend + 10/* * zoomableScrollpane.getZoom() */);
   }
 
-  private void layoutF(IFigure figure) {
+  private void layoutFigures(IFigure figure) {
 
     //
     BoxSize boxSize = new BoxSize();
@@ -366,44 +429,15 @@ public class DsmViewWidget extends Canvas implements Observer {
   }
 
   private int computeSize() {
-    String value = DsmUtils.getLongestString(getValues());
+    String value = DsmUtils.getLongestString(getDependenciesAsStrings());
     return FigureUtilities.getTextWidth(value, _matrixFigure.getFont()) + 6;
   }
 
-  public void setModel(IDsmContentProvider contentProvider) {
-
-    if (_dsmContentProvider != null) {
-      _dsmContentProvider.deleteObserver(this);
-    }
-
-    _dsmContentProvider = contentProvider;
-
-    _matrixFigure.setModel(contentProvider);
-    _verticalListFigure.setModel(contentProvider);
-    _horizontalListFigure.setModel(contentProvider);
-
-    _verticalFigureWidth = getTextExtend(_matrixFigure, _zoomableScrollpane);
-
-    _mainFigure.revalidate();
-    _mainFigure.repaint();
-
-    // _zoomScrollBar.setValue(40);
-    // _useShortendLabelsCheckBox.setSelected(_model.isUseShortendLabels());
-  }
-
-  public void addMatrixListener(IMatrixListener listener) {
-    _matrixFigure.addMatrixListener(listener);
-  }
-
-  public void removeMatrixLIstener(IMatrixListener listener) {
-    _matrixFigure.removeMatrixLIstener(listener);
-  }
-
-  final class DsmViewWidgetMouseMotionListener extends MouseMotionListener.Stub implements MouseListener {
-
+  private final class DsmViewWidgetMouseMotionListener extends MouseMotionListener.Stub implements MouseListener {
+  
     /** - */
     private final DsmViewWidget _dsmViewWidget;
-
+  
     /**
      * <p>
      * Creates a new instance of type {@link DsmViewWidgetMouseMotionListener}.
@@ -414,22 +448,22 @@ public class DsmViewWidget extends Canvas implements Observer {
     public DsmViewWidgetMouseMotionListener(DsmViewWidget dsmViewWidget) {
       _dsmViewWidget = dsmViewWidget;
     }
-
+  
     /** - */
     private static final int HORIZONTAL   = 1;
-
+  
     /** - */
     private static final int VERTICAL     = 2;
-
+  
     /** - */
     private static final int DIAGONAL     = 3;
-
+  
     /** - */
     private static final int RANGE        = 5;
-
+  
     /** - */
     private int              _currentDrag = -1;
-
+  
     /**
      * {@inheritDoc}
      */
@@ -440,7 +474,7 @@ public class DsmViewWidget extends Canvas implements Observer {
       // ((Figure) me.getSource()).setCursor(Cursors.HAND);
       // }
     }
-
+  
     /**
      * {@inheritDoc}
      */
@@ -450,24 +484,24 @@ public class DsmViewWidget extends Canvas implements Observer {
       // ((Figure) me.getSource()).setCursor(Cursors.ARROW);
       // }
     }
-
+  
     /**
      * {@inheritDoc}
      */
     @Override
     public void mouseDoubleClicked(MouseEvent me) {
     }
-
+  
     @Override
     public void mouseMoved(MouseEvent me) {
       handle(me, false);
     }
-
+  
     @Override
     public void mouseDragged(MouseEvent me) {
       handle(me, true);
     }
-
+  
     /**
      * <p>
      * </p>
@@ -476,11 +510,11 @@ public class DsmViewWidget extends Canvas implements Observer {
      * @param isDragged
      */
     private void handle(MouseEvent me, boolean isDragged) {
-
+  
       // if (!isDragged) {
       // _currentDrag = -1;
       // }
-
+  
       //
       if (me.getSource() instanceof Figure && (me.getState() & SWT.BUTTON1) == 0) {
         _currentDrag = isInRange(me);
@@ -499,17 +533,17 @@ public class DsmViewWidget extends Canvas implements Observer {
           break;
         }
       }
-
+  
       //
       if ((me.getState() & SWT.BUTTON1) != 0 && isDragged) {
-
+  
         //
         // if (_currentDrag == -1) {
         // _currentDrag = isInRange(me);
         // }
-
+  
         if ((me.getState() & SWT.SHIFT) != 0) {
-
+  
           //
           if (me.getSource().equals(_dsmViewWidget._matrixFigure)) {
             float newZoom = me.getLocation().x / (float) _dsmViewWidget._verticalFigureWidth;
@@ -517,12 +551,12 @@ public class DsmViewWidget extends Canvas implements Observer {
           //
           else if (me.getSource().equals(_dsmViewWidget._mainFigure)) {
             float newZoom = me.getLocation().x / (float) _dsmViewWidget._verticalFigureWidth;
-
+  
             _dsmViewWidget.setZoom(newZoom);
           }
-
+  
         } else {
-
+  
           //
           if ((_currentDrag == HORIZONTAL || _currentDrag == DIAGONAL)
               && me.getSource().equals(_dsmViewWidget._matrixFigure)) {
@@ -567,7 +601,7 @@ public class DsmViewWidget extends Canvas implements Observer {
         _dsmViewWidget._mainFigure.revalidate();
       }
     }
-
+  
     /**
      * <p>
      * </p>
@@ -576,86 +610,58 @@ public class DsmViewWidget extends Canvas implements Observer {
      * @return
      */
     private int isInRange(MouseEvent me) {
-
+  
       //
       if (me.getSource().equals(_dsmViewWidget._matrixFigure)) {
-
+  
         if (Math.abs(me.getLocation().x) < (RANGE * _dsmViewWidget._zoom)
             && Math.abs(me.getLocation().y) < (RANGE * _dsmViewWidget._zoom)) {
           return DIAGONAL;
         }
-
+  
         if (Math.abs(me.getLocation().x) < (RANGE * _dsmViewWidget._zoom)) {
           return VERTICAL;
         }
-
+  
         if (Math.abs(me.getLocation().y) < (RANGE * _dsmViewWidget._zoom)) {
           return HORIZONTAL;
         }
       }
-
+  
       else if (me.getSource().equals(_dsmViewWidget._horizontalListFigure)) {
-
+  
         if (Math.abs(me.getLocation().x) < (RANGE * _dsmViewWidget._zoom)
             && _dsmViewWidget._horizontalListFigure.getSize().height - Math.abs(me.getLocation().y) < (RANGE * _dsmViewWidget._zoom)) {
           return DIAGONAL;
         }
-
+  
         if (Math.abs(me.getLocation().x) < (RANGE * _dsmViewWidget._zoom)) {
           return VERTICAL;
         }
-
+  
         if (_dsmViewWidget._horizontalListFigure.getSize().height - Math.abs(me.getLocation().y) < (RANGE * _dsmViewWidget._zoom)) {
           return HORIZONTAL;
         }
       }
-
+  
       else if (me.getSource().equals(_dsmViewWidget._verticalListFigure)) {
-
+  
         if (Math.abs(me.getLocation().y) < (RANGE * _dsmViewWidget._zoom)
             && _dsmViewWidget._verticalListFigure.getSize().width - Math.abs(me.getLocation().x) < (RANGE * _dsmViewWidget._zoom)) {
           return HORIZONTAL;
         }
-
+  
         if (Math.abs(me.getLocation().y) < (RANGE * _dsmViewWidget._zoom)) {
           return HORIZONTAL;
         }
-
+  
         if (_dsmViewWidget._verticalListFigure.getSize().width - Math.abs(me.getLocation().x) < (RANGE * _dsmViewWidget._zoom)) {
           return VERTICAL;
         }
       }
-
+  
       //
       return -1;
     }
-  }
-
-  private String[] getLabels() {
-    //
-    String[] result = new String[_dsmContentProvider.getNodes().length];
-
-    //
-    for (int i = 0; i < _dsmContentProvider.getNodes().length; i++) {
-      result[i] = _artifactLabelProvider.getText(_dsmContentProvider.getNodes()[i]);
-    }
-
-    //
-    return result;
-  }
-
-  protected String[][] getValues() {
-
-    String[][] result = new String[_dsmContentProvider.getNodes().length][_dsmContentProvider.getNodes().length];
-    for (int i = 0; i < result.length; i++) {
-      for (int j = 0; j < result.length; j++) {
-        if (_dsmContentProvider.getDependencies()[i][j] != null) {
-          result[i][j] = _dependencyLabelProvider.getText(_dsmContentProvider.getDependencies()[i][j]);
-        }
-      }
-    }
-
-    //
-    return result;
   }
 }

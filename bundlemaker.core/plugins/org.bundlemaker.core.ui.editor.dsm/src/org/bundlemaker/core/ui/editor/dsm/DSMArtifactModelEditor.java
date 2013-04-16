@@ -24,7 +24,6 @@ import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.ui.editor.dsm.widget.DsmViewWidget;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.matrix.IMatrixListener;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.matrix.MatrixEvent;
-import org.bundlemaker.core.ui.editor.dsm.widget.internal.util.DependencyLabelProvider;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
 import org.bundlemaker.core.ui.utils.EditorHelper;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -69,7 +68,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   /** - */
   private IBundleMakerArtifact  _toArtifact;
 
-  private ArtifactLabelProvider _artifactLabelProvider;
+  private DefaultArtifactLabelProvider _artifactLabelProvider;
 
   private DsmViewModel          _model;
 
@@ -111,8 +110,8 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     //
 
     DsmViewModel model = new DsmViewModel();
-    _artifactLabelProvider = new ArtifactLabelProvider(model);
-    _viewWidget = new DsmViewWidget(model, _artifactLabelProvider, new DependencyLabelProvider(), parent);
+    _artifactLabelProvider = new DefaultArtifactLabelProvider(model);
+    _viewWidget = new DsmViewWidget(model, _artifactLabelProvider, new DefaultDependencyLabelProvider(), parent);
     GridDataFactory.swtDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(_viewWidget);
     _viewWidget.setZoom((50 + 10) * 0.02f);
 
@@ -137,17 +136,17 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
         //
         if (isCellSelected(event)) {
           _detailComposite.getSelectionCountLabel().setText(
-              getNullSafeString(_model.getValues()[event.getX()][event.getY()], "0"));
-          _detailComposite.getFromLabel().setText(_model.getLabels()[event.getY()]);
-          _detailComposite.getToLabel().setText(_model.getLabels()[event.getX()]);
+              getNullSafeString(_viewWidget.getDependenciesAsStrings()[event.getX()][event.getY()], "0"));
+          _detailComposite.getFromLabel().setText(_viewWidget.getNodesAsStrings()[event.getY()]);
+          _detailComposite.getToLabel().setText(_viewWidget.getNodesAsStrings()[event.getX()]);
         }
 
         //
         else if (_selectedCell != null) {
           _detailComposite.getSelectionCountLabel().setText(
-              getNullSafeString(_model.getValues()[_selectedCell[0]][_selectedCell[1]], "0"));
-          _detailComposite.getFromLabel().setText(_model.getLabels()[_selectedCell[1]]);
-          _detailComposite.getToLabel().setText(_model.getLabels()[_selectedCell[0]]);
+              getNullSafeString(_viewWidget.getDependenciesAsStrings()[_selectedCell[0]][_selectedCell[1]], "0"));
+          _detailComposite.getFromLabel().setText(_viewWidget.getNodesAsStrings()[_selectedCell[1]]);
+          _detailComposite.getToLabel().setText(_viewWidget.getNodesAsStrings()[_selectedCell[0]]);
         }
 
         //
