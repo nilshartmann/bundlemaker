@@ -5,8 +5,6 @@ import java.beans.PropertyChangeListener;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.bundlemaker.core.ui.editor.dsm.DsmViewModel;
-import org.bundlemaker.core.ui.editor.dsm.IDsmViewModel;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.matrix.IMatrixListener;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.matrix.Matrix;
 import org.bundlemaker.core.ui.editor.dsm.widget.internal.matrix.MatrixEvent;
@@ -48,8 +46,17 @@ public class DsmViewWidget extends Canvas implements Observer {
   @Deprecated
   float                        _zoom                   = 1.0f;
 
-  /** the {@link DsmViewModel} */
-  private IDsmViewModel  _dsmContentProvider;
+  /** the content provider */
+  private IDsmContentProvider  _dsmContentProvider;
+
+  /** - */
+  private IDsmColorScheme      _colorScheme;
+
+  /** - */
+  private ILabelProvider       _artifactLabelProvider;
+
+  /** - */
+  private ILabelProvider       _dependencyLabelProvider;
 
   /** the main figure */
   private Figure               _mainFigure;
@@ -77,32 +84,26 @@ public class DsmViewWidget extends Canvas implements Observer {
 
   private boolean              _drawToolTip            = false;
 
-  private ILabelProvider       _artifactLabelProvider;
-
-  private ILabelProvider       _dependencyLabelProvider;
-
-  private IDsmColorScheme      _colorScheme;
-
   /**
    * <p>
    * Creates a new instance of type {@link DsmViewWidget}.
    * </p>
    * 
-   * @param model
+   * @param contentProvider
    * @param canvas
    */
-  public DsmViewWidget(IDsmViewModel model, ILabelProvider artifactLabelProvider,
+  public DsmViewWidget(IDsmContentProvider contentProvider, ILabelProvider artifactLabelProvider,
       ILabelProvider dependencyLabelProvider, Composite parent) {
     super(parent, SWT.NO_REDRAW_RESIZE);
 
     // assert not null
-    Assert.isNotNull(model);
+    Assert.isNotNull(contentProvider);
     Assert.isNotNull(parent);
     Assert.isNotNull(artifactLabelProvider);
     Assert.isNotNull(dependencyLabelProvider);
 
     // set model and canvas
-    this._dsmContentProvider = model;
+    this._dsmContentProvider = contentProvider;
 
     //
     _artifactLabelProvider = artifactLabelProvider;
@@ -321,8 +322,7 @@ public class DsmViewWidget extends Canvas implements Observer {
   private int getTextExtend(final Matrix matrixFigure, final ZoomableScrollPane zoomableScrollpane) {
 
     //
-    int testExtend = FigureUtilities.getTextWidth(DsmUtils.getLongestString(_dsmContentProvider.getDisplayLabels()),
-        matrixFigure.getFont());
+    int testExtend = FigureUtilities.getTextWidth(DsmUtils.getLongestString(getLabels()), matrixFigure.getFont());
     return (testExtend + 10/* * zoomableScrollpane.getZoom() */);
   }
 
@@ -366,21 +366,21 @@ public class DsmViewWidget extends Canvas implements Observer {
   }
 
   private int computeSize() {
-    String value = DsmUtils.getLongestString(_dsmContentProvider.getValues());
+    String value = DsmUtils.getLongestString(getValues());
     return FigureUtilities.getTextWidth(value, _matrixFigure.getFont()) + 6;
   }
 
-  public void setModel(DsmViewModel model) {
+  public void setModel(IDsmContentProvider contentProvider) {
 
     if (_dsmContentProvider != null) {
       _dsmContentProvider.deleteObserver(this);
     }
 
-    _dsmContentProvider = model;
+    _dsmContentProvider = contentProvider;
 
-    _matrixFigure.setModel(model);
-    _verticalListFigure.setModel(model);
-    _horizontalListFigure.setModel(model);
+    _matrixFigure.setModel(contentProvider);
+    _verticalListFigure.setModel(contentProvider);
+    _horizontalListFigure.setModel(contentProvider);
 
     _verticalFigureWidth = getTextExtend(_matrixFigure, _zoomableScrollpane);
 
@@ -629,5 +629,33 @@ public class DsmViewWidget extends Canvas implements Observer {
       //
       return -1;
     }
+  }
+
+  private String[] getLabels() {
+    //
+    String[] result = new String[_dsmContentProvider.getNodes().length];
+
+    //
+    for (int i = 0; i < _dsmContentProvider.getNodes().length; i++) {
+      result[i] = _artifactLabelProvider.getText(_dsmContentProvider.getNodes()[i]);
+    }
+
+    //
+    return result;
+  }
+
+  protected String[][] getValues() {
+
+    String[][] result = new String[_dsmContentProvider.getNodes().length][_dsmContentProvider.getNodes().length];
+    for (int i = 0; i < result.length; i++) {
+      for (int j = 0; j < result.length; j++) {
+        if (_dsmContentProvider.getDependencies()[i][j] != null) {
+          result[i][j] = _dependencyLabelProvider.getText(_dsmContentProvider.getDependencies()[i][j]);
+        }
+      }
+    }
+
+    //
+    return result;
   }
 }
