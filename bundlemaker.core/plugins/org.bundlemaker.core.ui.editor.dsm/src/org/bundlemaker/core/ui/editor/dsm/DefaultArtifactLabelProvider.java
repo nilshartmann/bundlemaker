@@ -13,29 +13,39 @@ import org.eclipse.jface.viewers.LabelProvider;
 public class DefaultArtifactLabelProvider extends LabelProvider {
 
   /** - */
-  private DsmViewModel _model;
+  private LabelPresentationMode _labelPresentationMode = LabelPresentationMode.qualifiedName;
 
   /**
    * <p>
-   * Creates a new instance of type {@link DefaultArtifactLabelProvider}.
+   * </p>
+   * 
+   * @return
+   */
+  public LabelPresentationMode getLabelPresentationMode() {
+    return _labelPresentationMode;
+  }
+
+  /**
+   * <p>
    * </p>
    * 
    * @param labelPresentationMode
    */
-  public DefaultArtifactLabelProvider(DsmViewModel model) {
-    _model = model;
-  }
-  
-  public void setModel(DsmViewModel model) {
-    _model = model;
+  public void setLabelPresentationMode(LabelPresentationMode labelPresentationMode) {
+    if (labelPresentationMode != _labelPresentationMode) {
+      _labelPresentationMode = labelPresentationMode;
+    }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String getText(Object element) {
 
     IBundleMakerArtifact artifact = (IBundleMakerArtifact) element;
 
-    if (_model.getLabelPresentationMode() == LabelPresentationMode.simpleName) {
+    if (getLabelPresentationMode() == LabelPresentationMode.simpleName) {
 
       if (artifact instanceof IModuleArtifact) {
         IModuleArtifact moduleArtifact = (IModuleArtifact) artifact;
@@ -47,7 +57,7 @@ public class DefaultArtifactLabelProvider extends LabelProvider {
 
     String label = artifact.getQualifiedName();
 
-    if (_model.getLabelPresentationMode() == LabelPresentationMode.qualifiedName) {
+    if (getLabelPresentationMode() == LabelPresentationMode.qualifiedName) {
       return label;
     }
 

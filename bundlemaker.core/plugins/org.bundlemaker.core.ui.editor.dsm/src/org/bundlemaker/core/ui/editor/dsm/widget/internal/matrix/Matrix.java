@@ -175,8 +175,7 @@ public class Matrix extends Figure {
     for (int i = visibleSlices[0]; (i <= visibleSlices[1]); i++) {
       for (int j = visibleSlices[2]; j < _dsmContentProvider.getItemCount(); j++) {
         if (i != j) {
-          String value = _dsmContentProvider.isToggled() ? _matrixLabelProvider.getText(_dsmContentProvider
-              .getDependency(j, i)) : _matrixLabelProvider.getText(_dsmContentProvider.getDependency(i, j));
+          String value = _matrixLabelProvider.getText(_dsmContentProvider.getDependency(i, j));
           if (value != null) {
             graphics.drawString(value, getHorizontalSliceSize(i) + 4, getVerticalSliceSize(j));
           }
