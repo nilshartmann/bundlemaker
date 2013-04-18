@@ -17,7 +17,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.ui.operations.CreateModuleWithArtifactsOperation;
+import org.bundlemaker.core.ui.operations.MoveArtifactsOperation;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Display;
 
@@ -25,19 +25,18 @@ import org.eclipse.swt.widgets.Display;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class CreateModuleFromReferencedArtifactsAction extends Action {
+public class MoveReferencedArtifactsAction extends Action {
 
   private final Set<IBundleMakerArtifact> _referencedArtifacts;
 
-  public CreateModuleFromReferencedArtifactsAction(Set<IBundleMakerArtifact> set) {
-    super("Create Module from referenced Artifacts");
+  public MoveReferencedArtifactsAction(Set<IBundleMakerArtifact> set) {
+    super("Move referenced Artifacts");
     _referencedArtifacts = set;
     setEnabled(_referencedArtifacts != null && !_referencedArtifacts.isEmpty());
   }
 
   @Override
   public void run() {
-    System.out.println(_referencedArtifacts.size() + " referenced Artifacts");
     List<IBundleMakerArtifact> resources = new LinkedList<IBundleMakerArtifact>();
     for (IBundleMakerArtifact artifact : _referencedArtifacts) {
       if (artifact.isInstanceOf(IResourceArtifact.class)) {
@@ -45,9 +44,9 @@ public class CreateModuleFromReferencedArtifactsAction extends Action {
       }
     }
 
-    CreateModuleWithArtifactsOperation operation = new CreateModuleWithArtifactsOperation(Display.getCurrent()
-        .getActiveShell(), resources);
-    operation.run();
+    MoveArtifactsOperation moveArtifactsOperation = new MoveArtifactsOperation(Display.getCurrent().getActiveShell(),
+        resources);
+    moveArtifactsOperation.run();
 
   }
 }
