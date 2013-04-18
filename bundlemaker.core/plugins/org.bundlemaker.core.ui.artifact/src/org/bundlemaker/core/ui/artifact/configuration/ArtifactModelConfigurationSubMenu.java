@@ -109,9 +109,13 @@ public class ArtifactModelConfigurationSubMenu extends CompoundContributionItem 
 
   }
 
-  protected void saveConfiguration() {
+  protected void saveConfiguration(boolean hierarchical,
+      ProjectContentType contentType, boolean includeVirtualModuleForMissingTypes) {
+
+    //
     if (_artifactModelConfigurationProvider instanceof ArtifactModelConfigurationProvider) {
-      ((ArtifactModelConfigurationProvider) _artifactModelConfigurationProvider).store();
+      ((ArtifactModelConfigurationProvider) _artifactModelConfigurationProvider).store(hierarchical, contentType,
+          includeVirtualModuleForMissingTypes);
     } else {
       // "Should not happen"...
       System.err.printf(
@@ -177,7 +181,7 @@ public class ArtifactModelConfigurationSubMenu extends CompoundContributionItem 
     private final boolean _hierarchicalPackages;
 
     HierachicalPackagesAction(boolean hierarchicalPackages, String title, ImageDescriptor imageDescriptor) {
-      super(title, Action.AS_RADIO_BUTTON);
+      super(title, Action.AS_CHECK_BOX);
       this._hierarchicalPackages = hierarchicalPackages;
 
       setImageDescriptor(imageDescriptor);
@@ -189,11 +193,11 @@ public class ArtifactModelConfigurationSubMenu extends CompoundContributionItem 
 
     @Override
     public void run() {
-      _artifactModelConfigurationProvider.getArtifactModelConfiguration()
-          .setHierarchicalPackages(_hierarchicalPackages);
 
       // persist change
-      saveConfiguration();
+      saveConfiguration(_hierarchicalPackages, _artifactModelConfigurationProvider.getArtifactModelConfiguration()
+          .getContentType(),
+          _artifactModelConfigurationProvider.getArtifactModelConfiguration().isIncludeVirtualModuleForMissingTypes());
     }
 
   }
@@ -210,11 +214,12 @@ public class ArtifactModelConfigurationSubMenu extends CompoundContributionItem 
 
     @Override
     public void run() {
-      _artifactModelConfigurationProvider.getArtifactModelConfiguration().setIncludeVirtualModuleForMissingTypes(
-          isChecked());
 
       // persist change
-      saveConfiguration();
+      saveConfiguration(_artifactModelConfigurationProvider.getArtifactModelConfiguration().isHierarchicalPackages(),
+          _artifactModelConfigurationProvider.getArtifactModelConfiguration()
+              .getContentType(),
+          isChecked());
     }
   }
 
@@ -222,7 +227,7 @@ public class ArtifactModelConfigurationSubMenu extends CompoundContributionItem 
     private final ProjectContentType _projectContentType;
 
     ContentTypeAction(ProjectContentType type, String typeString) {
-      super("Show " + typeString, Action.AS_RADIO_BUTTON);
+      super("Show " + typeString, Action.AS_CHECK_BOX);
       this._projectContentType = type;
     }
 
@@ -233,9 +238,11 @@ public class ArtifactModelConfigurationSubMenu extends CompoundContributionItem 
 
     @Override
     public void run() {
-      _artifactModelConfigurationProvider.getArtifactModelConfiguration().setContentType(_projectContentType);
 
-      saveConfiguration();
+      // persist change
+      saveConfiguration(_artifactModelConfigurationProvider.getArtifactModelConfiguration().isHierarchicalPackages(),
+          _projectContentType,
+          _artifactModelConfigurationProvider.getArtifactModelConfiguration().isIncludeVirtualModuleForMissingTypes());
     }
   }
 }
