@@ -253,9 +253,12 @@ public class XRefComposite extends Composite {
     manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
     CreateModuleFromReferencedArtifactsAction action = new CreateModuleFromReferencedArtifactsAction(
         _artifactLabelProvider.getBundleMakerArtifacts());
+    MoveReferencedArtifactsAction moveReferencedArtifactsAction = new MoveReferencedArtifactsAction(
+        _artifactLabelProvider.getBundleMakerArtifacts());
 
     manager.add(new Separator("artifactsGroup"));
     manager.appendToGroup("artifactsGroup", action);
+    manager.appendToGroup("artifactsGroup", moveReferencedArtifactsAction);
 
   }
 
