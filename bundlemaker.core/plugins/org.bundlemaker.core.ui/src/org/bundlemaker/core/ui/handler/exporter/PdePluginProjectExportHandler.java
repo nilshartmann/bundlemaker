@@ -19,7 +19,7 @@ import org.bundlemaker.core.exporter.IModuleExporter;
 import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.osgi.exporter.pde.PdePluginProjectModuleExporter;
-import org.bundlemaker.core.osgi.manifest.CustomManifestCreator;
+import org.bundlemaker.core.osgi.manifest.DefaultManifestCreator;
 import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class PdePluginProjectExportHandler extends AbstractExportHandler {
 
-  private CustomManifestCreator _customManifestCreator;
+  private DefaultManifestCreator _customManifestCreator;
 
   @Override
   protected void exportAll(Shell shell, IModularizedSystem modularizedSystem,
@@ -69,7 +69,7 @@ public class PdePluginProjectExportHandler extends AbstractExportHandler {
   @Override
   protected IModuleExporter createExporter() throws Exception {
 
-    _customManifestCreator = new CustomManifestCreator();
+    _customManifestCreator = new DefaultManifestCreator();
     // Create the exporter instance
     PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter(null, _customManifestCreator, null);
 
