@@ -68,7 +68,7 @@ public class ThreewayXRefView extends AbstractArtifactSelectionAwareEditorPart {
 
         @Override
         public void run() {
-          if (_composite != null && _composite.isDisposed()) {
+          if (_composite != null && !_composite.isDisposed()) {
             _composite.refresh();
           }
         }
