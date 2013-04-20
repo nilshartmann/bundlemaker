@@ -478,6 +478,31 @@ public class AnalysisModelQueries {
     return result;
   }
 
+  public static List<IPackageArtifact> findPackageArtifacts(IBundleMakerArtifact root,
+      final Matcher<IPackageArtifact> matcher) {
+    // create the result array
+    final List<IPackageArtifact> result = new LinkedList<IPackageArtifact>();
+
+    // visit
+    root.accept(new IAnalysisModelVisitor.Adapter() {
+      @Override
+      public boolean visit(IPackageArtifact packageArtifact) {
+
+        //
+        if (matcher.matches(packageArtifact)) {
+          result.add(packageArtifact);
+        }
+
+        //
+        return true;
+      }
+    });
+
+    // return result
+    return result;
+
+  }
+
   // /**
   // * <p>
   // * </p>
@@ -914,6 +939,12 @@ public class AnalysisModelQueries {
     StringBuilder builder = new StringBuilder();
     dumpArtifact(artifact, 0, builder, -1);
     return builder.toString();
+  }
+
+  public static interface Matcher<T extends IBundleMakerArtifact> {
+
+    public boolean matches(T artifact);
+
   }
 
   /**
