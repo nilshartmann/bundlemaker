@@ -88,12 +88,24 @@ public class StageView extends ViewPart {
 
                                                                               @Override
                                                                               public void analysisModelModified() {
-                                                                                IArtifactSelection selection = Selection
+                                                                                final IArtifactSelection selection = Selection
                                                                                     .instance()
                                                                                     .getArtifactSelectionService()
                                                                                     .getSelection(
                                                                                         Selection.ARTIFACT_STAGE_SELECTION_ID);
-                                                                                refreshTreeContent(selection);
+
+                                                                                Display display = Display.getCurrent();
+
+                                                                                if (display != null) {
+                                                                                  display.asyncExec(new Runnable() {
+
+                                                                                    @Override
+                                                                                    public void run() {
+                                                                                      refreshTreeContent(selection);
+                                                                                    }
+                                                                                  });
+                                                                                }
+
                                                                               }
                                                                             };
 
