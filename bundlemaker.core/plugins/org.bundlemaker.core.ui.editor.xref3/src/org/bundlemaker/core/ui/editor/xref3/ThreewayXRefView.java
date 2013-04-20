@@ -15,6 +15,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -61,7 +62,19 @@ public class ThreewayXRefView extends AbstractArtifactSelectionAwareEditorPart {
     // refreshFromCurrentArtifactSelection(selection.getSelectedArtifacts());
     // }
 
-    _composite.refresh();
+    Display display = Display.getCurrent();
+    if (display != null) {
+      display.asyncExec(new Runnable() {
+
+        @Override
+        public void run() {
+          if (_composite != null && _composite.isDisposed()) {
+            _composite.refresh();
+          }
+        }
+      });
+
+    }
 
   }
 
