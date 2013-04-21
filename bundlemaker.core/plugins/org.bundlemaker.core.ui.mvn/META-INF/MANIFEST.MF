@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: BundleMaker Core UI MVN
 Bundle-SymbolicName: org.bundlemaker.core.ui.mvn;singleton:=true
-Bundle-Version: 0.11.0.RELEASE
+Bundle-Version: 0.12.0.qualifier
 Bundle-Activator: org.bundlemaker.core.ui.mvn.Activator
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.ui,
