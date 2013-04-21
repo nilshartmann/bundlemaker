@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: BundleMaker Core Selection
 Bundle-SymbolicName: org.bundlemaker.core.selection
-Bundle-Version: 0.10.0.qualifier
+Bundle-Version: 0.11.0.RELEASE
 Bundle-Activator: org.bundlemaker.core.selection.internal.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.bundlemaker.core;bundle-version="0.10.0",

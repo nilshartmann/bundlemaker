@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: BundleMaker Core
 Bundle-SymbolicName: org.bundlemaker.core;singleton:=true
 Eclipse-ExtensibleAPI: true
-Bundle-Version: 0.10.0.qualifier
+Bundle-Version: 0.11.0.RELEASE
 Bundle-ClassPath: .
 Bundle-Vendor: bundlemaker.org
 Bundle-Localization: plugin
