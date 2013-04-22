@@ -4,7 +4,7 @@
 
 	<groupId>org.bundlemaker.core</groupId>
 	<artifactId>org.bundlemaker.core.parent</artifactId>
-	<version>0.10.0-SNAPSHOT</version>
+	<version>0.12.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<modules>
@@ -28,9 +28,8 @@
 		<module>plugins/org.bundlemaker.core.ui.view.stage</module>
 		<module>plugins/org.bundlemaker.core.ui.editor.dsm</module>
 		<module>plugins/org.bundlemaker.core.ui.editor.sourceviewer</module>
-		<module>plugins/org.bundlemaker.core.ui.editor.xref</module>
+		<module>plugins/org.bundlemaker.core.ui.editor.xref3</module>
 		<module>plugins/org.bundlemaker.core.ui.app.perspective</module>
-		<module>plugins/org.bundlemaker.core.ui.experimental</module>
 		<module>plugins/org.bundlemaker.core.ui.mvn</module>
 		<module>plugins/org.bundlemaker.core.ui.projecteditor</module>
 		<module>features/org.bundlemaker.core.feature</module>
@@ -47,16 +46,8 @@
 	</prerequisites>
 
 	<properties>
-		<tycho-version>0.16.0</tycho-version>
+		<tycho-version>0.17.0</tycho-version>
 	</properties>
-
-	<!-- repositories> <repository> <id>bundlemaker-thirdparty</id> <layout>p2</layout> 
-		<url>http://www.bundlemaker.org/p2-thirdparty</url> </repository> <repository> 
-		<id>juno</id> <layout>p2</layout> <url>http://download.eclipse.org/releases/juno</url> 
-		</repository> <repository> <id>GEF-Update-3.8.1</id> <layout>p2</layout> 
-		<url>http://download.eclipse.org/tools/gef/updates/releases/</url> </repository> 
-		<repository> <id>zest2</id> <layout>p2</layout> <url>https://hudson.eclipse.org/hudson/job/gef-zest-nightly/lastSuccessfulBuild/artifact/targetPlatform/</url> 
-		</repository> </repositories -->
 
 	<build>
 		<plugins>

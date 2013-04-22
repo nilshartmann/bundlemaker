@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: BundleMaker Core
 Bundle-SymbolicName: org.bundlemaker.core;singleton:=true
 Eclipse-ExtensibleAPI: true
-Bundle-Version: 0.10.0.qualifier
+Bundle-Version: 0.12.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: bundlemaker.org
 Bundle-Localization: plugin
@@ -29,7 +29,8 @@ Export-Package: org.bundlemaker.core,
  org.bundlemaker.core.resource.modifiable,
  org.bundlemaker.core.util,
  org.bundlemaker.core.util.collections,
- org.bundlemaker.core.util.gson
+ org.bundlemaker.core.util.gson,
+ org.bundlemaker.core.util.history
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.6.0",
  org.eclipse.jdt.launching;bundle-version="3.5.100",

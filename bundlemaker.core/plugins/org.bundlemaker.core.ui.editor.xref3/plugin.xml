@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+      <!-- the pop up menus -->
+      <extension point="org.eclipse.ui.commands">
+	      		<command id="org.bundlemaker.core.ui.editor.xref3.OpenThreewayXRefViewCommand" 
+	      			name="Reveal in Three-way Cross Referencer"/>
+   </extension>
+
+    <extension
+          id="bla"
+          point="org.eclipse.ui.handlers">
+          
+		    <handler class="org.bundlemaker.core.ui.editor.xref3.handler.OpenThreewayXRefViewHandler"
+		       commandId="org.bundlemaker.core.ui.editor.xref3.OpenThreewayXRefViewCommand">
+		       <activeWhen>
+		          <reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+		          > </reference>
+		       </activeWhen>
+		       <enabledWhen>
+		          <reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+		          > </reference>
+		       </enabledWhen>
+		    </handler>
+        </extension>
+      
+
+
+      <!-- ProjectExplorer Menu Entry -->
+      <extension point="org.eclipse.ui.menus">
+		<!-- Toolbar -->
+	 	  <menuContribution
+              allPopups="false"
+              locationURI="toolbar:org.bundlemaker.core.ui.toolbar">
+              <command
+                    commandId="org.bundlemaker.core.ui.editor.xref3.OpenThreewayXRefViewCommand"
+                    disabledIcon="icons/XRef.png"
+                    icon="icons/XRef.png"
+                    style="push">
+              </command>
+        </menuContribution>      
+	
+
+				    <!-- Artifact Editor-actions -->
+				    <menuContribution
+		         locationURI="popup:org.eclipse.ui.popup.any?after=org.bundlemaker.core.ui.editor.separator">
+				         <command commandId="org.bundlemaker.core.ui.editor.xref3.OpenThreewayXRefViewCommand" style="push" icon="icons/XRef.png">
+            			<visibleWhen checkEnabled="true"/>
+         				</command>
+         				</menuContribution>
+      </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <editor
+            class="org.bundlemaker.core.ui.editor.xref3.ThreewayXRefView"
+            default="false"
+            icon="icons/XRef.png"
+            id="org.bundlemaker.core.ui.editor.xref3.ThreewayXRefView"
+            name="Three-way Cross Referencer"> </editor>
+   </extension>
+   
+   <extension
+         id="org.bundlemaker.core.jdt.content.JdtProjectContentProvider"
+         name="JdtProjectContentProvider"
+         point="org.bundlemaker.core.projectcontentprovider">
+      <projectContentProvider
+            id="org.bundlemaker.core.jdt.projectcontentprovider.javaproject"
+            class="org.bundlemaker.core.jdt.content.JdtProjectContentProvider">
+      </projectContentProvider>
+   </extension>
+
+</plugin>

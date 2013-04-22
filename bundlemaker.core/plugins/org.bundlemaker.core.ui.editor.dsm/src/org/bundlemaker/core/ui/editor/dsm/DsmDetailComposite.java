@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.bundlemaker.core.ui.editor.dsm.widget.DsmViewWidget;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
@@ -34,6 +35,7 @@ public class DsmDetailComposite extends Composite {
   /** - */
   private Button _shortendNamesButton;
   
+  /** - */
   private LabelPresentationMode _labelPresentationMode;
 
   /**
@@ -71,7 +73,7 @@ public class DsmDetailComposite extends Composite {
     _fromLabel = createFieldWithLabel(composite, "from");
     _toLabel = createFieldWithLabel(composite, "to");
 
-    Composite presentationModeComposite = new Composite(this, SWT.BORDER);
+    Composite presentationModeComposite = new Composite(this, SWT.NONE);
     gridLayout = new GridLayout(1, false);
     gridLayout.marginHeight = 0;
     gridLayout.marginWidth = 0;

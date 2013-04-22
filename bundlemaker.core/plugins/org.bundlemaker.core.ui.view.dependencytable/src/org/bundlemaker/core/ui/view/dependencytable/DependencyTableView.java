@@ -20,11 +20,14 @@ import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.selection.IDependencySelection;
 import org.bundlemaker.core.selection.IDependencySelectionListener;
 import org.bundlemaker.core.selection.Selection;
+import org.bundlemaker.core.ui.ErrorDialogUtil;
 import org.bundlemaker.core.ui.artifact.tree.EditorHelper;
 import org.bundlemaker.core.ui.event.selection.workbench.view.AbstractDependencySelectionAwareViewPart;
+import org.bundlemaker.core.ui.operations.CreateModuleWithArtifactsOperation;
 import org.bundlemaker.core.ui.view.dependencytable.internal.Activator;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -52,6 +55,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -148,7 +152,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     });
     Menu menu = menuMgr.createContextMenu(_viewer.getControl());
     _viewer.getControl().setMenu(menu);
-    getSite().registerContextMenu(menuMgr, _viewer);
+//    getSite().registerContextMenu(menuMgr, _viewer);
 
     contributeToActionBars();
 
@@ -160,7 +164,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
    * @param manager
    */
   protected void fillContextMenu(IMenuManager manager) {
-    List<IDependency> selectedDependencies = getSelectedDependencies();
+    final List<IDependency> selectedDependencies = getSelectedDependencies();
     Action action = new Action("Open in Editor") {
 
       @Override
@@ -180,6 +184,43 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     };
     action.setEnabled(selectedDependencies.isEmpty() == false);
     manager.add(action);
+    
+    action = new Action("Create Module from referenced Artifacts") {
+      public void run() {
+        List<IBundleMakerArtifact> artifacts = new LinkedList<IBundleMakerArtifact>();
+        List<IDependency> currentSelectedDependencies = getSelectedDependencies();
+        for (IDependency iDependency : currentSelectedDependencies) {
+          IBundleMakerArtifact to = iDependency.getTo();
+          if (to instanceof ITypeArtifact) {
+            if (!artifacts.contains(to)) {
+            artifacts.add(to);
+            }
+          }
+        }
+        createModuleFromSelectedTypes(artifacts);
+        _viewer.refresh();
+      }
+    };
+    manager.add(action);
+    
+    action = new Action("Create Module from referencing Artifacts") {
+      public void run() {
+        List<IBundleMakerArtifact> artifacts = new LinkedList<IBundleMakerArtifact>();
+        List<IDependency> currentSelectedDependencies = getSelectedDependencies();
+        for (IDependency iDependency : currentSelectedDependencies) {
+          IBundleMakerArtifact from = iDependency.getFrom();
+          if (from instanceof ITypeArtifact) {
+            if (!artifacts.contains(from)) {
+            artifacts.add(from);
+            }
+          }
+        }
+        createModuleFromSelectedTypes(artifacts);
+        _viewer.refresh();
+      }
+    };
+    manager.add(action);
+
   }
 
   private void contributeToActionBars() {
@@ -301,6 +342,11 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     final Clipboard cb = new Clipboard(getSite().getShell().getDisplay());
     TextTransfer textTransfer = TextTransfer.getInstance();
     cb.setContents(new Object[] { builder.toString() }, new Transfer[] { textTransfer });
+  }
+  
+  protected void createModuleFromSelectedTypes(List<IBundleMakerArtifact> types) {
+    CreateModuleWithArtifactsOperation operation = new CreateModuleWithArtifactsOperation(getViewSite().getShell(), types);
+    operation.run();
   }
 
   /**

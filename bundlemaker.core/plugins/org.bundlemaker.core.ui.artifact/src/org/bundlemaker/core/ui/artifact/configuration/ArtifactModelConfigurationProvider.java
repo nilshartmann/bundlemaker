@@ -25,35 +25,21 @@ import org.eclipse.jface.preference.IPreferenceStore;
  */
 public class ArtifactModelConfigurationProvider implements IArtifactModelConfigurationProvider {
 
-  private static AnalysisModelConfiguration DEFAULT_CONFIGURATION;
+  private final static String        PREFS_PREFIX               = "org.bundlemaker.core.ui.prefs.artifactModelConfiguration.";
 
-  private final static String               PREFS_PREFIX               = "org.bundlemaker.core.ui.prefs.artifactModelConfiguration.";
+  private final static String        PREF_CONTENT_TYPE          = PREFS_PREFIX + "contentType";
 
-  private final static String               PREF_AGGREGATE_INNER_TYPES = PREFS_PREFIX + "aggregateInnerTypes";
+  private final static String        PREF_VIRTUAL_MODULE        = PREFS_PREFIX + "virtualModuleForMissingTypes";
 
-  private final static String               PREF_CONTENT_TYPE          = PREFS_PREFIX + "contentType";
-
-  private final static String               PREF_VIRTUAL_MODULE        = PREFS_PREFIX + "virtualModuleForMissingTypes";
-
-  private final static String               PREF_HIERARCHICAL_PACKAGES = PREFS_PREFIX + "hierarchicalPackages";
+  private final static String        PREF_HIERARCHICAL_PACKAGES = PREFS_PREFIX + "hierarchicalPackages";
 
   /**
    * The {@link IPreferenceStore} used to load and store settings
    */
-  private final IPreferenceStore            _store;
+  private final IPreferenceStore     _store;
 
-  /**
-   * The managed configuration object
-   */
-  private AnalysisModelConfiguration        _configuration;
-
-  private synchronized static AnalysisModelConfiguration getDefaultArtifactModelConfiguration() {
-    if (DEFAULT_CONFIGURATION == null) {
-      DEFAULT_CONFIGURATION = new AnalysisModelConfiguration(false, ProjectContentType.SOURCE, false);
-    }
-
-    return DEFAULT_CONFIGURATION;
-  }
+  /** - */
+  private AnalysisModelConfiguration _analysisModelConfiguration;
 
   /**
    * @param preferenceStore
@@ -70,27 +56,37 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
    */
   @Override
   public AnalysisModelConfiguration getArtifactModelConfiguration() {
-    if (_configuration == null) {
-      // Get instance pre-filled with default settings
-      _configuration = getDefaultArtifactModelConfiguration();
+
+    //
+
+    if (_analysisModelConfiguration == null) {
+
+      ProjectContentType contentType = ProjectContentType.SOURCE;
+      boolean hierarchical = false;
+      boolean includeVirtualModuleForMissingTypes = false;
+
       try {
+
         // override default settings with stored preferences
         if (_store.contains(PREF_CONTENT_TYPE)) {
-          _configuration.setContentType(ProjectContentType.valueOf(_store.getString(PREF_CONTENT_TYPE)));
+          contentType = ProjectContentType.valueOf(_store.getString(PREF_CONTENT_TYPE));
         }
         if (_store.contains(PREF_HIERARCHICAL_PACKAGES)) {
-          _configuration.setHierarchicalPackages(_store.getBoolean(PREF_HIERARCHICAL_PACKAGES));
+          hierarchical = _store.getBoolean(PREF_HIERARCHICAL_PACKAGES);
         }
         if (_store.contains(PREF_VIRTUAL_MODULE)) {
-          _configuration.setIncludeVirtualModuleForMissingTypes(_store.getBoolean(PREF_VIRTUAL_MODULE));
+          includeVirtualModuleForMissingTypes = _store.getBoolean(PREF_VIRTUAL_MODULE);
         }
       } catch (Exception ex) {
         ex.printStackTrace();
       }
+
+      _analysisModelConfiguration = new AnalysisModelConfiguration(hierarchical, contentType,
+          includeVirtualModuleForMissingTypes);
     }
 
     // return the configuration
-    return _configuration;
+    return _analysisModelConfiguration;
 
   }
 
@@ -102,14 +98,22 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
    * <p>
    * This method is not part of the API and should not be invoked by clients
    * </p>
+   * 
+   * @param includeVirtualModuleForMissingTypes
+   * @param contentType
+   * @param hierarchical
    */
-  public void store() {
+  public void store(boolean hierarchical, ProjectContentType contentType, boolean includeVirtualModuleForMissingTypes) {
+
+    //
+    _analysisModelConfiguration = null;
+
     // Store Boolean values as Strings, otherwise they were never stored, in case
     // the default value in DEFAULT_CONFIGURATION is 'false'
-    _store.setValue(PREF_CONTENT_TYPE, _configuration.getContentType().toString());
+    _store.setValue(PREF_CONTENT_TYPE, contentType.toString());
     _store.setValue(PREF_HIERARCHICAL_PACKAGES,
         String.valueOf(
-            _configuration.isHierarchicalPackages()));
-    _store.setValue(PREF_VIRTUAL_MODULE, String.valueOf(_configuration.isIncludeVirtualModuleForMissingTypes()));
+            hierarchical));
+    _store.setValue(PREF_VIRTUAL_MODULE, String.valueOf(includeVirtualModuleForMissingTypes));
   }
 }

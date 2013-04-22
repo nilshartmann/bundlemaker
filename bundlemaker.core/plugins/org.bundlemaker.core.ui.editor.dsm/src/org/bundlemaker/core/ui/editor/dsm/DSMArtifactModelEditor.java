@@ -15,43 +15,24 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
-import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.selection.IArtifactSelection;
 import org.bundlemaker.core.selection.Selection;
-import org.bundlemaker.core.ui.editor.dsm.figures.matrix.IMatrixListener;
-import org.bundlemaker.core.ui.editor.dsm.figures.matrix.Matrix;
-import org.bundlemaker.core.ui.editor.dsm.figures.matrix.MatrixEvent;
-import org.bundlemaker.core.ui.editor.dsm.figures.sidemarker.HorizontalSideMarker;
-import org.bundlemaker.core.ui.editor.dsm.figures.sidemarker.VerticalSideMarker;
-import org.bundlemaker.core.ui.editor.dsm.utils.DsmUtils;
+import org.bundlemaker.core.ui.editor.dsm.widget.DsmViewWidget;
+import org.bundlemaker.core.ui.editor.dsm.widget.IDsmContentProvider;
+import org.bundlemaker.core.ui.editor.dsm.widget.IMatrixListener;
+import org.bundlemaker.core.ui.editor.dsm.widget.MatrixEvent;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
 import org.bundlemaker.core.ui.utils.EditorHelper;
-import org.eclipse.draw2d.Figure;
-import org.eclipse.draw2d.FigureUtilities;
-import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.jface.action.ContributionItem;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.internal.part.NullEditorInput;
 
 /**
@@ -60,33 +41,39 @@ import org.eclipse.ui.internal.part.NullEditorInput;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
+@SuppressWarnings("restriction")
 public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditorPart {
 
   /**
    * This is used as the DSMView's providerId for the xxxSelectionServices
    */
-  public static String         DSM_EDITOR_ID   = DSMArtifactModelEditor.class.getName();
+  public static String                 DSM_EDITOR_ID   = DSMArtifactModelEditor.class.getName();
 
   /**
    * Dummy input used for this editor
    */
-  @SuppressWarnings("restriction")
-  private static IEditorInput  nullInputEditor = new NullEditorInput();
+  private static IEditorInput          nullInputEditor = new NullEditorInput();
 
   /** - */
-  private DsmViewWidget        _viewWidget;
+  private DsmViewWidget                _viewWidget;
 
   /** - */
-  private DsmDetailComposite   _detailComposite;
+  private DsmDetailComposite           _detailComposite;
 
   /** - */
-  private int[]                _selectedCell;
+  private int[]                        _selectedCell;
 
   /** - */
-  private IBundleMakerArtifact _fromArtifact;
+  private IBundleMakerArtifact         _fromArtifact;
 
   /** - */
-  private IBundleMakerArtifact _toArtifact;
+  private IBundleMakerArtifact         _toArtifact;
+
+  /** - */
+  private DefaultArtifactLabelProvider _artifactLabelProvider;
+
+  /** - */
+  private IDsmContentProvider          _dsmContentProvider;
 
   /**
    * Opens the DSM View.
@@ -106,11 +93,11 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   public void analysisModelModified() {
     Display.getDefault().syncExec(new Runnable() {
       @Override
-	public void run() {
-         initSelection(getCurrentArtifactSelection());
+      public void run() {
+        initSelection(getCurrentArtifactSelection());
       }
-   });
-    
+    });
+
   }
 
   /**
@@ -124,19 +111,23 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     parent.setLayout(gridLayout);
 
     //
-    _viewWidget = new DsmViewWidget(new DsmViewModel(), parent);
+
+    _dsmContentProvider = new DefaultBundleMakerArtifactDsmContentProvider();
+    _artifactLabelProvider = new DefaultArtifactLabelProvider();
+    _viewWidget = new DsmViewWidget(_dsmContentProvider, _artifactLabelProvider, new DefaultDependencyLabelProvider(),
+        parent);
     GridDataFactory.swtDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(_viewWidget);
     _viewWidget.setZoom((50 + 10) * 0.02f);
 
     //
     _detailComposite = new DsmDetailComposite(parent, _viewWidget);
     _detailComposite.addPropertyChangeListener(new PropertyChangeListener() {
-		
-		@Override
-		public void propertyChange(PropertyChangeEvent evt) {
-			initSelection(getCurrentArtifactSelection());
-		}
-	});
+      @Override
+      public void propertyChange(PropertyChangeEvent evt) {
+        initSelection(getCurrentArtifactSelection());
+      }
+    });
+
     GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).applyTo(_detailComposite);
     setDefaultDependencyDescription();
 
@@ -149,17 +140,21 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
         //
         if (isCellSelected(event)) {
           _detailComposite.getSelectionCountLabel().setText(
-              getNullSafeString(_viewWidget.getModel().getValues()[event.getX()][event.getY()], "0"));
-          _detailComposite.getFromLabel().setText(_viewWidget.getModel().getLabels()[event.getY()]);
-          _detailComposite.getToLabel().setText(_viewWidget.getModel().getLabels()[event.getX()]);
+              getNullSafeString(_viewWidget.getDependenciesAsStrings()[event.getX()][event.getY()], "0"));
+          _detailComposite.getFromLabel().setText(
+              ((IBundleMakerArtifact) _dsmContentProvider.getNodes()[event.getY()]).getQualifiedName());
+          _detailComposite.getToLabel().setText(
+              ((IBundleMakerArtifact) _dsmContentProvider.getNodes()[event.getX()]).getQualifiedName());
         }
 
         //
         else if (_selectedCell != null) {
           _detailComposite.getSelectionCountLabel().setText(
-              getNullSafeString(_viewWidget.getModel().getValues()[_selectedCell[0]][_selectedCell[1]], "0"));
-          _detailComposite.getFromLabel().setText(_viewWidget.getModel().getLabels()[_selectedCell[1]]);
-          _detailComposite.getToLabel().setText(_viewWidget.getModel().getLabels()[_selectedCell[0]]);
+              getNullSafeString(_viewWidget.getDependenciesAsStrings()[_selectedCell[0]][_selectedCell[1]], "0"));
+          _detailComposite.getFromLabel().setText(
+              ((IBundleMakerArtifact) _dsmContentProvider.getNodes()[_selectedCell[1]]).getQualifiedName());
+          _detailComposite.getToLabel().setText(
+              ((IBundleMakerArtifact) _dsmContentProvider.getNodes()[_selectedCell[0]]).getQualifiedName());
         }
 
         //
@@ -177,15 +172,13 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
 
           _selectedCell = new int[] { event.getX(), event.getY() };
 
-          IDependency dependency = _viewWidget.getModel().isToggled() ? ((DsmViewModel) _viewWidget.getModel())
-              .getDependency(event.getY(),
-                  event.getX()) : ((DsmViewModel) _viewWidget.getModel()).getDependency(event.getX(), event.getY());
+          IDependency dependency = (IDependency) _dsmContentProvider.getDependency(event.getX(), event.getY());
 
           Selection.instance().getDependencySelectionService()
               .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DSMArtifactModelEditor.DSM_EDITOR_ID, dependency);
 
-          _fromArtifact = (IBundleMakerArtifact) _viewWidget.getModel().getNodes()[event.getX()];
-          _toArtifact = (IBundleMakerArtifact) _viewWidget.getModel().getNodes()[event.getY()];
+          _fromArtifact = (IBundleMakerArtifact) _dsmContentProvider.getNodes()[event.getX()];
+          _toArtifact = (IBundleMakerArtifact) _dsmContentProvider.getNodes()[event.getY()];
         }
       }
     });
@@ -220,41 +213,26 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
       return;
     }
 
-    // //
-    // if (selection.hasSelectedArtifacts() && selection.getSelectedArtifacts().size() == 1
-    // && isResourceOrResourceContent(selection)) {
-    // return;
-    // }
-
     super.setCurrentArtifactSelection(selection);
 
     initSelection(selection);
   }
-
-//  private boolean isResourceOrResourceContent(IArtifactSelection selection) {
-//    return selection.getEffectiveSelectedArtifacts().get(0) instanceof IResourceArtifact
-//        || selection.getEffectiveSelectedArtifacts().get(0).getParent(IResourceArtifact.class) != null;
-//  }
 
   private void initSelection(IArtifactSelection selection) {
 
     if (_viewWidget != null && _detailComposite != null) {
 
       //
-      
-      // set the model
-        DsmViewModel model = new DsmViewModel(selection.getEffectiveSelectedArtifacts());
-        model.setLabelPresentationMode(_detailComposite.getLabelPresentationMode());
-		_viewWidget.setModel(model);
+      _dsmContentProvider = new DefaultBundleMakerArtifactDsmContentProvider(selection.getEffectiveSelectedArtifacts());
+      _artifactLabelProvider.setLabelPresentationMode(_detailComposite.getLabelPresentationMode());
+      _viewWidget.setModel(_dsmContentProvider);
 
-        // clear the dependency selection
-        resetDependencySelection();
+      // clear the dependency selection
+      resetDependencySelection();
 
       setDefaultDependencyDescription();
     }
-    
   }
-  
 
   /**
    * {@inheritDoc}
@@ -285,10 +263,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   private void resetDependencySelection() {
 
     //
-    DsmViewModel dsmViewModel = (DsmViewModel) _viewWidget.getModel();
-
-    //
-    List<?> artifacts = Arrays.asList(dsmViewModel.getNodes());
+    List<?> artifacts = Arrays.asList(_dsmContentProvider.getNodes());
 
     //
     if (_fromArtifact == null || _toArtifact == null || !artifacts.contains(_fromArtifact)
@@ -304,21 +279,10 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
       //
       _selectedCell = new int[] { artifacts.indexOf(_fromArtifact), artifacts.indexOf(_toArtifact) };
 
-      IDependency dependency = _viewWidget.getModel().isToggled() ? ((DsmViewModel) _viewWidget.getModel())
-          .getDependency(_selectedCell[1],
-              _selectedCell[0]) : ((DsmViewModel) _viewWidget.getModel()).getDependency(_selectedCell[0],
-          _selectedCell[1]);
+      IDependency dependency = (IDependency) _dsmContentProvider.getDependency(_selectedCell[0], _selectedCell[1]);
 
       Selection.instance().getDependencySelectionService()
           .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DSMArtifactModelEditor.DSM_EDITOR_ID, dependency);
-
-      // //
-      // _selectedCell = null;
-      //
-      // List<IDependency> dependencies = Collections.emptyList();
-      //
-      // Selection.instance().getDependencySelectionService()
-      // .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DSM_EDITOR_ID, dependencies);
     }
   }
 
@@ -330,104 +294,104 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     return DSM_EDITOR_ID;
   }
 
-//  /**
-//   * <p>
-//   * </p>
-//   * 
-//   * @param dsmViewWidget
-//   */
-//  private void createContextMenu(DsmViewWidget dsmViewWidget) {
-//
-//    MenuManager menuManager = new MenuManager("#PopupMenu");
-//    menuManager.setRemoveAllWhenShown(true);
-//    menuManager.addMenuListener(new IMenuListener() {
-//
-//      private MenuItem _menuItem;
-//
-//      @Override
-//      public void menuAboutToShow(IMenuManager manager) {
-//        manager.add(new Separator("edit"));
-//        manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-//        manager.appendToGroup("edit", new ContributionItem("Test") {
-//
-//          /**
-//           * {@inheritDoc}
-//           */
-//          @Override
-//          public void fill(Menu menu, int index) {
-//            _menuItem = new MenuItem(menu, SWT.PUSH);
-//            _menuItem.setText("Export...");
-//            _menuItem.addSelectionListener(new SelectionListener() {
-//
-//              @Override
-//              public void widgetSelected(SelectionEvent e) {
-//
-//                final int sideMarkerOffset = FigureUtilities.getTextWidth(
-//                    DsmUtils.getLongestString(_viewWidget.getModel().getLabels()), Display.getCurrent().getSystemFont());
-//
-//                //
-//                int matrixWidth = _viewWidget.getModel().getConfiguration().getHorizontalBoxSize()
-//                    * _viewWidget.getModel().getItemCount();
-//                int matrixHeight = _viewWidget.getModel().getConfiguration().getVerticalBoxSize()
-//                    * _viewWidget.getModel().getItemCount();
-//                final Matrix matrix = new Matrix(_viewWidget.getModel(), new DependencyLabelProvider(), _viewWidget
-//                    .getModel());
-//                matrix.setSize(matrixWidth, matrixHeight);
-//                matrix.setFont(Display.getCurrent().getSystemFont());
-//
-//                //
-//                final VerticalSideMarker verticalSideMarker = new VerticalSideMarker(_viewWidget.getModel());
-//                verticalSideMarker.setSize(sideMarkerOffset, matrixHeight);
-//                verticalSideMarker.setFont(Display.getCurrent().getSystemFont());
-//
-//                //
-//                final HorizontalSideMarker horizontalSideMarker = new HorizontalSideMarker(_viewWidget.getModel());
-//                horizontalSideMarker.setSize(matrixWidth, sideMarkerOffset);
-//                horizontalSideMarker.setFont(Display.getCurrent().getSystemFont());
-//
-//                IFigure mainFigure = new Figure() {
-//
-//                  /**
-//                   * {@inheritDoc}
-//                   */
-//                  @Override
-//                  public void paint(Graphics graphics) {
-//                    super.paint(graphics);
-//
-//                    graphics.pushState();
-//                    graphics.translate(0, sideMarkerOffset);
-//                    verticalSideMarker.paint(graphics);
-//                    graphics.restoreState();
-//
-//                    graphics.pushState();
-//                    graphics.translate(sideMarkerOffset, sideMarkerOffset);
-//                    matrix.paint(graphics);
-//                    graphics.restoreState();
-//
-//                    graphics.pushState();
-//                    graphics.translate(sideMarkerOffset, 0);
-//                    horizontalSideMarker.paint(graphics);
-//                    graphics.restoreState();
-//                  }
-//                };
-//                mainFigure.setSize(matrix.getSize().width + sideMarkerOffset + 1, matrix.getSize().height
-//                    + sideMarkerOffset + 1);
-//
-//                FigurePrinter.save(mainFigure);
-//              }
-//
-//              @Override
-//              public void widgetDefaultSelected(SelectionEvent e) {
-//              }
-//            });
-//          }
-//        });
-//      }
-//    });
-//
-//    Menu menu = menuManager.createContextMenu(dsmViewWidget);
-//    dsmViewWidget.setMenu(menu);
-//  }
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param dsmViewWidget
+  // */
+  // private void createContextMenu(DsmViewWidget dsmViewWidget) {
+  //
+  // MenuManager menuManager = new MenuManager("#PopupMenu");
+  // menuManager.setRemoveAllWhenShown(true);
+  // menuManager.addMenuListener(new IMenuListener() {
+  //
+  // private MenuItem _menuItem;
+  //
+  // @Override
+  // public void menuAboutToShow(IMenuManager manager) {
+  // manager.add(new Separator("edit"));
+  // manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+  // manager.appendToGroup("edit", new ContributionItem("Test") {
+  //
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Override
+  // public void fill(Menu menu, int index) {
+  // _menuItem = new MenuItem(menu, SWT.PUSH);
+  // _menuItem.setText("Export...");
+  // _menuItem.addSelectionListener(new SelectionListener() {
+  //
+  // @Override
+  // public void widgetSelected(SelectionEvent e) {
+  //
+  // final int sideMarkerOffset = FigureUtilities.getTextWidth(
+  // DsmUtils.getLongestString(_viewWidget.getModel().getLabels()), Display.getCurrent().getSystemFont());
+  //
+  // //
+  // int matrixWidth = _viewWidget.getModel().getConfiguration().getHorizontalBoxSize()
+  // * _viewWidget.getModel().getItemCount();
+  // int matrixHeight = _viewWidget.getModel().getConfiguration().getVerticalBoxSize()
+  // * _viewWidget.getModel().getItemCount();
+  // final Matrix matrix = new Matrix(_viewWidget.getModel(), new DependencyLabelProvider(), _viewWidget
+  // .getModel());
+  // matrix.setSize(matrixWidth, matrixHeight);
+  // matrix.setFont(Display.getCurrent().getSystemFont());
+  //
+  // //
+  // final VerticalSideMarker verticalSideMarker = new VerticalSideMarker(_viewWidget.getModel());
+  // verticalSideMarker.setSize(sideMarkerOffset, matrixHeight);
+  // verticalSideMarker.setFont(Display.getCurrent().getSystemFont());
+  //
+  // //
+  // final HorizontalSideMarker horizontalSideMarker = new HorizontalSideMarker(_viewWidget.getModel());
+  // horizontalSideMarker.setSize(matrixWidth, sideMarkerOffset);
+  // horizontalSideMarker.setFont(Display.getCurrent().getSystemFont());
+  //
+  // IFigure mainFigure = new Figure() {
+  //
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Override
+  // public void paint(Graphics graphics) {
+  // super.paint(graphics);
+  //
+  // graphics.pushState();
+  // graphics.translate(0, sideMarkerOffset);
+  // verticalSideMarker.paint(graphics);
+  // graphics.restoreState();
+  //
+  // graphics.pushState();
+  // graphics.translate(sideMarkerOffset, sideMarkerOffset);
+  // matrix.paint(graphics);
+  // graphics.restoreState();
+  //
+  // graphics.pushState();
+  // graphics.translate(sideMarkerOffset, 0);
+  // horizontalSideMarker.paint(graphics);
+  // graphics.restoreState();
+  // }
+  // };
+  // mainFigure.setSize(matrix.getSize().width + sideMarkerOffset + 1, matrix.getSize().height
+  // + sideMarkerOffset + 1);
+  //
+  // FigurePrinter.save(mainFigure);
+  // }
+  //
+  // @Override
+  // public void widgetDefaultSelected(SelectionEvent e) {
+  // }
+  // });
+  // }
+  // });
+  // }
+  // });
+  //
+  // Menu menu = menuManager.createContextMenu(dsmViewWidget);
+  // dsmViewWidget.setMenu(menu);
+  // }
 
   // /** Paints the figure onto the given graphics */
   // public static void paintDiagram(Graphics g, IFigure figure) {
@@ -452,8 +416,8 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    * @return
    */
   private boolean isCellSelected(MatrixEvent event) {
-    return event.getX() <= _viewWidget.getModel().getLabels().length && event.getX() >= 0
-        && event.getY() <= _viewWidget.getModel().getLabels().length && event.getY() >= 0;
+    return event.getX() <= _dsmContentProvider.getItemCount() && event.getX() >= 0
+        && event.getY() <= _dsmContentProvider.getItemCount() && event.getY() >= 0;
   }
 
   /**

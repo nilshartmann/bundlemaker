@@ -235,7 +235,7 @@ public class ProjectEditorPage extends FormPage {
     GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
     layoutData.grabExcessVerticalSpace = true;
     layoutData.verticalAlignment = SWT.BOTTOM;
-    _parseProjectButton.setImage(BundleMakerImages.REFRESH.getImage());
+    _parseProjectButton.setImage(BundleMakerImages.BUNDLEMAKER_PARSE_PROJECT.getImage());
     _parseProjectButton.setLayoutData(layoutData);
 
     _treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {

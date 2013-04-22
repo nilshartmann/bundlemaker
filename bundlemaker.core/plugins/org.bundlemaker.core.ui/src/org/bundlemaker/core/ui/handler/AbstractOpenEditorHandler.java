@@ -44,7 +44,7 @@ public abstract class AbstractOpenEditorHandler extends AbstractArtifactBasedHan
     IEditorPart editor = EditorHelper.openEditor(editorId, editorInput);
 
     if (editor != null) {
-      editorOpened(editor);
+      editorOpened(editor, selectedArtifacts);
     }
 
   }
@@ -52,7 +52,7 @@ public abstract class AbstractOpenEditorHandler extends AbstractArtifactBasedHan
   /**
    * @param editor
    */
-  protected void editorOpened(IEditorPart editor) {
+  protected void editorOpened(IEditorPart editor, List<IBundleMakerArtifact> selectedArtifacts) {
     // override in subclasses to perfom additional actions after the editor has been opened
   }
 

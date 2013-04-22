@@ -23,12 +23,12 @@ public class AnalysisModelConfiguration implements IAnalysisModelConfiguration {
   /** whether the packages should be hierarchical or flat */
   @Expose
   @SerializedName("hierarchicalPackages")
-  private boolean     _hierarchicalPackages                = true;
+  private boolean            _hierarchicalPackages                = true;
 
   /** whether to include missing types or not */
   @Expose
   @SerializedName("includeVirtualModuleForMissingTypes")
-  private boolean     _includeVirtualModuleForMissingTypes = false;
+  private boolean            _includeVirtualModuleForMissingTypes = false;
 
   /**
    * <p>
@@ -51,9 +51,9 @@ public class AnalysisModelConfiguration implements IAnalysisModelConfiguration {
    */
   public AnalysisModelConfiguration(boolean hierarchical,
       ProjectContentType contentType, boolean includeVirtualModuleForMissingTypes) {
-  
+
     Assert.isNotNull(contentType);
-  
+
     _hierarchicalPackages = hierarchical;
     _contentType = contentType;
     _includeVirtualModuleForMissingTypes = includeVirtualModuleForMissingTypes;
@@ -106,38 +106,38 @@ public class AnalysisModelConfiguration implements IAnalysisModelConfiguration {
     return _contentType.equals(ProjectContentType.BINARY);
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param hierarchical
-   */
-  public final void setHierarchicalPackages(boolean hierarchical) {
-    _hierarchicalPackages = hierarchical;
-  }
-
-  /**
-   * <p>
-   * Sets the content type of this configuration.
-   * </p>
-   * 
-   * @param contentType
-   */
-  public final void setContentType(ProjectContentType contentType) {
-    Assert.isNotNull(contentType);
-
-    _contentType = contentType;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param includeVirtualModuleForMissingTypes
-   */
-  public final void setIncludeVirtualModuleForMissingTypes(boolean includeVirtualModuleForMissingTypes) {
-    _includeVirtualModuleForMissingTypes = includeVirtualModuleForMissingTypes;
-  }
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param hierarchical
+  // */
+  // public final void setHierarchicalPackages(boolean hierarchical) {
+  // _hierarchicalPackages = hierarchical;
+  // }
+  //
+  // /**
+  // * <p>
+  // * Sets the content type of this configuration.
+  // * </p>
+  // *
+  // * @param contentType
+  // */
+  // public final void setContentType(ProjectContentType contentType) {
+  // Assert.isNotNull(contentType);
+  //
+  // _contentType = contentType;
+  // }
+  //
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param includeVirtualModuleForMissingTypes
+  // */
+  // public final void setIncludeVirtualModuleForMissingTypes(boolean includeVirtualModuleForMissingTypes) {
+  // _includeVirtualModuleForMissingTypes = includeVirtualModuleForMissingTypes;
+  // }
 
   /**
    * {@inheritDoc}
