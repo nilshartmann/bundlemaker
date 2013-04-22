@@ -36,9 +36,6 @@
                         <visibleWhen checkEnabled="true"/>
                   </command>
             </menuContribution>
-            <menuContribution allPopups="false"
-                  locationURI="org.bundlemaker.analysis.ui.dsmview.DSMView#PopupMenu?after=edit"
-            > </menuContribution>
             <menuContribution
                   allPopups="false"
                   locationURI="toolbar:org.bundlemaker.core.ui.toolbar">
