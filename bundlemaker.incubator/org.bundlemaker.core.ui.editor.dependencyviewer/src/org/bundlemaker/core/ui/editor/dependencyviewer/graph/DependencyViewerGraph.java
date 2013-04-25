@@ -221,6 +221,7 @@ public class DependencyViewerGraph {
     graph.setConnectableEdges(false);
     graph.setCellsBendable(false);
     graph.setCellsEditable(false);
+    graph.setCellsResizable(false);
 
     return graph;
 
