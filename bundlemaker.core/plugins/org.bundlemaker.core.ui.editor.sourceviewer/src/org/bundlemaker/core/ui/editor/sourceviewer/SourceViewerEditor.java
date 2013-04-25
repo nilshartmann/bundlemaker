@@ -9,8 +9,7 @@ import java.util.Set;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.modules.IMovableUnit;
-import org.bundlemaker.core.modules.MovableUnit;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.selection.IDependencySelection;
 import org.bundlemaker.core.selection.Selection;
@@ -226,7 +225,7 @@ public class SourceViewerEditor extends AbstractDependencySelectionAwareEditorPa
     //
     IReferenceDetailParser detailParser = new ReferenceDetailParser();
     IResource resource = _resourceArtifact.getAssociatedResource();
-    IMovableUnit movableUnit = MovableUnit.createFromResource(resource, _resourceArtifact.getModularizedSystem());
+    IMovableUnit movableUnit = resource.getMovableUnit(_resourceArtifact.getModularizedSystem());
     IResource sourceResource = movableUnit.getAssociatedBinaryResources().get(0);
     _positions = detailParser.parseReferencePositions(sourceResource, _resourceArtifact.getModularizedSystem());
 

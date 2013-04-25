@@ -1,4 +1,4 @@
-package org.bundlemaker.core.modules;
+package org.bundlemaker.core.internal.resource;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
+import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.JavaTypeUtils;
@@ -75,7 +78,8 @@ public class MovableUnit implements IMovableUnit {
    * @param resource
    * @return
    */
-  public static IMovableUnit createFromResource(IResource resource, IModularizedSystem modularizedSystem) {
+  // TODO an der Resource anbieten
+  public static MovableUnit createFromResource(IResource resource, IModularizedSystem modularizedSystem) {
     Assert.isNotNull(resource);
 
     //

@@ -19,6 +19,7 @@ import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem
 import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -63,6 +64,9 @@ public class Resource extends ResourceKey implements IModifiableResource {
   /**  */
   private transient ResourceStandin    _resourceStandin;
 
+  /** - */
+  private transient MovableUnit        _movableUnit;
+
   /**
    * <p>
    * Creates a new instance of type {@link Resource}.
@@ -99,6 +103,24 @@ public class Resource extends ResourceKey implements IModifiableResource {
    */
   public Resource(String contentId, String root, String path) {
     super(contentId, root, path);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IMovableUnit getMovableUnit(IModularizedSystem modularizedSystem) {
+
+    //
+    Assert.isNotNull(modularizedSystem);
+
+    //
+    if (_movableUnit == null) {
+      _movableUnit = MovableUnit.createFromResource(this, modularizedSystem);
+    }
+
+    //
+    return _movableUnit;
   }
 
   /**

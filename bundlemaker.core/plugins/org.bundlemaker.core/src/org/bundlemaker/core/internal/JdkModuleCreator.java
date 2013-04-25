@@ -78,7 +78,7 @@ public class JdkModuleCreator {
     Module virtualModule = new Module(new ModuleIdentifier(vmInstall.getName(), vmInstall.getName()),
         modularizedSystem);
 
-    virtualModule.setResourceModule(true);
+    virtualModule.setResourceModule(false);
 
     //
     Set<IResourceStandin> resources = new HashSet<IResourceStandin>();

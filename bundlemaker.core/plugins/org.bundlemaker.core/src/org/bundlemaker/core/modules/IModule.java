@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.IGenericAdaptable;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.IPath;

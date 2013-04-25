@@ -36,6 +36,15 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
 
   /**
    * <p>
+   * </p>
+   * 
+   * @param modularizedSystem
+   * @return
+   */
+  IMovableUnit getMovableUnit(IModularizedSystem modularizedSystem);
+
+  /**
+   * <p>
    * Returns all {@link IReference IReferences} that are originated in this resource.
    * </p>
    * <p>

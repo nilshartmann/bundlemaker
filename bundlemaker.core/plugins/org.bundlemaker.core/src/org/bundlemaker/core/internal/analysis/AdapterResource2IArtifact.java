@@ -18,9 +18,9 @@ import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
+import org.bundlemaker.core.internal.resource.MovableUnit;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IMovableUnit;
-import org.bundlemaker.core.modules.MovableUnit;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 

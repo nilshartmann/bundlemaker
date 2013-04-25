@@ -33,7 +33,7 @@ import org.bundlemaker.core.internal.modules.event.MovableUnitMovedEvent;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IMovableUnit;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;

@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IMovableUnit;
-import org.bundlemaker.core.modules.MovableUnit;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -31,7 +30,7 @@ public class ReferenceDetailParser implements IReferenceDetailParser {
     IProject project = modularizedSystem.getBundleMakerProject().getProject();
     IJavaProject javaProject = getAssociatedJavaProject(project);
 
-    IMovableUnit movableUnit = MovableUnit.createFromResource(resource, modularizedSystem);
+    IMovableUnit movableUnit = resource.getMovableUnit(modularizedSystem);
     for (IResource binaryResource : movableUnit.getAssociatedBinaryResources()) {
       try {
         IJavaElement element = javaProject.findElement(new Path(binaryResource.getPath()));

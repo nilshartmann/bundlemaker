@@ -18,6 +18,7 @@ import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -105,6 +106,24 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
     return 0;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IMovableUnit getMovableUnit(IModularizedSystem modularizedSystem) {
+
+    //
+    if (_resource == null) {
+      // TODO
+      throw new RuntimeException();
+    }
+
+    return _resource.getMovableUnit(modularizedSystem);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Set<IReference> getReferences() {
 

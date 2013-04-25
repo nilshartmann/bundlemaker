@@ -2,7 +2,7 @@ package org.bundlemaker.core.internal.modules.event;
 
 import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IMovableUnit;
+import org.bundlemaker.core.resource.IMovableUnit;
 
 public class MovableUnitMovedEvent {
 
