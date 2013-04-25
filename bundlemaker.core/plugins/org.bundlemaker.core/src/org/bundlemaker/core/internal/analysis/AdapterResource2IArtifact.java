@@ -12,6 +12,7 @@ package org.bundlemaker.core.internal.analysis;
 
 import java.util.List;
 
+import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -22,7 +23,6 @@ import org.bundlemaker.core.internal.resource.MovableUnit;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
 
 /**
  * <p>
@@ -96,8 +96,8 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     return _movableUnit.getAssociatedSourceResource();
   }
 
-  public IModule getModule() {
-    return _movableUnit.getModule();
+  public IModule getAssoicatedModule() {
+    return _movableUnit.getAssoicatedModule();
   }
 
   public boolean hasModule() {

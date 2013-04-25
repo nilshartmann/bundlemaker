@@ -5,8 +5,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
+import org.bundlemaker.core.resource.IModifiableResource;
 import org.bundlemaker.core.resource.ResourceKey;
-import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
 

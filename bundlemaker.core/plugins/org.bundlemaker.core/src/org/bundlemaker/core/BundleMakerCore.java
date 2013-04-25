@@ -60,6 +60,16 @@ public final class BundleMakerCore {
    * <p>
    * </p>
    * 
+   * @return
+   */
+  public static String getVersion() {
+    return Activator.getDefault().getBundleVersion();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @param project
    * @return
    * @throws CoreException

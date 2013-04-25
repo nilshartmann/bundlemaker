@@ -14,8 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
@@ -110,7 +110,7 @@ public class JdtAstVisitor extends ASTVisitor {
 
     //
     for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
-      for (org.bundlemaker.core.resource.IType type : resource.getContainedTypes()) {
+      for (org.bundlemaker.core._type.IType type : resource.getContainedTypes()) {
         for (IReference reference : type.getReferences()) {
 
           //

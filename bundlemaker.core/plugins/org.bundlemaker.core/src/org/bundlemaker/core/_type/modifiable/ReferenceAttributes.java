@@ -8,9 +8,9 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.resource.modifiable;
+package org.bundlemaker.core._type.modifiable;
 
-import org.bundlemaker.core.resource.ReferenceType;
+import org.bundlemaker.core._type.ReferenceType;
 import org.eclipse.core.runtime.Assert;
 
 /**

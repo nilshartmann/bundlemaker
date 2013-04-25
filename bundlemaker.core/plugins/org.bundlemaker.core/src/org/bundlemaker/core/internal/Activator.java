@@ -144,6 +144,7 @@ public class Activator extends Plugin {
     //
     _factoryTracker.close();
 
+    //
     super.stop(context);
   }
 
@@ -169,6 +170,16 @@ public class Activator extends Plugin {
 
   public static BundleContext getContext() {
     return _context;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public String getBundleVersion() {
+    return getContext().getBundle().getVersion().toString();
   }
 
   /**

@@ -8,15 +8,26 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.resource;
+package org.bundlemaker.core._type;
 
 /**
  * <p>
+ * Enumeration that defines the possible types a type can have.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public enum ReferenceType {
+public enum TypeEnum {
 
-  PACKAGE_REFERENCE, TYPE_REFERENCE;
+  /** - */
+  CLASS,
+
+  /** - */
+  INTERFACE,
+
+  /** - */
+  ANNOTATION,
+
+  /** - */
+  ENUM;
 }

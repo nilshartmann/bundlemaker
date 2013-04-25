@@ -13,16 +13,16 @@ package org.bundlemaker.core.internal.parser;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core.internal.resource.FlyWeightCache;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.resource.IModifiableResource;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.resource.TypeEnum;
-import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;

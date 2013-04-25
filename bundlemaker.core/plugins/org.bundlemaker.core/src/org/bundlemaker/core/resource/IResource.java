@@ -12,6 +12,8 @@ package org.bundlemaker.core.resource;
 
 import java.util.Set;
 
+import org.bundlemaker.core._type.IReference;
+import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.eclipse.core.runtime.CoreException;

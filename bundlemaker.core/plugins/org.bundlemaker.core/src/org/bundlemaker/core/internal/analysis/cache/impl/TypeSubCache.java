@@ -1,5 +1,6 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
+import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
@@ -11,7 +12,6 @@ import org.bundlemaker.core.internal.analysis.cache.TypeKey;
 import org.bundlemaker.core.internal.analysis.virtual.VirtualType2IArtifact;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 
 /**

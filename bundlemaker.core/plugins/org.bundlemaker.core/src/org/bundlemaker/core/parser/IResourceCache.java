@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser;
 
+import org.bundlemaker.core.resource.IModifiableResource;
 import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 
 /**
  * <p>

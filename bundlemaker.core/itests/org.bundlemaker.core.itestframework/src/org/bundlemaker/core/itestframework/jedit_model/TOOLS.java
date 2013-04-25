@@ -3,12 +3,12 @@ package org.bundlemaker.core.itestframework.jedit_model;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ITypeModule;
-import org.bundlemaker.core.resource.IType;
 import org.junit.Assert;
 
 public class TOOLS {

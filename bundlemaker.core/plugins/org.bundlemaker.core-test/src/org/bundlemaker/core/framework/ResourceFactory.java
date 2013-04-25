@@ -6,12 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.CoreException;
 

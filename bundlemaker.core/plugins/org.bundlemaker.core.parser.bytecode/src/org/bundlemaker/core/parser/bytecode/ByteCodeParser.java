@@ -16,9 +16,9 @@ import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.parser.bytecode.asm.ArtefactAnalyserClassVisitor;
 import org.bundlemaker.core.parser.bytecode.asm.AsmReferenceRecorder;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.resource.IModifiableResource;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.ResourceKey;
-import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.bundlemaker.core.util.JavaTypeUtils;
 import org.objectweb.asm.ClassReader;
 

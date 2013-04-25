@@ -14,11 +14,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-import org.bundlemaker.core.resource.ReferenceType;
-import org.bundlemaker.core.resource.TypeEnum;
-import org.bundlemaker.core.resource.modifiable.IModifiableResource;
-import org.bundlemaker.core.resource.modifiable.IModifiableType;
-import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
+import org.bundlemaker.core._type.ReferenceType;
+import org.bundlemaker.core._type.TypeEnum;
+import org.bundlemaker.core._type.modifiable.IModifiableType;
+import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
+import org.bundlemaker.core.resource.IModifiableResource;
 import org.bundlemaker.core.util.JavaTypeUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.Flags;

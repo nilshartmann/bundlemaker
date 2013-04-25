@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core.internal.JdkModuleCreator;
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.Module;
@@ -36,7 +37,6 @@ import org.bundlemaker.core.modules.transformation.ITransformation;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.VariablePath;
-import org.bundlemaker.core.resource.TypeEnum;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;

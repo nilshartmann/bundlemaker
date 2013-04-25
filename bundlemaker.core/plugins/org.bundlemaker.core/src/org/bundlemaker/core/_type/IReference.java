@@ -8,7 +8,9 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.resource;
+package org.bundlemaker.core._type;
+
+import org.bundlemaker.core.resource.IResource;
 
 /**
  * <p>

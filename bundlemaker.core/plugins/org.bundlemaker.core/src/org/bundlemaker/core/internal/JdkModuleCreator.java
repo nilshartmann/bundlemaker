@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core.internal.modules.Module;
 import org.bundlemaker.core.internal.modules.modularizedsystem.DefaultTypeSelector;
 import org.bundlemaker.core.internal.parser.ResourceCache;
@@ -27,7 +28,6 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.util.FileUtils;
 import org.bundlemaker.core.util.JdkCreator;
 import org.eclipse.core.runtime.Assert;

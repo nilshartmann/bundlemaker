@@ -2,6 +2,7 @@ package org.bundlemaker.core.itest.misc_models;
 
 import java.util.Collection;
 
+import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
@@ -11,7 +12,6 @@ import org.bundlemaker.core.itestframework.utils.ArtifactTestUtil;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Test;

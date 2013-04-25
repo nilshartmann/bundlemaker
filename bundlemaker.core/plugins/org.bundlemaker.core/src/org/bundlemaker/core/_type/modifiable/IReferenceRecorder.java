@@ -8,9 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.resource.modifiable;
-
-import org.bundlemaker.core.resource.IType;
+package org.bundlemaker.core._type.modifiable;
 
 /**
  * <p>
@@ -21,6 +19,14 @@ import org.bundlemaker.core.resource.IType;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IModifiableType extends IType, IReferenceRecorder {
+public interface IReferenceRecorder {
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fullyQualifiedName
+   * @param referenceAttributes
+   */
+  public void recordReference(String fullyQualifiedName, ReferenceAttributes referenceAttributes);
 }

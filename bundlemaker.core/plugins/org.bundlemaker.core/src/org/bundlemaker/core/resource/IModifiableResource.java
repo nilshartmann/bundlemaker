@@ -8,12 +8,12 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.resource.modifiable;
+package org.bundlemaker.core.resource;
 
+import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.TypeEnum;
+import org.bundlemaker.core._type.modifiable.IReferenceRecorder;
 import org.bundlemaker.core.internal.resource.Type;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.resource.TypeEnum;
 
 /**
  * <p>
