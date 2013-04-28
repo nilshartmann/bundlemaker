@@ -70,7 +70,7 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
   }
 
   @Override
-  public IModule getAssociatedResourceModule(IModularizedSystem modularizedSystem) {
+  public IModule getModule(IModularizedSystem modularizedSystem) {
 
     //
     return ((ModularizedSystem) modularizedSystem).getAssociatedResourceModule(this);

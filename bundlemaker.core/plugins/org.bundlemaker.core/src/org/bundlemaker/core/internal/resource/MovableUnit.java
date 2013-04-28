@@ -91,7 +91,7 @@ public class MovableUnit implements IMovableUnit {
           String typeName = JavaTypeUtils.getEnclosingNonLocalAndNonAnonymousTypeName(type.getFullyQualifiedName());
 
           // TODO!!
-          IModule resourceModule = resource.getAssociatedResourceModule(modularizedSystem);
+          IModule resourceModule = resource.getModule(modularizedSystem);
           IResource nonAnonymousResource = resourceModule.getResource(typeName.replace('.', '/') + ".class",
               ProjectContentType.BINARY);
 
@@ -189,12 +189,12 @@ public class MovableUnit implements IMovableUnit {
       }
     } else if (!_binaryResources.isEmpty()) {
       IModule module = _binaryResources.toArray(new IResourceStandin[0])[0]
-          .getAssociatedResourceModule(_modularizedSystem);
+          .getModule(_modularizedSystem);
       if (module instanceof IModule) {
         resourceModule = (IModule) module;
       }
     } else {
-      resourceModule = _sourceResource.getAssociatedResourceModule(_modularizedSystem);
+      resourceModule = _sourceResource.getModule(_modularizedSystem);
     }
 
     //
@@ -248,7 +248,7 @@ public class MovableUnit implements IMovableUnit {
       } else {
 
         //
-        IModule resourceModule = _mainResource.getAssociatedResourceModule(_modularizedSystem);
+        IModule resourceModule = _mainResource.getModule(_modularizedSystem);
 
         //
         _sourceResource = resourceModule.getResource(_mainResource.getPath(), ProjectContentType.SOURCE);

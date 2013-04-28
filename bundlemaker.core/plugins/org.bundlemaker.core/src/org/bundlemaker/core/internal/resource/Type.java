@@ -290,11 +290,11 @@ public class Type implements IType, IModifiableType {
     IModule result = null;
 
     if (_binaryResource != null && _binaryResource instanceof Resource) {
-      result = ((Resource) _binaryResource).getAssociatedResourceModule(modularizedSystem);
+      result = ((Resource) _binaryResource).getModule(modularizedSystem);
     }
 
     if (result == null && _sourceResource != null) {
-      result = _sourceResource.getAssociatedResourceModule(modularizedSystem);
+      result = _sourceResource.getModule(modularizedSystem);
     }
 
     if (result == null) {

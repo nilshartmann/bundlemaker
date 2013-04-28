@@ -63,7 +63,7 @@ public class ResourceSubCache extends AbstractSubCache<IResource, IResourceArtif
     String packageName = JavaUtils.getPackageNameFromDirectory(resource.getDirectory());
 
     // step 2: get the associated resource module
-    IModule resourceModule = resource.getAssociatedResourceModule(getArtifactCache().getModularizedSystem());
+    IModule resourceModule = resource.getModule(getArtifactCache().getModularizedSystem());
     if (resourceModule == null) {
       throw new RuntimeException(String.format("No module for resource '%s'.", resource.getPath()));
     }

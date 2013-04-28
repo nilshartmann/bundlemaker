@@ -47,6 +47,24 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
 
   /**
    * <p>
+   * Returns the {@link IResourceModule} that contains this {@link IResource}.
+   * </p>
+   * 
+   * @param modularizedSystem
+   * @return the {@link IResourceModule} that contains this {@link IResource}.
+   */
+  IModule getModule(IModularizedSystem modularizedSystem);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Set<? extends IResource> getStickyResources();
+
+  /**
+   * <p>
    * Returns all {@link IReference IReferences} that are originated in this resource.
    * </p>
    * <p>
@@ -120,22 +138,4 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
    * @return <code>true</code> if this {@link IResource} has a primary type, <code>false</code> otherwise.
    */
   boolean hasPrimaryType();
-
-  /**
-   * <p>
-   * Returns the {@link IResourceModule} that contains this {@link IResource}.
-   * </p>
-   * 
-   * @param modularizedSystem
-   * @return the {@link IResourceModule} that contains this {@link IResource}.
-   */
-  IModule getAssociatedResourceModule(IModularizedSystem modularizedSystem);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  Set<? extends IResource> getStickyResources();
 }

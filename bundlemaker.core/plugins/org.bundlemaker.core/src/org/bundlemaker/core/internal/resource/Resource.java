@@ -285,7 +285,7 @@ public class Resource extends ResourceKey implements IModifiableResource {
   }
 
   @Override
-  public IModule getAssociatedResourceModule(IModularizedSystem modularizedSystem) {
+  public IModule getModule(IModularizedSystem modularizedSystem) {
 
     //
     if (_resourceStandin == null) {
