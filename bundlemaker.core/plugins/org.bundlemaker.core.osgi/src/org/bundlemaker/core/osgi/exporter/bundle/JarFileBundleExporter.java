@@ -224,18 +224,8 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
       final IReadableResource movedSource = new IReadableResource() {
         
         @Override
-        public boolean isValidJavaPackage() {
-          return source.isValidJavaPackage();
-        }
-        
-        @Override
         public String getPath() {
           return "OSGI-OPT/src/" + source.getPath();
-        }
-        
-        @Override
-        public String getPackageName() {
-          return source.getPackageName();
         }
         
         @Override

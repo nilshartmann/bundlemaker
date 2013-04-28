@@ -1,5 +1,6 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
+import org.bundlemaker.core._type.utils.JavaUtils;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
@@ -59,7 +60,7 @@ public class ResourceSubCache extends AbstractSubCache<IResource, IResourceArtif
     Assert.isNotNull(resource);
 
     // step 1: compute the package name
-    String packageName = resource.getPackageName();
+    String packageName = JavaUtils.getPackageNameFromDirectory(resource.getDirectory());
 
     // step 2: get the associated resource module
     IModule resourceModule = resource.getAssociatedResourceModule(getArtifactCache().getModularizedSystem());

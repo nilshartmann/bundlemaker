@@ -39,26 +39,6 @@ public interface IReadableResource {
 
   /**
    * <p>
-   * Returns <code>true</code>, if the package is a valid java package.
-   * </p>
-   * 
-   * @return <code>true</code>, if the package is a valid java package.
-   */
-  // TODO: move to Helper class
-  boolean isValidJavaPackage();
-
-  /**
-   * <p>
-   * Returns the package name, e.g. 'org.example'.
-   * </p>
-   * 
-   * @return the package name.
-   */
-  // TODO: move to Helper class
-  String getPackageName();
-
-  /**
-   * <p>
    * Returns the content of this resource.
    * </p>
    * 

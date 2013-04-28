@@ -1,5 +1,6 @@
 package org.bundlemaker.core.internal.analysis;
 
+import org.bundlemaker.core._type.utils.JavaUtils;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -111,7 +112,8 @@ public class AdapterPackage2IArtifact extends AbstractPackageFilteringArtifact i
 
     //
     if (artifact.isInstanceOf(IResourceArtifact.class)) {
-      String packageName = ((IResourceArtifact) artifact).getAssociatedResource().getPackageName();
+      String packageName = JavaUtils.getPackageNameFromDirectory(((IResourceArtifact) artifact).getAssociatedResource()
+          .getDirectory());
       if (!packageName.equals(this.getQualifiedName())) {
         return String.format("Can not add resource '%s' to package '%s'.", artifact.getQualifiedName(), packageName);
       } else {

@@ -11,6 +11,7 @@
 package org.bundlemaker.core.parser.bytecode;
 
 import org.bundlemaker.core.DefaultProblemImpl;
+import org.bundlemaker.core._type.utils.JavaUtils;
 import org.bundlemaker.core.parser.AbstractParser;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.parser.bytecode.asm.ArtefactAnalyserClassVisitor;
@@ -50,7 +51,7 @@ public class ByteCodeParser extends AbstractParser {
     }
 
     //
-    return resourceKey.isValidJavaPackage();
+    return JavaUtils.isValidJavaPackage(resourceKey.getPath());
   }
 
   @Override
