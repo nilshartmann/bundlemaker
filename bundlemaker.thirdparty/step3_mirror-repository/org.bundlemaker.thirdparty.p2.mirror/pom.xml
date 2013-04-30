@@ -4,7 +4,7 @@
 
 	<parent>
 		<groupId>org.bundlemaker.thirdparty</groupId>
-		<artifactId>org.bundlemaker.thirdparty.tycho.parent</artifactId>
+		<artifactId>org.bundlemaker.thirdparty.parent</artifactId>
 		<version>1.0.0</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
