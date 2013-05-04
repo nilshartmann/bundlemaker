@@ -8,15 +8,19 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.resource;
+package org.bundlemaker.core._type.modifiable;
+
+import org.bundlemaker.core._type.IType;
 
 /**
  * <p>
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ * 
+ * @noimplement This interface is not intended to be implemented by clients.
+ * @noextend This interface is not intended to be extended by clients.
  */
-public enum ReferenceType {
+public interface IModifiableType extends IType, IReferenceRecorder {
 
-  PACKAGE_REFERENCE, TYPE_REFERENCE;
 }

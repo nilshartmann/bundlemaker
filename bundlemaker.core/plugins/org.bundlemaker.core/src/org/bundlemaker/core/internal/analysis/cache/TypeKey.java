@@ -1,6 +1,6 @@
 package org.bundlemaker.core.internal.analysis.cache;
 
-import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core._type.IType;
 import org.eclipse.core.runtime.Assert;
 
 /**

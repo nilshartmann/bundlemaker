@@ -1,12 +1,13 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
+import org.bundlemaker.core._type.utils.JavaUtils;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.cache.ModulePackageKey;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 
@@ -59,10 +60,10 @@ public class ResourceSubCache extends AbstractSubCache<IResource, IResourceArtif
     Assert.isNotNull(resource);
 
     // step 1: compute the package name
-    String packageName = resource.getPackageName();
+    String packageName = JavaUtils.getPackageNameFromDirectory(resource.getDirectory());
 
     // step 2: get the associated resource module
-    IResourceModule resourceModule = resource.getAssociatedResourceModule(getArtifactCache().getModularizedSystem());
+    IModule resourceModule = resource.getModule(getArtifactCache().getModularizedSystem());
     if (resourceModule == null) {
       throw new RuntimeException(String.format("No module for resource '%s'.", resource.getPath()));
     }

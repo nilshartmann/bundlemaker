@@ -8,22 +8,15 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.modules.query;
+package org.bundlemaker.core._type;
 
 /**
- * @param <T>
+ * <p>
+ * </p>
  * 
- * @deprecated use AnalysisModel instead
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-@Deprecated
-public interface IQueryFilter<T> {
+public enum ReferenceType {
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param content
-   * @return
-   */
-  boolean matches(T content);
+  PACKAGE_REFERENCE, TYPE_REFERENCE;
 }

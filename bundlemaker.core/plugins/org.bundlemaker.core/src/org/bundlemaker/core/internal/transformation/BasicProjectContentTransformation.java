@@ -10,9 +10,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.transformation;
 
-import org.bundlemaker.core.internal.modules.ResourceContainer;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.internal.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
+import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
@@ -28,18 +28,18 @@ public class BasicProjectContentTransformation implements IInternalTransformatio
       if (fileBasedContent.isAnalyze()) {
 
         // create new module
-        IModifiableResourceModule module = modularizedSystem.createResourceModule(new ModuleIdentifier(fileBasedContent
+        IModifiableModule module = modularizedSystem.createResourceModule(new ModuleIdentifier(fileBasedContent
             .getName(), fileBasedContent.getVersion()));
 
         // put the user attributes
         module.getUserAttributes().putAll(fileBasedContent.getUserAttributes());
 
         // add all the binary content
-        ((ResourceContainer) module.getModifiableSelfResourceContainer()).addAll(fileBasedContent.getBinaryResources(),
+        module.addAll(((ProjectContentEntry) fileBasedContent).getBinaryResourceStandins(),
             ProjectContentType.BINARY);
 
         // add all the source content
-        ((ResourceContainer) module.getModifiableSelfResourceContainer()).addAll(fileBasedContent.getSourceResources(),
+        module.addAll(((ProjectContentEntry) fileBasedContent).getSourceResourceStandins(),
             ProjectContentType.SOURCE);
       }
     }

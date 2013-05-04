@@ -1,7 +1,12 @@
 package org.bundlemaker.core.internal.modules.modifiable;
 
+import java.util.Set;
+
+import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.IPath;
 
 /**
@@ -23,4 +28,22 @@ public interface IModifiableModule extends IModule {
   void setModuleIdentifier(String name, String version);
 
   void setModuleIdentifier(IModuleIdentifier moduleIdentifier);
+
+  void addAll(Set<IResourceStandin> resources, ProjectContentType binary);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param movableUnit
+   */
+  void addMovableUnit(IMovableUnit movableUnit);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param movableUnit
+   */
+  void removeMovableUnit(IMovableUnit movableUnit);
 }

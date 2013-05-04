@@ -1,4 +1,4 @@
-package org.bundlemaker.core.modules;
+package org.bundlemaker.core.internal.modules;
 
 /**
  * <p>

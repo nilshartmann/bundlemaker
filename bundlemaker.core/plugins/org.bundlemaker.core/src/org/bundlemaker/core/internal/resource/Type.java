@@ -14,16 +14,16 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bundlemaker.core._type.IReference;
+import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.TypeEnum;
+import org.bundlemaker.core._type.modifiable.IModifiableType;
+import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IReadableResource;
-import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.resource.TypeEnum;
-import org.bundlemaker.core.resource.modifiable.IModifiableType;
-import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -290,11 +290,11 @@ public class Type implements IType, IModifiableType {
     IModule result = null;
 
     if (_binaryResource != null && _binaryResource instanceof Resource) {
-      result = ((Resource) _binaryResource).getAssociatedResourceModule(modularizedSystem);
+      result = ((Resource) _binaryResource).getModule(modularizedSystem);
     }
 
     if (result == null && _sourceResource != null) {
-      result = _sourceResource.getAssociatedResourceModule(modularizedSystem);
+      result = _sourceResource.getModule(modularizedSystem);
     }
 
     if (result == null) {

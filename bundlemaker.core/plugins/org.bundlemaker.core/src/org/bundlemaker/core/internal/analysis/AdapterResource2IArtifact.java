@@ -12,17 +12,17 @@ package org.bundlemaker.core.internal.analysis;
 
 import java.util.List;
 
+import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
-import org.bundlemaker.core.modules.IMovableUnit;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.MovableUnit;
+import org.bundlemaker.core.internal.resource.MovableUnit;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
 
 /**
  * <p>
@@ -72,7 +72,7 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     return _movableUnit.getAssociatedTypes();
   }
 
-  public List<IResource> getAssociatedBinaryResources() {
+  public List<? extends IResource> getAssociatedBinaryResources() {
     return _movableUnit.getAssociatedBinaryResources();
   }
 
@@ -96,12 +96,12 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     return _movableUnit.getAssociatedSourceResource();
   }
 
-  public IResourceModule getContainingResourceModule() {
-    return _movableUnit.getContainingResourceModule();
+  public IModule getAssoicatedModule() {
+    return _movableUnit.getAssoicatedModule();
   }
 
-  public boolean hasContainingResourceModule() {
-    return _movableUnit.hasContainingResourceModule();
+  public boolean hasModule() {
+    return _movableUnit.hasModule();
   }
 
   @Override
@@ -119,7 +119,7 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
 
     //
     return artifact instanceof IModuleArtifact
-        && ((IModuleArtifact) artifact).getAssociatedModule() instanceof IResourceModule;
+        && ((IModuleArtifact) artifact).getAssociatedModule().isResourceModule();
   }
 
   @Override

@@ -12,7 +12,7 @@ package org.bundlemaker.core.modules;
 
 import java.util.Set;
 
-import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core._type.IType;
 
 /**
  * <p>
@@ -36,5 +36,5 @@ public interface ITypeSelector {
    *          the set of all implementations of the specified type
    * @return the selected type
    */
-  IType selectType(IResourceModule module, String fullyQualifiedName, Set<IType> types);
+  IType selectType(IModule module, String fullyQualifiedName, Set<IType> types);
 }

@@ -31,9 +31,9 @@ public class MissingTypesTest extends AbstractSimpleArtifactModelWithTypeLibrary
   public void testMissingTypes() throws Exception {
 
     //
-    assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
-    assertResourceModuleCount(getBinModel(), 2);
-    assertResourceModuleCount(getSrcModel(), 2);
+    assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 3);
+    assertResourceModuleCount(getBinModel(), 3);
+    assertResourceModuleCount(getSrcModel(), 3);
 
     //
     IModuleArtifact missingTypes = AnalysisModelQueries.getMissingTypesModuleArtifact(getBinModel().getRootArtifact());

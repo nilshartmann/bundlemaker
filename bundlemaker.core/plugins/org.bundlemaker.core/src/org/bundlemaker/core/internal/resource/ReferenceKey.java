@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.resource;
 
-import org.bundlemaker.core.resource.ReferenceType;
+import org.bundlemaker.core._type.ReferenceType;
 
 /**
  * <p>

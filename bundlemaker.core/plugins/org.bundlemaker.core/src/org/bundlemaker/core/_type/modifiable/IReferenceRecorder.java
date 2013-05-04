@@ -8,26 +8,25 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.resource;
+package org.bundlemaker.core._type.modifiable;
 
 /**
  * <p>
- * Enumeration that defines the possible types a type can have.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ * 
+ * @noimplement This interface is not intended to be implemented by clients.
+ * @noextend This interface is not intended to be extended by clients.
  */
-public enum TypeEnum {
+public interface IReferenceRecorder {
 
-  /** - */
-  CLASS,
-
-  /** - */
-  INTERFACE,
-
-  /** - */
-  ANNOTATION,
-
-  /** - */
-  ENUM;
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fullyQualifiedName
+   * @param referenceAttributes
+   */
+  public void recordReference(String fullyQualifiedName, ReferenceAttributes referenceAttributes);
 }

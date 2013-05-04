@@ -13,16 +13,16 @@ package org.bundlemaker.core.internal.parser;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core.internal.resource.FlyWeightCache;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.resource.IModifiableResource;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.resource.TypeEnum;
-import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -79,6 +79,26 @@ public class ResourceCache implements IResourceCache {
 
   /**
    * <p>
+   * Creates a new instance of type {@link ResourceCache}.
+   * </p>
+   */
+  public ResourceCache() {
+
+    //
+    _storedResourcesMap = new HashMap<IResourceKey, Resource>();
+
+    // set the element map
+    _newResourceMap = new HashMap<IResourceKey, Resource>();
+
+    //
+    _typeMap = new HashMap<String, Type>();
+
+    //
+    _flyWeightCache = new FlyWeightCache();
+  }
+
+  /**
+   * <p>
    * </p>
    */
   public synchronized void clear() throws CoreException {
@@ -94,6 +114,8 @@ public class ResourceCache implements IResourceCache {
    * @throws CoreException
    */
   public synchronized void commit(IProgressMonitor progressMonitor) throws CoreException {
+
+    Assert.isNotNull(_dependencyStore, "Dependency store must not be null.");
 
     //
     if (progressMonitor != null) {

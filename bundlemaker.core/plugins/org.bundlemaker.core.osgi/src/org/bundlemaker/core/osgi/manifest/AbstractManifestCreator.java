@@ -6,7 +6,7 @@ import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.osgi.utils.ArtifactUtils;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.eclipse.core.runtime.Assert;
@@ -40,7 +40,7 @@ public abstract class AbstractManifestCreator implements IBundleManifestCreator 
   private IModularizedSystem   _modularizedSystem;
 
   /** the resource module */
-  private IResourceModule      _resourceModule;
+  private IModule      _resourceModule;
 
   /** the manifest preferences */
   private IManifestPreferences _manifestPreferences;
@@ -56,7 +56,7 @@ public abstract class AbstractManifestCreator implements IBundleManifestCreator 
    */
   @Override
   public final ManifestContents createManifest(final IModularizedSystem modularizedSystem,
-      final IResourceModule resourceModule, final ManifestContents manifestTemplate,
+      final IModule resourceModule, final ManifestContents manifestTemplate,
       final ManifestContents originalManifest, final IManifestPreferences manifestPreferences) {
 
     // assert not null
@@ -138,7 +138,7 @@ public abstract class AbstractManifestCreator implements IBundleManifestCreator 
    * 
    * @return the {@link IResourceModule}.
    */
-  protected final IResourceModule getResourceModule() {
+  protected final IModule getResourceModule() {
     return _resourceModule;
   }
 

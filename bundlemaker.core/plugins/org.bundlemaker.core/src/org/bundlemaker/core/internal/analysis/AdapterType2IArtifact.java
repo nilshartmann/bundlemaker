@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core._type.IReference;
+import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.analysis.DependencyKind;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -32,13 +34,12 @@ import org.bundlemaker.core.analysis.spi.IReferencingArtifact;
 import org.bundlemaker.core.analysis.spi.ReferencedArtifactTrait;
 import org.bundlemaker.core.analysis.spi.ReferencingArtifactTrait;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
+import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
-import org.bundlemaker.core.modules.IMovableUnit;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.MovableUnit;
-import org.bundlemaker.core.resource.IReference;
+import org.bundlemaker.core.internal.resource.MovableUnit;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -248,12 +249,12 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     return false;
   }
 
-  public IResourceModule getContainingResourceModule() {
-    return _movableUnit.getContainingResourceModule();
+  public IModule getAssoicatedModule() {
+    return _movableUnit.getAssoicatedModule();
   }
 
-  public boolean hasContainingResourceModule() {
-    return _movableUnit.hasContainingResourceModule();
+  public boolean hasModule() {
+    return _movableUnit.hasModule();
   }
 
   /**
@@ -267,7 +268,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
     //
     if (!(artifact instanceof IModuleArtifact)
-        && ((IModuleArtifact) artifact).getAssociatedModule() instanceof IResourceModule) {
+        && ((IModuleArtifact) artifact).getAssociatedModule().isResourceModule()) {
       return false;
     }
 
@@ -289,7 +290,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    * {@inheritDoc}
    */
   @Override
-  public List<IResource> getAssociatedBinaryResources() {
+  public List<? extends IResource> getAssociatedBinaryResources() {
     return _movableUnit.getAssociatedBinaryResources();
   }
 
@@ -390,7 +391,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
     // STEP 2: initialize all dependencies to this artifact
     // this is necessary to filter unwanted references to types that occur multiple times!
-    if (_type.equals(getModularizedSystem().getType(_type.getFullyQualifiedName()))) {
+    if (_type.equals(((IModifiableModularizedSystem) getModularizedSystem()).getType(_type.getFullyQualifiedName()))) {
 
       //
       Set<IType> referringTypes = ((AbstractCachingModularizedSystem) getModularizedSystem())

@@ -12,8 +12,10 @@ package org.bundlemaker.core.resource;
 
 import java.util.Set;
 
+import org.bundlemaker.core._type.IReference;
+import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.eclipse.core.runtime.CoreException;
 
 /**
@@ -33,6 +35,33 @@ import org.eclipse.core.runtime.CoreException;
  * @noextend This interface is not intended to be extended by clients.
  */
 public interface IResource extends IResourceKey, Comparable<IResource> {
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modularizedSystem
+   * @return
+   */
+  IMovableUnit getMovableUnit(IModularizedSystem modularizedSystem);
+
+  /**
+   * <p>
+   * Returns the {@link IResourceModule} that contains this {@link IResource}.
+   * </p>
+   * 
+   * @param modularizedSystem
+   * @return the {@link IResourceModule} that contains this {@link IResource}.
+   */
+  IModule getModule(IModularizedSystem modularizedSystem);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Set<? extends IResource> getStickyResources();
 
   /**
    * <p>
@@ -109,22 +138,4 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
    * @return <code>true</code> if this {@link IResource} has a primary type, <code>false</code> otherwise.
    */
   boolean hasPrimaryType();
-
-  /**
-   * <p>
-   * Returns the {@link IResourceModule} that contains this {@link IResource}.
-   * </p>
-   * 
-   * @param modularizedSystem
-   * @return the {@link IResourceModule} that contains this {@link IResource}.
-   */
-  IResourceModule getAssociatedResourceModule(IModularizedSystem modularizedSystem);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  Set<IResource> getStickyResources();
 }

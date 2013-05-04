@@ -14,14 +14,16 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bundlemaker.core._type.IReference;
+import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.resource.IReference;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.ResourceKey;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
 /**
@@ -43,6 +45,21 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
    * Creates a new instance of type {@link ResourceStandin}.
    * </p>
    * 
+   * @param resource
+   */
+  public ResourceStandin(Resource resource) {
+
+    this(nullCheck(resource).getProjectContentEntryId(), nullCheck(resource).getRoot(), nullCheck(resource).getPath());
+
+    resource.setResourceStandin(this);
+    setResource(resource);
+  }
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link ResourceStandin}.
+   * </p>
+   * 
    * @param contentId
    * @param root
    * @param path
@@ -53,7 +70,7 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
   }
 
   @Override
-  public IResourceModule getAssociatedResourceModule(IModularizedSystem modularizedSystem) {
+  public IModule getModule(IModularizedSystem modularizedSystem) {
 
     //
     return ((ModularizedSystem) modularizedSystem).getAssociatedResourceModule(this);
@@ -89,6 +106,24 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
     return 0;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IMovableUnit getMovableUnit(IModularizedSystem modularizedSystem) {
+
+    //
+    if (_resource == null) {
+      // TODO
+      throw new RuntimeException();
+    }
+
+    return _resource.getMovableUnit(modularizedSystem);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Set<IReference> getReferences() {
 
@@ -189,5 +224,17 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
     }
 
     return _stickyResourceStandins;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resource
+   * @return
+   */
+  private static Resource nullCheck(Resource resource) {
+    Assert.isNotNull(resource, "Parameter resource must not be null.");
+    return resource;
   }
 }

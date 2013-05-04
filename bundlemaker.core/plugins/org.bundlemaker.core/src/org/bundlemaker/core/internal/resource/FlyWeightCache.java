@@ -12,7 +12,7 @@ package org.bundlemaker.core.internal.resource;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
+import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
 
 /**
  * <p>

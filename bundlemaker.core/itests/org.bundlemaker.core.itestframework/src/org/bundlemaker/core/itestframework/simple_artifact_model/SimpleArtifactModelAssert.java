@@ -142,7 +142,7 @@ public class SimpleArtifactModelAssert {
   public static void assertMainModuleNameAndVersion(SimpleArtifactModel model, String name, String version) {
 
     // assert resource module count == 1
-    assertResourceModuleCount(model, 1);
+    assertResourceModuleCount(model, 2);
 
     //
     Assert.assertEquals(name + "_" + version, model.getMainModuleArtifact().getName());

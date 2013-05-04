@@ -2,16 +2,16 @@ package org.bundlemaker.core.itest.misc_models;
 
 import java.util.Collection;
 
+import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
 import org.bundlemaker.core.itestframework.utils.ArtifactTestUtil;
-import org.bundlemaker.core.modules.AmbiguousElementException;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,15 +29,14 @@ public class InnerClassTest extends AbstractBundleMakerModelTest {
    * </p>
    * 
    * @throws CoreException
-   * @throws AmbiguousElementException
    */
   @Test
-  public void testInnerClass() throws CoreException, AmbiguousElementException {
+  public void testInnerClass() throws CoreException {
 
     //
-    IResourceModule resourceModule = getModularizedSystem().getResourceModule("InnerClassTest", "1.0.0");
-    IType aType = resourceModule.getType("de.test.innertypes.A");
-    IType bType = resourceModule.getType("de.test.innertypes.B");
+    IModule resourceModule = getModularizedSystem().getModule("InnerClassTest", "1.0.0");
+    IType aType = resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A");
+    IType bType = resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.B");
 
     // test resources
     Assert.assertNotNull(aType);

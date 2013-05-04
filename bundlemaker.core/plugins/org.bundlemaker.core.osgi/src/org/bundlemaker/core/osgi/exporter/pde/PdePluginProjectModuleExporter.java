@@ -18,7 +18,7 @@ import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ITemplateProvider;
 import org.bundlemaker.core.exporter.util.Helper;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.osgi.exporter.AbstractManifestAwareExporter;
 import org.bundlemaker.core.osgi.internal.Activator;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
@@ -104,7 +104,7 @@ public class PdePluginProjectModuleExporter extends AbstractManifestAwareExporte
    * {@inheritDoc}
    */
   @Override
-  public boolean canExport(IModularizedSystem modularizedSystem, IResourceModule module, IModuleExporterContext context) {
+  public boolean canExport(IModularizedSystem modularizedSystem, IModule module, IModuleExporterContext context) {
 
     //
     return !module.getResources(ProjectContentType.SOURCE).isEmpty();

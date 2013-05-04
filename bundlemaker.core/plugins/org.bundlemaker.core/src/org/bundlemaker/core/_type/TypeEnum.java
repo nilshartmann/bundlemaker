@@ -8,16 +8,26 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.modules.modifiable;
-
-import org.bundlemaker.core.modules.IResourceContainer;
+package org.bundlemaker.core._type;
 
 /**
  * <p>
+ * Enumeration that defines the possible types a type can have.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IModifiableResourceContainer extends IResourceContainer, IModifiableTypeContainer {
+public enum TypeEnum {
 
+  /** - */
+  CLASS,
+
+  /** - */
+  INTERFACE,
+
+  /** - */
+  ANNOTATION,
+
+  /** - */
+  ENUM;
 }

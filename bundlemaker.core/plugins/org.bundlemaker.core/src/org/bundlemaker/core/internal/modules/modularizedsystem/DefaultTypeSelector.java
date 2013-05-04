@@ -2,11 +2,11 @@ package org.bundlemaker.core.internal.modules.modularizedsystem;
 
 import java.util.Set;
 
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ITypeSelector;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -64,7 +64,7 @@ public class DefaultTypeSelector implements ITypeSelector {
    * {@inheritDoc}
    */
   @Override
-  public IType selectType(IResourceModule module, String fullyQualifiedName, Set<IType> types) {
+  public IType selectType(IModule module, String fullyQualifiedName, Set<IType> types) {
 
     //
     int currentIndex = Integer.MAX_VALUE;

@@ -9,6 +9,7 @@ import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
+import org.bundlemaker.core.modules.ITypeModule;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -44,9 +45,9 @@ public class AmbiguousTypesTest extends AbstractBundleMakerModelTest {
     Assert.assertNotNull(artifact);
 
     // assert that the type
-    Assert.assertNotNull(getModularizedSystem().getExecutionEnvironment().getType(
+    Assert.assertNotNull(getModularizedSystem().getExecutionEnvironment().adaptAs(ITypeModule.class).getType(
         "javax.xml.ws.handler.soap.SOAPMessageContext"));
-    Assert.assertNotNull(getModularizedSystem().getModule("AmbiguousTypesTest", "1.0.0").getType(
+    Assert.assertNotNull(getModularizedSystem().getModule("AmbiguousTypesTest", "1.0.0").adaptAs(ITypeModule.class).getType(
         "javax.xml.ws.handler.soap.SOAPMessageContext"));
 
     //

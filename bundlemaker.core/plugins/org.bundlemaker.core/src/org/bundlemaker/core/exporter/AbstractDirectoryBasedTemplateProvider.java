@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IReadableResource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.util.FileUtils;
@@ -81,7 +81,7 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
    * {@inheritDoc}
    */
   @Override
-  public T getTemplate(IResourceModule module, IModularizedSystem modularizedSystem,
+  public T getTemplate(IModule module, IModularizedSystem modularizedSystem,
       IModuleExporterContext context) {
 
     //
@@ -106,7 +106,7 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
    * {@inheritDoc}
    */
   @Override
-  public Set<IReadableResource> getAdditionalResources(IResourceModule resourceModule,
+  public Set<IReadableResource> getAdditionalResources(IModule resourceModule,
       IModularizedSystem currentModularizedSystem, IModuleExporterContext currentContext) {
 
     // step 1a: get the current root directory
@@ -122,7 +122,7 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
    * 
    * @return
    */
-  private File getTemplateFile(IResourceModule resourceModule) {
+  private File getTemplateFile(IModule resourceModule) {
 
     Assert.isNotNull(resourceModule);
 
@@ -177,7 +177,7 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
    * 
    * @return
    */
-  public final boolean hasModuleTemplateDirectory(IResourceModule resourceModule) {
+  public final boolean hasModuleTemplateDirectory(IModule resourceModule) {
 
     Assert.isNotNull(resourceModule);
 
@@ -190,7 +190,7 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
    * 
    * @return
    */
-  public File getModuleTemplateDirectory(IResourceModule resourceModule) {
+  public File getModuleTemplateDirectory(IModule resourceModule) {
 
     //
     Assert.isNotNull(resourceModule);

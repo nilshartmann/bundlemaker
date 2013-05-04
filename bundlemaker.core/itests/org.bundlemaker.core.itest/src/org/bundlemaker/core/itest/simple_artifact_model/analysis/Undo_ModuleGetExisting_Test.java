@@ -29,9 +29,9 @@ public class Undo_ModuleGetExisting_Test extends AbstractSimpleArtifactModelTest
       @Override
       public void prePostCondition() {
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-        assertResourceModuleCount(getBinModel(), 1);
-        assertResourceModuleCount(getSrcModel(), 1);
+        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
+        assertResourceModuleCount(getBinModel(), 2);
+        assertResourceModuleCount(getSrcModel(), 2);
       }
 
       /**

@@ -170,8 +170,8 @@ public class ArtifactAssert {
    * @param count
    */
   public static void assertResourceModuleCountInModularizedSystem(IModularizedSystem modularizedSystem, int count) {
-    Assert.assertEquals(String.format("%s.", modularizedSystem.getAllModules()), count, modularizedSystem
-        .getResourceModules().size());
+    Assert.assertEquals(String.format("%s.", modularizedSystem.getModules()), count, modularizedSystem
+        .getModules().size());
   }
 
   /**

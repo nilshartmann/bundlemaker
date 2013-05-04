@@ -82,9 +82,9 @@ public class Undo_AddArtifactsToGroup_Test extends AbstractSimpleArtifactModelTe
       @Override
       public void prePostCondition() {
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-        assertResourceModuleCount(getBinModel(), 1);
-        assertResourceModuleCount(getSrcModel(), 1);
+        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
+        assertResourceModuleCount(getBinModel(), 2);
+        assertResourceModuleCount(getSrcModel(), 2);
         Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
       }
 
@@ -99,18 +99,18 @@ public class Undo_AddArtifactsToGroup_Test extends AbstractSimpleArtifactModelTe
 
         // assert that we three groups
         Assert.assertEquals(3, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-        assertResourceModuleCount(getSrcModel(), 1);
-        assertResourceModuleCount(getBinModel(), 1);
+        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
+        assertResourceModuleCount(getSrcModel(), 2);
+        assertResourceModuleCount(getBinModel(), 2);
         Assert.assertEquals(getBinModel().getRootArtifact(), groupArtifact.getParent());
 
         addToGroup.addToGroup(groupArtifact);
 
         //
         Assert.assertEquals(3, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-        assertResourceModuleCount(getSrcModel(), 1);
-        assertResourceModuleCount(getBinModel(), 1);
+        assertResourceModuleCountInModularizedSystem(getModularizedSystem(),2);
+        assertResourceModuleCount(getSrcModel(), 2);
+        assertResourceModuleCount(getBinModel(), 2);
         Assert.assertEquals(getBinModel().getRootArtifact(), groupArtifact.getParent());
       }
     });

@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -23,10 +24,9 @@ import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.DispatchingArtifactTreeVisitor;
-import org.bundlemaker.core.modules.IMovableUnit;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -150,7 +150,7 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public IResourceModule getContainingResourceModule() {
+  public IModule getAssoicatedModule() {
     return null;
   }
 
@@ -196,7 +196,7 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
     return false;
   }
 
-  public boolean hasContainingResourceModule() {
+  public boolean hasModule() {
     return false;
   }
 

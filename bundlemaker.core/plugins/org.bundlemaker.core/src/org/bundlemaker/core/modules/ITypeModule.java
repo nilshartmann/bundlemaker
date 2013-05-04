@@ -13,8 +13,7 @@ package org.bundlemaker.core.modules;
 import java.util.Collection;
 import java.util.Set;
 
-import org.bundlemaker.core.internal.modules.query.IQueryFilter;
-import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core._type.IType;
 
 /**
  * <p>
@@ -22,17 +21,7 @@ import org.bundlemaker.core.resource.IType;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface ITypeContainer {
-
-  /**
-   * <p>
-   * Returns the containing {@link IModule}. If the {@link ITypeContainer} is a {@link IModule}, the {@link IModule}
-   * itself will be returned.
-   * </p>
-   * 
-   * @return
-   */
-  IModule getModule();
+public interface ITypeModule {
 
   /**
    * <p>
@@ -66,32 +55,12 @@ public interface ITypeContainer {
 
   /**
    * <p>
-   * Returns a collection with all contained {@link IType ITypes} that match the specified {@link IQueryFilter}.
-   * </p>
-   * 
-   * @return a collection with all contained {@link IType ITypes} that match the specified {@link IQueryFilter}.
-   */
-  Collection<IType> getContainedTypes(IQueryFilter<IType> filter);
-
-  /**
-   * <p>
    * Returns a collection with the names of all contained types.
    * </p>
    * 
    * @return a collection with the names of all contained types.
    */
   Collection<String> getContainedTypeNames();
-
-  /**
-   * <p>
-   * Returns a collection with the names of all contained types that match the specified {@link IQueryFilter}.
-   * </p>
-   * 
-   * @param filter
-   *          the {@link IQueryFilter}
-   * @return a collection with the names of all contained types that match the specified {@link IQueryFilter}.
-   */
-  Collection<String> getContainedTypeNames(IQueryFilter<String> filter);
 
   /**
    * <p>
@@ -102,4 +71,6 @@ public interface ITypeContainer {
    * @return
    */
   boolean containsAll(Set<String> typeNames);
+
+  void add(IType type2);
 }

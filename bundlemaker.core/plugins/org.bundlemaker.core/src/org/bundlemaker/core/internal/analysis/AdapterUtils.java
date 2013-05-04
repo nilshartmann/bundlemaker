@@ -11,12 +11,12 @@ import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.internal.modules.AbstractModule;
 import org.bundlemaker.core.internal.modules.Group;
+import org.bundlemaker.core.internal.modules.Module;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.internal.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
-import org.bundlemaker.core.modules.IMovableUnit;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -143,7 +143,7 @@ public class AdapterUtils {
 
       if (moduleArtifact instanceof AdapterModule2IArtifact) {
         AdapterModule2IArtifact adapter = (AdapterModule2IArtifact) moduleArtifact;
-        AbstractModule<?, ?> abstractModule = (AbstractModule<?, ?>) adapter.getModule();
+        Module abstractModule = (Module) adapter.getModule();
         Assert.isNotNull(abstractModule);
         //
         if (!abstractModule.hasModularizedSystem()) {
@@ -258,7 +258,7 @@ public class AdapterUtils {
     Assert.isNotNull(artifact);
 
     //
-    IModifiableResourceModule resourceModule = (IModifiableResourceModule) adapterPackage2IArtifact
+    IModifiableModule resourceModule = (IModifiableModule) adapterPackage2IArtifact
         .getContainingModule();
 
     //
@@ -292,7 +292,7 @@ public class AdapterUtils {
     if (moduleArtifact != null) {
 
       //
-      removeResourcesFromModule((IModifiableResourceModule) moduleArtifact.getModule(),
+      removeResourcesFromModule((IModifiableModule) moduleArtifact.getModule(),
           getAllMovableUnits(artifactToRemove));
     }
 
@@ -366,21 +366,21 @@ public class AdapterUtils {
    * @param resourceModule
    * @param movableUnit
    */
-  public static void addResourceToModule(IModifiableResourceModule resourceModule, IMovableUnit movableUnit) {
+  public static void addResourceToModule(IModifiableModule resourceModule, IMovableUnit movableUnit) {
 
     //
     Assert.isNotNull(resourceModule);
     Assert.isNotNull(movableUnit);
 
     //
-    IModifiableResourceModule module = (IModifiableResourceModule) movableUnit.getContainingResourceModule();
+    IModifiableModule module = (IModifiableModule) movableUnit.getAssoicatedModule();
 
     if (module != null) {
-      module.getModifiableSelfResourceContainer().removeMovableUnit(movableUnit);
+      module.removeMovableUnit(movableUnit);
     }
 
     // add the binary resources
-    resourceModule.getModifiableSelfResourceContainer().addMovableUnit(movableUnit);
+    resourceModule.addMovableUnit(movableUnit);
   }
 
   /**
@@ -390,7 +390,7 @@ public class AdapterUtils {
    * @param resourceModule
    * @param resourceHolder
    */
-  public static void addResourcesToModule(IModifiableResourceModule resourceModule, List<IMovableUnit> movableUnits) {
+  public static void addResourcesToModule(IModifiableModule resourceModule, List<IMovableUnit> movableUnits) {
 
     Assert.isNotNull(resourceModule);
     Assert.isNotNull(movableUnits);
@@ -410,7 +410,7 @@ public class AdapterUtils {
    * @param resourceModule
    * @param movableUnits
    */
-  private static void removeResourcesFromModule(IModifiableResourceModule resourceModule,
+  private static void removeResourcesFromModule(IModifiableModule resourceModule,
       List<IMovableUnit> movableUnits) {
 
     // asserts
@@ -419,7 +419,7 @@ public class AdapterUtils {
 
     // remove all units
     for (IMovableUnit resourceHolder : movableUnits) {
-      resourceModule.getModifiableSelfResourceContainer().removeMovableUnit(resourceHolder);
+      resourceModule.removeMovableUnit(resourceHolder);
     }
   }
 }
