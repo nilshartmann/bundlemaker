@@ -71,7 +71,7 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    * 
    * @return
    */
-  public List<IProjectContentEntry> getFileBasedContents() {
+  protected List<IProjectContentEntry> getFileBasedContents() {
     return Collections.unmodifiableList(_fileBasedContents);
   }
 
@@ -174,6 +174,9 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
   @Override
   public final List<IProjectContentEntry> getBundleMakerProjectContent(IProgressMonitor progressMonitor,
       IBundleMakerProject bundleMakerProject) throws CoreException {
+
+    //
+    Assert.isNotNull(bundleMakerProject);
 
     //
     _bundleMakerProject = bundleMakerProject;

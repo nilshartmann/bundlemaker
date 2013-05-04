@@ -24,7 +24,43 @@ import org.bundlemaker.core.resource.IResource;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IProjectContentEntry extends IIdentifiableContentEntry {
+public interface IProjectContentEntry {
+
+  /**
+   * <p>
+   * Returns the internal identifier of this content entry.
+   * </p>
+   * 
+   * @return the internal identifier of this content entry.
+   */
+  String getId();
+
+  /**
+   * <p>
+   * Returns the {@link IProjectContentProvider} that created this {@link IProjectContentEntry}.
+   * </p>
+   * 
+   * @return the {@link IProjectContentProvider} that created this {@link IProjectContentEntry}.
+   */
+  IProjectContentProvider getProvider();
+
+  /**
+   * <p>
+   * Returns the name of this content entry.
+   * </p>
+   * 
+   * @return the name of this content entry.
+   */
+  String getName();
+
+  /**
+   * <p>
+   * Returns the version of this content entry.
+   * </p>
+   * 
+   * @return the version of this content entry.
+   */
+  String getVersion();
 
   /**
    * <p>

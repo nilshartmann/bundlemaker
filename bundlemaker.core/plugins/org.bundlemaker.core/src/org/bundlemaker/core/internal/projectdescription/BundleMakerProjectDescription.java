@@ -25,6 +25,7 @@ import org.bundlemaker.core.BundleMakerProjectChangedEvent;
 import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
+import org.bundlemaker.core.internal.projectdescription.api.IInternalProjectDescription;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.spi.AbstractProjectContentProvider;
@@ -43,7 +44,7 @@ import com.google.gson.annotations.SerializedName;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class BundleMakerProjectDescription implements IModifiableProjectDescription {
+public class BundleMakerProjectDescription implements IModifiableProjectDescription, IInternalProjectDescription {
 
   /** - */
   private static NumberFormat               FORMATTER  = new DecimalFormat("000000");

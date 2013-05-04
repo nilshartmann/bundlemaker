@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.internal.projectdescription.api.IInternalProjectDescription;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
@@ -64,7 +65,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
   private Set<IResourceStandin>              _sourceResourceStandins;
 
   /** the project description */
-  private IProjectDescription                _projectDescription;
+  private IInternalProjectDescription        _projectDescription;
 
   /** the bundle maker project content provider */
   private IProjectContentProvider            _provider;
@@ -322,6 +323,8 @@ public class ProjectContentEntry implements IProjectContentEntry {
 
     //
     Assert.isNotNull(projectDescription);
+    Assert.isTrue(projectDescription instanceof IInternalProjectDescription,
+        String.format("Project description must be instance of %s.", IInternalProjectDescription.class.getName()));
 
     // return if content already is initialized
     if (isInitialized()) {
@@ -329,7 +332,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
     }
 
     // the project description
-    _projectDescription = projectDescription;
+    _projectDescription = (IInternalProjectDescription) projectDescription;
 
     //
     onInitialize(projectDescription);
@@ -362,12 +365,12 @@ public class ProjectContentEntry implements IProjectContentEntry {
     // add the resource
     switch (type) {
     case BINARY: {
-      ((BundleMakerProjectDescription) _projectDescription).addBinaryResource(resourceStandin);
+      _projectDescription.addBinaryResource(resourceStandin);
       binaryResourceStandins().add(resourceStandin);
       break;
     }
     case SOURCE: {
-      ((BundleMakerProjectDescription) _projectDescription).addSourceResource(resourceStandin);
+      _projectDescription.addSourceResource(resourceStandin);
       sourceResourceStandins().add(resourceStandin);
       break;
     }

@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class BundleMakerPreferences {
+public class BundleMakerPreferences implements IBundleMakerPreferences {
 
   /** - */
   private IScopeContext[]     _contexts;
@@ -70,6 +70,14 @@ public class BundleMakerPreferences {
 
   public String getString(String key, String defaultValue) {
     return _service.getString(_qualifier, key, defaultValue, _contexts);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void reload() {
+    // throw new RuntimeException("reload");
   }
 
   /**
