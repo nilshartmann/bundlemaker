@@ -8,7 +8,7 @@
  * Contributors:
  *     Nils Hartmann - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.hook;
+package org.bundlemaker.core;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.eclipse.core.runtime.IProgressMonitor;

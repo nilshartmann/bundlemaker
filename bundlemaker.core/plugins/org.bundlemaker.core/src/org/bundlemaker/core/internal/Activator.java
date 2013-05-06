@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.hook.IBundleMakerProjectHook;
+import org.bundlemaker.core.IBundleMakerProjectHook;
 import org.bundlemaker.core.internal.parser.ParserFactoryRegistry;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IProject;
