@@ -1,4 +1,4 @@
-package org.bundlemaker.core.util;
+package org.bundlemaker.core.util.prefs;
 
 public interface IBundleMakerPreferences {
 

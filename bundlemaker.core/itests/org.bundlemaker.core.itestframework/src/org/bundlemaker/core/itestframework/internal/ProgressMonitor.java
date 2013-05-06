@@ -8,10 +8,9 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.util;
+package org.bundlemaker.core.itestframework.internal;
 
-import org.bundlemaker.core.internal.Activator;
-import org.bundlemaker.core.internal.parser.ResourceCache;
+import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
@@ -25,8 +24,6 @@ public class ProgressMonitor extends NullProgressMonitor {
 
   private static final String MSG            = "Processed %s/%s steps (%s) [ %s sec, %s sec, %s sec] %s";
 
-  private static final String CACHE_MSG      = " - [|Resources|: %s, |FlyWeightStrings|: %s, |References|: %s, |ReferencesAttributes|: %s]";
-
   /** - */
   private int                 _totalWork;
 
@@ -38,9 +35,6 @@ public class ProgressMonitor extends NullProgressMonitor {
 
   /** - */
   private StopWatch           _stopWatch;
-
-  /** - */
-  private ResourceCache       _resourceCache;
 
   /**
    * @see org.eclipse.core.runtime.NullProgressMonitor#beginTask(java.lang.String, int)
@@ -70,13 +64,7 @@ public class ProgressMonitor extends NullProgressMonitor {
       estimatedTimeLeft = estimatedTimeLeft > 0 ? estimatedTimeLeft : 0;
 
       System.err.println(String.format(MSG, _done, _totalWork, _doneInProzent, elapsedTime / 1000,
-          estimatedOverallTime / 1000, estimatedTimeLeft / 1000, MemoryUtils.getMemoryUsage()));
-
-      if (_resourceCache != null) {
-        System.err.println(String.format(CACHE_MSG, _resourceCache.getResourceMap().size(), _resourceCache
-            .getFlyWeightCache().getFlyWeightStrings().size(), _resourceCache.getFlyWeightCache().getReferenceCache()
-            .size(), _resourceCache.getFlyWeightCache().getReferenceAttributesCache().size()));
-      }
+          estimatedOverallTime / 1000, estimatedTimeLeft / 1000, getMemoryUsage()));
     }
   }
 
@@ -84,15 +72,16 @@ public class ProgressMonitor extends NullProgressMonitor {
   public void done() {
     _stopWatch.stop();
   }
-
+  
   /**
    * <p>
    * </p>
    * 
-   * @param cache
+   * @return
    */
-  public void setResourceCache(ResourceCache cache) {
-    _resourceCache = cache;
+  public static String getMemoryUsage() {
+    long totalMem = Runtime.getRuntime().totalMemory();
+    long freeMem = Runtime.getRuntime().freeMemory();
+    return "Memory used: " + (totalMem - freeMem) / (1024 * 1024) + " MB (total: " + totalMem / (1024 * 1024) + " MB )";
   }
-
 }

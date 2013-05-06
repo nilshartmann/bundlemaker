@@ -16,8 +16,8 @@ import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core._type.modifiable.IModifiableType;
 import org.bundlemaker.core._type.modifiable.IReferenceRecorder;
 import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
+import org.bundlemaker.core._type.utils.JavaTypeUtils;
 import org.bundlemaker.core.resource.IParsableResource;
-import org.bundlemaker.core.util.JavaTypeUtils;
 import org.eclipse.core.runtime.Assert;
 
 /**

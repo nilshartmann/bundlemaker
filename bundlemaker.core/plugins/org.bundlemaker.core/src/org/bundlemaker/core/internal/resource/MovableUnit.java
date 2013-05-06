@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.utils.JavaTypeUtils;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.util.JavaTypeUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 

@@ -10,7 +10,6 @@ import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.util.JdkCreator;
-import org.bundlemaker.core.util.ProgressMonitor;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.launching.IVMInstall;

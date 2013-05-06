@@ -1,4 +1,4 @@
-package org.bundlemaker.core.util;
+package org.bundlemaker.core.util.prefs;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;

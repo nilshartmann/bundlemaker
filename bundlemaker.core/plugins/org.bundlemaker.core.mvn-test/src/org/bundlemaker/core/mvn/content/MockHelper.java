@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 
 import org.bundlemaker.core.mvn.MvnCoreActivator;
 import org.bundlemaker.core.mvn.preferences.MvnConfigurationSettingEnum;
-import org.bundlemaker.core.util.IBundleMakerPreferences;
+import org.bundlemaker.core.util.prefs.IBundleMakerPreferences;
 
 public class MockHelper {
 

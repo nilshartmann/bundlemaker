@@ -13,7 +13,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.projectdescription.api.IInternalProjectDescription;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.util.IBundleMakerPreferences;
+import org.bundlemaker.core.util.prefs.IBundleMakerPreferences;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
 

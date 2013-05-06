@@ -46,6 +46,7 @@ public class BundleMakerArtifactJsonAdapter implements JsonSerializer<IBundleMak
   /**
    * {@inheritDoc}
    */
+  @SuppressWarnings("deprecation")
   @Override
   public JsonElement serialize(IBundleMakerArtifact bundleMakerArtifact, Type arg1, JsonSerializationContext context) {
 
