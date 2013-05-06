@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.modules;
+package org.bundlemaker.core._type.modules;
 
 import java.util.Collection;
 import java.util.Set;

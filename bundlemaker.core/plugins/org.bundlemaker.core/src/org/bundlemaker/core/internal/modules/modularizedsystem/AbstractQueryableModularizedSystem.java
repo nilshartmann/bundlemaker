@@ -18,8 +18,8 @@ import java.util.Set;
 
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.modules.ITypeSelector;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.ITypeSelector;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.eclipse.core.runtime.Assert;
 

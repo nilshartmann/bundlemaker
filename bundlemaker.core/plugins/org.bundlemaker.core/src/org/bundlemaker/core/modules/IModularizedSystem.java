@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.modules.ITypeSelector;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.transformation.ITransformation;

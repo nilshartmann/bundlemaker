@@ -17,10 +17,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.modules.ITypeModule;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.ITypeModule;
 import org.eclipse.core.runtime.Assert;
 
 /**
