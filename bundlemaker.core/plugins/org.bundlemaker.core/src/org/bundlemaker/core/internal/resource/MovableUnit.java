@@ -11,7 +11,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.util.JavaTypeUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -35,7 +35,7 @@ public class MovableUnit implements IMovableUnit {
   private IType                               _mainType;
 
   /** the main resource */
-  private IResource                           _mainResource;
+  private IModuleResource                           _mainResource;
 
   /** the modularized system */
   private IModularizedSystem                  _modularizedSystem;
@@ -44,7 +44,7 @@ public class MovableUnit implements IMovableUnit {
   private List<IType>                         _associatedTypes;
 
   /** the source resource */
-  private IResource                           _sourceResource;
+  private IModuleResource                           _sourceResource;
 
   /** the binary resource */
   private List<IResourceStandin>              _binaryResources;
@@ -79,7 +79,7 @@ public class MovableUnit implements IMovableUnit {
    * @return
    */
   // TODO an der Resource anbieten
-  public static MovableUnit createFromResource(IResource resource, IModularizedSystem modularizedSystem) {
+  public static MovableUnit createFromResource(IModuleResource resource, IModularizedSystem modularizedSystem) {
     Assert.isNotNull(resource);
 
     //
@@ -92,7 +92,7 @@ public class MovableUnit implements IMovableUnit {
 
           // TODO!!
           IModule resourceModule = resource.getModule(modularizedSystem);
-          IResource nonAnonymousResource = resourceModule.getResource(typeName.replace('.', '/') + ".class",
+          IModuleResource nonAnonymousResource = resourceModule.getResource(typeName.replace('.', '/') + ".class",
               ProjectContentType.BINARY);
 
           if (nonAnonymousResource != null) {
@@ -152,7 +152,7 @@ public class MovableUnit implements IMovableUnit {
    * {@inheritDoc}
    */
   @Override
-  public IResource getAssociatedSourceResource() {
+  public IModuleResource getAssociatedSourceResource() {
 
     init();
 
@@ -254,7 +254,7 @@ public class MovableUnit implements IMovableUnit {
         _sourceResource = resourceModule.getResource(_mainResource.getPath(), ProjectContentType.SOURCE);
 
         //
-        IResource binaryResource = resourceModule.getResource(_mainResource.getPath(), ProjectContentType.BINARY);
+        IModuleResource binaryResource = resourceModule.getResource(_mainResource.getPath(), ProjectContentType.BINARY);
         if (binaryResource != null) {
           _binaryResources.add((IResourceStandin) binaryResource);
         }
@@ -295,7 +295,7 @@ public class MovableUnit implements IMovableUnit {
 
     //
     if (type.hasBinaryResource()) {
-      IResource binaryResource = type.getBinaryResource();
+      IModuleResource binaryResource = type.getBinaryResource();
       _binaryResources.add((IResourceStandin) binaryResource);
       _binaryResources.addAll((Set<IResourceStandin>) binaryResource.getStickyResources());
     }

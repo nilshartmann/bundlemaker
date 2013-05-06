@@ -25,7 +25,7 @@ import org.bundlemaker.core.internal.resource.Type;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IModifiableResource extends IResource, IReferenceRecorder {
+public interface IParsableResource extends IModuleResource, IReferenceRecorder {
 
   /**
    * <p>
@@ -33,7 +33,7 @@ public interface IModifiableResource extends IResource, IReferenceRecorder {
    * 
    * @param stickyResource
    */
-  public void addStickyResource(IModifiableResource stickyResource);
+  public void addStickyResource(IModuleResource stickyResource);
 
   /**
    * <p>

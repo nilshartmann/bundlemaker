@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core;
 
-import org.bundlemaker.core.resource.IResourceKey;
+import org.bundlemaker.core.resource.IProjectContentResource;
 
 /**
  * <p>
@@ -26,12 +26,12 @@ public interface IProblem {
 
   /**
    * <p>
-   * Returns {@link IResourceKey} of the associated resource.
+   * Returns {@link IProjectContentResource} of the associated resource.
    * </p>
    * 
-   * @return the {@link IResourceKey} of the associated resource.
+   * @return the {@link IProjectContentResource} of the associated resource.
    */
-  IResourceKey getResource();
+  IProjectContentResource getResource();
 
   /**
    * <p>

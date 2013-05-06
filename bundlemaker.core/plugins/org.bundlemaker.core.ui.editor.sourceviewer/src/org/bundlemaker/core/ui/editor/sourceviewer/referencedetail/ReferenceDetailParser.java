@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -24,14 +24,14 @@ import org.eclipse.jface.text.Position;
 public class ReferenceDetailParser implements IReferenceDetailParser {
 
   @Override
-  public Map<String, List<Position>> parseReferencePositions(IResource resource, IModularizedSystem modularizedSystem) {
+  public Map<String, List<Position>> parseReferencePositions(IModuleResource resource, IModularizedSystem modularizedSystem) {
 
     //
     IProject project = modularizedSystem.getBundleMakerProject().getProject();
     IJavaProject javaProject = getAssociatedJavaProject(project);
 
     IMovableUnit movableUnit = resource.getMovableUnit(modularizedSystem);
-    for (IResource binaryResource : movableUnit.getAssociatedBinaryResources()) {
+    for (IModuleResource binaryResource : movableUnit.getAssociatedBinaryResources()) {
       try {
         IJavaElement element = javaProject.findElement(new Path(binaryResource.getPath()));
         if (element != null) {

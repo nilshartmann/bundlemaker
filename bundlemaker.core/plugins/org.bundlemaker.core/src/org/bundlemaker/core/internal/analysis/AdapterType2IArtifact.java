@@ -39,7 +39,7 @@ import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingMo
 import org.bundlemaker.core.internal.resource.MovableUnit;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -290,7 +290,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    * {@inheritDoc}
    */
   @Override
-  public List<? extends IResource> getAssociatedBinaryResources() {
+  public List<? extends IModuleResource> getAssociatedBinaryResources() {
     return _movableUnit.getAssociatedBinaryResources();
   }
 
@@ -306,7 +306,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    * {@inheritDoc}
    */
   @Override
-  public IResource getAssociatedSourceResource() {
+  public IModuleResource getAssociatedSourceResource() {
     return _movableUnit.getAssociatedSourceResource();
   }
 

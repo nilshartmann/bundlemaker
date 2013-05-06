@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core;
 
-import org.bundlemaker.core.resource.IResourceKey;
+import org.bundlemaker.core.resource.IProjectContentResource;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -18,14 +18,14 @@ import org.bundlemaker.core.resource.IResourceKey;
  */
 public class DefaultProblemImpl implements IProblem {
   
-  private final IResourceKey _resourceKey;
+  private final IProjectContentResource _resourceKey;
   private final String _message;
   
   /**
    * @param resourceKey
    * @param message
    */
-  public DefaultProblemImpl(IResourceKey resourceKey, String message) {
+  public DefaultProblemImpl(IProjectContentResource resourceKey, String message) {
     _resourceKey = resourceKey;
     _message = message;
   }
@@ -34,7 +34,7 @@ public class DefaultProblemImpl implements IProblem {
    * @see org.bundlemaker.core.IProblem#getResource()
    */
   @Override
-  public IResourceKey getResource() {
+  public IProjectContentResource getResource() {
     return _resourceKey;
   }
 

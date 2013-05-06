@@ -14,8 +14,9 @@ import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 
 /**
  * <p>
- * An {@link IResourceKey} implements an identifier for a resource. It contains a <code>contentId</code>, a
- * <code>root</code> directory or archive file, and a <code>path</code>.
+ * An {@link IProjectContentResource} defines a resource that is definied through a {@link IProjectContentEntry}. It
+ * provides access to the <code>contentId</code>, the <code>root</code> directory or archive file, and a
+ * <code>timestamp</code>.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -23,7 +24,7 @@ import org.bundlemaker.core.projectdescription.IProjectContentEntry;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IResourceKey extends IReadableResource {
+public interface IProjectContentResource extends IResource {
 
   /**
    * <p>
@@ -36,8 +37,8 @@ public interface IResourceKey extends IReadableResource {
 
   /**
    * <p>
-   * Returns the root directory or archive file that contains the resource (e.g. 'c:/dev/classes.zip' or
-   * 'c:/dev/source'). Note that resource paths are always slash-delimited ('/').
+   * Returns the root directory or archive file that contains the resource (e.g. <code>'c:/dev/classes.zip'</code> or
+   * <code>'c:/dev/source'</code>). Note that resource paths are always slash-delimited ('/').
    * </p>
    * 
    * @return the root directory or archive file that contains the resource.
@@ -46,6 +47,7 @@ public interface IResourceKey extends IReadableResource {
 
   /**
    * <p>
+   * The timestamp.
    * </p>
    * 
    * @return

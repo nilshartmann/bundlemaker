@@ -11,7 +11,7 @@ import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.virgo.bundlor.util.SimpleManifestContents;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifestFactory;
@@ -145,7 +145,7 @@ public class ManifestCreatorAdapter {
     if (_originalManifestContents == null) {
 
       // the existing bundle manifest resource
-      IResource existingManifestResource = getModule().getResource("META-INF/MANIFEST.MF", ProjectContentType.BINARY);
+      IModuleResource existingManifestResource = getModule().getResource("META-INF/MANIFEST.MF", ProjectContentType.BINARY);
 
       // create default manifest
       if (existingManifestResource == null) {

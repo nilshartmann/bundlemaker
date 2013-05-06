@@ -1,11 +1,11 @@
 package org.bundlemaker.core.analysis;
 
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 
 /**
  * <p>
- * Defines an {@link IBundleMakerArtifact} that holds an {@link IResource} instance.
+ * Defines an {@link IBundleMakerArtifact} that holds an {@link IModuleResource} instance.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -19,7 +19,7 @@ public interface IResourceArtifact extends IBundleMakerArtifact, IMovableUnit {
    * 
    * @return the associated resource.
    */
-  IResource getAssociatedResource();
+  IModuleResource getAssociatedResource();
 
   /**
    * <p>

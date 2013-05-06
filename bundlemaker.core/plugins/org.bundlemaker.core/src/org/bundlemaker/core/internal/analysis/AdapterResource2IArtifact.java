@@ -22,7 +22,7 @@ import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.resource.MovableUnit;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 
 /**
  * <p>
@@ -34,7 +34,7 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     IMovableUnit {
 
   /** the bundle maker resource */
-  private IResource    _resource;
+  private IModuleResource    _resource;
 
   /** - */
   private boolean      _isSourceResource;
@@ -50,7 +50,7 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
    * @param type
    * @param parent
    */
-  public AdapterResource2IArtifact(IResource resource, boolean isSourceResource, IBundleMakerArtifact parent,
+  public AdapterResource2IArtifact(IModuleResource resource, boolean isSourceResource, IBundleMakerArtifact parent,
       ArtifactCache artifactCache) {
     super(resource.getName());
 
@@ -72,7 +72,7 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     return _movableUnit.getAssociatedTypes();
   }
 
-  public List<? extends IResource> getAssociatedBinaryResources() {
+  public List<? extends IModuleResource> getAssociatedBinaryResources() {
     return _movableUnit.getAssociatedBinaryResources();
   }
 
@@ -92,7 +92,7 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     return _movableUnit.hasAssociatedSourceResource();
   }
 
-  public IResource getAssociatedSourceResource() {
+  public IModuleResource getAssociatedSourceResource() {
     return _movableUnit.getAssociatedSourceResource();
   }
 
@@ -123,7 +123,7 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
   }
 
   @Override
-  public IResource getAssociatedResource() {
+  public IModuleResource getAssociatedResource() {
     return _resource;
   }
 
@@ -152,7 +152,7 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     return _resource.getPath();
   }
 
-  public IResource getResource() {
+  public IModuleResource getResource() {
     return _resource;
   }
 

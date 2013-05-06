@@ -18,7 +18,8 @@ import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParser.ParserType;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.resource.IResourceKey;
+import org.bundlemaker.core.resource.IParsableResource;
+import org.bundlemaker.core.resource.IProjectContentResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -45,9 +46,12 @@ public class FunctionalHelper {
           // check if the operation has been canceled
           FunctionalHelper.checkIfCanceled(monitor);
 
+          // get the IModifiableResource
+          IParsableResource resource = resourceCache.getOrCreateResource(resourceStandin);
+
           //
-          if (parser.canParse(resourceStandin)) {
-            List<IProblem> problems = parser.parseResource(content, resourceStandin, resourceCache);
+          if (parser.canParse(resource)) {
+            List<IProblem> problems = parser.parseResource(content, resource, resourceCache);
             result.addAll(problems);
             resourceCache.getOrCreateResource(resourceStandin).setErroneous(!problems.isEmpty());
           }
@@ -72,7 +76,7 @@ public class FunctionalHelper {
    * @return
    */
   static Set<IResourceStandin> computeNewAndModifiedResources(Collection<IResourceStandin> resourceStandins,
-      Map<IResourceKey, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor monitor) {
+      Map<IProjectContentResource, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor monitor) {
 
     //
     monitor.beginTask("", resourceStandins.size());
@@ -116,7 +120,7 @@ public class FunctionalHelper {
   }
 
   static void associateResourceStandinsWithResources(Collection<IResourceStandin> resourceStandins,
-      Map<IResourceKey, Resource> map, boolean isSource, IProgressMonitor monitor) {
+      Map<IProjectContentResource, Resource> map, boolean isSource, IProgressMonitor monitor) {
 
     Assert.isNotNull(resourceStandins);
     Assert.isNotNull(map);

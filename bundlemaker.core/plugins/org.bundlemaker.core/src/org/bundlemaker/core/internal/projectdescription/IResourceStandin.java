@@ -1,6 +1,6 @@
 package org.bundlemaker.core.internal.projectdescription;
 
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 
 /**
  * <p>
@@ -16,6 +16,6 @@ import org.bundlemaker.core.resource.IResource;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IResourceStandin extends IResource {
+public interface IResourceStandin extends IModuleResource {
   // empty tag interface
 }

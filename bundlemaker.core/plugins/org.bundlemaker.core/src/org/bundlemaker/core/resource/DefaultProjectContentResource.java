@@ -25,14 +25,14 @@ import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
- * Default implementation of the interface {@link IResourceKey}.
+ * Default implementation of the interface {@link IProjectContentResource}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  * 
  * @noextend This class is not intended to be extended by clients.
  */
-public class ResourceKey implements IResourceKey {
+public class DefaultProjectContentResource implements IProjectContentResource {
 
   /** the content id */
   private FlyWeightString _contentId;
@@ -48,14 +48,14 @@ public class ResourceKey implements IResourceKey {
 
   /**
    * <p>
-   * Creates a new instance of type {@link ResourceKey}.
+   * Creates a new instance of type {@link DefaultProjectContentResource}.
    * </p>
    * 
    * @param contentId
    * @param root
    * @param path
    */
-  public ResourceKey(String contentId, String root, String path) {
+  public DefaultProjectContentResource(String contentId, String root, String path) {
     Assert.isNotNull(contentId);
     Assert.isNotNull(root);
     Assert.isNotNull(path);
@@ -67,7 +67,7 @@ public class ResourceKey implements IResourceKey {
 
   /**
    * <p>
-   * Creates a new instance of type {@link ResourceKey}.
+   * Creates a new instance of type {@link DefaultProjectContentResource}.
    * </p>
    * 
    * @param contentId
@@ -75,7 +75,7 @@ public class ResourceKey implements IResourceKey {
    * @param path
    * @param cache
    */
-  protected ResourceKey(String contentId, String root, String path, FlyWeightCache cache) {
+  protected DefaultProjectContentResource(String contentId, String root, String path, FlyWeightCache cache) {
 
     Assert.isNotNull(contentId);
     Assert.isNotNull(root);
@@ -255,9 +255,9 @@ public class ResourceKey implements IResourceKey {
       return true;
     if (obj == null)
       return false;
-    if (!(ResourceKey.class.isAssignableFrom(obj.getClass())))
+    if (!(DefaultProjectContentResource.class.isAssignableFrom(obj.getClass())))
       return false;
-    ResourceKey other = (ResourceKey) obj;
+    DefaultProjectContentResource other = (DefaultProjectContentResource) obj;
     if (!_contentId.equals(other.getProjectContentEntryId()))
       return false;
     if (!_path.equals(other.getPath()))

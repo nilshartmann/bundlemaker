@@ -23,10 +23,10 @@ import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem
 import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.resource.IModifiableResource;
+import org.bundlemaker.core.resource.DefaultProjectContentResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.ResourceKey;
+import org.bundlemaker.core.resource.IParsableResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -38,7 +38,7 @@ import org.eclipse.core.runtime.Status;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class Resource extends ResourceKey implements IModifiableResource {
+public class Resource extends DefaultProjectContentResource implements IParsableResource {
 
   /** - */
   private Set<Reference>               _references;
@@ -50,7 +50,7 @@ public class Resource extends ResourceKey implements IModifiableResource {
   private IType                        _primaryType;
 
   /** - */
-  private Set<IModifiableResource>     _stickyResources;
+  private Set<IModuleResource>         _stickyResources;
 
   /** - */
   private boolean                      _erroneous;
@@ -196,8 +196,8 @@ public class Resource extends ResourceKey implements IModifiableResource {
    * {@inheritDoc}
    */
   @Override
-  public Set<IResource> getStickyResources() {
-    Set<? extends IResource> result = stickyResources();
+  public Set<IModuleResource> getStickyResources() {
+    Set<? extends IModuleResource> result = stickyResources();
     return Collections.unmodifiableSet(result);
   }
 
@@ -251,7 +251,7 @@ public class Resource extends ResourceKey implements IModifiableResource {
   }
 
   @Override
-  public void addStickyResource(IModifiableResource stickyResource) {
+  public void addStickyResource(IModuleResource stickyResource) {
     stickyResources().add(stickyResource);
   }
 
@@ -297,7 +297,7 @@ public class Resource extends ResourceKey implements IModifiableResource {
   }
 
   @Override
-  public int compareTo(IResource arg0) {
+  public int compareTo(IModuleResource arg0) {
 
     //
     if (_resourceStandin == null) {
@@ -344,10 +344,10 @@ public class Resource extends ResourceKey implements IModifiableResource {
     return _containedTypes;
   }
 
-  private Set<IModifiableResource> stickyResources() {
+  private Set<IModuleResource> stickyResources() {
 
     if (_stickyResources == null) {
-      _stickyResources = new HashSet<IModifiableResource>();
+      _stickyResources = new HashSet<IModuleResource>();
     }
 
     return _stickyResources;

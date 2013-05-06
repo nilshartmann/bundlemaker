@@ -27,7 +27,7 @@ public class ResourceKeyTest {
     File testFile = new File(testDir, "com/ClassInCom.class");
     assertTrue(testFile.isFile());
 
-    ResourceKey resourceKey = new ResourceKey("123", testDir.getAbsolutePath(), "com/ClassInCom.class");
+    DefaultProjectContentResource resourceKey = new DefaultProjectContentResource("123", testDir.getAbsolutePath(), "com/ClassInCom.class");
 
     assertThat(resourceKey.getRoot(), is(testDir.getAbsolutePath().replace('\\', '/')));
     assertThat(resourceKey.getDirectory(), is("com"));

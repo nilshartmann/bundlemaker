@@ -21,8 +21,8 @@ import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.ResourceKey;
+import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.DefaultProjectContentResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
@@ -32,13 +32,13 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ResourceStandin extends ResourceKey implements IResourceStandin {
+public class ResourceStandin extends DefaultProjectContentResource implements IResourceStandin {
 
   /** - */
   private Resource       _resource;
 
   /** - */
-  private Set<IResource> _stickyResourceStandins;
+  private Set<IModuleResource> _stickyResourceStandins;
 
   /**
    * <p>
@@ -76,7 +76,7 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
     return ((ModularizedSystem) modularizedSystem).getAssociatedResourceModule(this);
   }
 
-  public IResource getResource() {
+  public IModuleResource getResource() {
     return _resource;
   }
 
@@ -91,7 +91,7 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
   }
 
   @Override
-  public int compareTo(IResource other) {
+  public int compareTo(IModuleResource other) {
 
     if (!getProjectContentEntryId().equals(other.getProjectContentEntryId())) {
       return getProjectContentEntryId().compareTo(other.getProjectContentEntryId());
@@ -199,7 +199,7 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
   }
 
   @Override
-  public Set<IResource> getStickyResources() {
+  public Set<IModuleResource> getStickyResources() {
 
     //
     if (_resource == null) {
@@ -215,10 +215,10 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
     if (_stickyResourceStandins == null) {
 
       // create new set
-      _stickyResourceStandins = new HashSet<IResource>();
+      _stickyResourceStandins = new HashSet<IModuleResource>();
 
       // add resource standins
-      for (IResource resource : _resource.getStickyResources()) {
+      for (IModuleResource resource : _resource.getStickyResources()) {
         _stickyResourceStandins.add(((Resource) resource).getResourceStandin());
       }
     }

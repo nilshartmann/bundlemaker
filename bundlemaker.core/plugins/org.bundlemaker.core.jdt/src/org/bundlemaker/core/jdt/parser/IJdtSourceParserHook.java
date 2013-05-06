@@ -11,7 +11,7 @@
 package org.bundlemaker.core.jdt.parser;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.resource.IResourceKey;
+import org.bundlemaker.core.resource.IProjectContentResource;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
 /**
@@ -37,7 +37,7 @@ public interface IJdtSourceParserHook {
    * 
    * @return
    */
-  public void analyzeCompilationUnit(IResourceKey resourceKey, CompilationUnit compilationUnit);
+  public void analyzeCompilationUnit(IProjectContentResource resourceKey, CompilationUnit compilationUnit);
 
   /**
    * <p>

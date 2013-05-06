@@ -26,7 +26,7 @@ import org.bundlemaker.core.exporter.util.Helper;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -150,7 +150,7 @@ public class JdtProjectExporter extends AbstractExporter {
 		IFolder srcFolder = project.getFolder(SRC_DIRECTORY_NAME);
 
 		// copy the source
-		for (IResource resourceStandin : getCurrentModule().getResources(
+		for (IModuleResource resourceStandin : getCurrentModule().getResources(
 				ProjectContentType.SOURCE)) {
 
 				//

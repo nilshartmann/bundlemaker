@@ -10,11 +10,11 @@
  ******************************************************************************/
 package org.bundlemaker.core._type;
 
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 
 /**
  * <p>
- * Represents a reference from an {@link IResource} to a type or a package.
+ * Represents a reference from an {@link IModuleResource} to a type or a package.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -64,7 +64,7 @@ public interface IReference extends Comparable<IReference> {
   /**
    * <p>
    * Returns <code>true</code>, if the this {@link IReference} represents an extends relationship. This is the case if
-   * the originating {@link IResource} contains a java type that extends the type described by this dependency (e.g.
+   * the originating {@link IModuleResource} contains a java type that extends the type described by this dependency (e.g.
    * <code>public class XY extends Z</code>).
    * </p>
    * 
@@ -76,7 +76,7 @@ public interface IReference extends Comparable<IReference> {
   /**
    * <p>
    * Returns <code>true</code>, if the this {@link IReference} represents an implements relationship. This is the case
-   * if the originating {@link IResource} contains a java type that implements the type described by this dependency
+   * if the originating {@link IModuleResource} contains a java type that implements the type described by this dependency
    * (e.g. <code>public class XY implements Z</code>).
    * </p>
    * 
@@ -99,7 +99,7 @@ public interface IReference extends Comparable<IReference> {
 
   /**
    * <p>
-   * Returns the originating {@link IResource} or <code>null</code>, if the reference does not belong to a resource. In
+   * Returns the originating {@link IModuleResource} or <code>null</code>, if the reference does not belong to a resource. In
    * this case, the reference belongs to a type that is return by method {@link IReference#getType()}.
    * </p>
    * <p>
@@ -107,9 +107,9 @@ public interface IReference extends Comparable<IReference> {
    * stored model.
    * </p>
    * 
-   * @return the originating {@link IResource}.
+   * @return the originating {@link IModuleResource}.
    */
-  IResource getResource();
+  IModuleResource getResource();
 
   /**
    * <p>

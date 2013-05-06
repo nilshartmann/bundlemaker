@@ -19,8 +19,8 @@ import org.bundlemaker.core.jdt.parser.CoreParserJdt;
 import org.bundlemaker.core.jdt.parser.IJdtSourceParserHook;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.resource.IModifiableResource;
-import org.bundlemaker.core.resource.IResourceKey;
+import org.bundlemaker.core.resource.IParsableResource;
+import org.bundlemaker.core.resource.IProjectContentResource;
 import org.bundlemaker.core.util.ExtensionRegistryTracker;
 import org.bundlemaker.core.util.JavaTypeUtils;
 import org.eclipse.core.runtime.Assert;
@@ -78,7 +78,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
    * {@inheritDoc}
    */
   @Override
-  protected synchronized void doParseResource(IProjectContentEntry projectContent, IResourceKey resourceKey,
+  protected synchronized void doParseResource(IProjectContentEntry projectContent, IProjectContentResource resourceKey,
       IResourceCache cache) {
 
     //
@@ -87,7 +87,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     }
 
     // get the modifiable resource
-    IModifiableResource modifiableResource = cache.getOrCreateResource(resourceKey);
+    IParsableResource modifiableResource = cache.getOrCreateResource(resourceKey);
 
     try {
 
@@ -142,7 +142,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
   }
 
   @Override
-  public boolean canParse(IResourceKey resourceKey) {
+  public boolean canParse(IProjectContentResource resourceKey) {
     return resourceKey.getPath().endsWith(".java");
   }
 
@@ -157,7 +157,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
    * @param content
    * @throws JavaModelException
    */
-  private void analyzeCompilationUnit(IModifiableResource modifiableResource, CompilationUnit compilationUnit)
+  private void analyzeCompilationUnit(IParsableResource modifiableResource, CompilationUnit compilationUnit)
       throws CoreException {
 
     // step 1: set the directly referenced types

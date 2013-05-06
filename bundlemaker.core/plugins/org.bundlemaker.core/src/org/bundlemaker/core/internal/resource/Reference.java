@@ -14,7 +14,7 @@ import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ReferenceType;
 import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -153,7 +153,7 @@ public class Reference implements IReference {
   /**
    * {@inheritDoc}
    */
-  public IResource getResource() {
+  public IModuleResource getResource() {
     return _resource.getResourceStandin();
   }
 

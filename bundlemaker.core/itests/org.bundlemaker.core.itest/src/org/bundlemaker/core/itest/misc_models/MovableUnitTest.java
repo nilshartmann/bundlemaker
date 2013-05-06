@@ -10,7 +10,7 @@ import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -140,9 +140,9 @@ public class MovableUnitTest extends AbstractBundleMakerModelTest {
     Assert.assertEquals("B$BB", types.get(3).getName());
 
     // assert binary resources
-    List<? extends IResource> binaryResources = movableUnit.getAssociatedBinaryResources();
-    Collections.sort(binaryResources, new Comparator<IResource>() {
-      public int compare(IResource o1, IResource o2) {
+    List<? extends IModuleResource> binaryResources = movableUnit.getAssociatedBinaryResources();
+    Collections.sort(binaryResources, new Comparator<IModuleResource>() {
+      public int compare(IModuleResource o1, IModuleResource o2) {
         return o1.getName().compareTo(o2.getName());
       }
     });
@@ -155,7 +155,7 @@ public class MovableUnitTest extends AbstractBundleMakerModelTest {
     Assert.assertEquals("B.class", binaryResources.get(5).getName());
 
     // test source resources
-    IResource sourceResources = movableUnit.getAssociatedSourceResource();
+    IModuleResource sourceResources = movableUnit.getAssociatedSourceResource();
     Assert.assertNotNull(sourceResources);
     Assert.assertEquals("A.java", sourceResources.getName());
   }

@@ -31,7 +31,7 @@ import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractModulariz
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ITypeModule;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -201,7 +201,7 @@ public class ArtifactCache {
    * @param resource
    * @return
    */
-  public final AdapterResource2IArtifact getResourceArtifact(IResource resource) {
+  public final AdapterResource2IArtifact getResourceArtifact(IModuleResource resource) {
     Assert.isNotNull(resource);
 
     //
@@ -362,7 +362,7 @@ public class ArtifactCache {
         IModifiableModule resourceModule = (IModifiableModule) module;
 
         // iterate over all contained resources
-        for (IResource resource : resourceModule.getResources(getConfiguration().getContentType())) {
+        for (IModuleResource resource : resourceModule.getResources(getConfiguration().getContentType())) {
 
           if (progressMonitor != null) {
             progressMonitor.worked(1);

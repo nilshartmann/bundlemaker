@@ -22,8 +22,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
-import org.bundlemaker.core.resource.IReadableResource;
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -38,7 +38,7 @@ public final class JarFileUtils {
 
   /**
    * <p>
-   * Creates a jar archive for the given list of {@link IResource IResources}.
+   * Creates a jar archive for the given list of {@link IModuleResource IResources}.
    * </p>
    * 
    * @param resources
@@ -48,8 +48,8 @@ public final class JarFileUtils {
    * @param archiveFile
    *          the archive file to create
    */
-  public static void createJarArchive(Set<? extends IResource> resources, Manifest manifest,
-      Set<IReadableResource> additionalContent, OutputStream outputStream) {
+  public static void createJarArchive(Set<? extends IModuleResource> resources, Manifest manifest,
+      Set<IResource> additionalContent, OutputStream outputStream) {
 
     Assert.isNotNull(resources);
     Assert.isNotNull(manifest);
@@ -67,7 +67,7 @@ public final class JarFileUtils {
       jarOutputStream = new JarOutputStream(outputStream, manifest);
 
       // add all the resources
-      for (IResource resourceStandin : resources) {
+      for (IModuleResource resourceStandin : resources) {
 
         // add everything but the manifest
         if (!skipResource(resourceStandin.getPath())) {
@@ -88,7 +88,7 @@ public final class JarFileUtils {
 
       if (additionalContent != null) {
         // add all additional files
-        for (IReadableResource contentProvider : additionalContent) {
+        for (IResource contentProvider : additionalContent) {
 
           // add archive entry
           JarEntry newEntry = new JarEntry(contentProvider.getPath());

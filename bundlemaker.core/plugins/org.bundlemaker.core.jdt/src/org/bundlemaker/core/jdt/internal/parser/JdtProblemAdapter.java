@@ -11,7 +11,7 @@
 package org.bundlemaker.core.jdt.internal.parser;
 
 import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.resource.IResourceKey;
+import org.bundlemaker.core.resource.IProjectContentResource;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -26,7 +26,7 @@ public class JdtProblemAdapter implements IProblem {
   private org.eclipse.jdt.core.compiler.IProblem _compilerProblem;
 
   /** - */
-  private IResourceKey                           _resourceKey;
+  private IProjectContentResource                           _resourceKey;
 
   /**
    * <p>
@@ -36,7 +36,7 @@ public class JdtProblemAdapter implements IProblem {
    * @param resourceKey
    * @param compilerProblem
    */
-  public JdtProblemAdapter(IResourceKey resourceKey, org.eclipse.jdt.core.compiler.IProblem compilerProblem) {
+  public JdtProblemAdapter(IProjectContentResource resourceKey, org.eclipse.jdt.core.compiler.IProblem compilerProblem) {
 
     // assert
     Assert.isNotNull(resourceKey);
@@ -53,7 +53,7 @@ public class JdtProblemAdapter implements IProblem {
    * {@inheritDoc}
    */
   @Override
-  public IResourceKey getResource() {
+  public IProjectContentResource getResource() {
     return _resourceKey;
   }
 

@@ -17,9 +17,9 @@ import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.parser.bytecode.asm.ArtefactAnalyserClassVisitor;
 import org.bundlemaker.core.parser.bytecode.asm.AsmReferenceRecorder;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.resource.IModifiableResource;
-import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.resource.ResourceKey;
+import org.bundlemaker.core.resource.IParsableResource;
+import org.bundlemaker.core.resource.IProjectContentResource;
+import org.bundlemaker.core.resource.DefaultProjectContentResource;
 import org.bundlemaker.core.util.JavaTypeUtils;
 import org.objectweb.asm.ClassReader;
 
@@ -43,7 +43,7 @@ public class ByteCodeParser extends AbstractParser {
    * {@inheritDoc}
    */
   @Override
-  public boolean canParse(IResourceKey resourceKey) {
+  public boolean canParse(IProjectContentResource resourceKey) {
 
     //
     if (!resourceKey.getPath().endsWith(".class")) {
@@ -55,10 +55,10 @@ public class ByteCodeParser extends AbstractParser {
   }
 
   @Override
-  protected void doParseResource(IProjectContentEntry content, IResourceKey resourceKey, IResourceCache cache) {
+  protected void doParseResource(IProjectContentEntry content, IProjectContentResource resourceKey, IResourceCache cache) {
 
     // get the IModifiableResource
-    IModifiableResource resource = cache.getOrCreateResource(resourceKey);
+    IParsableResource resource = cache.getOrCreateResource(resourceKey);
 
     // if the resource already contains a type, it already has been parsed.
     // In this case we can return immediately
@@ -68,7 +68,7 @@ public class ByteCodeParser extends AbstractParser {
 
     // if the resource does not contain a anonymous or local type
     // the enclosing resource is the resource (the default)
-    IModifiableResource enclosingResource = resource;
+    IParsableResource enclosingResource = resource;
 
     // get fully qualified type name
     String fullyQualifiedName = JavaTypeUtils.convertToFullyQualifiedName(resource.getPath());
@@ -81,7 +81,8 @@ public class ByteCodeParser extends AbstractParser {
       String enclosingName = JavaTypeUtils.getEnclosingNonLocalAndNonAnonymousTypeName(fullyQualifiedName);
 
       // the resource key for the enclosing type
-      ResourceKey enclosingKey = new ResourceKey(resourceKey.getProjectContentEntryId(), resourceKey.getRoot(),
+      DefaultProjectContentResource enclosingKey = new DefaultProjectContentResource(
+          resourceKey.getProjectContentEntryId(), resourceKey.getRoot(),
           JavaTypeUtils.convertFromFullyQualifiedName(enclosingName));
 
       // get the enclosing resource

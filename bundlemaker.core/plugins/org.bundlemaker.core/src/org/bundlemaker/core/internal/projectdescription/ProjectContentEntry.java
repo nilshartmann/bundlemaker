@@ -15,7 +15,7 @@ import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.VariablePath;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -178,7 +178,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * {@inheritDoc}
    */
   @Override
-  public final Set<? extends IResource> getBinaryResources() {
+  public final Set<? extends IModuleResource> getBinaryResources() {
     return Collections.unmodifiableSet(getBinaryResourceStandins());
   }
 
@@ -186,7 +186,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * {@inheritDoc}
    */
   @Override
-  public final Set<? extends IResource> getSourceResources() {
+  public final Set<? extends IModuleResource> getSourceResources() {
     return Collections.unmodifiableSet(getSourceResourceStandins());
   }
 
@@ -194,7 +194,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * {@inheritDoc}
    */
   @Override
-  public Set<? extends IResource> getResources(ProjectContentType type) {
+  public Set<? extends IModuleResource> getResources(ProjectContentType type) {
     switch (type) {
     case BINARY: {
       return getBinaryResources();

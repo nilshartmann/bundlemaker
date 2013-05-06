@@ -18,7 +18,7 @@ import org.bundlemaker.core.IGenericAdaptable;
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.IPath;
 
 /**
@@ -120,7 +120,7 @@ public interface IModule extends IGenericAdaptable {
    * @param conentType
    * @return
    */
-  IResource getResource(String path, ProjectContentType conentType);
+  IModuleResource getResource(String path, ProjectContentType conentType);
 
   /**
    * <p>
@@ -129,7 +129,7 @@ public interface IModule extends IGenericAdaptable {
    * @param conentType
    * @return
    */
-  Set<? extends IResource> getResources(ProjectContentType conentType);
+  Set<? extends IModuleResource> getResources(ProjectContentType conentType);
 
   /**
    * <p>

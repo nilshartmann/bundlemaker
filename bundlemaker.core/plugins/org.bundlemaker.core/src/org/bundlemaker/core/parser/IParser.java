@@ -16,7 +16,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.resource.IResourceKey;
+import org.bundlemaker.core.resource.IProjectContentResource;
 import org.eclipse.core.runtime.CoreException;
 
 /**
@@ -43,7 +43,7 @@ public interface IParser {
    * @param resourceKey
    * @return
    */
-  boolean canParse(IResourceKey resourceKey);
+  boolean canParse(IProjectContentResource resourceKey);
 
   /**
    * <p>
@@ -54,7 +54,8 @@ public interface IParser {
    * @param cache
    * @throws CoreException
    */
-  public List<IProblem> parseResource(IProjectContentEntry content, IResourceKey resource, IResourceCache cache)
+  public List<IProblem> parseResource(IProjectContentEntry content, IProjectContentResource resource,
+      IResourceCache cache)
       throws CoreException;
 
   /**

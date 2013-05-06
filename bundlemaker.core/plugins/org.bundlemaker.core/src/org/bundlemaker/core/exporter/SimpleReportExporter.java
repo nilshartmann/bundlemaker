@@ -23,7 +23,7 @@ import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -64,7 +64,7 @@ public class SimpleReportExporter extends AbstractExporter {
     builder.append("\n");
     builder.append("Source-Content: \n");
 
-    for (IResource resource : asSortedList((Set<IResource>) getCurrentModule().getResources(ProjectContentType.SOURCE))) {
+    for (IModuleResource resource : asSortedList((Set<IModuleResource>) getCurrentModule().getResources(ProjectContentType.SOURCE))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : resource.getReferences()) {
@@ -83,14 +83,14 @@ public class SimpleReportExporter extends AbstractExporter {
 
     builder.append("\n");
     builder.append("Binary-Content: \n");
-    for (IResource resource : asSortedList((Set<IResource>) getCurrentModule().getResources(ProjectContentType.BINARY))) {
+    for (IModuleResource resource : asSortedList((Set<IModuleResource>) getCurrentModule().getResources(ProjectContentType.BINARY))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : resource.getReferences()) {
         builder.append(" * " + reference.toString() + "\n");
       }
 
-      for (IResource stickyResources : resource.getStickyResources()) {
+      for (IModuleResource stickyResources : resource.getStickyResources()) {
         builder.append(" ~sticky~ " + stickyResources.getPath() + "\n");
       }
 

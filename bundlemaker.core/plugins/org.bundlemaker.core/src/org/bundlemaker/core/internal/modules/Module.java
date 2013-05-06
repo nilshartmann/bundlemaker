@@ -35,7 +35,7 @@ import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 
@@ -315,10 +315,10 @@ public class Module implements IModifiableModule {
   public void validate() {
 
     //
-    Map<String, IResource> entries = new HashMap<String, IResource>();
+    Map<String, IModuleResource> entries = new HashMap<String, IModuleResource>();
 
     //
-    for (IResource resource : getResources(ProjectContentType.SOURCE)) {
+    for (IModuleResource resource : getResources(ProjectContentType.SOURCE)) {
 
       if (entries.containsKey(resource.getPath())) {
 
@@ -338,7 +338,7 @@ public class Module implements IModifiableModule {
 
     //
     entries.clear();
-    for (IResource resource : getResources(ProjectContentType.BINARY)) {
+    for (IModuleResource resource : getResources(ProjectContentType.BINARY)) {
 
       if (entries.containsKey(resource.getPath())) {
 
@@ -406,13 +406,13 @@ public class Module implements IModifiableModule {
     Set<IReference> result = new HashSet<IReference>();
 
     // iterate over all resources
-    for (IResource resource : getResources(ProjectContentType.BINARY)) {
+    for (IModuleResource resource : getResources(ProjectContentType.BINARY)) {
       for (IReference reference : resource.getReferences()) {
         result.add(reference);
       }
     }
 
-    for (IResource resource : getResources(ProjectContentType.SOURCE)) {
+    for (IModuleResource resource : getResources(ProjectContentType.SOURCE)) {
       for (IReference reference : resource.getReferences()) {
         result.add(reference);
       }
@@ -451,7 +451,7 @@ public class Module implements IModifiableModule {
     }
 
     // iterate over all resources
-    for (IResource resource : getResources(ProjectContentType.BINARY)) {
+    for (IModuleResource resource : getResources(ProjectContentType.BINARY)) {
       if (!resource.containsTypes()) {
 
         //
@@ -465,7 +465,7 @@ public class Module implements IModifiableModule {
     }
 
     // iterate over all resources
-    for (IResource resource : getResources(ProjectContentType.SOURCE)) {
+    for (IModuleResource resource : getResources(ProjectContentType.SOURCE)) {
       if (!resource.containsTypes()) {
 
         //
@@ -576,7 +576,7 @@ public class Module implements IModifiableModule {
     getModifiableResourcesSet(contentType).addAll(resources);
 
     // ... and add all contained types to the cache
-    for (IResource resource : resources) {
+    for (IModuleResource resource : resources) {
       for (IType type : resource.getContainedTypes()) {
         _typeContainer.add(type);
       }
@@ -592,7 +592,7 @@ public class Module implements IModifiableModule {
   /**
    * {@inheritDoc}
    */
-  private void remove(IResource resource, ProjectContentType contentType) {
+  private void remove(IModuleResource resource, ProjectContentType contentType) {
 
     Assert.isNotNull(resource);
     Assert.isNotNull(contentType);
@@ -614,7 +614,7 @@ public class Module implements IModifiableModule {
   /**
    * {@inheritDoc}
    */
-  private void removeAll(Collection<? extends IResource> resources, ProjectContentType contentType) {
+  private void removeAll(Collection<? extends IModuleResource> resources, ProjectContentType contentType) {
 
     Assert.isNotNull(resources);
     Assert.isNotNull(contentType);

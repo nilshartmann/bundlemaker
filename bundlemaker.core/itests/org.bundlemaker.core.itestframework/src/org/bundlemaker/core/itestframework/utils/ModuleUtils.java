@@ -10,7 +10,7 @@ import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 
 public class ModuleUtils {
 
@@ -24,7 +24,7 @@ public class ModuleUtils {
     builder.append("\n");
     builder.append("Source-Content: \n");
 
-    for (IResource resource : asSortedList((Set<IResource>)module.getResources(ProjectContentType.SOURCE))) {
+    for (IModuleResource resource : asSortedList((Set<IModuleResource>)module.getResources(ProjectContentType.SOURCE))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : asSortedList(resource.getReferences())) {
@@ -42,14 +42,14 @@ public class ModuleUtils {
 
     builder.append("\n");
     builder.append("Binary-Content: \n");
-    for (IResource resource : asSortedList((Set<IResource>)module.getResources(ProjectContentType.BINARY))) {
+    for (IModuleResource resource : asSortedList((Set<IModuleResource>)module.getResources(ProjectContentType.BINARY))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : asSortedList(resource.getReferences())) {
         builder.append(" * " + reference.toString() + "\n");
       }
 
-      for (IResource stickyResources : asSortedList((Set<IResource>)resource.getStickyResources())) {
+      for (IModuleResource stickyResources : asSortedList((Set<IModuleResource>)resource.getStickyResources())) {
         builder.append(" ~sticky~ " + stickyResources.getPath() + "\n");
       }
 

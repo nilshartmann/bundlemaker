@@ -22,8 +22,8 @@ import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.resource.IReadableResource;
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -53,7 +53,7 @@ public class Type implements IType, IModifiableType {
   private transient Resource           _sourceResource;
 
   /** transient: the binary resource */
-  private transient IReadableResource  _binaryResource;
+  private transient IResource  _binaryResource;
 
   /** transient: the reference container */
   private transient ReferenceContainer _referenceContainer;
@@ -207,7 +207,7 @@ public class Type implements IType, IModifiableType {
    * {@inheritDoc}
    */
   @Override
-  public IResource getSourceResource() {
+  public IModuleResource getSourceResource() {
     return _sourceResource != null ? _sourceResource.getResourceStandin() : null;
   }
 
@@ -215,7 +215,7 @@ public class Type implements IType, IModifiableType {
    * {@inheritDoc}
    */
   @Override
-  public IResource getBinaryResource() {
+  public IModuleResource getBinaryResource() {
 
     //
     if (_binaryResource == null) {
@@ -231,7 +231,7 @@ public class Type implements IType, IModifiableType {
   }
 
   @Override
-  public IReadableResource getBinaryReadableResource() {
+  public IResource getBinaryReadableResource() {
     return _binaryResource;
   }
 
@@ -268,7 +268,7 @@ public class Type implements IType, IModifiableType {
     }
 
     //
-    IResource sourceResource = this.getSourceResource();
+    IModuleResource sourceResource = this.getSourceResource();
 
     // if the source resource does not contain a primary type,
     // handle the non primary type as a primary type
@@ -335,7 +335,7 @@ public class Type implements IType, IModifiableType {
    * 
    * @param binaryResource
    */
-  public void setBinaryResource(IReadableResource binaryResource) {
+  public void setBinaryResource(IResource binaryResource) {
     _binaryResource = binaryResource;
   }
 
@@ -391,7 +391,7 @@ public class Type implements IType, IModifiableType {
       return true;
     }
 
-    IResource sourceResource = getSourceResource();
+    IModuleResource sourceResource = getSourceResource();
 
     return sourceResource.isPrimaryType(this);
   }

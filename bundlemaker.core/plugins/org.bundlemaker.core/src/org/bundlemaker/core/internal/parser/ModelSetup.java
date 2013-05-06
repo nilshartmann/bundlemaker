@@ -26,7 +26,7 @@ import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.resource.IResourceKey;
+import org.bundlemaker.core.resource.IProjectContentResource;
 import org.bundlemaker.core.util.StopWatch;
 import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
@@ -108,10 +108,10 @@ public class ModelSetup {
       mainMonitor.subTask("Reading from datastore...");
 
       // execute as loggable action...
-      final Map<IResourceKey, Resource> storedResourcesMap = StaticLog.log(LOG, "Reading from datastore",
-          new LoggableAction<Map<IResourceKey, Resource>>() {
+      final Map<IProjectContentResource, Resource> storedResourcesMap = StaticLog.log(LOG, "Reading from datastore",
+          new LoggableAction<Map<IProjectContentResource, Resource>>() {
             @Override
-            public Map<IResourceKey, Resource> execute() {
+            public Map<IProjectContentResource, Resource> execute() {
               return readFromDependencyStore(dependencyStore, progressMonitor.newChild(10));
             }
           });
@@ -151,7 +151,7 @@ public class ModelSetup {
       // STEP 4: Setup the resource content
       // ***********************************************************************************************
       mainMonitor.subTask("Set up model...");
-      Map<IResourceKey, Resource> newMap = resourceCache.getCombinedMap();
+      Map<IProjectContentResource, Resource> newMap = resourceCache.getCombinedMap();
 
       // set up binary resources
       FunctionalHelper.associateResourceStandinsWithResources(_bundleMakerProject.getBinaryResourceStandins(), newMap,
@@ -184,7 +184,7 @@ public class ModelSetup {
    * @param mainMonitor
    */
   private List<IProblem> compareAndUpdate(List<IProjectContentEntry> projectContents,
-      Map<IResourceKey, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor mainMonitor) {
+      Map<IProjectContentResource, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor mainMonitor) {
 
     //
     List<IProblem> result = Collections.emptyList();
@@ -276,7 +276,7 @@ public class ModelSetup {
     return result;
   }
 
-  private List<IProblem> multiThreadedReparse(Map<IResourceKey, Resource> storedResourcesMap,
+  private List<IProblem> multiThreadedReparse(Map<IProjectContentResource, Resource> storedResourcesMap,
       Collection<IResourceStandin> sourceResources, Collection<IResourceStandin> binaryResources,
       ResourceCache resourceCache, IProjectContentEntry fileBasedContent, IProgressMonitor monitor) {
 
@@ -393,13 +393,13 @@ public class ModelSetup {
    * @param monitor
    * @return
    */
-  private static Map<IResourceKey, Resource> readFromDependencyStore(IDependencyStore dependencyStore,
+  private static Map<IProjectContentResource, Resource> readFromDependencyStore(IDependencyStore dependencyStore,
       IProgressMonitor monitor) {
 
     Assert.isNotNull(dependencyStore);
     Assert.isNotNull(monitor);
 
-    Map<IResourceKey, Resource> map = new HashMap<IResourceKey, Resource>();
+    Map<IProjectContentResource, Resource> map = new HashMap<IProjectContentResource, Resource>();
 
     if (dependencyStore != null) {
 

@@ -33,8 +33,8 @@ import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.osgi.utils.JarFileManifestWriter;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IReadableResource;
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.util.JarFileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -173,18 +173,18 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
           getCurrentContext());
 
       //
-      Set<IReadableResource> resourceKeys = getTemplateProvider().getAdditionalResources(getCurrentModule(),
+      Set<IResource> resourceKeys = getTemplateProvider().getAdditionalResources(getCurrentModule(),
           getCurrentModularizedSystem(), getCurrentContext());
 
-      Set<IReadableResource> additionalResources;
+      Set<IResource> additionalResources;
 
       if (isIncludeSources()) {
-        additionalResources = new HashSet<IReadableResource>();
+        additionalResources = new HashSet<IResource>();
         // add files from template provider
         additionalResources.addAll(resourceKeys);
         
         // add sources
-        Set<? extends IResource> sources = getCurrentModule().getResources(ProjectContentType.SOURCE);
+        Set<? extends IModuleResource> sources = getCurrentModule().getResources(ProjectContentType.SOURCE);
         additionalResources.addAll(wrapSourceResources(sources));
       } else {
         
@@ -215,13 +215,13 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
    * @param sources
    * @return
    */
-  private Collection<? extends IReadableResource> wrapSourceResources(Set<? extends IResource> sources) {
+  private Collection<? extends IResource> wrapSourceResources(Set<? extends IModuleResource> sources) {
     
-    Set<IReadableResource> movedSources = new HashSet<IReadableResource>();
+    Set<IResource> movedSources = new HashSet<IResource>();
     
     // wrap sources in new IReadableResource that has it's path pointing to OSGI-OPT/src
-    for (final IReadableResource source : sources) {
-      final IReadableResource movedSource = new IReadableResource() {
+    for (final IResource source : sources) {
+      final IResource movedSource = new IResource() {
         
         @Override
         public String getPath() {

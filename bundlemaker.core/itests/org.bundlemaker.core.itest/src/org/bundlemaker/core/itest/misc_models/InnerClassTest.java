@@ -11,7 +11,7 @@ import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
 import org.bundlemaker.core.itestframework.utils.ArtifactTestUtil;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ITypeModule;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class InnerClassTest extends AbstractBundleMakerModelTest {
     Assert.assertNotNull(aType);
     Assert.assertTrue(aType.hasBinaryResource());
     Assert.assertTrue(aType.hasSourceResource());
-    IResource aSourceResource = aType.getSourceResource();
+    IModuleResource aSourceResource = aType.getSourceResource();
     Assert.assertTrue(aSourceResource.isPrimaryType(aType));
     Assert.assertFalse(aSourceResource.isPrimaryType(bType));
     Assert.assertNotNull(aSourceResource.getContainedTypes());
@@ -52,11 +52,11 @@ public class InnerClassTest extends AbstractBundleMakerModelTest {
     Assert.assertTrue(bType.hasBinaryResource());
     Assert.assertTrue(bType.hasSourceResource());
 
-    IResource binaryResource = bType.getBinaryResource();
+    IModuleResource binaryResource = bType.getBinaryResource();
     Assert.assertNotNull(binaryResource.getStickyResources());
     Assert.assertEquals(1, binaryResource.getStickyResources().size());
 
-    IResource bSourceResource = bType.getSourceResource();
+    IModuleResource bSourceResource = bType.getSourceResource();
     Assert.assertSame(aSourceResource, bSourceResource);
 
     // transform the model

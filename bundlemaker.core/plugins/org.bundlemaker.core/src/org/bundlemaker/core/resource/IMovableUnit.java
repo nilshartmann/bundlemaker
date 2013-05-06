@@ -46,7 +46,7 @@ public interface IMovableUnit {
    * 
    * @return the list of binary resources that are associated with this movable unit.
    */
-  List<? extends IResource> getAssociatedBinaryResources();
+  List<? extends IModuleResource> getAssociatedBinaryResources();
 
   /**
    * <p>
@@ -63,7 +63,7 @@ public interface IMovableUnit {
    * 
    * @return the source resource that is associated with this movable type.
    */
-  IResource getAssociatedSourceResource();
+  IModuleResource getAssociatedSourceResource();
 
   /**
    * <p>

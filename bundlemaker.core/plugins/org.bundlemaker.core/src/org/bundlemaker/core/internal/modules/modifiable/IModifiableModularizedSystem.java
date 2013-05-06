@@ -24,7 +24,7 @@ import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.transformation.ITransformation;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -195,7 +195,7 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
    */
   void applyTransformations(IProgressMonitor monitor, ITransformation... transformation);
 
-  void resourcesChanged(Collection<? extends IResource> resources, IModule module, ChangeAction added);
+  void resourcesChanged(Collection<? extends IModuleResource> resources, IModule module, ChangeAction added);
 
   void typeChanged(IType type, IModule module, ChangeAction added);
 

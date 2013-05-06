@@ -15,7 +15,7 @@ import java.io.File;
 import org.bundlemaker.core.internal.resource.Reference;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
-import org.bundlemaker.core.resource.ResourceKey;
+import org.bundlemaker.core.resource.DefaultProjectContentResource;
 import org.eclipse.core.runtime.Assert;
 
 import com.db4o.Db4o;
@@ -75,12 +75,12 @@ public abstract class AbstractPersistentDependencyStore implements IPersistentDe
     // set cascade on update
     configuration.objectClass(Resource.class).cascadeOnUpdate(true);
     configuration.objectClass(Reference.class).cascadeOnUpdate(true);
-    configuration.objectClass(ResourceKey.class).cascadeOnUpdate(true);
+    configuration.objectClass(DefaultProjectContentResource.class).cascadeOnUpdate(true);
     
     // set cascade on activation
     configuration.objectClass(Resource.class).cascadeOnActivate(true);
     configuration.objectClass(Reference.class).cascadeOnActivate(true);
-    configuration.objectClass(ResourceKey.class).cascadeOnActivate(true);
+    configuration.objectClass(DefaultProjectContentResource.class).cascadeOnActivate(true);
     
     // note: cascadeOnDelete is not possible, otherwise we clean up FlyWeightCache instances!
 //    configuration.objectClass(Resource.class).cascadeOnDelete(false);
