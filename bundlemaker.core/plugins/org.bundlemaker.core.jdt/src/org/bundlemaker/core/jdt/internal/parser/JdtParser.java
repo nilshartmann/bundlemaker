@@ -87,7 +87,8 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     }
 
     // get the modifiable resource
-    IParsableResource modifiableResource = cache.getOrCreateResource(resourceKey);
+    IParsableResource modifiableResource = cache.getOrCreateResource(resourceKey.getProjectContentEntryId(),
+        resourceKey.getRoot(), resourceKey.getPath());
 
     try {
 
@@ -97,11 +98,12 @@ public class JdtParser extends AbstractHookAwareJdtParser {
       // TODO
       if (projectContent.getProvider() instanceof JdtProjectContentProvider) {
         String root = resourceKey.getRoot();
-        IJavaProject javaProject = ((JdtProjectContentProvider) projectContent.getProvider()).getSourceJavaProject(projectContent, root);
+        IJavaProject javaProject = ((JdtProjectContentProvider) projectContent.getProvider()).getSourceJavaProject(
+            projectContent, root);
         _parser.setProject(javaProject);
       } else {
-      _parser.setProject(_javaProject);
-       }
+        _parser.setProject(_javaProject);
+      }
 
       _parser.setSource(content);
       // TODO

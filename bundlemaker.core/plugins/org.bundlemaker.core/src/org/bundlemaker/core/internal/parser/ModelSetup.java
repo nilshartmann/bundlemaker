@@ -184,7 +184,8 @@ public class ModelSetup {
    * @param mainMonitor
    */
   private List<IProblem> compareAndUpdate(List<IProjectContentEntry> projectContents,
-      Map<IProjectContentResource, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor mainMonitor) {
+      Map<IProjectContentResource, Resource> storedResourcesMap, ResourceCache resourceCache,
+      IProgressMonitor mainMonitor) {
 
     //
     List<IProblem> result = Collections.emptyList();

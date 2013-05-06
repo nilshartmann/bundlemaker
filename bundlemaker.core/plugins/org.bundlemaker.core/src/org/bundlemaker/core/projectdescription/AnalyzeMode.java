@@ -16,6 +16,8 @@ package org.bundlemaker.core.projectdescription;
  * </p>
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
+ * 
+ * @noextend This class is not intended to be extended by clients.
  */
 public enum AnalyzeMode {
 

@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bundlemaker.core._type.TypeEnum;
+import org.bundlemaker.core.internal.resource.DefaultProjectContentResource;
 import org.bundlemaker.core.internal.resource.FlyWeightCache;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.Type;
@@ -21,7 +22,6 @@ import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.resource.IParsableResource;
-import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IProjectContentResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -36,19 +36,19 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class ResourceCache implements IResourceCache {
 
   /** the element map */
-  Map<IProjectContentResource, Resource>        _storedResourcesMap;
+  Map<IProjectContentResource, Resource> _storedResourcesMap;
 
   /** the element map */
-  Map<IProjectContentResource, Resource>        _newResourceMap;
+  Map<IProjectContentResource, Resource> _newResourceMap;
 
   /** the element map */
-  private Map<String, Type>          _typeMap;
+  private Map<String, Type>              _typeMap;
 
   /** the dependency store */
-  private IPersistentDependencyStore _dependencyStore;
+  private IPersistentDependencyStore     _dependencyStore;
 
   /** - */
-  private FlyWeightCache             _flyWeightCache;
+  private FlyWeightCache                 _flyWeightCache;
 
   /**
    * <p>
@@ -148,6 +148,12 @@ public class ResourceCache implements IResourceCache {
    */
   // TODO synchronized
   @Override
+  public synchronized IParsableResource getOrCreateResource(String contentId, String root, String path) {
+
+    // return the result
+    return getOrCreateResource(new DefaultProjectContentResource(contentId, root, path));
+  }
+
   public synchronized IParsableResource getOrCreateResource(IProjectContentResource resourceKey) {
 
     //
@@ -244,7 +250,7 @@ public class ResourceCache implements IResourceCache {
     _typeMap.clear();
 
     //
-    for (IModuleResource resource : fileBasedContent.getBinaryResources()) {
+    for (IProjectContentResource resource : fileBasedContent.getBinaryResources()) {
 
       Resource storedResource = _storedResourcesMap.get(resource);
 
@@ -257,7 +263,7 @@ public class ResourceCache implements IResourceCache {
     }
 
     //
-    for (IModuleResource resource : fileBasedContent.getSourceResources()) {
+    for (IProjectContentResource resource : fileBasedContent.getSourceResources()) {
 
       Resource storedResource = _storedResourcesMap.get(resource);
 

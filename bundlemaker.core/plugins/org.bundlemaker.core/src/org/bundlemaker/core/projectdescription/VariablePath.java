@@ -24,6 +24,8 @@ import com.google.gson.annotations.SerializedName;
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ * 
+ * @noextend This interface is not intended to be extended by clients.
  */
 public class VariablePath {
 

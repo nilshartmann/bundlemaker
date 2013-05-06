@@ -19,7 +19,6 @@ import org.bundlemaker.core.parser.bytecode.asm.AsmReferenceRecorder;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.resource.IParsableResource;
 import org.bundlemaker.core.resource.IProjectContentResource;
-import org.bundlemaker.core.resource.DefaultProjectContentResource;
 import org.bundlemaker.core.util.JavaTypeUtils;
 import org.objectweb.asm.ClassReader;
 
@@ -58,7 +57,8 @@ public class ByteCodeParser extends AbstractParser {
   protected void doParseResource(IProjectContentEntry content, IProjectContentResource resourceKey, IResourceCache cache) {
 
     // get the IModifiableResource
-    IParsableResource resource = cache.getOrCreateResource(resourceKey);
+    IParsableResource resource = cache.getOrCreateResource(resourceKey.getProjectContentEntryId(),
+        resourceKey.getRoot(), resourceKey.getPath());
 
     // if the resource already contains a type, it already has been parsed.
     // In this case we can return immediately
@@ -80,17 +80,13 @@ public class ByteCodeParser extends AbstractParser {
       // get the name of the enclosing type
       String enclosingName = JavaTypeUtils.getEnclosingNonLocalAndNonAnonymousTypeName(fullyQualifiedName);
 
-      // the resource key for the enclosing type
-      DefaultProjectContentResource enclosingKey = new DefaultProjectContentResource(
-          resourceKey.getProjectContentEntryId(), resourceKey.getRoot(),
-          JavaTypeUtils.convertFromFullyQualifiedName(enclosingName));
-
       // get the enclosing resource
-      enclosingResource = cache.getOrCreateResource(enclosingKey);
+      enclosingResource = cache.getOrCreateResource(resourceKey.getProjectContentEntryId(), resourceKey.getRoot(),
+          JavaTypeUtils.convertFromFullyQualifiedName(enclosingName));
 
       // if we have to parse the enclosing type
       if (enclosingResource.getContainedTypes().isEmpty()) {
-        parseResource(content, enclosingKey, cache);
+        parseResource(content, enclosingResource, cache);
 
         if (enclosingResource.getContainedTypes().isEmpty()) {
           // TODO

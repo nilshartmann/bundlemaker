@@ -11,7 +11,6 @@
 package org.bundlemaker.core.parser;
 
 import org.bundlemaker.core.resource.IParsableResource;
-import org.bundlemaker.core.resource.IProjectContentResource;
 
 /**
  * <p>
@@ -31,5 +30,5 @@ public interface IResourceCache {
    * @param resourceKey
    * @return
    */
-  IParsableResource getOrCreateResource(IProjectContentResource resourceKey);
+  IParsableResource getOrCreateResource(String contentId, String root, String path);
 }

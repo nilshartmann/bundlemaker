@@ -4,10 +4,10 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bundlemaker.core.internal.resource.DefaultProjectContentResource;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.DefaultProjectContentResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
