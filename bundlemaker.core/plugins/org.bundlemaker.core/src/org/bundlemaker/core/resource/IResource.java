@@ -63,6 +63,8 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
    */
   Set<? extends IResource> getStickyResources();
 
+  // *** TODO: REMOVE *** /
+
   /**
    * <p>
    * Returns all {@link IReference IReferences} that are originated in this resource.

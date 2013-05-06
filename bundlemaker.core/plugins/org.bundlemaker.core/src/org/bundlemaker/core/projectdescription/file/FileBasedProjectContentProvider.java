@@ -6,12 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.VariablePath;
-import org.bundlemaker.core.projectdescription.spi.AbstractProjectContentProvider;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 

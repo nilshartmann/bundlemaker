@@ -1,8 +1,8 @@
 package org.bundlemaker.core.projectdescription.file;
 
+import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.VariablePath;
-import org.bundlemaker.core.projectdescription.spi.AbstractProjectContentProvider;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package org.bundlemaker.core.projectdescription.spi;
+package org.bundlemaker.core.projectdescription;
 
 import java.io.File;
 import java.util.Collections;
@@ -9,13 +9,6 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.internal.projectdescription.gson.GsonProjectDescriptionHelper;
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.IProjectContentProblem;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.projectdescription.VariablePath;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;

@@ -8,7 +8,7 @@ import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.util.JdkCreator;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.eclipse.core.resources.IProject;

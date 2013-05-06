@@ -5,9 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jdt.core.IJavaProject;

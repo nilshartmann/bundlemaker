@@ -31,6 +31,24 @@ public interface IModifiableResource extends IResource, IReferenceRecorder {
    * <p>
    * </p>
    * 
+   * @param stickyResource
+   */
+  public void addStickyResource(IModifiableResource stickyResource);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param erroneous
+   */
+  public void setErroneous(boolean erroneous);
+
+  // *** TODO: REMOVE ***/
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @param fullyQualifiedName
    * @return
    */
@@ -52,20 +70,4 @@ public interface IModifiableResource extends IResource, IReferenceRecorder {
    * @return
    */
   public Type getType(String fullyQualifiedName);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param stickyResource
-   */
-  public void addStickyResource(IModifiableResource stickyResource);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param erroneous
-   */
-  public void setErroneous(boolean erroneous);
 }

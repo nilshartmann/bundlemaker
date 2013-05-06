@@ -8,13 +8,11 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.projectdescription.spi;
+package org.bundlemaker.core.projectdescription;
 
 import java.util.List;
 
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 
 /**
