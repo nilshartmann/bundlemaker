@@ -16,7 +16,7 @@ import java.util.List;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.resource.IProjectContentResource;
+import org.bundlemaker.core.resource.IParsableResource;
 
 /**
  * <p>
@@ -62,7 +62,7 @@ public abstract class AbstractParser implements IParser {
    * @param resourceKey
    * @param cache
    */
-  public List<IProblem> parseResource(IProjectContentEntry content, IProjectContentResource resource,
+  public List<IProblem> parseResource(IProjectContentEntry content, IParsableResource resource,
       IResourceCache cache) {
 
     // Reset problem list
@@ -82,16 +82,16 @@ public abstract class AbstractParser implements IParser {
    * @param resource
    * @param cache
    */
-  protected abstract void doParseResource(IProjectContentEntry content, IProjectContentResource resource,
+  protected abstract void doParseResource(IProjectContentEntry content, IParsableResource resource,
       IResourceCache cache);
 
   /**
    * <p>
    * </p>
    * 
-   * @param resourceKey
+   * @param resource
    * @return
    */
-  public abstract boolean canParse(IProjectContentResource resourceKey);
+  public abstract boolean canParse(IParsableResource resource);
 
 }

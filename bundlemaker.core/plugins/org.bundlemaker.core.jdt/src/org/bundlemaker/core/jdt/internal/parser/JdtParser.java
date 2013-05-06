@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.jdt.internal.parser;
 
-import org.bundlemaker.core.DefaultProblemImpl;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core._type.IType;
@@ -20,7 +19,6 @@ import org.bundlemaker.core.jdt.parser.IJdtSourceParserHook;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.resource.IParsableResource;
-import org.bundlemaker.core.resource.IProjectContentResource;
 import org.bundlemaker.core.util.ExtensionRegistryTracker;
 import org.bundlemaker.core.util.JavaTypeUtils;
 import org.eclipse.core.runtime.Assert;
@@ -78,26 +76,22 @@ public class JdtParser extends AbstractHookAwareJdtParser {
    * {@inheritDoc}
    */
   @Override
-  protected synchronized void doParseResource(IProjectContentEntry projectContent, IProjectContentResource resourceKey,
+  protected synchronized void doParseResource(IProjectContentEntry projectContent, IParsableResource resource,
       IResourceCache cache) {
 
     //
-    if (!canParse(resourceKey)) {
+    if (!canParse(resource)) {
       return;
     }
-
-    // get the modifiable resource
-    IParsableResource modifiableResource = cache.getOrCreateResource(resourceKey.getProjectContentEntryId(),
-        resourceKey.getRoot(), resourceKey.getPath());
 
     try {
 
       // _parser.setSource(iCompilationUnit);
-      char[] content = new String(modifiableResource.getContent()).toCharArray();
+      char[] content = new String(resource.getContent()).toCharArray();
 
       // TODO
       if (projectContent.getProvider() instanceof JdtProjectContentProvider) {
-        String root = resourceKey.getRoot();
+        String root = resource.getRoot();
         IJavaProject javaProject = ((JdtProjectContentProvider) projectContent.getProvider()).getSourceJavaProject(
             projectContent, root);
         _parser.setProject(javaProject);
@@ -107,7 +101,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 
       _parser.setSource(content);
       // TODO
-      _parser.setUnitName("/" + _javaProject.getProject().getName() + "/" + modifiableResource.getPath());
+      _parser.setUnitName("/" + _javaProject.getProject().getName() + "/" + resource.getPath());
       _parser.setCompilerOptions(CoreParserJdt.getCompilerOptionsWithComplianceLevel(null));
       _parser.setResolveBindings(true);
 
@@ -130,22 +124,22 @@ public class JdtParser extends AbstractHookAwareJdtParser {
       // }
       // }
 
-      analyzeCompilationUnit(modifiableResource, compilationUnit);
+      analyzeCompilationUnit(resource, compilationUnit);
 
       // set the primary type
-      String primaryTypeName = JavaTypeUtils.convertToFullyQualifiedName(modifiableResource.getPath(), ".java");
-      IType primaryType = modifiableResource.getType(primaryTypeName);
-      modifiableResource.setPrimaryType(primaryType);
+      String primaryTypeName = JavaTypeUtils.convertToFullyQualifiedName(resource.getPath(), ".java");
+      IType primaryType = resource.getType(primaryTypeName);
+      resource.setPrimaryType(primaryType);
 
     } catch (Exception e) {
-      getProblems().add(new DefaultProblemImpl(resourceKey, "Error while parsing: " + e));
+      getProblems().add(new IProblem.DefaultProblem(resource, "Error while parsing: " + e));
       e.printStackTrace();
     }
   }
 
   @Override
-  public boolean canParse(IProjectContentResource resourceKey) {
-    return resourceKey.getPath().endsWith(".java");
+  public boolean canParse(IParsableResource resource) {
+    return resource.getPath().endsWith(".java");
   }
 
   /**

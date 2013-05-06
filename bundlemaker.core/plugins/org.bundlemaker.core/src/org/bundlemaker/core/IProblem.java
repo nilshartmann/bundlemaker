@@ -77,4 +77,67 @@ public interface IProblem {
    * @return the end position of the problem (inclusive), or -1 if unknown
    */
   int getSourceEnd();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Nils Hartmann (nils@nilshartmann.net)
+   */
+  public static class DefaultProblem implements IProblem {
+
+    private final IProjectContentResource _resourceKey;
+
+    private final String                  _message;
+
+    /**
+     * @param resourceKey
+     * @param message
+     */
+    public DefaultProblem(IProjectContentResource resourceKey, String message) {
+      _resourceKey = resourceKey;
+      _message = message;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bundlemaker.core.IProblem#getResource()
+     */
+    @Override
+    public IProjectContentResource getResource() {
+      return _resourceKey;
+    }
+
+    @Override
+    public String getMessage() {
+      // source not available
+      return this._message;
+    }
+
+    @Override
+    public boolean isError() {
+      return true;
+    }
+
+    @Override
+    public int getSourceLineNumber() {
+      // source not available
+      return -1;
+    }
+
+    @Override
+    public int getSourceStart() {
+      // source not available
+      return -1;
+    }
+
+    @Override
+    public int getSourceEnd() {
+      // source not available
+      return -1;
+    }
+
+  }
+
 }

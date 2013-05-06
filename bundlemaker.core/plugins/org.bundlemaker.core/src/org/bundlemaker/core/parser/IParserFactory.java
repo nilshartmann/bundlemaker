@@ -67,4 +67,42 @@ public interface IParserFactory {
    * @param bundleMakerProject
    */
   public void dispose(IBundleMakerProject bundleMakerProject);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   */
+  public static abstract class Adapter implements IParserFactory {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void initialize() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void dispose() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void initialize(IBundleMakerProject bundleMakerProject) throws CoreException {
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void dispose(IBundleMakerProject bundleMakerProject) {
+    }
+  }
 }

@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser.bytecode;
 
-import org.bundlemaker.core.DefaultProblemImpl;
+import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core._type.utils.JavaUtils;
 import org.bundlemaker.core.parser.AbstractParser;
 import org.bundlemaker.core.parser.IResourceCache;
@@ -18,7 +18,6 @@ import org.bundlemaker.core.parser.bytecode.asm.ArtefactAnalyserClassVisitor;
 import org.bundlemaker.core.parser.bytecode.asm.AsmReferenceRecorder;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.resource.IParsableResource;
-import org.bundlemaker.core.resource.IProjectContentResource;
 import org.bundlemaker.core.util.JavaTypeUtils;
 import org.objectweb.asm.ClassReader;
 
@@ -42,23 +41,19 @@ public class ByteCodeParser extends AbstractParser {
    * {@inheritDoc}
    */
   @Override
-  public boolean canParse(IProjectContentResource resourceKey) {
+  public boolean canParse(IParsableResource resource) {
 
     //
-    if (!resourceKey.getPath().endsWith(".class")) {
+    if (!resource.getPath().endsWith(".class")) {
       return false;
     }
 
     //
-    return JavaUtils.isValidJavaPackage(resourceKey.getPath());
+    return JavaUtils.isValidJavaPackage(resource.getPath());
   }
 
   @Override
-  protected void doParseResource(IProjectContentEntry content, IProjectContentResource resourceKey, IResourceCache cache) {
-
-    // get the IModifiableResource
-    IParsableResource resource = cache.getOrCreateResource(resourceKey.getProjectContentEntryId(),
-        resourceKey.getRoot(), resourceKey.getPath());
+  protected void doParseResource(IProjectContentEntry content, IParsableResource resource, IResourceCache cache) {
 
     // if the resource already contains a type, it already has been parsed.
     // In this case we can return immediately
@@ -81,7 +76,7 @@ public class ByteCodeParser extends AbstractParser {
       String enclosingName = JavaTypeUtils.getEnclosingNonLocalAndNonAnonymousTypeName(fullyQualifiedName);
 
       // get the enclosing resource
-      enclosingResource = cache.getOrCreateResource(resourceKey.getProjectContentEntryId(), resourceKey.getRoot(),
+      enclosingResource = cache.getOrCreateResource(resource.getProjectContentEntryId(), resource.getRoot(),
           JavaTypeUtils.convertFromFullyQualifiedName(enclosingName));
 
       // if we have to parse the enclosing type
@@ -108,7 +103,7 @@ public class ByteCodeParser extends AbstractParser {
 
     } catch (Exception e) {
       e.printStackTrace();
-      DefaultProblemImpl byteCodeParserProblem = new DefaultProblemImpl(resourceKey, e.toString());
+      IProblem byteCodeParserProblem = new IProblem.DefaultProblem(resource, e.toString());
       getProblems().add(byteCodeParserProblem);
     }
 
