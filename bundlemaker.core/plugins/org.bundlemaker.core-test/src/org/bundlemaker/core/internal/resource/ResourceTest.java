@@ -18,13 +18,13 @@ public class ResourceTest {
 
     Resource resource = new Resource("123", tempFile.getParentFile().getAbsolutePath(), tempFile.getName());
 
-    FileUtil.touch(tempFile, 12345678);
-    assertThat(resource.getCurrentTimestamp(), is(12345678l));
+    FileUtil.touch(tempFile, 1234);
+    assertThat(resource.getCurrentTimestamp(), is(1234l));
 
     resource.storeCurrentTimestamp();
 
-    FileUtil.touch(tempFile, 987654321);
-    assertThat(resource.getCurrentTimestamp(), is(987654321l));
-    assertThat(resource.getParsedTimestamp(), is(12345678l));
+    FileUtil.touch(tempFile, 9876);
+    assertThat(resource.getCurrentTimestamp(), is(9876l));
+    assertThat(resource.getParsedTimestamp(), is(1234l));
   }
 }

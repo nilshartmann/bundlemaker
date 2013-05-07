@@ -26,12 +26,12 @@ public class ProjectContentResourceTest {
     DefaultProjectContentResource resource = new DefaultProjectContentResource("123", tempFile.getParentFile()
         .getAbsolutePath(), tempFile.getName());
 
-    FileUtil.touch(tempFile, 123456);
-    assertThat(resource.getCurrentTimestamp(), is(123456l));
-    FileUtil.touch(tempFile, 987654);
-    assertThat(resource.getCurrentTimestamp(), is(987654l));
-    FileUtil.touch(tempFile, 123456);
-    assertThat(resource.getCurrentTimestamp(), is(123456l));
+    FileUtil.touch(tempFile, 1234);
+    assertThat(resource.getCurrentTimestamp(), is(1234l));
+    FileUtil.touch(tempFile, 9876);
+    assertThat(resource.getCurrentTimestamp(), is(9876l));
+    FileUtil.touch(tempFile, 1234);
+    assertThat(resource.getCurrentTimestamp(), is(1234l));
   }
 
 
