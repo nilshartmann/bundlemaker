@@ -11,6 +11,7 @@
 package org.bundlemaker.core;
 
 import org.bundlemaker.core.resource.IProjectContentResource;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
@@ -86,8 +87,10 @@ public interface IProblem {
    */
   public static class DefaultProblem implements IProblem {
 
-    private final IProjectContentResource _resourceKey;
+    /** - */
+    private final IProjectContentResource _resource;
 
+    /** - */
     private final String                  _message;
 
     /**
@@ -95,46 +98,59 @@ public interface IProblem {
      * @param message
      */
     public DefaultProblem(IProjectContentResource resourceKey, String message) {
-      _resourceKey = resourceKey;
+
+      Assert.isNotNull(resourceKey);
+      Assert.isNotNull(message);
+
+      _resource = resourceKey;
       _message = message;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bundlemaker.core.IProblem#getResource()
+    /**
+     * {@inheritDoc}
      */
     @Override
     public IProjectContentResource getResource() {
-      return _resourceKey;
+      return _resource;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getMessage() {
-      // source not available
       return this._message;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isError() {
       return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getSourceLineNumber() {
-      // source not available
       return -1;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getSourceStart() {
-      // source not available
       return -1;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getSourceEnd() {
-      // source not available
       return -1;
     }
 
