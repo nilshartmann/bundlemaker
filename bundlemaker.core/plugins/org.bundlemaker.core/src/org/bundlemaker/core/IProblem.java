@@ -154,6 +154,12 @@ public interface IProblem {
       return -1;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+      return "DefaultProblem [_resource=" + _resource + ", _message=" + _message + "]";
+    }
   }
-
 }

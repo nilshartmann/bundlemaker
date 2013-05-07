@@ -129,6 +129,10 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, ITypeArtifact> {
     //
     // if (module.isResourceModule()) {
 
+    if (resource == null) {
+      System.out.println("Type without resource: " + type);
+    }
+
     // force cast
     return (AbstractArtifactContainer) getArtifactCache().getResourceCache().getOrCreate(resource);
 
