@@ -52,5 +52,5 @@ public interface IProjectContentResource extends IResource {
    * 
    * @return
    */
-  long getTimestamp();
+  long getCurrentTimestamp();
 }

@@ -41,8 +41,8 @@ public class DefaultProjectContentResource implements IProjectContentResource {
   /** the path of the resource */
   private String          _path;
 
-  /** - */
-  private long            _timestamp = -1;
+  // /** - */
+  // private long _timestamp = -1;
 
   /**
    * <p>
@@ -139,7 +139,6 @@ public class DefaultProjectContentResource implements IProjectContentResource {
       try {
         ZipFile zipFile = new ZipFile(new File(getRoot()));
         ZipEntry zipEntry = zipFile.getEntry(getPath());
-        setTimeStamp(zipEntry);
 
         InputStream is = zipFile.getInputStream(zipEntry);
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -174,7 +173,6 @@ public class DefaultProjectContentResource implements IProjectContentResource {
       try {
 
         File file = new File(rootFile, getPath());
-        setTimeStamp(file);
         InputStream is = new BufferedInputStream(new FileInputStream(file));
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         int nRead;
@@ -204,31 +202,24 @@ public class DefaultProjectContentResource implements IProjectContentResource {
   /**
    * {@inheritDoc}
    */
-  public long getTimestamp() {
+  @Override
+  public long getCurrentTimestamp() {
 
-    //
-    if (_timestamp == -1) {
-
-      // jar file?
-      if (getRoot().endsWith(".jar") || getRoot().endsWith(".zip")) {
-
-        try {
-          ZipFile zipFile = ZipFileCache.instance().getZipFile(getRoot());
-          //
-          // new ZipFile(new File(getRoot()));
-          ZipEntry zipEntry = zipFile.getEntry(getPath());
-          setTimeStamp(zipEntry);
-        } catch (Exception e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-
-      } else {
-        setTimeStamp(new File(getRoot(), getPath()));
+    // jar file?
+    if (getRoot().endsWith(".jar") || getRoot().endsWith(".zip")) {
+      try {
+        ZipFile zipFile = ZipFileCache.instance().getZipFile(getRoot());
+        ZipEntry zipEntry = zipFile.getEntry(getPath());
+        return zipEntry.getTime();
+      } catch (Exception e) {
       }
+    } else {
+      //
+      return new File(getRoot(), getPath()).lastModified();
     }
 
-    return _timestamp;
+    //
+    return -1;
   }
 
   /**
@@ -280,35 +271,35 @@ public class DefaultProjectContentResource implements IProjectContentResource {
     return string.replace('\\', '/');
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param file
-   */
-  private void setTimeStamp(File file) {
-    long timestamp = file.lastModified();
-    if (timestamp != 0l) {
-      _timestamp = timestamp;
-    } else {
-      System.out.println(this);
-      throw new RuntimeException();
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param zipEntry
-   */
-  private void setTimeStamp(ZipEntry zipEntry) {
-    long timestamp = zipEntry.getTime();
-    if (timestamp != -1l) {
-      _timestamp = timestamp;
-    } else {
-      System.out.println(this);
-      throw new RuntimeException();
-    }
-  }
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param file
+  // */
+  // private void setTimeStamp(File file) {
+  // long timestamp = file.lastModified();
+  // if (timestamp != 0l) {
+  // _timestamp = timestamp;
+  // } else {
+  // System.out.println(this);
+  // throw new RuntimeException();
+  // }
+  // }
+  //
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param zipEntry
+  // */
+  // private void setTimeStamp(ZipEntry zipEntry) {
+  // long timestamp = zipEntry.getTime();
+  // if (timestamp != -1l) {
+  // _timestamp = timestamp;
+  // } else {
+  // System.out.println(this);
+  // throw new RuntimeException();
+  // }
+  // }
 }

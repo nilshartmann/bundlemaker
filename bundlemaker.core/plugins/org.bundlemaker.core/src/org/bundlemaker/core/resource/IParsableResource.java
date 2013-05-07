@@ -43,6 +43,14 @@ public interface IParsableResource extends IModuleResource, IReferenceRecorder {
    */
   public void setErroneous(boolean erroneous);
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  long getParsedTimestamp();
+
   // *** TODO: REMOVE ***/
 
   /**

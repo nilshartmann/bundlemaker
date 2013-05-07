@@ -51,6 +51,7 @@ public class FunctionalHelper {
 
           //
           if (parser.canParse(resource)) {
+            ((Resource) resource).storeCurrentTimestamp();
             List<IProblem> problems = parser.parseResource(content, resource, resourceCache);
             result.addAll(problems);
             resourceCache.getOrCreateResource(resourceStandin).setErroneous(!problems.isEmpty());
@@ -243,24 +244,8 @@ public class FunctionalHelper {
       return true;
     }
 
-    // String root = resourceStandin.getRoot();
-    // String resourceRoot = resource.getRoot();
-    //
-    // // System.out.println("root: '" + root + "', resourceroot: '" + resourceRoot + "'");
-    //
-    // if (root != null &&
-    // root.endsWith(".jar")) {
-    //
-    // File rootFile = new File(root);
-    // File resourceRootFile = new File(resourceRoot);
-    //
-    // if (rootFile.getName().equals(resourceRootFile.getName())) {
-    // return false;
-    // }
-    // }
-    //
     // check the time stamp
-    return resource.getTimestamp() != resourceStandin.getTimestamp();
+    return resource.getParsedTimestamp() != resourceStandin.getCurrentTimestamp();
   }
 
   /**

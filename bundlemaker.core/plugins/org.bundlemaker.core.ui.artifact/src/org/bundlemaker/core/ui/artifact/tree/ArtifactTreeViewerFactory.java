@@ -2,7 +2,6 @@ package org.bundlemaker.core.ui.artifact.tree;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.analysis.IResourceArtifactContent;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -71,7 +70,7 @@ public class ArtifactTreeViewerFactory {
           //
           Object object = structuredSelection.getFirstElement();
 
-          if (object instanceof IResourceArtifact || object instanceof IResourceArtifactContent) {
+          if (object instanceof IResourceArtifact || object instanceof IResourceArtifact.IResourceArtifactContent) {
 
             //
             IResourceArtifact resourceArtifact = object instanceof IResourceArtifact ? (IResourceArtifact) object

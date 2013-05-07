@@ -11,7 +11,7 @@ import org.bundlemaker.core.resource.IMovableUnit;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface ITypeArtifact extends IBundleMakerArtifact, IMovableUnit, IResourceArtifactContent {
+public interface ITypeArtifact extends IBundleMakerArtifact, IMovableUnit, IResourceArtifact.IResourceArtifactContent {
 
   /**
    * <p>

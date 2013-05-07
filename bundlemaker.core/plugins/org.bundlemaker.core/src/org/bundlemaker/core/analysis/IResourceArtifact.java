@@ -1,7 +1,7 @@
 package org.bundlemaker.core.analysis;
 
-import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
 
 /**
  * <p>
@@ -38,4 +38,14 @@ public interface IResourceArtifact extends IBundleMakerArtifact, IMovableUnit {
    * @return the fully qualified resource name, e.g. {@code com/example/MyClass}, never {@code null}.
    */
   String getQualifiedName();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   */
+  public static interface IResourceArtifactContent {
+
+  }
 }

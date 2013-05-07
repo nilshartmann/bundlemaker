@@ -55,6 +55,9 @@ public class Resource extends DefaultProjectContentResource implements IParsable
   private boolean                      _erroneous;
 
   /** - */
+  private long                         _lastTimestamp;
+
+  /** - */
   private transient ReferenceContainer _referenceContainer;
 
   /** - */
@@ -102,6 +105,22 @@ public class Resource extends DefaultProjectContentResource implements IParsable
    */
   public Resource(String contentId, String root, String path) {
     super(contentId, root, path);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public long getParsedTimestamp() {
+    return _lastTimestamp;
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  public void storeCurrentTimestamp() {
+    _lastTimestamp = getCurrentTimestamp();
   }
 
   /**
