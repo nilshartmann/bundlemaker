@@ -87,44 +87,27 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     try {
 
       // _parser.setSource(iCompilationUnit);
-      char[] content = new String(resource.getContent()).toCharArray();
+
 
       // TODO
-      if (projectContent.getProvider() instanceof JdtProjectContentProvider) {
-        String root = resource.getRoot();
-        IJavaProject javaProject = ((JdtProjectContentProvider) projectContent.getProvider()).getSourceJavaProject(
-            projectContent, root);
-        _parser.setProject(javaProject);
-      } else {
-        _parser.setProject(_javaProject);
-      }
+//      if (projectContent.getProvider() instanceof JdtProjectContentProvider) {
+//        String root = resource.getRoot();
+//        IJavaProject javaProject = ((JdtProjectContentProvider) projectContent.getProvider()).getSourceJavaProject(
+//            projectContent, root);
+//        _parser.setProject(javaProject);
+//        _parser.setUnitName("/" + _javaProject.getProject().getName() + "/" + resource.getPath());
+//      } else {
 
-      _parser.setSource(content);
-      // TODO
+//      }
+      
+      _parser.setSource(new String(resource.getContent()).toCharArray());
+      _parser.setProject(_javaProject);
       _parser.setUnitName("/" + _javaProject.getProject().getName() + "/" + resource.getPath());
       _parser.setCompilerOptions(CoreParserJdt.getCompilerOptionsWithComplianceLevel(null));
       _parser.setResolveBindings(true);
 
-      CompilationUnit compilationUnit = (CompilationUnit) _parser.createAST(null);
-
-      // for (org.eclipse.jdt.core.compiler.IProblem problem : compilationUnit.getProblems()) {
-      // if (problem.isError()) {
       //
-      //
-      // // _parser.setSource(iCompilationUnit);
-      // content = new String(modifiableResource.getContent()).toCharArray();
-      // _parser.setProject(_javaProject);
-      // _parser.setSource(content);
-      // // TODO
-      // _parser.setUnitName("/" + _javaProject.getProject().getName() + "/" + modifiableResource.getPath());
-      // _parser.setCompilerOptions(CoreParserJdt.getCompilerOptionsWithComplianceLevel(null));
-      // _parser.setResolveBindings(true);
-      // CompilationUnit cu = (CompilationUnit) _parser.createAST(null);
-      // cu.getProblems();
-      // }
-      // }
-
-      analyzeCompilationUnit(resource, compilationUnit);
+      analyzeCompilationUnit(resource, (CompilationUnit) _parser.createAST(null));
 
       // set the primary type
       String primaryTypeName = JavaTypeUtils.convertToFullyQualifiedName(resource.getPath(), ".java");
@@ -160,15 +143,6 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     JdtAstVisitor visitor = new JdtAstVisitor(modifiableResource);
     compilationUnit.accept(visitor);
 
-    // org.eclipse.jdt.core.IType primaryType = compilationUnit.getTypeRoot().findPrimaryType();
-    // if (primaryType != null) {
-    // Type type = (Type) modifiableResource.getType(primaryType.getFullyQualifiedName());
-    // modifiableResource.setMainType(type);
-    // } else {
-    // // TODO
-    // throw new RuntimeException(compilationUnit.toString());
-    // }
-
     // step 2:
     callSourceParserHooks(modifiableResource, compilationUnit);
 
@@ -177,7 +151,6 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 
       // add errors
       if (problem.isError()) {
-        System.out.println("JDT Parser Error: " + problem.getMessage());
         getProblems().add(problem);
       }
     }

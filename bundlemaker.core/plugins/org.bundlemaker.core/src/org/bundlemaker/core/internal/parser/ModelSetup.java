@@ -95,6 +95,11 @@ public class ModelSetup {
     final SubMonitor progressMonitor = SubMonitor.convert(mainMonitor, 100);
 
     //
+    for (IParserFactory parserFactory : Activator.getDefault().getParserFactoryRegistry().getParserFactories()) {
+      parserFactory.initialize(_bundleMakerProject);
+    }
+
+    //
     setupParsers();
 
     //
@@ -169,6 +174,11 @@ public class ModelSetup {
 
     //
     notifyParseStop();
+
+    //
+    for (IParserFactory parserFactory : Activator.getDefault().getParserFactoryRegistry().getParserFactories()) {
+      parserFactory.dispose(_bundleMakerProject);
+    }
 
     //
     return result[0];

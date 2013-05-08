@@ -20,12 +20,11 @@ import java.util.Map;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.BundleMakerProjectChangedEvent;
-import org.bundlemaker.core.IBundleMakerProjectHook;
 import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IBundleMakerProject.IProjectDescriptionModifier;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
+import org.bundlemaker.core.IBundleMakerProjectHook;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ModelSetup;
@@ -37,7 +36,6 @@ import org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.transformation.ITransformation;
-import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -156,11 +154,6 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
 
     // set the initialized flag
     _projectState = BundleMakerProjectState.INITIALIZED;
-
-    // step 4: call initialize on the parser factories
-    for (IParserFactory parserFactory : Activator.getDefault().getParserFactoryRegistry().getParserFactories()) {
-      parserFactory.initialize(this);
-    }
 
     // notify listeners
     notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_STATE_CHANGED));

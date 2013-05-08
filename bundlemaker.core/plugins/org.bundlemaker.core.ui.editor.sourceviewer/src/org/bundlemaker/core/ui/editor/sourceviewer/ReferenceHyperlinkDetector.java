@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.parser.IReferenceDetailParser.IPosition;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
@@ -50,7 +51,7 @@ public class ReferenceHyperlinkDetector implements IHyperlinkDetector {
     List<IHyperlink> hyperlinks = new LinkedList<IHyperlink>();
 
     //
-    for (Entry<String, List<Position>> entry : _editor.getPositions().entrySet()) {
+    for (Entry<String, List<IPosition>> entry : _editor.getPositions().entrySet()) {
 
       //
       IBundleMakerArtifact referencedArtifact = AnalysisModelQueries.getReferencedArtifact(
@@ -65,7 +66,7 @@ public class ReferenceHyperlinkDetector implements IHyperlinkDetector {
       if (referencedResourceArtifact != null) {
 
         //
-        for (Position position : entry.getValue()) {
+        for (IPosition position : entry.getValue()) {
 
           //
           if (region.getOffset() >= position.getOffset()

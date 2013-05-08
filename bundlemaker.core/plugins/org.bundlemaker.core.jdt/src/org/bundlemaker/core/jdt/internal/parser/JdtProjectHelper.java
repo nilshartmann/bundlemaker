@@ -13,6 +13,7 @@ package org.bundlemaker.core.jdt.internal.parser;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.jdt.parser.CoreParserJdt;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
@@ -23,10 +24,14 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -52,7 +57,6 @@ public class JdtProjectHelper {
   public static void setupAssociatedJavaProject(IBundleMakerProject project) throws CoreException {
 
     try {
-      System.out.println("setupAssociatedJavaProject(" + project + ")");
 
       // step 1: get the associated JDT project
       IJavaProject javaProject = getAssociatedJavaProject(project);
@@ -254,4 +258,55 @@ public class JdtProjectHelper {
     return project.getName() + CoreParserJdt.BUNDLEMAKER_JDT_PROJECT_POSTFIX;
   }
 
+  public static void deleteAssociatedProjectIfNecessary(final IProject resource) {
+
+    try {
+
+      if (resource instanceof IProject && ((IProject) resource).hasNature(BundleMakerCore.NATURE_ID)) {
+
+        // create a new workspace job
+        WorkspaceJob workspaceJob = new WorkspaceJob("delete") {
+
+          @Override
+          public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+
+            try {
+
+              IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject((IProject) resource);
+
+              if (JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
+
+                // get the associated java project
+                IProject associatedJavaProject = JdtProjectHelper.getAssociatedJavaProjectAsProject(bundleMakerProject);
+
+                if (!associatedJavaProject.isOpen()) {
+
+                  // simply delete the project
+                  associatedJavaProject.open(null);
+                }
+
+                associatedJavaProject.delete(true, null);
+
+              }
+
+              //
+              return new Status(IStatus.OK, CoreParserJdt.BUNDLE_ID, null);
+
+            } catch (Exception e) {
+
+              // TODO
+              return new Status(IStatus.ERROR, CoreParserJdt.BUNDLE_ID, "Could not delete project.");
+            }
+
+          }
+        };
+
+        // schedule the job
+        workspaceJob.schedule();
+      }
+
+    } catch (CoreException e) {
+      e.printStackTrace();
+    }
+  }
 }

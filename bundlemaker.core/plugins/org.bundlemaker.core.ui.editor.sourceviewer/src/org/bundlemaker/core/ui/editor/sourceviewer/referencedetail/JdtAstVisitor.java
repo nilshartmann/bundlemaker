@@ -15,8 +15,10 @@ import java.util.List;
 import java.util.Stack;
 
 import org.bundlemaker.core._type.IReference;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.parser.IReferenceDetailParser;
+import org.bundlemaker.core.parser.IReferenceDetailParser.IPosition;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.Flags;
@@ -62,7 +64,6 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.TypeLiteral;
 import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
-import org.eclipse.jface.text.Position;
 
 /**
  * <p>
@@ -73,57 +74,29 @@ import org.eclipse.jface.text.Position;
 public class JdtAstVisitor extends ASTVisitor {
 
   /** - */
-  private Stack<ITypeBinding>          _typeBindings;
+  private Stack<ITypeBinding>           _typeBindings;
 
   /** */
-  private Message[]                    _messages   = new Message[0];
+  private Message[]                     _messages   = new Message[0];
 
   /** */
-  private IProblem[]                   _problems   = new IProblem[0];
+  private IProblem[]                    _problems   = new IProblem[0];
 
-  GenericCache<String, List<Position>> _references = new GenericCache<String, List<Position>>() {
+  GenericCache<String, List<IPosition>> _references = new GenericCache<String, List<IPosition>>() {
 
-                                                     /** - */
-                                                     private static final long serialVersionUID = 1L;
+                                                      /** - */
+                                                      private static final long serialVersionUID = 1L;
 
-                                                     @Override
-                                                     protected List<Position> create(String key) {
-                                                       return new LinkedList<Position>();
-                                                     }
-                                                   };
+                                                      @Override
+                                                      protected List<IPosition> create(String key) {
+                                                        return new LinkedList<IPosition>();
+                                                      }
+                                                    };
 
-  public JdtAstVisitor(IMovableUnit movableUnit) {
-
-    //
-    Assert.isNotNull(movableUnit);
+  public JdtAstVisitor() {
 
     //
     _typeBindings = new Stack<ITypeBinding>();
-
-    //
-    GenericCache<String, List<String>> referencedTypes = new GenericCache<String, List<String>>() {
-      @Override
-      protected List<String> create(String key) {
-        return new LinkedList<String>();
-      }
-    };
-
-    //
-    for (IModuleResource resource : movableUnit.getAssociatedBinaryResources()) {
-      for (org.bundlemaker.core._type.IType type : resource.getContainedTypes()) {
-        for (IReference reference : type.getReferences()) {
-
-          //
-          String fullyQualifiedName = reference.getFullyQualifiedName();
-
-          //
-          int lastIndex = fullyQualifiedName.lastIndexOf(".");
-          if (lastIndex != -1 && lastIndex <= fullyQualifiedName.length()) {
-            referencedTypes.getOrCreate(fullyQualifiedName.substring(lastIndex + 1)).add(fullyQualifiedName);
-          }
-        }
-      }
-    }
   }
 
   /**
@@ -132,7 +105,7 @@ public class JdtAstVisitor extends ASTVisitor {
    * 
    * @return
    */
-  protected final GenericCache<String, List<Position>> getReferences() {
+  protected final GenericCache<String, List<IPosition>> getReferences() {
     return _references;
   }
 
@@ -828,25 +801,27 @@ public class JdtAstVisitor extends ASTVisitor {
     // handle others
     else {
 
-      if (typeBinding.getJavaElement() == null) {
-        // System.err.println("*****");
-        // System.err.println(typeBinding);
-        // System.err.println("*****");
-      } else {
-
-        IJavaElement javaElement = typeBinding.getJavaElement();
-
-        if (javaElement instanceof IType) {
-          addReferencedType(((IType) typeBinding.getJavaElement()).getFullyQualifiedName('$'), startPosition, length);
-        } else {
-          System.out.println("------------------------------------");
-          System.out.println(javaElement.getClass());
-          System.out.println(javaElement.getElementName());
-          System.out.println(startPosition + " : " + length);
-          new RuntimeException().printStackTrace();
-        }
-
-      }
+      System.out.println(typeBinding.getBinaryName());
+      addReferencedType(typeBinding.getBinaryName(), startPosition, length);
+      // if (typeBinding.getJavaElement() == null) {
+      // // System.err.println("*****");
+      // // System.err.println(typeBinding);
+      // // System.err.println("*****");
+      // } else {
+      //
+      // IJavaElement javaElement = typeBinding.getJavaElement();
+      //
+      // if (javaElement instanceof IType) {
+      //
+      // } else {
+      // System.out.println("------------------------------------");
+      // System.out.println(javaElement.getClass());
+      // System.out.println(javaElement.getElementName());
+      // System.out.println(startPosition + " : " + length);
+      // new RuntimeException().printStackTrace();
+      // }
+      //
+      // }
     }
 
     _typeBindings.pop();
@@ -919,5 +894,50 @@ public class JdtAstVisitor extends ASTVisitor {
         resolveTypeBinding(typeBinding, expression.getStartPosition(), expression.getLength());
       }
     }
+  }
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   */
+  private static class Position implements IReferenceDetailParser.IPosition {
+
+    /** - */
+    private int offset;
+
+    /** - */
+    private int length;
+
+    /**
+     * <p>
+     * Creates a new instance of type {@link Position}.
+     * </p>
+     * 
+     * @param offset
+     * @param length
+     */
+    public Position(int offset, int length) {
+      this.offset = offset;
+      this.length = length;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getOffset() {
+      return offset;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getLength() {
+      return length;
+    }
+
   }
 }

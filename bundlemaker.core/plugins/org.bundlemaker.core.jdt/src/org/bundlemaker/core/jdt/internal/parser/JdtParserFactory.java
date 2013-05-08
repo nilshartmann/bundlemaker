@@ -10,18 +10,12 @@
  ******************************************************************************/
 package org.bundlemaker.core.jdt.internal.parser;
 
-import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.jdt.parser.CoreParserJdt;
 import org.bundlemaker.core.jdt.parser.IJdtSourceParserHook;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.util.ExtensionRegistryTracker;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
 /**
@@ -30,10 +24,7 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class JdtParserFactory implements IParserFactory {
-
-  /** - */
-  private IResourceChangeListener                        _resourceChangeListener;
+public class JdtParserFactory extends IParserFactory.Adapter {
 
   /** - */
   private ExtensionRegistryTracker<IJdtSourceParserHook> _hookRegistry;
@@ -43,10 +34,6 @@ public class JdtParserFactory implements IParserFactory {
    */
   @Override
   public void initialize() {
-    _resourceChangeListener = new DeleteAssociatedProjectChangeListener();
-    ResourcesPlugin.getWorkspace().addResourceChangeListener(_resourceChangeListener,
-        IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE);
-
     _hookRegistry = new ExtensionRegistryTracker<IJdtSourceParserHook>(CoreParserJdt.EXTENSION_POINT_ID);
     _hookRegistry.initialize();
   }
@@ -77,38 +64,15 @@ public class JdtParserFactory implements IParserFactory {
    * {@inheritDoc}
    */
   @Override
-  public IParser createParser(IBundleMakerProject bundleMakerProject) throws CoreException {
-    return new JdtParser(bundleMakerProject, _hookRegistry);
+  public void dispose(IBundleMakerProject bundleMakerProject) {
+    JdtProjectHelper.deleteAssociatedProjectIfNecessary(bundleMakerProject.getProject());
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public void dispose(IBundleMakerProject bundleMakerProject) {
-
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  private boolean createAssociatedJavaProject(IBundleMakerProject bundleMakerProject) {
-
-    //
-    if (!JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
-      return true;
-    }
-
-    //
-    IProject project = JdtProjectHelper.getAssociatedJavaProjectAsProject(bundleMakerProject);
-
-    //
-    IResource resource = bundleMakerProject.getProject().findMember(BundleMakerCore.PROJECT_DESCRIPTION_PATH);
-
-    //
-    return resource.getLocalTimeStamp() > project.getLocalTimeStamp();
+  public IParser createParser(IBundleMakerProject bundleMakerProject) throws CoreException {
+    return new JdtParser(bundleMakerProject, _hookRegistry);
   }
 }
