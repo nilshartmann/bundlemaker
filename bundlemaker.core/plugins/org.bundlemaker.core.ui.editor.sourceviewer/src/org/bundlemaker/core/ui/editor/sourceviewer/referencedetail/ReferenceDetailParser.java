@@ -52,11 +52,11 @@ public class ReferenceDetailParser implements IReferenceDetailParser {
     String[][] result = get(iBundleMakerProject);
     parser.setSource(new String(resource.getContent()).toCharArray()); // set source
     parser.setResolveBindings(true); // we need bindings later on
-    parser.setUnitName(JavaTypeUtils.convertToFullyQualifiedName(resource.getPath(), ".java"));
+    parser.setUnitName(resource.getPath());
     parser.setEnvironment(result[0], result[1], null, false);
 
     org.eclipse.jdt.core.dom.ASTNode node = parser.createAST(null /* IProgressMonitor */);
-System.out.println(node);
+
     return (CompilationUnit) node; // parse
   }
 

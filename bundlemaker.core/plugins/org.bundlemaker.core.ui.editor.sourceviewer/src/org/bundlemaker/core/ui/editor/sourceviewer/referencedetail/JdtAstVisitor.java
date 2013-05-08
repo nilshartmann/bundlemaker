@@ -802,26 +802,11 @@ public class JdtAstVisitor extends ASTVisitor {
     else {
 
       System.out.println(typeBinding.getBinaryName());
-      addReferencedType(typeBinding.getBinaryName(), startPosition, length);
-      // if (typeBinding.getJavaElement() == null) {
-      // // System.err.println("*****");
-      // // System.err.println(typeBinding);
-      // // System.err.println("*****");
-      // } else {
-      //
-      // IJavaElement javaElement = typeBinding.getJavaElement();
-      //
-      // if (javaElement instanceof IType) {
-      //
-      // } else {
-      // System.out.println("------------------------------------");
-      // System.out.println(javaElement.getClass());
-      // System.out.println(javaElement.getElementName());
-      // System.out.println(startPosition + " : " + length);
-      // new RuntimeException().printStackTrace();
-      // }
-      //
-      // }
+      if (typeBinding.getBinaryName() != null) {
+        addReferencedType(typeBinding.getBinaryName(), startPosition, length);
+      } else {
+        
+      }
     }
 
     _typeBindings.pop();
