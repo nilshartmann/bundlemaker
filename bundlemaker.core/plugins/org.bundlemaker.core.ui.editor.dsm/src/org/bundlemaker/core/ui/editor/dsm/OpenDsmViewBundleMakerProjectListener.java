@@ -51,9 +51,10 @@ public class OpenDsmViewBundleMakerProjectListener implements IBundleMakerProjec
     //
     IAnalysisModelConfiguration analysisModelConfiguration = Activator.getDefault()
         .getArtifactModelConfigurationProvider().getArtifactModelConfiguration();
-    
+
     try {
-      IRootArtifact artifact = event.getBundleMakerProject().getModularizedSystemWorkingCopy().getAnalysisModel(analysisModelConfiguration);
+      IRootArtifact artifact = event.getBundleMakerProject().getModularizedSystemWorkingCopy()
+          .getAnalysisModel(analysisModelConfiguration);
       CommonNavigatorUtils.findCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID).selectReveal(
           new StructuredSelection(artifact));
     } catch (CoreException e) {

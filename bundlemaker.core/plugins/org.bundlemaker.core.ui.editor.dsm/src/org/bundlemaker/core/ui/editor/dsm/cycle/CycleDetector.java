@@ -33,7 +33,7 @@ public class CycleDetector {
    * <p>
    * Creates a new instance of type {@link CycleDetector}.
    * </p>
-   *
+   * 
    * @param unorderedArtifacts
    */
   public CycleDetector(Collection<? extends IBundleMakerArtifact> unorderedArtifacts) {
@@ -50,7 +50,7 @@ public class CycleDetector {
     _cycleArray = new int[0][0];
     _artifacts = new IBundleMakerArtifact[0];
   }
-  
+
   public IBundleMakerArtifact[] getOrderedArtifacts() {
     return _artifacts;
   }
