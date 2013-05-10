@@ -16,22 +16,22 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class CallableReparse implements Callable<List<IProblem>> {
 
   /** - */
-  private ResourceCache              _resourceCache;
+  private ResourceCache         _resourceCache;
 
   /** - */
-  private IProgressMonitor           _progressMonitor;
+  private IProgressMonitor      _progressMonitor;
 
   /** - */
-  private IProjectContentEntry _content;
+  private IProjectContentEntry  _content;
 
   /** - */
-  private Collection<Directory>      _directories;
+  private Collection<Directory> _directories;
 
   // /** the list of all errors */
   // private List<IProblem> _errors;
 
   /** - */
-  private IParser[]                  _parser;
+  private IParser[]             _parser;
 
   /**
    * <p>

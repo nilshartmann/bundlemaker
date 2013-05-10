@@ -6,15 +6,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.internal.projectdescription.api.IInternalProjectDescription;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
+import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.VariablePath;
-import org.bundlemaker.core.projectdescription.spi.AbstractProjectContentProvider;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -64,7 +65,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
   private Set<IResourceStandin>              _sourceResourceStandins;
 
   /** the project description */
-  private IProjectDescription                _projectDescription;
+  private IInternalProjectDescription        _projectDescription;
 
   /** the bundle maker project content provider */
   private IProjectContentProvider            _provider;
@@ -177,7 +178,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * {@inheritDoc}
    */
   @Override
-  public final Set<? extends IResource> getBinaryResources() {
+  public final Set<? extends IModuleResource> getBinaryResources() {
     return Collections.unmodifiableSet(getBinaryResourceStandins());
   }
 
@@ -185,7 +186,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * {@inheritDoc}
    */
   @Override
-  public final Set<? extends IResource> getSourceResources() {
+  public final Set<? extends IModuleResource> getSourceResources() {
     return Collections.unmodifiableSet(getSourceResourceStandins());
   }
 
@@ -193,7 +194,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * {@inheritDoc}
    */
   @Override
-  public Set<? extends IResource> getResources(ProjectContentType type) {
+  public Set<? extends IModuleResource> getResources(ProjectContentType type) {
     switch (type) {
     case BINARY: {
       return getBinaryResources();
@@ -322,6 +323,8 @@ public class ProjectContentEntry implements IProjectContentEntry {
 
     //
     Assert.isNotNull(projectDescription);
+    Assert.isTrue(projectDescription instanceof IInternalProjectDescription,
+        String.format("Project description must be instance of %s.", IInternalProjectDescription.class.getName()));
 
     // return if content already is initialized
     if (isInitialized()) {
@@ -329,7 +332,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
     }
 
     // the project description
-    _projectDescription = projectDescription;
+    _projectDescription = (IInternalProjectDescription) projectDescription;
 
     //
     onInitialize(projectDescription);
@@ -362,12 +365,12 @@ public class ProjectContentEntry implements IProjectContentEntry {
     // add the resource
     switch (type) {
     case BINARY: {
-      ((BundleMakerProjectDescription) _projectDescription).addBinaryResource(resourceStandin);
+      _projectDescription.addBinaryResource(resourceStandin);
       binaryResourceStandins().add(resourceStandin);
       break;
     }
     case SOURCE: {
-      ((BundleMakerProjectDescription) _projectDescription).addSourceResource(resourceStandin);
+      _projectDescription.addSourceResource(resourceStandin);
       sourceResourceStandins().add(resourceStandin);
       break;
     }

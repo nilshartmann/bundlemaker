@@ -29,9 +29,9 @@ public class ModuleCreateNewTest extends AbstractSimpleArtifactModelTest {
   public void createNewModuleBelowExistingGroup() throws Exception {
 
     //
-    assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-    assertResourceModuleCount(getBinModel(), 1);
-    assertResourceModuleCount(getSrcModel(), 1);
+    assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
+    assertResourceModuleCount(getBinModel(), 2);
+    assertResourceModuleCount(getSrcModel(), 2);
 
     // create a new group
     IModuleArtifact newModuleArtifact = getBinModel().getGroup2Artifact().getOrCreateModule("NewModule", "1.0.0");
@@ -39,8 +39,8 @@ public class ModuleCreateNewTest extends AbstractSimpleArtifactModelTest {
 
     // assert that we have three groups
     Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-    assertResourceModuleCount(getBinModel(), 2);
-    assertResourceModuleCount(getSrcModel(), 2);
+    assertResourceModuleCount(getBinModel(), 3);
+    assertResourceModuleCount(getSrcModel(), 3);
 
     //
     IModuleArtifact srcModule = AnalysisModelQueries.getModuleArtifact(getBinModel().getRootArtifact(),
@@ -69,9 +69,9 @@ public class ModuleCreateNewTest extends AbstractSimpleArtifactModelTest {
   public void createNewModuleBelowRoot() throws Exception {
 
     //
-    assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-    assertResourceModuleCount(getBinModel(), 1);
-    assertResourceModuleCount(getSrcModel(), 1);
+    assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
+    assertResourceModuleCount(getBinModel(), 2);
+    assertResourceModuleCount(getSrcModel(), 2);
 
     // create a new group
     IModuleArtifact newModuleArtifact = getBinModel().getRootArtifact().getOrCreateModule("NewModule", "1.0.0");
@@ -79,8 +79,8 @@ public class ModuleCreateNewTest extends AbstractSimpleArtifactModelTest {
 
     // assert that we have three groups
     Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-    assertResourceModuleCount(getBinModel(), 2);
-    assertResourceModuleCount(getSrcModel(), 2);
+    assertResourceModuleCount(getBinModel(), 3);
+    assertResourceModuleCount(getSrcModel(), 3);
   }
 
   @Test(expected = AnalysisModelException.class)
@@ -88,9 +88,9 @@ public class ModuleCreateNewTest extends AbstractSimpleArtifactModelTest {
 
     //
     Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-    assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-    assertResourceModuleCount(getBinModel(), 1);
-    assertResourceModuleCount(getSrcModel(), 1);
+    assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
+    assertResourceModuleCount(getBinModel(), 2);
+    assertResourceModuleCount(getSrcModel(), 2);
 
     // We have 2 (!) transformations here, as the "CreateGroupTransformation" is
     // implemented as an inner transformation

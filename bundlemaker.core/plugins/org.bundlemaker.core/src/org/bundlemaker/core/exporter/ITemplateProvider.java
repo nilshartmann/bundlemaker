@@ -3,8 +3,8 @@ package org.bundlemaker.core.exporter;
 import java.util.Set;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.resource.IReadableResource;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IResource;
 
 /**
  * <p>
@@ -27,7 +27,7 @@ public interface ITemplateProvider<T> {
    * @param context
    * @return
    */
-  T getTemplate(IResourceModule module, IModularizedSystem modularizedSystem,
+  T getTemplate(IModule module, IModularizedSystem modularizedSystem,
       IModuleExporterContext context);
 
   /**
@@ -39,6 +39,6 @@ public interface ITemplateProvider<T> {
    * @param currentContext
    * @return
    */
-  Set<IReadableResource> getAdditionalResources(IResourceModule currentModule,
+  Set<IResource> getAdditionalResources(IModule currentModule,
       IModularizedSystem currentModularizedSystem, IModuleExporterContext currentContext);
 }

@@ -16,12 +16,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core.internal.modules.query.ReferenceQueryFilters;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.ITypeSelector;
+import org.bundlemaker.core._type.IReference;
+import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.modules.ITypeSelector;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -68,7 +67,6 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
   /**
    * {@inheritDoc}
    */
-  @Override
   public IType getType(String fullyQualifiedName) {
     return getType(fullyQualifiedName, null);
   }
@@ -76,8 +74,7 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
   /**
    * {@inheritDoc}
    */
-  @Override
-  public IType getType(String fullyQualifiedName, IResourceModule referencingModule) {
+  public IType getType(String fullyQualifiedName, IModule referencingModule) {
 
     // assert
     Assert.isNotNull(fullyQualifiedName);
@@ -117,13 +114,11 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
   /**
    * {@inheritDoc}
    */
-  @Override
   public Set<IType> getTypes(String fullyQualifiedName) {
     return getTypes(fullyQualifiedName, null);
   }
 
-  @Override
-  public Set<IType> getTypes(String fullyQualifiedName, IResourceModule referencingModule) {
+  public Set<IType> getTypes(String fullyQualifiedName, IModule referencingModule) {
     //
     Assert.isNotNull(fullyQualifiedName);
     Assert.isTrue(fullyQualifiedName.trim().length() > 0);
@@ -136,15 +131,14 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
     return Collections.unmodifiableSet(types);
   }
 
-  @Override
-  public Set<IReference> getUnsatisfiedReferences(IResourceModule resourceModule) {
+  public Set<IReference> getUnsatisfiedReferences(IModule resourceModule) {
 
     //
     Set<IReference> result = new HashSet<IReference>();
 
     //
     Set<IReference> references = resourceModule
-        .getReferences(ReferenceQueryFilters.ALL_DIRECT_EXTERNAL_REFERENCES_QUERY_FILTER);
+        .getReferences();
 
     for (IReference iReference : references) {
       if (getType(iReference.getFullyQualifiedName(), resourceModule) == null) {

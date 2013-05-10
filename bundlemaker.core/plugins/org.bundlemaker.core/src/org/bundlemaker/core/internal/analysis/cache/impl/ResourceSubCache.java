@@ -1,13 +1,14 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
+import org.bundlemaker.core._type.utils.JavaUtils;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.cache.ModulePackageKey;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -17,7 +18,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ResourceSubCache extends AbstractSubCache<IResource, IResourceArtifact> {
+public class ResourceSubCache extends AbstractSubCache<IModuleResource, IResourceArtifact> {
 
   /** serialVersionUID */
   private static final long serialVersionUID = 1L;
@@ -37,7 +38,7 @@ public class ResourceSubCache extends AbstractSubCache<IResource, IResourceArtif
    * {@inheritDoc}
    */
   @Override
-  protected IResourceArtifact create(IResource key) {
+  protected IResourceArtifact create(IModuleResource key) {
 
     // get the parent
     AbstractArtifactContainer parent = getOrCreateParent(key);
@@ -54,15 +55,15 @@ public class ResourceSubCache extends AbstractSubCache<IResource, IResourceArtif
    * @param resource
    * @return
    */
-  public AbstractArtifactContainer getOrCreateParent(IResource resource) {
+  public AbstractArtifactContainer getOrCreateParent(IModuleResource resource) {
 
     Assert.isNotNull(resource);
 
     // step 1: compute the package name
-    String packageName = resource.getPackageName();
+    String packageName = JavaUtils.getPackageNameFromDirectory(resource.getDirectory());
 
     // step 2: get the associated resource module
-    IResourceModule resourceModule = resource.getAssociatedResourceModule(getArtifactCache().getModularizedSystem());
+    IModule resourceModule = resource.getModule(getArtifactCache().getModularizedSystem());
     if (resourceModule == null) {
       throw new RuntimeException(String.format("No module for resource '%s'.", resource.getPath()));
     }

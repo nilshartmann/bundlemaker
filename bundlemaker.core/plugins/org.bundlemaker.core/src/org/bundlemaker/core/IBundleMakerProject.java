@@ -15,9 +15,9 @@ import java.util.List;
 
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -192,7 +192,7 @@ public interface IBundleMakerProject {
    * 
    * @return a list with all binary resources that are contained in this project.
    */
-  List<IResource> getBinaryResources();
+  List<IModuleResource> getBinaryResources();
 
   /**
    * <p>
@@ -201,7 +201,7 @@ public interface IBundleMakerProject {
    * 
    * @return a list with all source resources that are contained in this project.
    */
-  List<IResource> getSourceResources();
+  List<IModuleResource> getSourceResources();
 
   /**
    * <p>

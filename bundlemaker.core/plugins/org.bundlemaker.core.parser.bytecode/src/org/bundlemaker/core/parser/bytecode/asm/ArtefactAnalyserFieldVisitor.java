@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser.bytecode.asm;
 
-import org.bundlemaker.core.resource.ReferenceType;
-import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
+import org.bundlemaker.core._type.ReferenceType;
+import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Type;

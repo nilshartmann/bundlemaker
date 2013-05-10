@@ -14,10 +14,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.bundlemaker.core.modules.IResourceContainer;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -39,19 +38,19 @@ public class ModuleExporterUtils {
    * @param resourceStandins
    * @return
    */
-  public static boolean requiresRepackaging(IResourceModule resourceModule, File currentModuleTemplateDirectory,
+  public static boolean requiresRepackaging(IModule resourceModule, File currentModuleTemplateDirectory,
       ProjectContentType contentType) {
 
     Assert.isNotNull(resourceModule, "Parameter 'resourceModule' has to be set!");
     Assert.isNotNull(contentType, "Parameter 'type' has to be set!");
 
-    // step 1: requires repackaging if contained containers not empty
-    if (!resourceModule.getContainedResourceContainers().isEmpty()) {
-      return true;
-    }
+    // // step 1: requires repackaging if contained containers not empty
+    // if (!resourceModule.getContainedResourceContainers().isEmpty()) {
+    // return true;
+    // }
 
     // step 3: get the root file (or return true)
-    return requiresRepackaging(resourceModule.getSelfResourceContainer(), contentType);
+    return requiresRepackaging(resourceModule, contentType);
   }
 
   /**
@@ -62,14 +61,14 @@ public class ModuleExporterUtils {
    * @param contentType
    * @return
    */
-  public static boolean requiresRepackaging(IResourceContainer resourceContainer, ProjectContentType contentType) {
+  public static boolean requiresRepackaging(IModule resourceContainer, ProjectContentType contentType) {
 
     Assert.isNotNull(resourceContainer, "Parameter 'resourceContainer' has to be set!");
     Assert.isNotNull(contentType, "Parameter 'type' has to be set!");
 
     // step 2: get the root file (or return true)
     String root = null;
-    for (IResource resourceStandin : resourceContainer.getResources(contentType)) {
+    for (IModuleResource resourceStandin : resourceContainer.getResources(contentType)) {
       if (root == null) {
         root = resourceStandin.getRoot();
       } else if (!root.equals(resourceStandin.getRoot())) {
@@ -117,7 +116,7 @@ public class ModuleExporterUtils {
    * @return
    * @throws IOException
    */
-  public static File getRootFile(IResourceModule resourceModule, ProjectContentType contentType) {
+  public static File getRootFile(IModule resourceModule, ProjectContentType contentType) {
 
     //
     Assert.isNotNull(resourceModule);
@@ -129,7 +128,7 @@ public class ModuleExporterUtils {
     }
 
     // get resource standin
-    IResource resourceStandin = resourceModule.getResources(contentType).toArray(new IResource[0])[0];
+    IModuleResource resourceStandin = resourceModule.getResources(contentType).toArray(new IModuleResource[0])[0];
 
     // return the root
     return new File(resourceStandin.getRoot());

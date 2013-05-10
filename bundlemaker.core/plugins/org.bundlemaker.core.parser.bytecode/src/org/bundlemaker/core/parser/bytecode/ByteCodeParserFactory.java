@@ -11,8 +11,8 @@
 package org.bundlemaker.core.parser.bytecode;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.parser.AbstractParserFactory;
 import org.bundlemaker.core.parser.IParser;
+import org.bundlemaker.core.parser.IParserFactory;
 import org.eclipse.core.runtime.CoreException;
 
 /**
@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ByteCodeParserFactory extends AbstractParserFactory {
+public class ByteCodeParserFactory extends IParserFactory.Adapter {
 
   /**
    * {@inheritDoc}

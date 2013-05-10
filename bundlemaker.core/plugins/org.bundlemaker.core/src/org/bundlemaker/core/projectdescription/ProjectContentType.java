@@ -16,6 +16,8 @@ package org.bundlemaker.core.projectdescription;
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ * 
+ * @noextend This class is not intended to be extended by clients.
  */
 public enum ProjectContentType {
 

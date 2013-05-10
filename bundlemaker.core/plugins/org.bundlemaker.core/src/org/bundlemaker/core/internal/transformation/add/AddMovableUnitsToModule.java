@@ -8,8 +8,9 @@ import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterUtils;
-import org.bundlemaker.core.internal.modules.modifiable.IModifiableResourceModule;
-import org.bundlemaker.core.modules.IMovableUnit;
+import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IMovableUnit;
 
 /**
  * <p>
@@ -21,10 +22,10 @@ import org.bundlemaker.core.modules.IMovableUnit;
 public class AddMovableUnitsToModule implements IAddArtifactAction<IBundleMakerArtifact> {
 
   /** - */
-  private List<IMovableUnit>        _movedMovableUnits;
+  private List<IMovableUnit> _movedMovableUnits;
 
   /** - */
-  private IModifiableResourceModule _oldParentModule;
+  private IModule            _oldParentModule;
 
   /**
    * <p>
@@ -42,7 +43,7 @@ public class AddMovableUnitsToModule implements IAddArtifactAction<IBundleMakerA
 
       //
       _movedMovableUnits = AdapterUtils.getAllMovableUnits(artifact);
-      _oldParentModule = (IModifiableResourceModule) artifact.getParent(IModuleArtifact.class).getAssociatedModule();
+      _oldParentModule = (IModule) artifact.getParent(IModuleArtifact.class).getAssociatedModule();
 
       //
       IModuleArtifact moduleArtifact = parentArtifact instanceof IModuleArtifact ? parentArtifact
@@ -51,7 +52,7 @@ public class AddMovableUnitsToModule implements IAddArtifactAction<IBundleMakerA
               .getParent(IModuleArtifact.class);
 
       //
-      AdapterUtils.addResourcesToModule((IModifiableResourceModule) moduleArtifact.getAssociatedModule(),
+      AdapterUtils.addResourcesToModule((IModifiableModule) moduleArtifact.getAssociatedModule(),
           _movedMovableUnits);
     }
   }
@@ -62,7 +63,7 @@ public class AddMovableUnitsToModule implements IAddArtifactAction<IBundleMakerA
   @Override
   public void undo() {
 
-    AdapterUtils.addResourcesToModule(_oldParentModule,
+    AdapterUtils.addResourcesToModule((IModifiableModule) _oldParentModule,
         _movedMovableUnits);
   }
 }

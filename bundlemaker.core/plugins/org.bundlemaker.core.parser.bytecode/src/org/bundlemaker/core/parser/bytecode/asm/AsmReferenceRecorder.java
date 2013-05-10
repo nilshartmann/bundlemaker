@@ -10,14 +10,14 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser.bytecode.asm;
 
-import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.resource.ReferenceType;
-import org.bundlemaker.core.resource.TypeEnum;
-import org.bundlemaker.core.resource.modifiable.IModifiableResource;
-import org.bundlemaker.core.resource.modifiable.IModifiableType;
-import org.bundlemaker.core.resource.modifiable.IReferenceRecorder;
-import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
-import org.bundlemaker.core.util.JavaTypeUtils;
+import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.ReferenceType;
+import org.bundlemaker.core._type.TypeEnum;
+import org.bundlemaker.core._type.modifiable.IModifiableType;
+import org.bundlemaker.core._type.modifiable.IReferenceRecorder;
+import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
+import org.bundlemaker.core._type.utils.JavaTypeUtils;
+import org.bundlemaker.core.resource.IParsableResource;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -29,10 +29,10 @@ import org.eclipse.core.runtime.Assert;
 public class AsmReferenceRecorder implements IReferenceRecorder {
 
   /** - */
-  private IModifiableResource _resource;
+  private IParsableResource _resource;
 
   /** - */
-  private IModifiableResource _enclosingClassFileResource;
+  private IParsableResource _enclosingClassFileResource;
 
   /** - */
   private IModifiableType     _bundleMakerType;
@@ -51,7 +51,7 @@ public class AsmReferenceRecorder implements IReferenceRecorder {
    * @param resource
    * @param enclosingClassFileResource
    */
-  public AsmReferenceRecorder(IModifiableResource resource, IModifiableResource enclosingClassFileResource) {
+  public AsmReferenceRecorder(IParsableResource resource, IParsableResource enclosingClassFileResource) {
 
     Assert.isNotNull(resource);
     Assert.isNotNull(enclosingClassFileResource);

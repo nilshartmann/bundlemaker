@@ -25,11 +25,12 @@ import org.bundlemaker.core.BundleMakerProjectChangedEvent;
 import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
+import org.bundlemaker.core.internal.projectdescription.api.IInternalProjectDescription;
+import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
-import org.bundlemaker.core.projectdescription.spi.AbstractProjectContentProvider;
-import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -43,7 +44,7 @@ import com.google.gson.annotations.SerializedName;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class BundleMakerProjectDescription implements IModifiableProjectDescription {
+public class BundleMakerProjectDescription implements IModifiableProjectDescription, IInternalProjectDescription {
 
   /** - */
   private static NumberFormat               FORMATTER  = new DecimalFormat("000000");
@@ -377,15 +378,15 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   }
 
   @SuppressWarnings("unchecked")
-  public final List<IResource> getSourceResources() {
-    List<? extends IResource> result = Collections.unmodifiableList(_sourceResources);
-    return (List<IResource>) result;
+  public final List<IModuleResource> getSourceResources() {
+    List<? extends IModuleResource> result = Collections.unmodifiableList(_sourceResources);
+    return (List<IModuleResource>) result;
   }
 
   @SuppressWarnings("unchecked")
-  public final List<IResource> getBinaryResources() {
-    List<? extends IResource> result = Collections.unmodifiableList(_binaryResources);
-    return (List<IResource>) result;
+  public final List<IModuleResource> getBinaryResources() {
+    List<? extends IModuleResource> result = Collections.unmodifiableList(_binaryResources);
+    return (List<IModuleResource>) result;
   }
 
   public final List<IResourceStandin> getSourceResourceStandins() {

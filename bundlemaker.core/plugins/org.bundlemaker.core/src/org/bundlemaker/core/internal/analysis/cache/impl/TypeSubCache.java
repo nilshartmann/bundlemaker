@@ -1,5 +1,6 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
+import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
@@ -10,10 +11,8 @@ import org.bundlemaker.core.internal.analysis.cache.ModulePackageKey;
 import org.bundlemaker.core.internal.analysis.cache.TypeKey;
 import org.bundlemaker.core.internal.analysis.virtual.VirtualType2IArtifact;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -119,16 +118,21 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, ITypeArtifact> {
     Assert.isNotNull(type);
 
     // get the associated resources
-    IResource resource = null;
+    IModuleResource resource = null;
 
     resource = getArtifactCache().getConfiguration().getContentType().equals(ProjectContentType.SOURCE)
         && type.hasSourceResource() ? type.getSourceResource() : type.getBinaryResource();
 
     // get the associated module
-    IModule module = resource != null ? resource.getAssociatedResourceModule(getArtifactCache().getModularizedSystem())
+    IModule module = resource != null ?
+        resource.getModule(getArtifactCache().getModularizedSystem())
         : type.getModule(getArtifactCache().getModularizedSystem());
 
-    if (module instanceof IResourceModule) {
+    if (resource != null && module.isResourceModule()) {
+
+      if (resource == null) {
+        System.out.println("Type without resource: " + type);
+      }
 
       // force cast
       return (AbstractArtifactContainer) getArtifactCache().getResourceCache().getOrCreate(resource);

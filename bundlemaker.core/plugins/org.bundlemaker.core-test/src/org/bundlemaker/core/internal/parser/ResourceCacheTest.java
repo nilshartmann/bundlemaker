@@ -4,9 +4,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import org.bundlemaker.core.internal.resource.DefaultProjectContentResource;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
-import org.bundlemaker.core.resource.ResourceKey;
-import org.bundlemaker.core.resource.modifiable.IModifiableResource;
+import org.bundlemaker.core.resource.IParsableResource;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ public class ResourceCacheTest {
 
     //
     ResourceCache resourceCache = new ResourceCache(dependencyStore);
-    IModifiableResource modifiableResource = resourceCache.getOrCreateResource(new ResourceKey("1", "12", "123"));
+    IParsableResource modifiableResource = resourceCache.getOrCreateResource(new DefaultProjectContentResource("1", "12", "123"));
     
     //
     resourceCache.commit(null);

@@ -2,6 +2,7 @@ package org.bundlemaker.core.itest.misc_models;
 
 import java.util.LinkedList;
 
+import org.bundlemaker.core._type.modules.ITypeModule;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -44,9 +45,9 @@ public class AmbiguousTypesTest extends AbstractBundleMakerModelTest {
     Assert.assertNotNull(artifact);
 
     // assert that the type
-    Assert.assertNotNull(getModularizedSystem().getExecutionEnvironment().getType(
+    Assert.assertNotNull(getModularizedSystem().getExecutionEnvironment().adaptAs(ITypeModule.class).getType(
         "javax.xml.ws.handler.soap.SOAPMessageContext"));
-    Assert.assertNotNull(getModularizedSystem().getModule("AmbiguousTypesTest", "1.0.0").getType(
+    Assert.assertNotNull(getModularizedSystem().getModule("AmbiguousTypesTest", "1.0.0").adaptAs(ITypeModule.class).getType(
         "javax.xml.ws.handler.soap.SOAPMessageContext"));
 
     //

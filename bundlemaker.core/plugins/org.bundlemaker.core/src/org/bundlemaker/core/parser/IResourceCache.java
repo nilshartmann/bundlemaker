@@ -10,8 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser;
 
-import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.resource.modifiable.IModifiableResource;
+import org.bundlemaker.core.resource.IParsableResource;
 
 /**
  * <p>
@@ -31,5 +30,5 @@ public interface IResourceCache {
    * @param resourceKey
    * @return
    */
-  IModifiableResource getOrCreateResource(IResourceKey resourceKey);
+  IParsableResource getOrCreateResource(String contentId, String root, String path);
 }

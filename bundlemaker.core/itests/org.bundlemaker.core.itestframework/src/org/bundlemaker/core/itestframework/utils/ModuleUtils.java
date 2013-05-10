@@ -5,16 +5,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.bundlemaker.core._type.IReference;
+import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.resource.IModuleResource;
 
 public class ModuleUtils {
 
-  public static final String dump(IResourceModule module) {
+  public static final String dump(IModule module) {
 
     IModularizedSystem modularizedSystem = module.getModularizedSystem();
 
@@ -24,7 +24,7 @@ public class ModuleUtils {
     builder.append("\n");
     builder.append("Source-Content: \n");
 
-    for (IResource resource : asSortedList(module.getResources(ProjectContentType.SOURCE))) {
+    for (IModuleResource resource : asSortedList((Set<IModuleResource>)module.getResources(ProjectContentType.SOURCE))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : asSortedList(resource.getReferences())) {
@@ -42,14 +42,14 @@ public class ModuleUtils {
 
     builder.append("\n");
     builder.append("Binary-Content: \n");
-    for (IResource resource : asSortedList(module.getResources(ProjectContentType.BINARY))) {
+    for (IModuleResource resource : asSortedList((Set<IModuleResource>)module.getResources(ProjectContentType.BINARY))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : asSortedList(resource.getReferences())) {
         builder.append(" * " + reference.toString() + "\n");
       }
 
-      for (IResource stickyResources : asSortedList(resource.getStickyResources())) {
+      for (IModuleResource stickyResources : asSortedList((Set<IModuleResource>)resource.getStickyResources())) {
         builder.append(" ~sticky~ " + stickyResources.getPath() + "\n");
       }
 

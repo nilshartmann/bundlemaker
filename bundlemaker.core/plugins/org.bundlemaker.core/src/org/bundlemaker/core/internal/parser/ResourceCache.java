@@ -13,16 +13,16 @@ package org.bundlemaker.core.internal.parser;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bundlemaker.core._type.TypeEnum;
+import org.bundlemaker.core.internal.resource.DefaultProjectContentResource;
 import org.bundlemaker.core.internal.resource.FlyWeightCache;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.resource.TypeEnum;
-import org.bundlemaker.core.resource.modifiable.IModifiableResource;
+import org.bundlemaker.core.resource.IParsableResource;
+import org.bundlemaker.core.resource.IProjectContentResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -36,19 +36,19 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class ResourceCache implements IResourceCache {
 
   /** the element map */
-  Map<IResourceKey, Resource>        _storedResourcesMap;
+  Map<IProjectContentResource, Resource> _storedResourcesMap;
 
   /** the element map */
-  Map<IResourceKey, Resource>        _newResourceMap;
+  Map<IProjectContentResource, Resource> _newResourceMap;
 
   /** the element map */
-  private Map<String, Type>          _typeMap;
+  private Map<String, Type>              _typeMap;
 
   /** the dependency store */
-  private IPersistentDependencyStore _dependencyStore;
+  private IPersistentDependencyStore     _dependencyStore;
 
   /** - */
-  private FlyWeightCache             _flyWeightCache;
+  private FlyWeightCache                 _flyWeightCache;
 
   /**
    * <p>
@@ -65,10 +65,30 @@ public class ResourceCache implements IResourceCache {
     _dependencyStore = dependencyStore;
 
     //
-    _storedResourcesMap = new HashMap<IResourceKey, Resource>();
+    _storedResourcesMap = new HashMap<IProjectContentResource, Resource>();
 
     // set the element map
-    _newResourceMap = new HashMap<IResourceKey, Resource>();
+    _newResourceMap = new HashMap<IProjectContentResource, Resource>();
+
+    //
+    _typeMap = new HashMap<String, Type>();
+
+    //
+    _flyWeightCache = new FlyWeightCache();
+  }
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link ResourceCache}.
+   * </p>
+   */
+  public ResourceCache() {
+
+    //
+    _storedResourcesMap = new HashMap<IProjectContentResource, Resource>();
+
+    // set the element map
+    _newResourceMap = new HashMap<IProjectContentResource, Resource>();
 
     //
     _typeMap = new HashMap<String, Type>();
@@ -94,6 +114,8 @@ public class ResourceCache implements IResourceCache {
    * @throws CoreException
    */
   public synchronized void commit(IProgressMonitor progressMonitor) throws CoreException {
+
+    Assert.isNotNull(_dependencyStore, "Dependency store must not be null.");
 
     //
     if (progressMonitor != null) {
@@ -126,7 +148,13 @@ public class ResourceCache implements IResourceCache {
    */
   // TODO synchronized
   @Override
-  public synchronized IModifiableResource getOrCreateResource(IResourceKey resourceKey) {
+  public synchronized IParsableResource getOrCreateResource(String contentId, String root, String path) {
+
+    // return the result
+    return getOrCreateResource(new DefaultProjectContentResource(contentId, root, path));
+  }
+
+  public synchronized IParsableResource getOrCreateResource(IProjectContentResource resourceKey) {
 
     //
     Resource resource = _storedResourcesMap.get(resourceKey);
@@ -184,7 +212,7 @@ public class ResourceCache implements IResourceCache {
   }
 
   @Deprecated
-  public Map<IResourceKey, Resource> getResourceMap() {
+  public Map<IProjectContentResource, Resource> getResourceMap() {
     return _newResourceMap;
   }
 
@@ -205,7 +233,7 @@ public class ResourceCache implements IResourceCache {
    * @param key
    * @param resource
    */
-  public void addToStoredResourcesMap(IResourceKey key, Resource resource) {
+  public void addToStoredResourcesMap(IProjectContentResource key, Resource resource) {
     _storedResourcesMap.put(key, resource);
   }
 
@@ -222,7 +250,7 @@ public class ResourceCache implements IResourceCache {
     _typeMap.clear();
 
     //
-    for (IResource resource : fileBasedContent.getBinaryResources()) {
+    for (IProjectContentResource resource : fileBasedContent.getBinaryResources()) {
 
       Resource storedResource = _storedResourcesMap.get(resource);
 
@@ -235,7 +263,7 @@ public class ResourceCache implements IResourceCache {
     }
 
     //
-    for (IResource resource : fileBasedContent.getSourceResources()) {
+    for (IProjectContentResource resource : fileBasedContent.getSourceResources()) {
 
       Resource storedResource = _storedResourcesMap.get(resource);
 
@@ -259,9 +287,9 @@ public class ResourceCache implements IResourceCache {
     _typeMap.clear();
   }
 
-  public Map<IResourceKey, Resource> getCombinedMap() {
+  public Map<IProjectContentResource, Resource> getCombinedMap() {
 
-    Map<IResourceKey, Resource> result = new HashMap<IResourceKey, Resource>();
+    Map<IProjectContentResource, Resource> result = new HashMap<IProjectContentResource, Resource>();
 
     result.putAll(_storedResourcesMap);
     result.putAll(_newResourceMap);

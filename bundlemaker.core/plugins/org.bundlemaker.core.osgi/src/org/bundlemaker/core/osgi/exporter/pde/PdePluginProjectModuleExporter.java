@@ -18,13 +18,13 @@ import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ITemplateProvider;
 import org.bundlemaker.core.exporter.util.Helper;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.osgi.exporter.AbstractManifestAwareExporter;
 import org.bundlemaker.core.osgi.internal.Activator;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -104,7 +104,7 @@ public class PdePluginProjectModuleExporter extends AbstractManifestAwareExporte
    * {@inheritDoc}
    */
   @Override
-  public boolean canExport(IModularizedSystem modularizedSystem, IResourceModule module, IModuleExporterContext context) {
+  public boolean canExport(IModularizedSystem modularizedSystem, IModule module, IModuleExporterContext context) {
 
     //
     return !module.getResources(ProjectContentType.SOURCE).isEmpty();
@@ -165,7 +165,7 @@ public class PdePluginProjectModuleExporter extends AbstractManifestAwareExporte
     IFolder srcFolder = project.getFolder(SRC_DIRECTORY_NAME);
 
     // copy the source
-    for (IResource resourceStandin : getCurrentModule().getResources(ProjectContentType.SOURCE)) {
+    for (IModuleResource resourceStandin : getCurrentModule().getResources(ProjectContentType.SOURCE)) {
 
       if (!resourceStandin.getPath().startsWith("META-INF")) {
 

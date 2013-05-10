@@ -25,7 +25,6 @@ import org.bundlemaker.core.exporter.IModuleExporter;
 import org.bundlemaker.core.jdt.exporter.JdtProjectExporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.exporter.pde.PdePluginProjectModuleExporter;
 import org.bundlemaker.core.osgi.manifest.CustomManifestCreator;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -73,24 +72,21 @@ public class JdtProjectExportHandler extends AbstractExportHandler {
             final IModuleArtifact jdkModule = AnalysisModelQueries.getJreModuleArtifact(module);
 
             IModule associatedModule = module.getAssociatedModule();
-            if (associatedModule instanceof IResourceModule) {
-              IResourceModule resourceModule = (IResourceModule) associatedModule;
-              if (jdtProjectExporter.canExport(modularizedSystem, resourceModule, exporterContext)) {
+            if (jdtProjectExporter.canExport(modularizedSystem, associatedModule, exporterContext)) {
 
-                Collection<IDependency> dependenciesTo = module.getDependenciesTo();
+              Collection<IDependency> dependenciesTo = module.getDependenciesTo();
 
-                Set<IModuleArtifact> referencedModules = new HashSet<IModuleArtifact>();
+              Set<IModuleArtifact> referencedModules = new HashSet<IModuleArtifact>();
 
-                for (IDependency dependency : dependenciesTo) {
-                  IModuleArtifact refModule = dependency.getTo().getParent(IModuleArtifact.class);
-                  if (refModule != null && !module.equals(refModule) && !jdkModule.equals(refModule)) {
-                    referencedModules.add(refModule);
-                  }
+              for (IDependency dependency : dependenciesTo) {
+                IModuleArtifact refModule = dependency.getTo().getParent(IModuleArtifact.class);
+                if (refModule != null && !module.equals(refModule) && !jdkModule.equals(refModule)) {
+                  referencedModules.add(refModule);
                 }
-
-                jdtProjectExporter.setReferencedModules(referencedModules);
-                jdtProjectExporter.export(modularizedSystem, resourceModule, exporterContext, subMonitor.newChild(1));
               }
+
+              jdtProjectExporter.setReferencedModules(referencedModules);
+              jdtProjectExporter.export(modularizedSystem, associatedModule, exporterContext, subMonitor.newChild(1));
             }
           }
         } catch (Exception ex) {

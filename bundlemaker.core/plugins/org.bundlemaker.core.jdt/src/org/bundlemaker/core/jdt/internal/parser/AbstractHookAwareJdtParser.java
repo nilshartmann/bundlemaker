@@ -16,7 +16,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.jdt.parser.IJdtSourceParserHook;
 import org.bundlemaker.core.parser.AbstractParser;
 import org.bundlemaker.core.parser.IParser;
-import org.bundlemaker.core.resource.IResourceKey;
+import org.bundlemaker.core.resource.IProjectContentResource;
 import org.bundlemaker.core.util.ExtensionRegistryTracker;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -88,7 +88,7 @@ public abstract class AbstractHookAwareJdtParser extends AbstractParser implemen
    * @param iCompilationUnit
    * @param compilationUnit
    */
-  protected final void callSourceParserHooks(IResourceKey resourceKey, CompilationUnit compilationUnit) {
+  protected final void callSourceParserHooks(IProjectContentResource resourceKey, CompilationUnit compilationUnit) {
 
     //
     Assert.isNotNull(_currentHooks);

@@ -18,7 +18,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.bundlemaker.core.internal.modules.TypeModule;
+import org.bundlemaker.core._type.IReference;
+import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.internal.modules.event.ClassificationChangedEvent;
 import org.bundlemaker.core.internal.modules.event.GroupChangedEvent;
 import org.bundlemaker.core.internal.modules.event.IModularizedSystemChangedListener;
@@ -26,18 +28,14 @@ import org.bundlemaker.core.internal.modules.event.ModuleClassificationChangedEv
 import org.bundlemaker.core.internal.modules.event.ModuleIdentifierChangedEvent;
 import org.bundlemaker.core.internal.modules.event.ModuleMovedEvent;
 import org.bundlemaker.core.internal.modules.event.MovableUnitMovedEvent;
-import org.bundlemaker.core.internal.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
 import org.bundlemaker.core.internal.resource.Resource;
-import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IMovableUnit;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
 
@@ -51,25 +49,25 @@ import org.eclipse.core.runtime.Assert;
 public abstract class AbstractCachingModularizedSystem extends AbstractTransformationAwareModularizedSystem {
 
   /** type name -> type */
-  private GenericCache<String, Set<IType>>              _typeNameToTypeCache;
+  private GenericCache<String, Set<IType>>        _typeNameToTypeCache;
 
   /** type name -> referring type */
-  private GenericCache<String, Set<IType>>              _typeNameToReferringCache;
+  private GenericCache<String, Set<IType>>        _typeNameToReferringCache;
 
   /** resource -> resource module */
-  private GenericCache<IResource, Set<IResourceModule>> _resourceToResourceModuleCache;
+  private GenericCache<IModuleResource, Set<IModule>>   _resourceToResourceModuleCache;
 
   /** type -> module */
-  private GenericCache<IType, Set<IModule>>             _typeToModuleCache;
+  private GenericCache<IType, Set<IModule>>       _typeToModuleCache;
 
   /** - */
-  private List<IModularizedSystemChangedListener>       _changedListeners;
+  private List<IModularizedSystemChangedListener> _changedListeners;
 
   /** - */
-  private boolean                                       _isModelModifiedNotificationDisabled = false;
+  private boolean                                 _isModelModifiedNotificationDisabled = false;
 
   /** - */
-  private boolean                                       _handleModelModification             = true;
+  private boolean                                 _handleModelModification             = true;
 
   /**
    * <p>
@@ -118,16 +116,16 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * 
    * @return
    */
-  protected final GenericCache<IResource, Set<IResourceModule>> getResourceToResourceModuleCache() {
+  protected final GenericCache<IModuleResource, Set<IModule>> getResourceToResourceModuleCache() {
 
     //
     if (_resourceToResourceModuleCache == null) {
 
       // create _resourceToResourceModuleCache
-      _resourceToResourceModuleCache = new GenericCache<IResource, Set<IResourceModule>>() {
+      _resourceToResourceModuleCache = new GenericCache<IModuleResource, Set<IModule>>() {
         @Override
-        protected Set<IResourceModule> create(IResource resource) {
-          return new HashSet<IResourceModule>();
+        protected Set<IModule> create(IModuleResource resource) {
+          return new HashSet<IModule>();
         }
       };
     }
@@ -240,11 +238,11 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * @param resourceModule
    * @param action
    */
-  public void resourcesChanged(Collection<? extends IResource> resources, IResourceModule resourceModule,
+  public void resourcesChanged(Collection<? extends IModuleResource> resources, IModule resourceModule,
       ChangeAction action) {
 
     // iterate over all the resources...
-    for (IResource resource : resources) {
+    for (IModuleResource resource : resources) {
 
       // ... and handle them
       internalResourceChanged(resource, resourceModule, action);
@@ -277,7 +275,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * @param resourceModule
    * @param action
    */
-  public void resourceChanged(IResource resource, IResourceModule resourceModule, ChangeAction action) {
+  public void resourceChanged(IModuleResource resource, IModule resourceModule, ChangeAction action) {
     internalResourceChanged(resource, resourceModule, action);
   }
 
@@ -299,7 +297,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * {@inheritDoc}
    */
   @Override
-  protected void resourceModuleAdded(IModifiableResourceModule resourceModule) {
+  protected void resourceModuleAdded(IModifiableModule resourceModule) {
 
     Assert.isNotNull(resourceModule);
 
@@ -307,7 +305,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     fireModuleChanged(resourceModule, ChangeAction.ADDED);
 
     //
-    for (IResource resource : resourceModule.getResources(ProjectContentType.SOURCE)) {
+    for (IModuleResource resource : resourceModule.getResources(ProjectContentType.SOURCE)) {
       internalResourceChanged(resource, resourceModule, ChangeAction.ADDED);
 
       //
@@ -317,7 +315,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     }
 
     //
-    for (IResource resource : resourceModule.getResources(ProjectContentType.BINARY)) {
+    for (IModuleResource resource : resourceModule.getResources(ProjectContentType.BINARY)) {
       internalResourceChanged(resource, resourceModule, ChangeAction.ADDED);
 
       //
@@ -331,12 +329,12 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * {@inheritDoc}
    */
   @Override
-  protected void resourceModuleRemoved(IModifiableResourceModule resourceModule) {
+  protected void resourceModuleRemoved(IModifiableModule resourceModule) {
 
     Assert.isNotNull(resourceModule);
 
     //
-    for (IResource resource : resourceModule.getResources(ProjectContentType.SOURCE)) {
+    for (IModuleResource resource : resourceModule.getResources(ProjectContentType.SOURCE)) {
       internalResourceChanged(resource, resourceModule, ChangeAction.REMOVED);
 
       //
@@ -346,7 +344,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     }
 
     //
-    for (IResource resource : resourceModule.getResources(ProjectContentType.BINARY)) {
+    for (IModuleResource resource : resourceModule.getResources(ProjectContentType.BINARY)) {
       internalResourceChanged(resource, resourceModule, ChangeAction.REMOVED);
 
       //
@@ -359,23 +357,23 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     fireModuleChanged(resourceModule, ChangeAction.REMOVED);
   }
 
-  @Override
-  protected void typeModuleAdded(TypeModule module) {
-    Assert.isNotNull(module);
-
-    for (IType type : module.getContainedTypes()) {
-      internalTypeChanged(type, module, ChangeAction.ADDED);
-    }
-  }
-
-  @Override
-  protected void typeModuleRemoved(TypeModule module) {
-    Assert.isNotNull(module);
-
-    for (IType type : module.getContainedTypes()) {
-      internalTypeChanged(type, module, ChangeAction.REMOVED);
-    }
-  }
+  // @Override
+  // protected void typeModuleAdded(IModule module) {
+  // Assert.isNotNull(module);
+  //
+  // for (IType type : module.getContainedTypes()) {
+  // internalTypeChanged(type, module, ChangeAction.ADDED);
+  // }
+  // }
+  //
+  // @Override
+  // protected void typeModuleRemoved(TypeModule module) {
+  // Assert.isNotNull(module);
+  //
+  // for (IType type : module.getContainedTypes()) {
+  // internalTypeChanged(type, module, ChangeAction.REMOVED);
+  // }
+  // }
 
   @Override
   protected void groupAdded(IGroup group) {
@@ -400,7 +398,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * @param resource
    * @return
    */
-  public IResourceModule getAssociatedResourceModule(IResource resource) {
+  public IModule getAssociatedResourceModule(IModuleResource resource) {
 
     Assert.isNotNull(resource);
 
@@ -409,7 +407,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     }
 
     //
-    Set<IResourceModule> resourceModules = _resourceToResourceModuleCache.get(resource);
+    Set<IModule> resourceModules = _resourceToResourceModuleCache.get(resource);
 
     //
     if (resourceModules == null || resourceModules.isEmpty()) {
@@ -418,7 +416,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
       throw new RuntimeException(String.format("Resource '%s' is contained in multiple ResourceModules: %s.", resource,
           resourceModules));
     } else {
-      return resourceModules.toArray(new IResourceModule[0])[0];
+      return resourceModules.toArray(new IModule[0])[0];
     }
   }
 
@@ -563,7 +561,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     }
   }
 
-  private void internalResourceChanged(IResource resource, IResourceModule resourceModule, ChangeAction action) {
+  private void internalResourceChanged(IModuleResource resource, IModule resourceModule, ChangeAction action) {
 
     // step 1: add/remove to resource map
     switch (action) {
@@ -572,7 +570,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
       break;
     }
     case REMOVED: {
-      Set<IResourceModule> resourceModules = _resourceToResourceModuleCache.get(resource);
+      Set<IModule> resourceModules = _resourceToResourceModuleCache.get(resource);
       if (resourceModules != null) {
         resourceModules.remove(resourceModule);
         if (resourceModules.isEmpty()) {

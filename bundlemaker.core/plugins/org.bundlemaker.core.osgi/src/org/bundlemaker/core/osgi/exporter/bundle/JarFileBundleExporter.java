@@ -26,15 +26,15 @@ import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ITemplateProvider;
 import org.bundlemaker.core.exporter.util.ModuleExporterUtils;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.osgi.exporter.AbstractManifestAwareExporter;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.osgi.utils.JarFileManifestWriter;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IReadableResource;
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.util.JarFileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -137,7 +137,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
    */
   private Manifest createSourceManifest() {
     
-    IResourceModule currentModule = getCurrentModule();
+    IModule currentModule = getCurrentModule();
     String sourceBundleName = currentModule.getModuleIdentifier().getName()+".source";
     String bundleVersion = currentModule.getModuleIdentifier().getVersion();
 
@@ -173,18 +173,18 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
           getCurrentContext());
 
       //
-      Set<IReadableResource> resourceKeys = getTemplateProvider().getAdditionalResources(getCurrentModule(),
+      Set<IResource> resourceKeys = getTemplateProvider().getAdditionalResources(getCurrentModule(),
           getCurrentModularizedSystem(), getCurrentContext());
 
-      Set<IReadableResource> additionalResources;
+      Set<IResource> additionalResources;
 
       if (isIncludeSources()) {
-        additionalResources = new HashSet<IReadableResource>();
+        additionalResources = new HashSet<IResource>();
         // add files from template provider
         additionalResources.addAll(resourceKeys);
         
         // add sources
-        Set<IResource> sources = getCurrentModule().getResources(ProjectContentType.SOURCE);
+        Set<? extends IModuleResource> sources = getCurrentModule().getResources(ProjectContentType.SOURCE);
         additionalResources.addAll(wrapSourceResources(sources));
       } else {
         
@@ -215,27 +215,17 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
    * @param sources
    * @return
    */
-  private Collection<? extends IReadableResource> wrapSourceResources(Set<IResource> sources) {
+  private Collection<? extends IResource> wrapSourceResources(Set<? extends IModuleResource> sources) {
     
-    Set<IReadableResource> movedSources = new HashSet<IReadableResource>();
+    Set<IResource> movedSources = new HashSet<IResource>();
     
     // wrap sources in new IReadableResource that has it's path pointing to OSGI-OPT/src
-    for (final IReadableResource source : sources) {
-      final IReadableResource movedSource = new IReadableResource() {
-        
-        @Override
-        public boolean isValidJavaPackage() {
-          return source.isValidJavaPackage();
-        }
+    for (final IResource source : sources) {
+      final IResource movedSource = new IResource() {
         
         @Override
         public String getPath() {
           return "OSGI-OPT/src/" + source.getPath();
-        }
-        
-        @Override
-        public String getPackageName() {
-          return source.getPackageName();
         }
         
         @Override
@@ -273,7 +263,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
    * @return
    * @throws Exception
    */
-  protected OutputStream createOutputStream(IModularizedSystem modularizedSystem, IResourceModule module,
+  protected OutputStream createOutputStream(IModularizedSystem modularizedSystem, IModule module,
       IModuleExporterContext context) throws Exception {
 
     File targetFile = getDestinationJarFile();
@@ -311,7 +301,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
     return getDestinationFile(computeSourceJarFileName(getCurrentModule()));
   }
   
-  protected String computeSourceJarFileName(IResourceModule module) {
+  protected String computeSourceJarFileName(IModule module) {
     return module.getModuleIdentifier().getName() + ".source_" + module.getModuleIdentifier().getVersion() + ".jar";
   }
 
@@ -322,7 +312,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
    * @param module
    * @return
    */
-  protected String computeJarFileName(IResourceModule module) {
+  protected String computeJarFileName(IModule module) {
 
     //
     return module.getModuleIdentifier().getName() + "_" + module.getModuleIdentifier().getVersion() + ".jar";

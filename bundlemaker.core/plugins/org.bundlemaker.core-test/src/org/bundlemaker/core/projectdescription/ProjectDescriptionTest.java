@@ -5,7 +5,6 @@ import junit.framework.Assert;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.internal.projectdescription.gson.GsonProjectDescriptionHelper;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
-import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
 import org.junit.Test;
 
 public class ProjectDescriptionTest {

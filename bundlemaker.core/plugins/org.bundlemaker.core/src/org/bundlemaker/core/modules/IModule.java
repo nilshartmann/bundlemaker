@@ -10,8 +10,15 @@
  ******************************************************************************/
 package org.bundlemaker.core.modules;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.bundlemaker.core.IGenericAdaptable;
+import org.bundlemaker.core._type.IReference;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.IPath;
 
 /**
@@ -20,7 +27,7 @@ import org.eclipse.core.runtime.IPath;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IModule extends ITypeContainer {
+public interface IModule extends IGenericAdaptable {
 
   /**
    * <p>
@@ -77,4 +84,67 @@ public interface IModule extends ITypeContainer {
    * @return the user attributes.
    */
   Map<String, Object> getUserAttributes();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  @Deprecated
+  boolean isResourceModule();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean containsSources();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param path
+   * @param contentType
+   * @return
+   */
+  boolean containsResource(String path, ProjectContentType contentType);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param path
+   * @param conentType
+   * @return
+   */
+  IModuleResource getResource(String path, ProjectContentType conentType);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param conentType
+   * @return
+   */
+  Set<? extends IModuleResource> getResources(ProjectContentType conentType);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  List<IMovableUnit> getMovableUnits();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param excludeContainedTypes
+   * @return
+   */
+  Set<IReference> getReferences();
 }

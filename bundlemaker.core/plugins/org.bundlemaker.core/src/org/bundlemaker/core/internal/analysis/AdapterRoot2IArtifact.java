@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
@@ -21,8 +22,8 @@ import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.cache.TypeKey;
 import org.bundlemaker.core.internal.analysis.cache.impl.ModuleSubCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.TypeSubCache;
-import org.bundlemaker.core.internal.modules.AbstractModule;
 import org.bundlemaker.core.internal.modules.Group;
+import org.bundlemaker.core.internal.modules.Module;
 import org.bundlemaker.core.internal.modules.event.ClassificationChangedEvent;
 import org.bundlemaker.core.internal.modules.event.GroupChangedEvent;
 import org.bundlemaker.core.internal.modules.event.IModularizedSystemChangedListener;
@@ -33,9 +34,8 @@ import org.bundlemaker.core.internal.modules.event.MovableUnitMovedEvent;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IMovableUnit;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -183,7 +183,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
    * {@inheritDoc}
    */
   @Override
-  public IResourceArtifact getResourceArtifact(IResource resource) {
+  public IResourceArtifact getResourceArtifact(IModuleResource resource) {
     return _artifactCache.getResourceCache().get(resource);
   }
 
@@ -326,7 +326,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
     if (configuration.isBinaryContent() && movableUnit.hasAssociatedBinaryResources()) {
 
       // iterate over the associated binary resources
-      for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
+      for (IModuleResource resource : movableUnit.getAssociatedBinaryResources()) {
         _addResource(resource);
       }
     }
@@ -340,7 +340,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
     else if (configuration.isSourceContent() && movableUnit.hasAssociatedBinaryResources()) {
 
       // iterate over the associated binary resources
-      for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
+      for (IModuleResource resource : movableUnit.getAssociatedBinaryResources()) {
         _addResource(resource);
       }
     }
@@ -365,7 +365,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
     handleModelModification();
   }
 
-  private void _addResource(IResource resource) {
+  private void _addResource(IModuleResource resource) {
 
     // skip local or anonymous types (no 'Bla$1.class' resources)
     if (resource.hasPrimaryType() && resource.getPrimaryType().isLocalOrAnonymousType()) {
@@ -405,7 +405,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
 
     if (configuration.isBinaryContent() && movableUnit.hasAssociatedBinaryResources()
     /* && ( configuration.containsAllResources() || !movableUnit.hasAssociatedTypes()) */) {
-      for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
+      for (IModuleResource resource : movableUnit.getAssociatedBinaryResources()) {
         IBundleMakerArtifact artifact = _artifactCache.getResourceCache().get(resource);
 
         if (artifact != null && artifact.getParent() != null) {
@@ -414,7 +414,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
       }
     } else if (configuration.isSourceContent() && movableUnit.hasAssociatedSourceResource()
     /* && ( configuration.containsAllResources() || !movableUnit.hasAssociatedTypes()) */) {
-      IResource resource = movableUnit.getAssociatedSourceResource();
+      IModuleResource resource = movableUnit.getAssociatedSourceResource();
       IBundleMakerArtifact artifact = _artifactCache.getResourceCache().get(resource);
 
       if (artifact != null && artifact.getParent() != null) {
@@ -508,7 +508,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
             module));
 
     //
-    Group classification = ((AbstractModule<?, ?>) module).getClassificationGroup();
+    Group classification = ((Module) module).getClassificationGroup();
 
     if (classification != null) {
       IGroupAndModuleContainer groupArtifact = _artifactCache.getGroupCache().getOrCreate(classification);

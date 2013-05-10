@@ -16,13 +16,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.modules.ITypeSelector;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.internal.modules.event.IModularizedSystemChangedListener;
 import org.bundlemaker.core.modules.transformation.ITransformation;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -90,22 +89,6 @@ public interface IModularizedSystem {
 
   /**
    * <p>
-   * </p>
-   * 
-   * @param listener
-   */
-  void addModularizedSystemChangedListener(IModularizedSystemChangedListener listener);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param listener
-   */
-  void removeModularizedSystemChangedListener(IModularizedSystemChangedListener listener);
-
-  /**
-   * <p>
    * Returns the unmodifiable list of all transformations.
    * </p>
    * 
@@ -170,7 +153,7 @@ public interface IModularizedSystem {
    * 
    * @return all contained modules.
    */
-  Collection<IModule> getAllModules();
+  Collection<IModule> getModules();
 
   /**
    * <p>
@@ -212,120 +195,6 @@ public interface IModularizedSystem {
    */
   Collection<IModule> getModules(String name);
 
-  /**
-   * <p>
-   * Returns the {@link IResourceModule} with the given identifier. This method is a convenience method and fully
-   * equivalent to:
-   * 
-   * <code>
-   * <pre>
-   * IModule module = getModule(...);
-   * 
-   * if (module instanceof IResourceModule) {
-   * 	 
-   *    IResourceModule resourceModule = (IResourceModule) module;
-   *    
-   *    ...
-   * 
-   * }
-   * </pre>
-   * </code>
-   * 
-   * </p>
-   * 
-   * @param identifier
-   * @return
-   */
-  IResourceModule getResourceModule(IModuleIdentifier identifier);
-
-  /**
-   * <p>
-   * Returns the {@link IResourceModule} with the given name and the given version. If this {@link IModularizedSystem}
-   * doesn't contain a {@link IResourceModule} with the specified name and version, <code>null</code> will be returned.
-   * </p>
-   * <p>
-   * This is a convenience method and fully equivalent to: <code><pre>
-   * getResourceModule(new ModuleIdentifier(name, version));
-   *  </pre></code>
-   * </p>
-   * 
-   * @param name
-   * @param version
-   * @return
-   */
-  IResourceModule getResourceModule(String name, String version);
-
-  /**
-   * <p>
-   * Returns all contained {@link IModule ITypeModules}.
-   * </p>
-   * 
-   * @return
-   */
-  Collection<IModule> getNonResourceModules();
-
-  /**
-   * <p>
-   * Returns all contained {@link IResourceModule IResourceModules}.
-   * </p>
-   * 
-   * @return
-   */
-  Collection<IResourceModule> getResourceModules();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  @Deprecated
-  Set<IType> getTypes();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param fullyQualifiedName
-   * @return
-   */
-  @Deprecated
-  Set<IType> getTypes(String fullyQualifiedName);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param fullyQualifiedName
-   * @param referencingModule
-   * @return
-   */
-  @Deprecated
-  Set<IType> getTypes(String fullyQualifiedName, IResourceModule referencingModule);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param fullyQualifiedName
-   * @return
-   * @throws AmbiguousElementException
-   */
-  @Deprecated
-  IType getType(String fullyQualifiedName);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param fullyQualifiedName
-   * @param referencingModule
-   * @return
-   * @throws AmbiguousElementException
-   */
-  @Deprecated
-  IType getType(String fullyQualifiedName, IResourceModule referencingModule) throws AmbiguousElementException;
-
   /******************************************************************************/
 
   /**
@@ -337,10 +206,12 @@ public interface IModularizedSystem {
   @Deprecated
   public List<ITypeSelector> getTypeSelectors();
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   @Deprecated
-  Set<IReference> getUnsatisfiedReferences(IResourceModule resourceModule);
-
-  @Deprecated
-  Map<String, Set<IType>> getReferencedTypes();
-
+  Set<IType> getTypes();
 }

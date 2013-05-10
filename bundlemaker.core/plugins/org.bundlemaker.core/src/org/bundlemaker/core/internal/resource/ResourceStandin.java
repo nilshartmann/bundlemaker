@@ -14,14 +14,15 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bundlemaker.core._type.IReference;
+import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.resource.ResourceKey;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleResource;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
 /**
@@ -30,13 +31,28 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ResourceStandin extends ResourceKey implements IResourceStandin {
+public class ResourceStandin extends DefaultProjectContentResource implements IResourceStandin {
 
   /** - */
   private Resource       _resource;
 
   /** - */
-  private Set<IResource> _stickyResourceStandins;
+  private Set<IModuleResource> _stickyResourceStandins;
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link ResourceStandin}.
+   * </p>
+   * 
+   * @param resource
+   */
+  public ResourceStandin(Resource resource) {
+
+    this(nullCheck(resource).getProjectContentEntryId(), nullCheck(resource).getRoot(), nullCheck(resource).getPath());
+
+    resource.setResourceStandin(this);
+    setResource(resource);
+  }
 
   /**
    * <p>
@@ -53,13 +69,13 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
   }
 
   @Override
-  public IResourceModule getAssociatedResourceModule(IModularizedSystem modularizedSystem) {
+  public IModule getModule(IModularizedSystem modularizedSystem) {
 
     //
     return ((ModularizedSystem) modularizedSystem).getAssociatedResourceModule(this);
   }
 
-  public IResource getResource() {
+  public IModuleResource getResource() {
     return _resource;
   }
 
@@ -74,7 +90,7 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
   }
 
   @Override
-  public int compareTo(IResource other) {
+  public int compareTo(IModuleResource other) {
 
     if (!getProjectContentEntryId().equals(other.getProjectContentEntryId())) {
       return getProjectContentEntryId().compareTo(other.getProjectContentEntryId());
@@ -89,6 +105,24 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
     return 0;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IMovableUnit getMovableUnit(IModularizedSystem modularizedSystem) {
+
+    //
+    if (_resource == null) {
+      // TODO
+      throw new RuntimeException();
+    }
+
+    return _resource.getMovableUnit(modularizedSystem);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Set<IReference> getReferences() {
 
@@ -164,7 +198,7 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
   }
 
   @Override
-  public Set<IResource> getStickyResources() {
+  public Set<IModuleResource> getStickyResources() {
 
     //
     if (_resource == null) {
@@ -180,14 +214,26 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
     if (_stickyResourceStandins == null) {
 
       // create new set
-      _stickyResourceStandins = new HashSet<IResource>();
+      _stickyResourceStandins = new HashSet<IModuleResource>();
 
       // add resource standins
-      for (IResource resource : _resource.getStickyResources()) {
+      for (IModuleResource resource : _resource.getStickyResources()) {
         _stickyResourceStandins.add(((Resource) resource).getResourceStandin());
       }
     }
 
     return _stickyResourceStandins;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resource
+   * @return
+   */
+  private static Resource nullCheck(Resource resource) {
+    Assert.isNotNull(resource, "Parameter resource must not be null.");
+    return resource;
   }
 }

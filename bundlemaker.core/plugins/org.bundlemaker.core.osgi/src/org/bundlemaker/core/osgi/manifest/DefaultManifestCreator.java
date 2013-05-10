@@ -14,7 +14,6 @@ import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.utils.ArtifactUtils;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.util.collections.GenericCache;

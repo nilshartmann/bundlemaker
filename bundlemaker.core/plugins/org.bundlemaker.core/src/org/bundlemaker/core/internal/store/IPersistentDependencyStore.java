@@ -11,12 +11,12 @@
 package org.bundlemaker.core.internal.store;
 
 import org.bundlemaker.core.internal.resource.Resource;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.modifiable.IModifiableResource;
+import org.bundlemaker.core.resource.IParsableResource;
+import org.bundlemaker.core.resource.IModuleResource;
 
 /**
  * <p>
- * Extends the {@link IDependencyStore} and adds some methods that allows to add and update {@link IResource IResources}
+ * Extends the {@link IDependencyStore} and adds some methods that allows to add and update {@link IModuleResource IResources}
  * .
  * </p>
  * 
@@ -32,7 +32,7 @@ public interface IPersistentDependencyStore extends IDependencyStore {
    * @param resource
    *          the {@link Resource} to add/update
    */
-  void updateResource(IModifiableResource resource);
+  void updateResource(IParsableResource resource);
 
   /**
    * <p>

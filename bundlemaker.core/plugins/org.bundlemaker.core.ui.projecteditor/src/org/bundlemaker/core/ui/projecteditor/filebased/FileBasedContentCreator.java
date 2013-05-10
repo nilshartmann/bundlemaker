@@ -7,8 +7,8 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.VariablePath;
-import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
 import org.bundlemaker.core.util.IFileBasedProjectContentInfo;
 
 /**

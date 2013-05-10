@@ -14,12 +14,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-import org.bundlemaker.core.resource.ReferenceType;
-import org.bundlemaker.core.resource.TypeEnum;
-import org.bundlemaker.core.resource.modifiable.IModifiableResource;
-import org.bundlemaker.core.resource.modifiable.IModifiableType;
-import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
-import org.bundlemaker.core.util.JavaTypeUtils;
+import org.bundlemaker.core._type.ReferenceType;
+import org.bundlemaker.core._type.TypeEnum;
+import org.bundlemaker.core._type.modifiable.IModifiableType;
+import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
+import org.bundlemaker.core._type.utils.JavaTypeUtils;
+import org.bundlemaker.core.resource.IParsableResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IType;
@@ -75,7 +75,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 public class JdtAstVisitor extends ASTVisitor {
 
   /** - */
-  private IModifiableResource    _javaSourceResource;
+  private IParsableResource    _javaSourceResource;
 
   /** - */
   private Stack<IModifiableType> _currentTypes;
@@ -100,7 +100,7 @@ public class JdtAstVisitor extends ASTVisitor {
    * @param javaSourceResource
    * @param mapTypeInfo
    */
-  public JdtAstVisitor(IModifiableResource javaSourceResource) {
+  public JdtAstVisitor(IParsableResource javaSourceResource) {
     Assert.isNotNull(javaSourceResource);
 
     _javaSourceResource = javaSourceResource;

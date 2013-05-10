@@ -22,11 +22,11 @@ import org.bundlemaker.core.exporter.AbstractExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ITemplateProvider;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.mvn.content.MvnArtifactType;
 import org.bundlemaker.core.mvn.internal.MvnArtifactConverter;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -69,7 +69,7 @@ public class MvnProjectModuleExporter extends AbstractExporter {
    * {@inheritDoc}
    */
   @Override
-  public boolean canExport(IModularizedSystem modularizedSystem, IResourceModule module, IModuleExporterContext context) {
+  public boolean canExport(IModularizedSystem modularizedSystem, IModule module, IModuleExporterContext context) {
     return !module.getResources(ProjectContentType.SOURCE).isEmpty();
   }
 
@@ -104,7 +104,7 @@ public class MvnProjectModuleExporter extends AbstractExporter {
     File resourceJavaDirectory = new File(versionDirectory, SRC_RESOUCRCES_DIRECTORY_NAME);
 
     // copy the source
-    for (IResource resource : getCurrentModule().getResources(ProjectContentType.SOURCE)) {
+    for (IModuleResource resource : getCurrentModule().getResources(ProjectContentType.SOURCE)) {
 
       if (!resource.getPath().startsWith("META-INF")) {
 

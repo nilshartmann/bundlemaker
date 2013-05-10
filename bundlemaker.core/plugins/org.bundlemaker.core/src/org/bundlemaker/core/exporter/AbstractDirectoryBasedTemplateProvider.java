@@ -4,10 +4,10 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bundlemaker.core.internal.resource.DefaultProjectContentResource;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.resource.IReadableResource;
-import org.bundlemaker.core.resource.ResourceKey;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -81,7 +81,7 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
    * {@inheritDoc}
    */
   @Override
-  public T getTemplate(IResourceModule module, IModularizedSystem modularizedSystem,
+  public T getTemplate(IModule module, IModularizedSystem modularizedSystem,
       IModuleExporterContext context) {
 
     //
@@ -106,7 +106,7 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
    * {@inheritDoc}
    */
   @Override
-  public Set<IReadableResource> getAdditionalResources(IResourceModule resourceModule,
+  public Set<IResource> getAdditionalResources(IModule resourceModule,
       IModularizedSystem currentModularizedSystem, IModuleExporterContext currentContext) {
 
     // step 1a: get the current root directory
@@ -122,7 +122,7 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
    * 
    * @return
    */
-  private File getTemplateFile(IResourceModule resourceModule) {
+  private File getTemplateFile(IModule resourceModule) {
 
     Assert.isNotNull(resourceModule);
 
@@ -177,7 +177,7 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
    * 
    * @return
    */
-  public final boolean hasModuleTemplateDirectory(IResourceModule resourceModule) {
+  public final boolean hasModuleTemplateDirectory(IModule resourceModule) {
 
     Assert.isNotNull(resourceModule);
 
@@ -190,7 +190,7 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
    * 
    * @return
    */
-  public File getModuleTemplateDirectory(IResourceModule resourceModule) {
+  public File getModuleTemplateDirectory(IModule resourceModule) {
 
     //
     Assert.isNotNull(resourceModule);
@@ -221,10 +221,10 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
    * @param templateDirectory
    * @return
    */
-  private Set<IReadableResource> getAdditionalResources(File templateDirectory) {
+  private Set<IResource> getAdditionalResources(File templateDirectory) {
 
     //
-    Set<IReadableResource> result = new HashSet<IReadableResource>();
+    Set<IResource> result = new HashSet<IResource>();
 
     if (templateDirectory == null) {
       return result;
@@ -235,7 +235,7 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
       for (String child : FileUtils.getAllChildren(templateDirectory)) {
 
         // create the resource standin
-        IReadableResource resourceKey = new ResourceKey("ADDITIONAL_CONTENT_DUMMY_ID",
+        IResource resourceKey = new DefaultProjectContentResource("ADDITIONAL_CONTENT_DUMMY_ID",
             templateDirectory.getAbsolutePath(),
             child);
 
@@ -258,13 +258,13 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
    * @param contentProvider
    * @return
    */
-  protected Set<IReadableResource> filterAdditionalResources(Set<IReadableResource> contentProvider) {
+  protected Set<IResource> filterAdditionalResources(Set<IResource> contentProvider) {
 
     //
-    Set<IReadableResource> filteredResult = new HashSet<IReadableResource>();
+    Set<IResource> filteredResult = new HashSet<IResource>();
 
     //
-    for (IReadableResource resourceKey : contentProvider) {
+    for (IResource resourceKey : contentProvider) {
       if (!"manifest.properties".equals(resourceKey.getName())) {
         filteredResult.add(resourceKey);
       }

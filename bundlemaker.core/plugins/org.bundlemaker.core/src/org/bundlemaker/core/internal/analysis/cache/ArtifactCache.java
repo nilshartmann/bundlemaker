@@ -10,6 +10,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.analysis.cache;
 
+import org.bundlemaker.core._type.IReference;
+import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.modules.ITypeModule;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
@@ -24,13 +27,11 @@ import org.bundlemaker.core.internal.analysis.cache.impl.ResourceSubCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.TypeSubCache;
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractModularizedSystem;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -149,7 +150,7 @@ public class ArtifactCache {
     }
 
     // transform the modularized system
-    return transform(_modularizedSystem.getAllModules().toArray(new IModule[0]), progressMonitor);
+    return transform(_modularizedSystem.getModules().toArray(new IModule[0]), progressMonitor);
   }
 
   /**
@@ -188,6 +189,7 @@ public class ArtifactCache {
       }
     } catch (Exception e) {
       e.printStackTrace();
+      System.out.println(type);
       throw new RuntimeException(e.getMessage(), e);
     }
   }
@@ -199,7 +201,7 @@ public class ArtifactCache {
    * @param resource
    * @return
    */
-  public final AdapterResource2IArtifact getResourceArtifact(IResource resource) {
+  public final AdapterResource2IArtifact getResourceArtifact(IModuleResource resource) {
     Assert.isNotNull(resource);
 
     //
@@ -220,7 +222,7 @@ public class ArtifactCache {
   public final ITypeArtifact getTypeArtifact(String fullyQualifiedName, boolean createIfMissing) {
 
     //
-    IType targetType = getModularizedSystem().getType(fullyQualifiedName);
+    IType targetType = ((IModifiableModularizedSystem) getModularizedSystem()).getType(fullyQualifiedName);
 
     //
     if (targetType == null) {
@@ -306,9 +308,9 @@ public class ArtifactCache {
     //
     int count = 0;
     for (IModule module : modules) {
-      count = count + module.getContainedTypes().size();
-      if (module instanceof IResourceModule) {
-        IResourceModule resourceModule = (IResourceModule) module;
+      count = count + module.adaptAs(ITypeModule.class).getContainedTypes().size();
+      if (module instanceof IModifiableModule) {
+        IModifiableModule resourceModule = (IModifiableModule) module;
         count = count + resourceModule.getResources(getConfiguration().getContentType()).size();
       }
     }
@@ -323,8 +325,9 @@ public class ArtifactCache {
 
       // add the
       for (IModule module : modules) {
-        if (module instanceof IResourceModule) {
-          for (IReference iReference : getModularizedSystem().getUnsatisfiedReferences((IResourceModule) module)) {
+        if (module instanceof IModifiableModule) {
+          for (IReference iReference : ((IModifiableModularizedSystem) getModularizedSystem())
+              .getUnsatisfiedReferences((IModifiableModule) module)) {
             getTypeCache().getOrCreate(new TypeKey(iReference.getFullyQualifiedName()));
           }
         }
@@ -338,7 +341,7 @@ public class ArtifactCache {
       this.getModuleArtifact(module);
 
       // add all types
-      for (IType type : module.getContainedTypes()) {
+      for (IType type : ((ITypeModule) module.getAdapter(ITypeModule.class)).getContainedTypes()) {
 
         if (progressMonitor != null) {
           progressMonitor.worked(1);
@@ -353,13 +356,13 @@ public class ArtifactCache {
       }
 
       // cast to 'IResourceModule'
-      if (module instanceof IResourceModule) {
+      if (module instanceof IModifiableModule) {
 
         // get the resource module
-        IResourceModule resourceModule = (IResourceModule) module;
+        IModifiableModule resourceModule = (IModifiableModule) module;
 
         // iterate over all contained resources
-        for (IResource resource : resourceModule.getResources(getConfiguration().getContentType())) {
+        for (IModuleResource resource : resourceModule.getResources(getConfiguration().getContentType())) {
 
           if (progressMonitor != null) {
             progressMonitor.worked(1);

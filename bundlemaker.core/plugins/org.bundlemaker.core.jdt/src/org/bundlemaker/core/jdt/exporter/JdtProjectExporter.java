@@ -18,18 +18,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.exporter.AbstractExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.util.Helper;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -93,7 +90,7 @@ public class JdtProjectExporter extends AbstractExporter {
 	 */
 	@Override
 	public boolean canExport(IModularizedSystem modularizedSystem,
-			IResourceModule module, IModuleExporterContext context) {
+			IModule module, IModuleExporterContext context) {
 
 		//
 		return !module.getResources(ProjectContentType.SOURCE).isEmpty();
@@ -153,7 +150,7 @@ public class JdtProjectExporter extends AbstractExporter {
 		IFolder srcFolder = project.getFolder(SRC_DIRECTORY_NAME);
 
 		// copy the source
-		for (IResource resourceStandin : getCurrentModule().getResources(
+		for (IModuleResource resourceStandin : getCurrentModule().getResources(
 				ProjectContentType.SOURCE)) {
 
 				//

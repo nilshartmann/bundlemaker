@@ -12,12 +12,9 @@ package org.bundlemaker.core.util;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.channels.FileChannel;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
@@ -80,6 +77,18 @@ public class FileUtils {
         //
       }
     }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param instream
+   * @param outstream
+   * @throws IOException
+   */
+  public static final void copy(InputStream instream, OutputStream outstream) throws IOException {
+    copy(instream, outstream, new byte[1024]);
   }
 
   /**

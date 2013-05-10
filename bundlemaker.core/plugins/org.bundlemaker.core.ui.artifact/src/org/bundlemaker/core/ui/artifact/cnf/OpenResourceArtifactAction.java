@@ -2,7 +2,6 @@ package org.bundlemaker.core.ui.artifact.cnf;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.analysis.IResourceArtifactContent;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.artifact.tree.EditorHelper;
 import org.eclipse.jface.action.Action;
@@ -46,7 +45,7 @@ public class OpenResourceArtifactAction extends Action {
       IStructuredSelection sSelection = (IStructuredSelection) selection;
       if (sSelection.size() == 1
           &&
-          (sSelection.getFirstElement() instanceof IResourceArtifact || sSelection.getFirstElement() instanceof IResourceArtifactContent))
+          (sSelection.getFirstElement() instanceof IResourceArtifact || sSelection.getFirstElement() instanceof IResourceArtifact.IResourceArtifactContent))
       {
         //
         IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) sSelection.getFirstElement();

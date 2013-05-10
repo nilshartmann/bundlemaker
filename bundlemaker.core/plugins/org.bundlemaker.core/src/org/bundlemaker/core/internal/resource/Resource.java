@@ -15,17 +15,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.BundleMakerCore;
+import org.bundlemaker.core._type.IReference;
+import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.TypeEnum;
+import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.resource.ResourceKey;
-import org.bundlemaker.core.resource.TypeEnum;
-import org.bundlemaker.core.resource.modifiable.IModifiableResource;
-import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IParsableResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -37,7 +37,7 @@ import org.eclipse.core.runtime.Status;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class Resource extends ResourceKey implements IModifiableResource {
+public class Resource extends DefaultProjectContentResource implements IParsableResource {
 
   /** - */
   private Set<Reference>               _references;
@@ -49,10 +49,13 @@ public class Resource extends ResourceKey implements IModifiableResource {
   private IType                        _primaryType;
 
   /** - */
-  private Set<IModifiableResource>     _stickyResources;
+  private Set<IModuleResource>         _stickyResources;
 
   /** - */
   private boolean                      _erroneous;
+
+  /** - */
+  private long                         _lastTimestamp;
 
   /** - */
   private transient ReferenceContainer _referenceContainer;
@@ -62,6 +65,9 @@ public class Resource extends ResourceKey implements IModifiableResource {
 
   /**  */
   private transient ResourceStandin    _resourceStandin;
+
+  /** - */
+  private transient MovableUnit        _movableUnit;
 
   /**
    * <p>
@@ -99,6 +105,40 @@ public class Resource extends ResourceKey implements IModifiableResource {
    */
   public Resource(String contentId, String root, String path) {
     super(contentId, root, path);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public long getParsedTimestamp() {
+    return _lastTimestamp;
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  public void storeCurrentTimestamp() {
+    _lastTimestamp = getCurrentTimestamp();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IMovableUnit getMovableUnit(IModularizedSystem modularizedSystem) {
+
+    //
+    Assert.isNotNull(modularizedSystem);
+
+    //
+    if (_movableUnit == null) {
+      _movableUnit = MovableUnit.createFromResource(this, modularizedSystem);
+    }
+
+    //
+    return _movableUnit;
   }
 
   /**
@@ -174,8 +214,8 @@ public class Resource extends ResourceKey implements IModifiableResource {
    * {@inheritDoc}
    */
   @Override
-  public Set<IResource> getStickyResources() {
-    Set<? extends IResource> result = stickyResources();
+  public Set<IModuleResource> getStickyResources() {
+    Set<? extends IModuleResource> result = stickyResources();
     return Collections.unmodifiableSet(result);
   }
 
@@ -229,7 +269,7 @@ public class Resource extends ResourceKey implements IModifiableResource {
   }
 
   @Override
-  public void addStickyResource(IModifiableResource stickyResource) {
+  public void addStickyResource(IModuleResource stickyResource) {
     stickyResources().add(stickyResource);
   }
 
@@ -263,7 +303,7 @@ public class Resource extends ResourceKey implements IModifiableResource {
   }
 
   @Override
-  public IResourceModule getAssociatedResourceModule(IModularizedSystem modularizedSystem) {
+  public IModule getModule(IModularizedSystem modularizedSystem) {
 
     //
     if (_resourceStandin == null) {
@@ -275,7 +315,7 @@ public class Resource extends ResourceKey implements IModifiableResource {
   }
 
   @Override
-  public int compareTo(IResource arg0) {
+  public int compareTo(IModuleResource arg0) {
 
     //
     if (_resourceStandin == null) {
@@ -322,10 +362,10 @@ public class Resource extends ResourceKey implements IModifiableResource {
     return _containedTypes;
   }
 
-  private Set<IModifiableResource> stickyResources() {
+  private Set<IModuleResource> stickyResources() {
 
     if (_stickyResources == null) {
-      _stickyResources = new HashSet<IModifiableResource>();
+      _stickyResources = new HashSet<IModuleResource>();
     }
 
     return _stickyResources;
