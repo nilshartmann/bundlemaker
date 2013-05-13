@@ -28,8 +28,8 @@ public class HorizontalSideMarker extends AbstractSideMarker {
    * @param matrixCycleDetector
    * @param colorScheme
    */
-  public HorizontalSideMarker(IDsmContentProvider contentProvider, 
-      ILabelProvider labelProvider, IDsmColorScheme colorScheme) {
+  public HorizontalSideMarker(IDsmContentProvider contentProvider, ILabelProvider labelProvider,
+      IDsmColorScheme colorScheme) {
     super(contentProvider, labelProvider, colorScheme);
   }
 
@@ -122,8 +122,8 @@ public class HorizontalSideMarker extends AbstractSideMarker {
 
         graphics.setForegroundColor(getColorScheme().getSideMarkerTextColor());
 
-        graphics.drawString(getLabelProvider().getText(getContentProvider().getNodes()[i]), new Point(10, (((getContentProvider()
-            .getItemCount() - (i + 1)) * getBoxSize().getHorizontalBoxSize())) + offset));
+        graphics.drawString(getLabelProvider().getText(getContentProvider().getNodes()[i]), new Point(10,
+            (((getContentProvider().getItemCount() - (i + 1)) * getBoxSize().getHorizontalBoxSize())) + offset));
       }
     }
 
