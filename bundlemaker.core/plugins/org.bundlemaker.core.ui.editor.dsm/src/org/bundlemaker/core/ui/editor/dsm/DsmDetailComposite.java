@@ -5,14 +5,18 @@ import java.beans.PropertyChangeListener;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.bundlemaker.core.analysis.algorithms.sorter.DsmSorterRegistry;
+import org.bundlemaker.core.ui.editor.dsm.cycle.CycleDetector;
 import org.bundlemaker.core.ui.editor.dsm.widget.DsmViewWidget;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
@@ -28,6 +32,12 @@ public class DsmDetailComposite extends Composite {
 
   /** - */
   private Label                             _selectionCountLabel;
+
+  /** - */
+  private Label                             _violationCountLabel;
+
+  /** - */
+  private Combo                             _dsmSorterNames;
 
   /** - */
   private Button                            _qualifiedNamesButton;
@@ -53,37 +63,54 @@ public class DsmDetailComposite extends Composite {
     Assert.isNotNull(viewWidget);
 
     // this.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
-    GridLayout l = new GridLayout(3, false);
+    GridLayout l = new GridLayout(1, true);
     this.setLayout(l);
+    GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.FILL).applyTo(this);
 
-    Composite composite = new Composite(this, SWT.NONE);
-    GridLayout gridLayout = new GridLayout(2, false);
+    Composite top = new Composite(this, SWT.NONE);
+    GridLayout gridLayout = new GridLayout(6, false);
     gridLayout.marginHeight = 0;
     gridLayout.marginWidth = 0;
-    composite.setLayout(gridLayout);
-    GridDataFactory.swtDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(composite);
+    top.setLayout(gridLayout);
+    GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.FILL).applyTo(top);
 
     //
-    _selectionCountLabel = new Label(composite, SWT.TRAIL);
-    GridDataFactory.swtDefaults().grab(false, false).align(SWT.FILL, SWT.FILL).applyTo(_selectionCountLabel);
-    Label theLabel = new Label(composite, SWT.LEAD);
-    theLabel.setText("dependencies");
-    GridDataFactory.swtDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(theLabel);
 
-    _fromLabel = createFieldWithLabel(composite, "from");
-    _toLabel = createFieldWithLabel(composite, "to");
+    _violationCountLabel = new Label(top, SWT.NONE);
+    _violationCountLabel.setText("violations");
+    GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.FILL).applyTo(_violationCountLabel);
 
-    Composite presentationModeComposite = new Composite(this, SWT.NONE);
-    gridLayout = new GridLayout(1, false);
-    gridLayout.marginHeight = 0;
-    gridLayout.marginWidth = 0;
-    presentationModeComposite.setLayout(gridLayout);
+    _selectionCountLabel = new Label(top, SWT.NONE);
+    GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.FILL).applyTo(_selectionCountLabel);
 
-    _qualifiedNamesButton = new Button(presentationModeComposite, SWT.CHECK);
+    _dsmSorterNames = new Combo(top, SWT.NONE);
+    GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.FILL).applyTo(_dsmSorterNames);
+    for (String dsmSorterName : DsmSorterRegistry.getArtifactSorterNames()) {
+      _dsmSorterNames.add(dsmSorterName);
+    }
+
+    _dsmSorterNames.select(0);
+    String dsmSorterName = _dsmSorterNames.getItem(_dsmSorterNames.getSelectionIndex());
+    CycleDetector.setDsmSorterName(dsmSorterName);
+
+    _dsmSorterNames.addSelectionListener(new SelectionListener() {
+
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        String dsmSorterName = _dsmSorterNames.getItem(_dsmSorterNames.getSelectionIndex());
+        CycleDetector.setDsmSorterName(dsmSorterName);
+      }
+
+      @Override
+      public void widgetDefaultSelected(SelectionEvent e) {
+      }
+    });
+
+    _qualifiedNamesButton = new Button(top, SWT.CHECK);
     _qualifiedNamesButton.setText("Show qualified names");
     _qualifiedNamesButton.setSelection(true);
 
-    _shortendNamesButton = new Button(presentationModeComposite, SWT.CHECK);
+    _shortendNamesButton = new Button(top, SWT.CHECK);
     _shortendNamesButton.setText("Shorten labels");
 
     _qualifiedNamesButton.addSelectionListener(new SelectionAdapter() {
@@ -105,6 +132,16 @@ public class DsmDetailComposite extends Composite {
 
     });
 
+    Composite bottom = new Composite(this, SWT.NONE);
+    gridLayout = new GridLayout(5, false);
+    bottom.setLayout(gridLayout);
+    GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.FILL).applyTo(bottom);
+
+    _selectionCountLabel = new Label(bottom, SWT.TRAIL);
+    GridDataFactory.swtDefaults().grab(false, false).align(SWT.FILL, SWT.FILL).applyTo(_selectionCountLabel);
+    _fromLabel = createFieldWithLabel(bottom, "from");
+    _toLabel = createFieldWithLabel(bottom, "to");
+
     _labelPresentationMode = determineLabelPresentationMode();
   }
 
@@ -114,8 +151,10 @@ public class DsmDetailComposite extends Composite {
    * 
    * @return the fromLabel
    */
-  protected final Label getFromLabel() {
-    return _fromLabel;
+  protected final void setFrom(String from) {
+    if (_fromLabel != null) {
+      _fromLabel.setText(from);
+    }
   }
 
   /**
@@ -124,8 +163,10 @@ public class DsmDetailComposite extends Composite {
    * 
    * @return the toLabel
    */
-  protected final Label getToLabel() {
-    return _toLabel;
+  protected final void setTo(String to) {
+    if (_toLabel != null) {
+      _toLabel.setText(to);
+    }
   }
 
   /**
@@ -134,8 +175,14 @@ public class DsmDetailComposite extends Composite {
    * 
    * @return the selectionCountLabel
    */
-  protected final Label getSelectionCountLabel() {
-    return _selectionCountLabel;
+  protected final void setSelectionCount(String selectionCount) {
+    if (_selectionCountLabel != null) {
+      _selectionCountLabel.setText("" + selectionCount + " dependencies");
+    }
+  }
+
+  protected final void setViolationCount(int violationCount) {
+    _violationCountLabel.setText("" + violationCount + " violations");
   }
 
   /**
@@ -153,7 +200,9 @@ public class DsmDetailComposite extends Composite {
     GridDataFactory.swtDefaults().grab(false, false).align(SWT.FILL, SWT.FILL).applyTo(theLabel);
 
     //
-    Label result = new Label(parent, SWT.LEAD);
+    // Label result = new Label(parent, SWT.LEAD);
+    Label result = new Label(parent, SWT.FILL | SWT.BORDER);
+
     GridDataFactory.swtDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(result);
 
     //
@@ -202,3 +251,4 @@ public class DsmDetailComposite extends Composite {
     return this._labelPresentationMode;
   }
 }
+

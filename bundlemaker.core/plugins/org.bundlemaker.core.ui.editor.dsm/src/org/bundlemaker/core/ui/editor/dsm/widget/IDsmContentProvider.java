@@ -4,21 +4,26 @@ import java.util.Observer;
 
 public interface IDsmContentProvider {
 
-  void addObserver(Observer observer);
+	void addObserver(Observer observer);
 
-  void deleteObserver(Observer dsmViewWidget);
+	void deleteObserver(Observer dsmViewWidget);
 
-  int getItemCount();
+	int getItemCount();
 
-  Object getDependency(int j, int i);
+	public void swap(int from, int to);
 
-  Object[][] getDependencies();
+	public int getViolationCount();
 
-  Object[] getNodes();
+	Object getDependency(int j, int i);
 
-  int[][] getCycles();
+	Object[][] getDependencies();
 
-  boolean isInCycle(int x, int y);
+	Object[] getNodes();
 
-  boolean isInCycle(int i);
+	int[][] getCycles();
+
+	boolean isInCycle(int x, int y);
+
+	boolean isInCycle(int i);
 }
+

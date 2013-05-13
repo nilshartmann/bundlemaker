@@ -19,3 +19,4 @@ Service-Component: OSGI-INF/org.bundlemaker.core.ui.editor.dsm.OpenDsmViewBundle
 Import-Package: org.osgi.service.component.annotations
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: bundlemaker.org
+Export-Package: org.bundlemaker.core.ui.editor.dsm.widget

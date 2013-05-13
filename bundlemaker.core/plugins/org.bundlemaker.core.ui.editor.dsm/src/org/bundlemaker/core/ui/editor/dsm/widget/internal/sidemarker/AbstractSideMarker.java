@@ -16,207 +16,216 @@ import org.eclipse.swt.graphics.FontMetrics;
  * <p>
  * Abstract base class for all side marker implementations.
  * </p>
- * 
- * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ *
+ * @author  Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 /**
  * <p>
  * </p>
- * 
- * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ *
+ * @author  Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  * 
  */
 public abstract class AbstractSideMarker extends Figure {
 
   /** - */
-  private IDsmContentProvider _contentProvider;
+	private IDsmContentProvider _contentProvider;
 
   /** - */
-  private ILabelProvider      _labelProvider;
+	private ILabelProvider _labelProvider;
 
   /** - */
-  private IDsmColorScheme     _colorScheme;
+	private IDsmColorScheme _colorScheme;
 
   /** the marked item */
-  private int                 _markedItem = -1;
+	private int _markedItem = -1;
 
   /** - */
-  private FontMetrics         _fontMetrics;
+	private FontMetrics _fontMetrics;
 
   /** - */
-  private BoxSize             _boxSize;
+	private BoxSize _boxSize;
 
-  /**
+	/**
    * <p>
    * Creates a new instance of type {@link AbstractSideMarker}.
    * </p>
-   * 
-   * @param contentProvider
-   * @param cycleDetector
-   * @param labelProvider
-   * @param colorScheme
-   */
+	 *
+	 * @param  contentProvider
+	 * @param  cycleDetector
+	 * @param  labelProvider
+	 * @param  colorScheme
+	 */
   public AbstractSideMarker(IDsmContentProvider contentProvider, ILabelProvider labelProvider,
       IDsmColorScheme colorScheme) {
 
-    //
-    Assert.isNotNull(contentProvider);
-    Assert.isNotNull(labelProvider);
-    Assert.isNotNull(colorScheme);
+		//
+		Assert.isNotNull(contentProvider);
+		Assert.isNotNull(labelProvider);
+		Assert.isNotNull(colorScheme);
 
-    //
-    _contentProvider = contentProvider;
-    _labelProvider = labelProvider;
-    _colorScheme = colorScheme;
+		//
+		_contentProvider = contentProvider;
+		_labelProvider = labelProvider;
+		_colorScheme = colorScheme;
 
-    //
-    _boxSize = new BoxSize();
+		//
+		_boxSize = new BoxSize();
 
-    //
-    addMouseListener(new MouseListener.Stub() {
+		//
+		addMouseListener(
+			new MouseListener.Stub() {
 
-      @Override
-      public void mouseReleased(MouseEvent me) {
+				@Override
+				public void mousePressed(MouseEvent me) {
+					onMousePressed(me);
+				}
 
-        if ((me.getState() & SWT.ALT) != 0) {
-          System.out.println("ALT");
-        }
+				@Override
+				public void mouseReleased(MouseEvent me) {
 
-        if ((me.getState() & SWT.SHIFT) != 0) {
-          System.out.println("SHIFT");
-        }
+					if ((me.getState() & SWT.ALT) != 0) {
+						System.out.println("ALT");
+					}
 
-        if ((me.getState() & SWT.CONTROL) != 0) {
-          System.out.println("CONTROL");
-        }
+					if ((me.getState() & SWT.SHIFT) != 0) {
+						System.out.println("SHIFT");
+					}
 
-        onMouseReleased(me);
-      }
+					if ((me.getState() & SWT.CONTROL) != 0) {
+						System.out.println("CONTROL");
+					}
+
+					onMouseReleased(me);
+				}
     });
-  }
+			}
 
-  public ILabelProvider getLabelProvider() {
-    return _labelProvider;
-  }
+	public ILabelProvider getLabelProvider() {
+		return _labelProvider;
+	}
 
-  /**
-   * <p>
-   * </p>
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @return
+	 */
+	public BoxSize getBoxSize() {
+		return _boxSize;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @param  boxSize
+	 */
+	public void setBoxSize(BoxSize boxSize) {
+
+		Assert.isNotNull(boxSize);
+
+		_boxSize = boxSize;
+	}
+
+	protected void onMousePressed(MouseEvent me) {
+	}
+
+	protected abstract void onMouseReleased(MouseEvent me);
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public final void mark(int i) {
+
+		int oldValue = _markedItem;
+		_markedItem = i;
+
+		onMark(oldValue, _markedItem);
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @return
+	 */
+	public IDsmContentProvider getContentProvider() {
+		return _contentProvider;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @param  oldValue
+	 * @param  x
+	 */
+	protected abstract void onMark(int oldValue, int x);
+
+	/**
+	 * <p>
+	 * </p>
    * 
-   * @return
-   */
-  public BoxSize getBoxSize() {
-    return _boxSize;
-  }
+	 */
+	protected abstract void resetSize();
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param boxSize
-   */
-  public void setBoxSize(BoxSize boxSize) {
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @return
+	 */
+	protected IDsmColorScheme getColorScheme() {
+		return _colorScheme;
+	}
 
-    Assert.isNotNull(boxSize);
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @param   count
+	 * @return
+	 */
+	protected final int getHorizontalSliceSize(int count) {
+		return (getBoxSize().getHorizontalBoxSize() * count);
+	}
 
-    _boxSize = boxSize;
-  }
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @param   count
+	 * @return
+	 */
+	protected final int getVerticalSliceSize(int count) {
+		return (getBoxSize().getVerticalBoxSize() * count);
+	}
 
-  protected abstract void onMouseReleased(MouseEvent me);
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @return
+	 */
+	public final int getMarkedItem() {
+		return _markedItem;
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  public final void mark(int i) {
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @return
+	 */
+	public int getFontHeight() {
+		if (_fontMetrics == null) {
+			_fontMetrics = FigureUtilities.getFontMetrics(getFont());
+		}
+		return _fontMetrics.getHeight();
+	}
 
-    int oldValue = _markedItem;
-    _markedItem = i;
-
-    onMark(oldValue, _markedItem);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public IDsmContentProvider getContentProvider() {
-    return _contentProvider;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param oldValue
-   * @param x
-   */
-  protected abstract void onMark(int oldValue, int x);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   */
-  protected abstract void resetSize();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  protected IDsmColorScheme getColorScheme() {
-    return _colorScheme;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param count
-   * @return
-   */
-  protected final int getHorizontalSliceSize(int count) {
-    return (getBoxSize().getHorizontalBoxSize() * count);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param count
-   * @return
-   */
-  protected final int getVerticalSliceSize(int count) {
-    return (getBoxSize().getVerticalBoxSize() * count);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public final int getMarkedItem() {
-    return _markedItem;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public int getFontHeight() {
-    if (_fontMetrics == null) {
-      _fontMetrics = FigureUtilities.getFontMetrics(getFont());
-    }
-    return _fontMetrics.getHeight();
-  }
-
-  public void setModel(IDsmContentProvider contentProvider) {
-    _contentProvider = contentProvider;
-  }
+	public void setModel(IDsmContentProvider contentProvider) {
+		_contentProvider = contentProvider;
+	}
 }

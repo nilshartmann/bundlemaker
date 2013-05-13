@@ -38,139 +38,156 @@ import org.eclipse.ui.internal.part.NullEditorInput;
 /**
  * <p>
  * </p>
- * 
- * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ *
+ * @author  Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 @SuppressWarnings("restriction")
 public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditorPart {
 
-  /**
-   * This is used as the DSMView's providerId for the xxxSelectionServices
-   */
-  public static String                 DSM_EDITOR_ID   = DSMArtifactModelEditor.class.getName();
+	/**
+	 * This is used as the DSMView's providerId for the xxxSelectionServices
+	 */
+	public static String DSM_EDITOR_ID = DSMArtifactModelEditor.class.getName();
 
-  /**
-   * Dummy input used for this editor
-   */
-  private static IEditorInput          nullInputEditor = new NullEditorInput();
+	/**
+	 * Dummy input used for this editor
+	 */
+	private static IEditorInput nullInputEditor = new NullEditorInput();
 
-  /** - */
-  private DsmViewWidget                _viewWidget;
-
-  /** - */
-  private DsmDetailComposite           _detailComposite;
+	/** - */
+	private DsmViewWidget _viewWidget;
 
   /** - */
-  private int[]                        _selectedCell;
+	private DsmDetailComposite _detailComposite;
 
   /** - */
-  private IBundleMakerArtifact         _fromArtifact;
+	private int[] _selectedCell;
 
   /** - */
-  private IBundleMakerArtifact         _toArtifact;
+	private IBundleMakerArtifact _fromArtifact;
 
   /** - */
-  private DefaultArtifactLabelProvider _artifactLabelProvider;
+	private IBundleMakerArtifact _toArtifact;
 
   /** - */
-  private IDsmContentProvider          _dsmContentProvider;
+	private DefaultArtifactLabelProvider _artifactLabelProvider;
 
-  /**
-   * Opens the DSM View.
-   * 
+  /** - */
+	private IDsmContentProvider _dsmContentProvider;
+
+	/**
+	 * Opens the DSM View.
+	 *
    * <p>
    * This method does nothing in case the DSM view could not be opened for any reason.
    * 
-   */
-  public static void openDsmView() {
-    EditorHelper.openEditor(DSM_EDITOR_ID, nullInputEditor);
-  }
+	 */
+	public static void openDsmView() {
+		EditorHelper.openEditor(DSM_EDITOR_ID, nullInputEditor);
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void analysisModelModified() {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void analysisModelModified() {
     Display.getDefault().syncExec(new Runnable() {
-      @Override
-      public void run() {
-        initSelection(getCurrentArtifactSelection());
-      }
+				@Override
+				public void run() {
+					initSelection(getCurrentArtifactSelection());
+				}
     });
 
-  }
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void createPartControl(Composite parent) {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void createPartControl(Composite parent) {
 
-    //
-    GridLayout gridLayout = new GridLayout(1, true);
-    parent.setLayout(gridLayout);
+		//
+		GridLayout gridLayout = new GridLayout(1, true);
+		parent.setLayout(gridLayout);
 
-    //
+		//
 
-    _dsmContentProvider = new DefaultBundleMakerArtifactDsmContentProvider();
-    _artifactLabelProvider = new DefaultArtifactLabelProvider();
+		_dsmContentProvider = new DefaultBundleMakerArtifactDsmContentProvider();
+		_artifactLabelProvider = new DefaultArtifactLabelProvider();
     _viewWidget = new DsmViewWidget(_dsmContentProvider, _artifactLabelProvider, new DefaultDependencyLabelProvider(),
         parent);
     GridDataFactory.swtDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(_viewWidget);
-    _viewWidget.setZoom((50 + 10) * 0.02f);
+		_viewWidget.setZoom((50 + 10) * 0.02f);
 
-    //
-    _detailComposite = new DsmDetailComposite(parent, _viewWidget);
+		//
+		_detailComposite = new DsmDetailComposite(parent, _viewWidget);
     _detailComposite.addPropertyChangeListener(new PropertyChangeListener() {
-      @Override
-      public void propertyChange(PropertyChangeEvent evt) {
-        initSelection(getCurrentArtifactSelection());
-      }
+				@Override
+				public void propertyChange(PropertyChangeEvent evt) {
+					initSelection(getCurrentArtifactSelection());
+				}
     });
 
     GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).applyTo(_detailComposite);
-    setDefaultDependencyDescription();
+		setDefaultDependencyDescription();
 
-    //
+		//
     _viewWidget.addMatrixListener(new IMatrixListener.Adapter() {
 
-      @Override
-      public void marked(MatrixEvent event) {
+				@Override
+				public void marked(MatrixEvent event) {
 
-        //
-        if (isCellSelected(event)) {
-          _detailComposite.getSelectionCountLabel().setText(
-              getNullSafeString(_viewWidget.getDependenciesAsStrings()[event.getX()][event.getY()], "0"));
-          _detailComposite.getFromLabel().setText(
-              ((IBundleMakerArtifact) _dsmContentProvider.getNodes()[event.getY()]).getQualifiedName());
-          _detailComposite.getToLabel().setText(
-              ((IBundleMakerArtifact) _dsmContentProvider.getNodes()[event.getX()]).getQualifiedName());
-        }
+					//
+					if (isCellSelected(event)) {
+						_detailComposite.setSelectionCount(
+							getNullSafeString(
+								_viewWidget.getDependenciesAsStrings()[event.getX()][event.getY()],
+								"0"
+							)
+						);
+						_detailComposite.setFrom(
+							((IBundleMakerArtifact) _dsmContentProvider.getNodes()[event.getY()])
+							.getQualifiedName()
+						);
+						_detailComposite.setTo(
+							((IBundleMakerArtifact) _dsmContentProvider.getNodes()[event.getX()])
+							.getQualifiedName()
+						);
+					}
 
-        //
-        else if (_selectedCell != null) {
-          _detailComposite.getSelectionCountLabel().setText(
-              getNullSafeString(_viewWidget.getDependenciesAsStrings()[_selectedCell[0]][_selectedCell[1]], "0"));
-          _detailComposite.getFromLabel().setText(
-              ((IBundleMakerArtifact) _dsmContentProvider.getNodes()[_selectedCell[1]]).getQualifiedName());
-          _detailComposite.getToLabel().setText(
-              ((IBundleMakerArtifact) _dsmContentProvider.getNodes()[_selectedCell[0]]).getQualifiedName());
-        }
+					//
+					else if (_selectedCell != null) {
+						_detailComposite.setSelectionCount(
+							getNullSafeString(
+								_viewWidget.getDependenciesAsStrings()[_selectedCell[0]][
+									_selectedCell[1]],
+								"0"
+							)
+						);
+						_detailComposite.setFrom(
+							((IBundleMakerArtifact) _dsmContentProvider.getNodes()[_selectedCell[1]])
+							.getQualifiedName()
+						);
+						_detailComposite.setTo(
+							((IBundleMakerArtifact) _dsmContentProvider.getNodes()[_selectedCell[0]])
+							.getQualifiedName()
+						);
+					}
 
-        //
-        else {
-          setDefaultDependencyDescription();
-        }
-      }
+					//
+					else {
+						setDefaultDependencyDescription();
+					}
+				}
 
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public void singleClick(MatrixEvent event) {
-        if (isCellSelected(event)) {
+				/**
+				 * {@inheritDoc}
+				 */
+				@Override
+				public void singleClick(MatrixEvent event) {
+					if (isCellSelected(event)) {
 
-          _selectedCell = new int[] { event.getX(), event.getY() };
+						_selectedCell = new int[] { event.getX(), event.getY() };
 
           IDependency dependency = (IDependency) _dsmContentProvider.getDependency(event.getX(), event.getY());
 
@@ -179,255 +196,256 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
 
           _fromArtifact = (IBundleMakerArtifact) _dsmContentProvider.getNodes()[event.getX()];
           _toArtifact = (IBundleMakerArtifact) _dsmContentProvider.getNodes()[event.getY()];
-        }
-      }
+					}
+				}
     });
 
-    // create the context menu
-    // createContextMenu(_viewWidget);
+		// create the context menu
+		// createContextMenu(_viewWidget);
 
-    //
-    setCurrentArtifactSelection(getCurrentArtifactSelection());
-  }
+		//
+		setCurrentArtifactSelection(getCurrentArtifactSelection());
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void setFocus() {
-    //
-  }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setFocus() {
+		//
+	}
 
-  protected String getNullSafeString(String string, String defaultValue) {
-    return string == null ? defaultValue : string;
-  }
+	protected String getNullSafeString(String string, String defaultValue) {
+		return string == null ? defaultValue : string;
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void setCurrentArtifactSelection(IArtifactSelection selection) {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setCurrentArtifactSelection(IArtifactSelection selection) {
 
-    //
-    if (selection.getProviderId().equals(DSM_EDITOR_ID)) {
-      return;
-    }
+		//
+		if (selection.getProviderId().equals(DSM_EDITOR_ID)) {
+			return;
+		}
 
-    super.setCurrentArtifactSelection(selection);
+		super.setCurrentArtifactSelection(selection);
 
-    initSelection(selection);
-  }
+		initSelection(selection);
+	}
 
-  private void initSelection(IArtifactSelection selection) {
+	private void initSelection(IArtifactSelection selection) {
 
-    if (_viewWidget != null && _detailComposite != null) {
+		if (_viewWidget != null && _detailComposite != null) {
 
-      //
+			//
       _dsmContentProvider = new DefaultBundleMakerArtifactDsmContentProvider(selection.getEffectiveSelectedArtifacts());
       _artifactLabelProvider.setLabelPresentationMode(_detailComposite.getLabelPresentationMode());
-      _viewWidget.setModel(_dsmContentProvider);
+			_viewWidget.setModel(_dsmContentProvider);
+			_detailComposite.setViolationCount(_dsmContentProvider.getViolationCount());
 
-      // clear the dependency selection
-      resetDependencySelection();
+			// clear the dependency selection
+			resetDependencySelection();
 
-      setDefaultDependencyDescription();
-    }
-  }
+			setDefaultDependencyDescription();
+		}
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void dispose() {
-    clearDependencySelection();
-    super.dispose();
-  }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void dispose() {
+		clearDependencySelection();
+		super.dispose();
+	}
 
-  /**
-   * <p>
-   * </p>
-   */
-  private void clearDependencySelection() {
-    _selectedCell = null;
-    List<IDependency> dependencies = Collections.emptyList();
+	/**
+	 * <p>
+	 * </p>
+	 */
+	private void clearDependencySelection() {
+		_selectedCell = null;
+		List<IDependency> dependencies = Collections.emptyList();
     Selection.instance().getDependencySelectionService()
         .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DSM_EDITOR_ID, dependencies);
-  }
+	}
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param list
-   */
-  private void resetDependencySelection() {
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @param  list
+	 */
+	private void resetDependencySelection() {
 
-    //
-    List<?> artifacts = Arrays.asList(_dsmContentProvider.getNodes());
+		//
+		List<?> artifacts = Arrays.asList(_dsmContentProvider.getNodes());
 
-    //
+		//
     if (_fromArtifact == null || _toArtifact == null || !artifacts.contains(_fromArtifact)
         || !artifacts.contains(_toArtifact)) {
 
-      //
-      clearDependencySelection();
-    }
+			//
+			clearDependencySelection();
+		}
 
-    //
-    else {
+		//
+		else {
 
-      //
+			//
       _selectedCell = new int[] { artifacts.indexOf(_fromArtifact), artifacts.indexOf(_toArtifact) };
 
       IDependency dependency = (IDependency) _dsmContentProvider.getDependency(_selectedCell[0], _selectedCell[1]);
 
       Selection.instance().getDependencySelectionService()
           .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DSMArtifactModelEditor.DSM_EDITOR_ID, dependency);
-    }
-  }
+		}
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected String getProviderId() {
-    return DSM_EDITOR_ID;
-  }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected String getProviderId() {
+		return DSM_EDITOR_ID;
+	}
 
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param dsmViewWidget
-  // */
-  // private void createContextMenu(DsmViewWidget dsmViewWidget) {
-  //
-  // MenuManager menuManager = new MenuManager("#PopupMenu");
-  // menuManager.setRemoveAllWhenShown(true);
-  // menuManager.addMenuListener(new IMenuListener() {
-  //
-  // private MenuItem _menuItem;
-  //
-  // @Override
-  // public void menuAboutToShow(IMenuManager manager) {
-  // manager.add(new Separator("edit"));
-  // manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-  // manager.appendToGroup("edit", new ContributionItem("Test") {
-  //
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // public void fill(Menu menu, int index) {
-  // _menuItem = new MenuItem(menu, SWT.PUSH);
-  // _menuItem.setText("Export...");
-  // _menuItem.addSelectionListener(new SelectionListener() {
-  //
-  // @Override
-  // public void widgetSelected(SelectionEvent e) {
-  //
-  // final int sideMarkerOffset = FigureUtilities.getTextWidth(
-  // DsmUtils.getLongestString(_viewWidget.getModel().getLabels()), Display.getCurrent().getSystemFont());
-  //
-  // //
-  // int matrixWidth = _viewWidget.getModel().getConfiguration().getHorizontalBoxSize()
-  // * _viewWidget.getModel().getItemCount();
-  // int matrixHeight = _viewWidget.getModel().getConfiguration().getVerticalBoxSize()
-  // * _viewWidget.getModel().getItemCount();
-  // final Matrix matrix = new Matrix(_viewWidget.getModel(), new DependencyLabelProvider(), _viewWidget
-  // .getModel());
-  // matrix.setSize(matrixWidth, matrixHeight);
-  // matrix.setFont(Display.getCurrent().getSystemFont());
-  //
-  // //
-  // final VerticalSideMarker verticalSideMarker = new VerticalSideMarker(_viewWidget.getModel());
-  // verticalSideMarker.setSize(sideMarkerOffset, matrixHeight);
-  // verticalSideMarker.setFont(Display.getCurrent().getSystemFont());
-  //
-  // //
-  // final HorizontalSideMarker horizontalSideMarker = new HorizontalSideMarker(_viewWidget.getModel());
-  // horizontalSideMarker.setSize(matrixWidth, sideMarkerOffset);
-  // horizontalSideMarker.setFont(Display.getCurrent().getSystemFont());
-  //
-  // IFigure mainFigure = new Figure() {
-  //
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // public void paint(Graphics graphics) {
-  // super.paint(graphics);
-  //
-  // graphics.pushState();
-  // graphics.translate(0, sideMarkerOffset);
-  // verticalSideMarker.paint(graphics);
-  // graphics.restoreState();
-  //
-  // graphics.pushState();
-  // graphics.translate(sideMarkerOffset, sideMarkerOffset);
-  // matrix.paint(graphics);
-  // graphics.restoreState();
-  //
-  // graphics.pushState();
-  // graphics.translate(sideMarkerOffset, 0);
-  // horizontalSideMarker.paint(graphics);
-  // graphics.restoreState();
-  // }
-  // };
-  // mainFigure.setSize(matrix.getSize().width + sideMarkerOffset + 1, matrix.getSize().height
-  // + sideMarkerOffset + 1);
-  //
-  // FigurePrinter.save(mainFigure);
-  // }
-  //
-  // @Override
-  // public void widgetDefaultSelected(SelectionEvent e) {
-  // }
-  // });
-  // }
-  // });
-  // }
-  // });
-  //
-  // Menu menu = menuManager.createContextMenu(dsmViewWidget);
-  // dsmViewWidget.setMenu(menu);
-  // }
+	// /**
+	// * <p>
+	// * </p>
+	// *
+	// * @param dsmViewWidget
+	// */
+	// private void createContextMenu(DsmViewWidget dsmViewWidget) {
+	//
+	// MenuManager menuManager = new MenuManager("#PopupMenu");
+	// menuManager.setRemoveAllWhenShown(true);
+	// menuManager.addMenuListener(new IMenuListener() {
+	//
+	// private MenuItem _menuItem;
+	//
+	// @Override
+	// public void menuAboutToShow(IMenuManager manager) {
+	// manager.add(new Separator("edit"));
+	// manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+	// manager.appendToGroup("edit", new ContributionItem("Test") {
+	//
+	// /**
+	// * {@inheritDoc}
+	// */
+	// @Override
+	// public void fill(Menu menu, int index) {
+	// _menuItem = new MenuItem(menu, SWT.PUSH);
+	// _menuItem.setText("Export...");
+	// _menuItem.addSelectionListener(new SelectionListener() {
+	//
+	// @Override
+	// public void widgetSelected(SelectionEvent e) {
+	//
+	// final int sideMarkerOffset = FigureUtilities.getTextWidth(
+	// DsmUtils.getLongestString(_viewWidget.getModel().getLabels()), Display.getCurrent().getSystemFont());
+	//
+	// //
+	// int matrixWidth = _viewWidget.getModel().getConfiguration().getHorizontalBoxSize()
+	// * _viewWidget.getModel().getItemCount();
+	// int matrixHeight = _viewWidget.getModel().getConfiguration().getVerticalBoxSize()
+	// * _viewWidget.getModel().getItemCount();
+	// final Matrix matrix = new Matrix(_viewWidget.getModel(), new DependencyLabelProvider(), _viewWidget
+	// .getModel());
+	// matrix.setSize(matrixWidth, matrixHeight);
+	// matrix.setFont(Display.getCurrent().getSystemFont());
+	//
+	// //
+	// final VerticalSideMarker verticalSideMarker = new VerticalSideMarker(_viewWidget.getModel());
+	// verticalSideMarker.setSize(sideMarkerOffset, matrixHeight);
+	// verticalSideMarker.setFont(Display.getCurrent().getSystemFont());
+	//
+	// //
+	// final HorizontalSideMarker horizontalSideMarker = new HorizontalSideMarker(_viewWidget.getModel());
+	// horizontalSideMarker.setSize(matrixWidth, sideMarkerOffset);
+	// horizontalSideMarker.setFont(Display.getCurrent().getSystemFont());
+	//
+	// IFigure mainFigure = new Figure() {
+	//
+	// /**
+	// * {@inheritDoc}
+	// */
+	// @Override
+	// public void paint(Graphics graphics) {
+	// super.paint(graphics);
+	//
+	// graphics.pushState();
+	// graphics.translate(0, sideMarkerOffset);
+	// verticalSideMarker.paint(graphics);
+	// graphics.restoreState();
+	//
+	// graphics.pushState();
+	// graphics.translate(sideMarkerOffset, sideMarkerOffset);
+	// matrix.paint(graphics);
+	// graphics.restoreState();
+	//
+	// graphics.pushState();
+	// graphics.translate(sideMarkerOffset, 0);
+	// horizontalSideMarker.paint(graphics);
+	// graphics.restoreState();
+	// }
+	// };
+	// mainFigure.setSize(matrix.getSize().width + sideMarkerOffset + 1, matrix.getSize().height
+	// + sideMarkerOffset + 1);
+	//
+	// FigurePrinter.save(mainFigure);
+	// }
+	//
+	// @Override
+	// public void widgetDefaultSelected(SelectionEvent e) {
+	// }
+	// });
+	// }
+	// });
+	// }
+	// });
+	//
+	// Menu menu = menuManager.createContextMenu(dsmViewWidget);
+	// dsmViewWidget.setMenu(menu);
+	// }
 
-  // /** Paints the figure onto the given graphics */
-  // public static void paintDiagram(Graphics g, IFigure figure) {
-  // // We want to ignore the first FreeformLayer (or we lose also all figure, as it draws the 'page boundaries'
-  // // which is obviously not wanted in the exported images.
-  // for (Object child : figure.getChildren()) {
-  // // ConnectionLayer inherits from FreeformLayer, so rather checking for FreeformLayer we check whether child
-  // // is not a ConnectionLayer!
-  // if (child instanceof FreeformLayer && !(child instanceof ConnectionLayer)) {
-  // paintDiagram(g, (IFigure) child);
-  // } else {
-  // ((IFigure) child).paint(g);
-  // }
-  // }
-  // }
+	// /** Paints the figure onto the given graphics */
+	// public static void paintDiagram(Graphics g, IFigure figure) {
+	// // We want to ignore the first FreeformLayer (or we lose also all figure, as it draws the 'page boundaries'
+	// // which is obviously not wanted in the exported images.
+	// for (Object child : figure.getChildren()) {
+	// // ConnectionLayer inherits from FreeformLayer, so rather checking for FreeformLayer we check whether child
+	// // is not a ConnectionLayer!
+	// if (child instanceof FreeformLayer && !(child instanceof ConnectionLayer)) {
+	// paintDiagram(g, (IFigure) child);
+	// } else {
+	// ((IFigure) child).paint(g);
+	// }
+	// }
+	// }
 
-  /**
-   * <p>
-   * </p>
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @param   event
+	 * @return
+	 */
+	private boolean isCellSelected(MatrixEvent event) {
+		return event.getX() <= _dsmContentProvider.getItemCount() && event.getX() >= 0
+		&& event.getY() <= _dsmContentProvider.getItemCount() && event.getY() >= 0;
+	}
+
+	/**
+	 * <p>
+	 * </p>
    * 
-   * @param event
-   * @return
-   */
-  private boolean isCellSelected(MatrixEvent event) {
-    return event.getX() <= _dsmContentProvider.getItemCount() && event.getX() >= 0
-        && event.getY() <= _dsmContentProvider.getItemCount() && event.getY() >= 0;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   */
-  private void setDefaultDependencyDescription() {
-    _detailComposite.getSelectionCountLabel().setText("0");
-    _detailComposite.getFromLabel().setText("-");
-    _detailComposite.getToLabel().setText("-");
-  }
+	 */
+	private void setDefaultDependencyDescription() {
+		_detailComposite.setSelectionCount("0");
+		_detailComposite.setFrom("-");
+		_detailComposite.setTo("-");
+	}
 }
