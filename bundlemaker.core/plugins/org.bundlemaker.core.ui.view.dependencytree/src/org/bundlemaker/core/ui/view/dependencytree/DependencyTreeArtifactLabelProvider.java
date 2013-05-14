@@ -46,7 +46,7 @@ public class DependencyTreeArtifactLabelProvider extends ArtifactTreeLabelProvid
    * <p>
    * </p>
    * 
-   * @param showReferenceCount
+   * @param showReferenceCount wether to show references count or not. Calculating references might be expensive.
    * @param toArtifacts
    */
   public void setShowReferenceCount(boolean showReferenceCount, boolean toArtifacts) {
@@ -82,43 +82,44 @@ public class DependencyTreeArtifactLabelProvider extends ArtifactTreeLabelProvid
    */
   private String getLeftSideLabel(IBundleMakerArtifact artifact) {
 
-    // //
-    // int dependencyCount = 0;
-    // Set<IBundleMakerArtifact> targetArtifacts = new HashSet<IBundleMakerArtifact>();
-    //
-    // //
-    // Collection<IDependency> dependencies = artifact.getDependenciesTo(_helper.getUnfilteredTargetArtifacts());
-    // if (dependencies != null) {
-    // for (IDependency dependency : dependencies) {
-    // for (IDependency coreDependency : dependency.getCoreDependencies()) {
-    //
-    // //
-    // Collection<IBundleMakerArtifact> unfilteredSourceDependencies = _helper.getUnfilteredSourceArtifacts();
-    //
-    // IBundleMakerArtifact fromArtifact = coreDependency.getFrom();
-    //
-    // //
-    // if (unfilteredSourceDependencies.contains(fromArtifact)) {
-    // targetArtifacts.add(coreDependency.getTo());
-    // dependencyCount = dependencyCount + coreDependency.getWeight();
-    // }
-    // }
-    // }
-    // }
-
     //
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(super.getText(artifact));
 
-    // if (_showReferenceCount) {
-    // stringBuilder.append(" (");
-    // stringBuilder.append(dependencyCount);
-    // stringBuilder.append("/");
-    // // stringBuilder.append(dependencyCount == 1 ? " Reference to " : " References to ");
-    // stringBuilder.append(targetArtifacts.size());
-    // // stringBuilder.append(targetArtifacts.size() == 1 ? " Artifact)" : " Artifacts)");
-    // stringBuilder.append(")");
-    // }
+    if (_showReferenceCount) {
+
+      // Warning: might be expensive to count....
+      int dependencyCount = 0;
+      Set<IBundleMakerArtifact> targetArtifacts = new HashSet<IBundleMakerArtifact>();
+
+      //
+      Collection<IDependency> dependencies = artifact.getDependenciesTo(_helper.getUnfilteredTargetArtifacts());
+      if (dependencies != null) {
+        for (IDependency dependency : dependencies) {
+          for (IDependency coreDependency : dependency.getCoreDependencies()) {
+
+            //
+            Collection<IBundleMakerArtifact> unfilteredSourceDependencies = _helper.getUnfilteredSourceArtifacts();
+
+            IBundleMakerArtifact fromArtifact = coreDependency.getFrom();
+
+            //
+            if (unfilteredSourceDependencies.contains(fromArtifact)) {
+              targetArtifacts.add(coreDependency.getTo());
+              dependencyCount = dependencyCount + coreDependency.getWeight();
+            }
+          }
+        }
+      }
+
+      stringBuilder.append(" (");
+      stringBuilder.append(dependencyCount);
+      stringBuilder.append("/");
+      // stringBuilder.append(dependencyCount == 1 ? " Reference to " : " References to ");
+      stringBuilder.append(targetArtifacts.size());
+      // stringBuilder.append(targetArtifacts.size() == 1 ? " Artifact)" : " Artifacts)");
+      stringBuilder.append(")");
+    }
 
     //
     return stringBuilder.toString();
@@ -133,40 +134,41 @@ public class DependencyTreeArtifactLabelProvider extends ArtifactTreeLabelProvid
    */
   private String getRightSideLabel(IBundleMakerArtifact artifact) {
 
-    // //
-    // int dependencyCount = 0;
-    // Set<IBundleMakerArtifact> targetArtifacts = new HashSet<IBundleMakerArtifact>();
-    //
-    // Collection<IDependency> dependencies = artifact.getDependenciesFrom(_helper.getUnfilteredSourceArtifacts());
-    // if (dependencies != null) {
-    // for (IDependency dependency : dependencies) {
-    // for (IDependency coreDependency : dependency.getCoreDependencies()) {
-    //
-    // //
-    // Collection<IBundleMakerArtifact> unfilteredTargetDependencies = _helper.getUnfilteredTargetArtifacts();
-    //
-    // IBundleMakerArtifact toArtifact = coreDependency.getTo();
-    //
-    // //
-    // if (unfilteredTargetDependencies.contains(toArtifact)) {
-    // targetArtifacts.add(coreDependency.getFrom());
-    // dependencyCount = dependencyCount + coreDependency.getWeight();
-    // }
-    // }
-    // }
-    // }
-
     //
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(super.getText(artifact));
-    
-    // stringBuilder.append(" (");
-    // stringBuilder.append(dependencyCount);
-    // stringBuilder.append("/");
-    // // stringBuilder.append(dependencyCount == 1 ? " Reference to " : " References to ");
-    // stringBuilder.append(targetArtifacts.size());
-    // // stringBuilder.append(targetArtifacts.size() == 1 ? " Artifact)" : " Artifacts)");
-    // stringBuilder.append(")");
+
+    if (_showReferenceCount) {
+
+      int dependencyCount = 0;
+      Set<IBundleMakerArtifact> targetArtifacts = new HashSet<IBundleMakerArtifact>();
+
+      Collection<IDependency> dependencies = artifact.getDependenciesFrom(_helper.getUnfilteredSourceArtifacts());
+      if (dependencies != null) {
+        for (IDependency dependency : dependencies) {
+          for (IDependency coreDependency : dependency.getCoreDependencies()) {
+
+            //
+            Collection<IBundleMakerArtifact> unfilteredTargetDependencies = _helper.getUnfilteredTargetArtifacts();
+
+            IBundleMakerArtifact toArtifact = coreDependency.getTo();
+
+            //
+            if (unfilteredTargetDependencies.contains(toArtifact)) {
+              targetArtifacts.add(coreDependency.getFrom());
+              dependencyCount = dependencyCount + coreDependency.getWeight();
+            }
+          }
+        }
+      }
+      stringBuilder.append(" (");
+      stringBuilder.append(dependencyCount);
+      stringBuilder.append("/");
+      // stringBuilder.append(dependencyCount == 1 ? " Reference to " : " References to ");
+      stringBuilder.append(targetArtifacts.size());
+      // stringBuilder.append(targetArtifacts.size() == 1 ? " Artifact)" : " Artifacts)");
+      stringBuilder.append(")");
+    }
 
     //
     return stringBuilder.toString();
