@@ -80,6 +80,8 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
   /** - */
   private TableViewer                _viewer;
   
+  private LabelPresentationModeAction[] _labelPresentationModeActions;
+  
   /** Comparator used to sort the columns */
   private DependencyComparator _dependencyComparator;
 
@@ -236,22 +238,42 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     // fillLocalToolBar(bars.getToolBarManager());
   }
 
-  class UseShortLabelsAction extends Action {
+  class LabelPresentationModeAction extends Action {
+    
+    private final LabelPresentationMode _labelPresentationMode;
 
-    public UseShortLabelsAction() {
-      super("Use Short Labels", IAction.AS_CHECK_BOX);
-      setChecked(_fromLabelGenerator.isUseShortLabel());
+    public LabelPresentationModeAction(LabelPresentationMode labelPresentationMode) {
+      super(labelPresentationMode.getLabel(), IAction.AS_CHECK_BOX);
+      _labelPresentationMode = labelPresentationMode;
+      setToolTipText(labelPresentationMode.getTooltip());
+      
+      update();
     }
 
     @Override
     public void run() {
-      _fromLabelGenerator.setUseShortLabel(isChecked());
-      _toLabelGenerator.setUseShortLabel(isChecked());
-
-      saveViewSettings();
-
-      _viewer.refresh();
+      setLabelPresentationMode(_labelPresentationMode);
     }
+    
+    public void update() {
+      setChecked(_fromLabelGenerator.getLabelPresentationMode() == _labelPresentationMode);
+    }
+  }
+  
+  protected void setLabelPresentationMode(LabelPresentationMode newLabelPresentationMode) {
+    _fromLabelGenerator.setLabelPresentationMode(newLabelPresentationMode);
+    _toLabelGenerator.setLabelPresentationMode(newLabelPresentationMode);
+
+    saveViewSettings();
+
+    _viewer.refresh();
+    
+    if (_labelPresentationModeActions != null) {
+      for (LabelPresentationModeAction action : _labelPresentationModeActions) {
+        action.update();
+      }
+    }
+
   }
 
   private IDialogSettings getViewSettings() {
@@ -266,22 +288,39 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
   private void saveViewSettings() {
     IDialogSettings dialogSettings = getViewSettings();
 
-    dialogSettings.put("useShortLabel", _fromLabelGenerator.isUseShortLabel());
+    dialogSettings.put("labelPresentationModel", _fromLabelGenerator.getLabelPresentationMode().name());
   }
 
   private void loadViewSettings() {
     IDialogSettings dialogSettings = getViewSettings();
-
-    boolean useShortLabel = dialogSettings.getBoolean("useShortLabel");
-
-    _fromLabelGenerator.setUseShortLabel(useShortLabel);
-    _toLabelGenerator.setUseShortLabel(useShortLabel);
+    
+    String labelPresentationModeName = dialogSettings.get("labelPresentationModel");
+    
+    if (labelPresentationModeName != null) {
+      LabelPresentationMode labelPresentationMode = LabelPresentationMode.valueOf(labelPresentationModeName);
+        
+      _fromLabelGenerator.setLabelPresentationMode(labelPresentationMode);
+      _toLabelGenerator.setLabelPresentationMode(labelPresentationMode);
+    }
   }
 
   private void fillLocalPullDown(IMenuManager menuManager) {
-
-    menuManager.add(new UseShortLabelsAction());
-
+    
+    if (_labelPresentationModeActions == null) {
+      
+      // Create one action for each label presentation mode
+      LabelPresentationMode[] values = LabelPresentationMode.values();
+      _labelPresentationModeActions = new LabelPresentationModeAction[values.length];
+      
+      for (int i = 0;i<values.length;i++) {
+        _labelPresentationModeActions[i] = new LabelPresentationModeAction(values[i]);
+      }
+    }
+    
+    for (int i = 0;i<_labelPresentationModeActions.length;i++) {
+      menuManager.add(_labelPresentationModeActions[i]);
+    }
+    
   }
 
   /**
