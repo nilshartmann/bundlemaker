@@ -1,13 +1,17 @@
 package org.bundlemaker.core.ui.artifact.tree;
 
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.ui.artifact.Activator;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.artifact.cnf.ResourceArtifactEditorInput;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 public class EditorHelper {
 
@@ -46,8 +50,9 @@ public class EditorHelper {
       CommonNavigatorUtils.activateCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
 
     } catch (PartInitException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      StatusManager.getManager().handle(
+          new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Opening Editor failed: " + e, e),
+          StatusManager.LOG | StatusManager.BLOCK);
     }
   }
 
