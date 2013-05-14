@@ -384,25 +384,35 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
       return;
     }
 
-    if (getCurrentDependencySelection() == null || !getCurrentDependencySelection().hasDependencies()) {
+    IDependencySelection currentDependencySelection = getCurrentDependencySelection();
+    if (currentDependencySelection == null || !currentDependencySelection.hasDependencies()) {
       setColumnTitles("From", "To");
       _viewer.setInput(new IDependency[0]);
       _viewer.getTable().redraw();
       return;
     } else {
+      
+      IBundleMakerArtifact toBaseArtifact = currentDependencySelection.getFirstDependency().getTo();
+      IBundleMakerArtifact fromBaseArtifact = currentDependencySelection.getFirstDependency().getFrom();
+      
+      if (currentDependencySelection.getSelectedDependencies().size()!=1) {
+        // TODO determine deepest common base of all dependencies
+        toBaseArtifact = toBaseArtifact.getRoot();
+        fromBaseArtifact = fromBaseArtifact.getRoot();
+      }
+      
+      System.out.println("ToArtifact: " + toBaseArtifact);
+      System.out.println("FromArtifact: " + fromBaseArtifact);
 
-      // TODO
-      IBundleMakerArtifact bundleMakerArtifact = getCurrentDependencySelection().getFirstDependency().getFrom()
-          .getRoot();
-      _fromLabelGenerator.setBaseArtifact(bundleMakerArtifact);
-      _toLabelGenerator.setBaseArtifact(bundleMakerArtifact);
+      _fromLabelGenerator.setBaseArtifact(fromBaseArtifact);
+      _toLabelGenerator.setBaseArtifact(toBaseArtifact);
       //
       String fromColumnTitle = "From " + _fromLabelGenerator.getTitle();
       String toColumnTitle = "To " + _toLabelGenerator.getTitle();
 
       setColumnTitles(fromColumnTitle, toColumnTitle);
 
-      List<IDependency> leafDependencies = AnalysisModelQueries.getCoreDependencies(getCurrentDependencySelection()
+      List<IDependency> leafDependencies = AnalysisModelQueries.getCoreDependencies(currentDependencySelection
           .getSelectedDependencies());
 
       IDependency[] dependencies = leafDependencies.toArray(new IDependency[0]);
