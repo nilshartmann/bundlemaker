@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.view.dependencytable;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -412,7 +411,8 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
   }
   
   private void setOrderedDependencies(IDependency[] dependencies) {
-    Arrays.sort(dependencies, _dependencyComparator);
+    _dependencyComparator.sortDependencies(dependencies);
+    
     _viewer.setInput(dependencies);
     _viewer.setItemCount(dependencies.length); // This is the difference when using a ILazyContentProvider
     _viewer.getTable().redraw();

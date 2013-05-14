@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.view.dependencytable;
 
+import java.util.Arrays;
 import java.util.Comparator;
 
 import org.bundlemaker.core.analysis.IDependency;
@@ -42,7 +43,8 @@ public class DependencyComparator implements Comparator<IDependency> {
     _fromArtifactPathLabelGenerator = fromArtifactPathLabelGenerator;
     _toArtifactPathLabelGenerator = toArtifactPathLabelGenerator;
 
-    this._columnIndex = 0;
+    // initially no ordering at all
+    this._columnIndex = -1;
     direction = DESCENDING;
   }
 
@@ -63,6 +65,15 @@ public class DependencyComparator implements Comparator<IDependency> {
       this._columnIndex = column;
       direction = DESCENDING;
     }
+  }
+  
+  public void sortDependencies(IDependency[] dependencies) {
+    if (dependencies == null || this._columnIndex == -1) {
+      return;
+    }
+    
+    Arrays.sort(dependencies, this);
+    
   }
 
   @Override
