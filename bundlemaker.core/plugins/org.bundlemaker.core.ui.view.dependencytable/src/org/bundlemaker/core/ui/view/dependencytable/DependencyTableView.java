@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.view.dependencytable;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,7 +24,6 @@ import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.selection.IDependencySelection;
 import org.bundlemaker.core.selection.IDependencySelectionListener;
 import org.bundlemaker.core.selection.Selection;
-import org.bundlemaker.core.ui.ErrorDialogUtil;
 import org.bundlemaker.core.ui.artifact.tree.EditorHelper;
 import org.bundlemaker.core.ui.event.selection.workbench.view.AbstractDependencySelectionAwareViewPart;
 import org.bundlemaker.core.ui.operations.CreateModuleWithArtifactsOperation;
@@ -53,9 +52,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -80,6 +80,9 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
 
   /** - */
   private TableViewer                _viewer;
+  
+  /** Comparator used to sort the columns */
+  private DependencyComparator _dependencyComparator;
 
   /** - */
   private ArtifactPathLabelGenerator _fromLabelGenerator   = new ArtifactPathLabelGenerator();
@@ -100,6 +103,8 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
 
     Composite tableComposite = new Composite(parent, SWT.NONE);
     tableComposite.setLayout(new TableColumnLayout());
+    
+    _dependencyComparator = new DependencyComparator(_fromLabelGenerator, _toLabelGenerator);
 
     _viewer = new TableViewer(tableComposite, SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL
         | SWT.FULL_SELECTION | SWT.MULTI);
@@ -107,6 +112,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     table.setHeaderVisible(true);
     table.setLinesVisible(true);
     _viewer.setContentProvider(new LazyDependencyProvider(_viewer));
+    
     createColumns(tableComposite, _viewer);
 
     // open editor on double click
@@ -186,6 +192,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     manager.add(action);
     
     action = new Action("Create Module from referenced Artifacts") {
+      @Override
       public void run() {
         List<IBundleMakerArtifact> artifacts = new LinkedList<IBundleMakerArtifact>();
         List<IDependency> currentSelectedDependencies = getSelectedDependencies();
@@ -204,6 +211,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     manager.add(action);
     
     action = new Action("Create Module from referencing Artifacts") {
+      @Override
       public void run() {
         List<IBundleMakerArtifact> artifacts = new LinkedList<IBundleMakerArtifact>();
         List<IDependency> currentSelectedDependencies = getSelectedDependencies();
@@ -399,10 +407,15 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
           .getSelectedDependencies());
 
       IDependency[] dependencies = leafDependencies.toArray(new IDependency[0]);
-      _viewer.setInput(dependencies);
-      _viewer.setItemCount(dependencies.length); // This is the difference when using a ILazyContentProvider
-      _viewer.getTable().redraw();
+      setOrderedDependencies(dependencies);
     }
+  }
+  
+  private void setOrderedDependencies(IDependency[] dependencies) {
+    Arrays.sort(dependencies, _dependencyComparator);
+    _viewer.setInput(dependencies);
+    _viewer.setItemCount(dependencies.length); // This is the difference when using a ILazyContentProvider
+    _viewer.getTable().redraw();
   }
 
   /**
@@ -426,7 +439,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
 
   private void createColumns(Composite parent, TableViewer viewer) {
 
-    createTableViewerColumn(parent, viewer, "From", 45, new DependencyColumnLabelProvider(_fromLabelGenerator) {
+    createTableViewerColumn(parent, viewer, 0,"From", 45, new DependencyColumnLabelProvider(_fromLabelGenerator) {
       @Override
       protected IBundleMakerArtifact getArtifactElement(IDependency element) {
         return element.getFrom();
@@ -434,7 +447,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     });
 
     //
-    createTableViewerColumn(parent, viewer, "Usage", 10, new ColumnLabelProvider() {
+    createTableViewerColumn(parent, viewer, 1, "Usage", 10, new ColumnLabelProvider() {
       @Override
       public String getText(Object element) {
         if (element instanceof IDependency) {
@@ -445,7 +458,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
       }
 
     });
-    createTableViewerColumn(parent, viewer, "To", 45, new DependencyColumnLabelProvider(_toLabelGenerator) {
+    createTableViewerColumn(parent, viewer, 2, "To", 45, new DependencyColumnLabelProvider(_toLabelGenerator) {
 
       @Override
       public IBundleMakerArtifact getArtifactElement(IDependency element) {
@@ -455,7 +468,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
 
   }
 
-  private TableViewerColumn createTableViewerColumn(Composite tableComposite, TableViewer viewer, String title,
+  private TableViewerColumn createTableViewerColumn(Composite tableComposite, TableViewer viewer, int index, String title,
       int weight, CellLabelProvider labelProvider) {
     final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, SWT.NONE);
     final TableColumn column = viewerColumn.getColumn();
@@ -469,8 +482,28 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     if (labelProvider != null) {
       viewerColumn.setLabelProvider(labelProvider);
     }
+    column.addSelectionListener(getSelectionAdapter(column, index));
     return viewerColumn;
 
+  }
+  
+  private SelectionAdapter getSelectionAdapter(final TableColumn column,
+      final int index) {
+    SelectionAdapter selectionAdapter = new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        _dependencyComparator.setColumn(index);
+        int dir = _dependencyComparator.getDirection();
+        _viewer.getTable().setSortDirection(dir);
+        _viewer.getTable().setSortColumn(column);
+        
+        IDependency[] currentDependencies = (IDependency[]) _viewer.getInput();
+        setOrderedDependencies(currentDependencies);
+        
+        _viewer.refresh();
+      }
+    };
+    return selectionAdapter;
   }
 
   private void setColumnTitles(String fromColumnTitle, String toColumnTitle) {
