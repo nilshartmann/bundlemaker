@@ -18,7 +18,8 @@ import java.util.Set;
 
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.modules.ITypeSelector;
+import org.bundlemaker.core._type.ITypeModule;
+import org.bundlemaker.core._type.ITypeSelector;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.eclipse.core.runtime.Assert;
@@ -137,7 +138,7 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
     Set<IReference> result = new HashSet<IReference>();
 
     //
-    Set<IReference> references = resourceModule
+    Set<IReference> references = resourceModule.adaptAs(ITypeModule.class)
         .getReferences();
 
     for (IReference iReference : references) {

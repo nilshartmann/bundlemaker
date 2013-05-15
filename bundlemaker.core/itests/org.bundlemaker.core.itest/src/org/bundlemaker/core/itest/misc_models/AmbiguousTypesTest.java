@@ -2,7 +2,7 @@ package org.bundlemaker.core.itest.misc_models;
 
 import java.util.LinkedList;
 
-import org.bundlemaker.core._type.modules.ITypeModule;
+import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;

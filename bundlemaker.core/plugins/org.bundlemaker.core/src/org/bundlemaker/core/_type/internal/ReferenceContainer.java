@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.resource;
+package org.bundlemaker.core._type.internal;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.Assert;
 public abstract class ReferenceContainer implements IReferenceRecorder {
 
   /** the fly weight cahce */
-  private FlyWeightCache               _flyWeightCache;
+  private transient TypeFlyWeightCache _flyWeightCache;
 
   /** the reference map */
   private Map<ReferenceKey, Reference> _referenceMap;
@@ -43,7 +43,7 @@ public abstract class ReferenceContainer implements IReferenceRecorder {
    * 
    * @param cache
    */
-  public ReferenceContainer(FlyWeightCache cache) {
+  public ReferenceContainer(TypeFlyWeightCache cache) {
     Assert.isNotNull(cache);
 
     //

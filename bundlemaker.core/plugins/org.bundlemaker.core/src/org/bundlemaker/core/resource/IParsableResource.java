@@ -10,10 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.resource;
 
-import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.TypeEnum;
-import org.bundlemaker.core._type.modifiable.IReferenceRecorder;
-import org.bundlemaker.core.internal.resource.Type;
 
 /**
  * <p>
@@ -25,7 +21,7 @@ import org.bundlemaker.core.internal.resource.Type;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IParsableResource extends IModuleResource, IReferenceRecorder {
+public interface IParsableResource extends IModuleResource {
 
   /**
    * <p>
@@ -50,32 +46,4 @@ public interface IParsableResource extends IModuleResource, IReferenceRecorder {
    * @return
    */
   long getParsedTimestamp();
-
-  // *** TODO: REMOVE ***/
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param fullyQualifiedName
-   * @return
-   */
-  public Type getOrCreateType(String fullyQualifiedName, TypeEnum typeEnum, boolean abstractType);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param type
-   */
-  public void setPrimaryType(IType type);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param fullyQualifiedName
-   * @return
-   */
-  public Type getType(String fullyQualifiedName);
 }

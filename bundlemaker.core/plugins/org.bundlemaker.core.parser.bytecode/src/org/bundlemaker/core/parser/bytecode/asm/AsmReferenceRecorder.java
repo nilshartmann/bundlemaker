@@ -10,7 +10,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser.bytecode.asm;
 
+import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core._type.ReferenceType;
 import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core._type.modifiable.IModifiableType;
@@ -79,16 +81,16 @@ public class AsmReferenceRecorder implements IReferenceRecorder {
       //
       if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName)) {
 
-        IType type = _resource.getOrCreateType(fullyQualifiedName, typeEnum, abstractType);
-        _resource.setPrimaryType(type);
+        IType type = _resource.adaptAs(IParsableTypeResource.class).getOrCreateType(fullyQualifiedName, typeEnum, abstractType);
+        _resource.adaptAs(IParsableTypeResource.class).setPrimaryType(type);
 
         // we have to check for the existence of contained types:
         // in the rare case of an (erroneous) non-set type we fall back
         // on the resource type
-        if (!(_enclosingClassFileResource.getContainedTypes().isEmpty())) {
+        if (!(_enclosingClassFileResource.adaptAs(ITypeResource.class).getContainedTypes().isEmpty())) {
 
           //
-          _bundleMakerType = ((IModifiableType[]) _enclosingClassFileResource.getContainedTypes().toArray(
+          _bundleMakerType = ((IModifiableType[]) _enclosingClassFileResource.adaptAs(ITypeResource.class).getContainedTypes().toArray(
               new IModifiableType[0]))[0];
 
           _fullyQualifiedEnclosingTypeName = _bundleMakerType.getFullyQualifiedName();
@@ -96,7 +98,7 @@ public class AsmReferenceRecorder implements IReferenceRecorder {
         } else {
 
           // create the fall-back type
-          _bundleMakerType = _resource.getOrCreateType(fullyQualifiedName, typeEnum, abstractType);
+          _bundleMakerType = _resource.adaptAs(IParsableTypeResource.class).getOrCreateType(fullyQualifiedName, typeEnum, abstractType);
         }
 
         // add as sticky
@@ -105,7 +107,7 @@ public class AsmReferenceRecorder implements IReferenceRecorder {
       } else {
 
         // create the type
-        _bundleMakerType = _resource.getOrCreateType(fullyQualifiedName, typeEnum,abstractType);
+        _bundleMakerType = _resource.adaptAs(IParsableTypeResource.class).getOrCreateType(fullyQualifiedName, typeEnum,abstractType);
       }
 
     } catch (RuntimeException runtimeException) {

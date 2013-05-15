@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.resource;
+package org.bundlemaker.core._type.internal;
 
 import org.bundlemaker.core._type.ReferenceType;
 

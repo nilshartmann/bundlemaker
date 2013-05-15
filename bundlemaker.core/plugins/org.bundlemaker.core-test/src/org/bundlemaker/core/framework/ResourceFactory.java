@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
@@ -52,7 +53,7 @@ public class ResourceFactory {
         typeName = typeName.replace('\\', '.');
 
         //
-        resource.getOrCreateType(typeName, TypeEnum.CLASS, false);
+        resource.adaptAs(IParsableTypeResource.class).getOrCreateType(typeName, TypeEnum.CLASS, false);
       }
 
       //

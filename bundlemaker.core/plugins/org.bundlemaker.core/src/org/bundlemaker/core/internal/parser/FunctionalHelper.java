@@ -9,12 +9,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.IProblem;
+import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.internal.Reference;
+import org.bundlemaker.core._type.internal.Type;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
-import org.bundlemaker.core.internal.resource.Reference;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
-import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParser.ParserType;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
@@ -148,7 +149,7 @@ public class FunctionalHelper {
       // perform some checks
       // TODO: MAYBE REMOVE?
       Assert.isNotNull(((ResourceStandin) resourceStandin).getResource());
-      for (IType type : resource.getContainedTypes()) {
+      for (IType type : resource.adaptAs(IParsableTypeResource.class).getContainedTypes()) {
         if (!type.hasBinaryResource()) {
           String message = "For source file "
               + resourceStandin.getDirectory()
@@ -194,16 +195,16 @@ public class FunctionalHelper {
 
     // set the references
     Set<Reference> resourceReferences = new HashSet<Reference>();
-    for (Reference reference : resource.getModifiableReferences()) {
+    for (Reference reference : resource.adaptAs(IParsableTypeResource.class).getModifiableReferences()) {
       Reference newReference = new Reference(reference);
       newReference.setResource(resource);
       resourceReferences.add(newReference);
     }
-    resource.getModifiableReferences().clear();
-    resource.getModifiableReferences().addAll(resourceReferences);
+    resource.adaptAs(IParsableTypeResource.class).getModifiableReferences().clear();
+    resource.adaptAs(IParsableTypeResource.class).getModifiableReferences().addAll(resourceReferences);
 
     // set the type-back-references
-    for (Type type : resource.getModifiableContainedTypes()) {
+    for (Type type : resource.adaptAs(IParsableTypeResource.class).getModifiableContainedTypes()) {
 
       //
       if (isSource) {

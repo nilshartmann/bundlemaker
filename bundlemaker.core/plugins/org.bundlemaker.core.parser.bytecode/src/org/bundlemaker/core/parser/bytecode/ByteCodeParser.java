@@ -11,6 +11,7 @@
 package org.bundlemaker.core.parser.bytecode;
 
 import org.bundlemaker.core.IProblem;
+import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core._type.utils.JavaTypeUtils;
 import org.bundlemaker.core._type.utils.JavaUtils;
 import org.bundlemaker.core.parser.AbstractParser;
@@ -57,7 +58,7 @@ public class ByteCodeParser extends AbstractParser {
 
     // if the resource already contains a type, it already has been parsed.
     // In this case we can return immediately
-    if (!resource.getContainedTypes().isEmpty()) {
+    if (!resource.adaptAs(ITypeResource.class).getContainedTypes().isEmpty()) {
       return;
     }
 
@@ -80,10 +81,10 @@ public class ByteCodeParser extends AbstractParser {
           JavaTypeUtils.convertFromFullyQualifiedName(enclosingName));
 
       // if we have to parse the enclosing type
-      if (enclosingResource.getContainedTypes().isEmpty()) {
+      if (enclosingResource.adaptAs(ITypeResource.class).getContainedTypes().isEmpty()) {
         parseResource(content, enclosingResource, cache);
 
-        if (enclosingResource.getContainedTypes().isEmpty()) {
+        if (enclosingResource.adaptAs(ITypeResource.class).getContainedTypes().isEmpty()) {
           // TODO
           // TODO remove null handling in AsmReferenceRecorder
           // Assert.isTrue(!enclosingResource.getContainedTypes().isEmpty());

@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.modules.ITypeModule;
+import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.modules.IModularizedSystem;

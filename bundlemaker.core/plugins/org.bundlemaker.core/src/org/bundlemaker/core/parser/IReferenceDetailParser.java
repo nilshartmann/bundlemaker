@@ -24,9 +24,9 @@ public interface IReferenceDetailParser {
   public static interface IPosition {
 
     /** The offset of the position */
-    public int getOffset();
+    int getOffset();
 
     /** The length of the position */
-    public int getLength();
+    int getLength();
   }
 }

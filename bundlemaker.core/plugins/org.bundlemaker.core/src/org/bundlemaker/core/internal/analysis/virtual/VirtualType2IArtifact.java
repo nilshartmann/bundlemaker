@@ -24,9 +24,10 @@ import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.DispatchingArtifactTreeVisitor;
+import org.bundlemaker.core.internal.analysis.ITempTypeProvider;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -34,7 +35,7 @@ import org.eclipse.core.runtime.Path;
 /**
  * 
  */
-public class VirtualType2IArtifact extends AbstractArtifact implements IMovableUnit, ITypeArtifact {
+public class VirtualType2IArtifact extends AbstractArtifact implements IMovableUnit, ITypeArtifact, ITempTypeProvider {
 
   /** - */
   private String        _fullyQualifiedName;

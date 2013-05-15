@@ -12,6 +12,7 @@ package org.bundlemaker.core.jdt.internal.parser;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
+import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.utils.JavaTypeUtils;
 import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
@@ -76,8 +77,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
    * {@inheritDoc}
    */
   @Override
-  protected synchronized void doParseResource(IProjectContentEntry projectContent, IParsableResource resource,
-      IResourceCache cache) {
+  protected synchronized void doParseResource(IProjectContentEntry projectContent, IParsableResource resource, IResourceCache cache) {
 
     //
     if (!canParse(resource)) {
@@ -111,8 +111,8 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 
       // set the primary type
       String primaryTypeName = JavaTypeUtils.convertToFullyQualifiedName(resource.getPath(), ".java");
-      IType primaryType = resource.getType(primaryTypeName);
-      resource.setPrimaryType(primaryType);
+      IType primaryType = resource.adaptAs(IParsableTypeResource.class).getType(primaryTypeName);
+      resource.adaptAs(IParsableTypeResource.class).setPrimaryType(primaryType);
 
     } catch (Exception e) {
       getProblems().add(new IProblem.DefaultProblem(resource, "Error while parsing: " + e));

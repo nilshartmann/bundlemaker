@@ -19,9 +19,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.modules.ITypeModule;
+import org.bundlemaker.core._type.ITypeModule;
+import org.bundlemaker.core._type.ITypeResource;
+import org.bundlemaker.core._type.internal.TypeContainer;
+import org.bundlemaker.core.internal.analysis.ITempTypeProvider;
 import org.bundlemaker.core.internal.modules.event.ModuleClassificationChangedEvent;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
@@ -34,8 +36,8 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 
@@ -114,7 +116,7 @@ public class Module implements IModifiableModule {
   public <T> T adaptAs(Class<T> clazz) {
 
     //
-    if (clazz == ITypeModule.class) {
+    if (ITypeModule.class.equals(clazz)) {
       return (T) _typeContainer;
     }
 
@@ -400,39 +402,6 @@ public class Module implements IModifiableModule {
    * {@inheritDoc}
    */
   @Override
-  public Set<IReference> getReferences() {
-
-    //
-    Set<IReference> result = new HashSet<IReference>();
-
-    // iterate over all resources
-    for (IModuleResource resource : getResources(ProjectContentType.BINARY)) {
-      for (IReference reference : resource.getReferences()) {
-        result.add(reference);
-      }
-    }
-
-    for (IModuleResource resource : getResources(ProjectContentType.SOURCE)) {
-      for (IReference reference : resource.getReferences()) {
-        result.add(reference);
-      }
-    }
-
-    //
-    for (IType type : _typeContainer.getContainedTypes()) {
-      for (IReference reference : type.getReferences()) {
-        result.add(reference);
-      }
-    }
-
-    // return result
-    return result;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   public List<IMovableUnit> getMovableUnits() {
 
     // the result
@@ -452,7 +421,7 @@ public class Module implements IModifiableModule {
 
     // iterate over all resources
     for (IModuleResource resource : getResources(ProjectContentType.BINARY)) {
-      if (!resource.containsTypes()) {
+      if (!resource.adaptAs(ITypeResource.class).containsTypes()) {
 
         //
         IMovableUnit movableUnit = MovableUnit.createFromResource(resource, getModularizedSystem());
@@ -466,7 +435,7 @@ public class Module implements IModifiableModule {
 
     // iterate over all resources
     for (IModuleResource resource : getResources(ProjectContentType.SOURCE)) {
-      if (!resource.containsTypes()) {
+      if (!resource.adaptAs(ITypeResource.class).containsTypes()) {
 
         //
         IMovableUnit movableUnit = MovableUnit.createFromResource(resource, getModularizedSystem());
@@ -551,7 +520,7 @@ public class Module implements IModifiableModule {
     getModifiableResourcesSet(contentType).add(resource);
 
     // ... and add all contained types to the cache
-    for (IType type : resource.getContainedTypes()) {
+    for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
       _typeContainer.add(type);
     }
 
@@ -577,7 +546,7 @@ public class Module implements IModifiableModule {
 
     // ... and add all contained types to the cache
     for (IModuleResource resource : resources) {
-      for (IType type : resource.getContainedTypes()) {
+      for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
         _typeContainer.add(type);
       }
     }
@@ -649,7 +618,7 @@ public class Module implements IModifiableModule {
     Assert.isNotNull(movableUnit);
 
     // add all types
-    for (IType type : movableUnit.getAssociatedTypes()) {
+    for (IType type : ((ITempTypeProvider) movableUnit).getAssociatedTypes()) {
       _typeContainer.add(type);
     }
 
@@ -676,7 +645,7 @@ public class Module implements IModifiableModule {
     Assert.isNotNull(movableUnit);
 
     // add all types
-    for (IType type : movableUnit.getAssociatedTypes()) {
+    for (IType type : ((ITempTypeProvider) movableUnit).getAssociatedTypes()) {
       _typeContainer.remove(type);
     }
 

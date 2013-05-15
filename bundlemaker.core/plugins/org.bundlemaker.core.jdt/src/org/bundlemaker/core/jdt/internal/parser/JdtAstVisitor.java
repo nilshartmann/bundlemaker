@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.ReferenceType;
 import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core._type.modifiable.IModifiableType;
@@ -196,7 +197,7 @@ public class JdtAstVisitor extends ASTVisitor {
       if (binding instanceof IPackageBinding) {
 
         /* Reference packageReference = */
-        _javaSourceResource.recordReference(((IPackageBinding) binding).getName(), new ReferenceAttributes(
+        _javaSourceResource.adaptAs(IParsableTypeResource.class).recordReference(((IPackageBinding) binding).getName(), new ReferenceAttributes(
             ReferenceType.PACKAGE_REFERENCE, false, false, false, true, false, true, false));
       }
 
@@ -282,12 +283,12 @@ public class JdtAstVisitor extends ASTVisitor {
       String outerType = JavaTypeUtils.getEnclosingNonLocalAndNonAnonymousTypeName(binaryName);
 
       //
-      currentType = _javaSourceResource.getType(outerType);
+      currentType = _javaSourceResource.adaptAs(IParsableTypeResource.class).getType(outerType);
 
     } else {
 
       //
-      currentType = _javaSourceResource.getOrCreateType(binaryName, typeEnum, abstractType);
+      currentType = _javaSourceResource.adaptAs(IParsableTypeResource.class).getOrCreateType(binaryName, typeEnum, abstractType);
     }
 
     _realTypes.push(binaryName);
@@ -322,7 +323,7 @@ public class JdtAstVisitor extends ASTVisitor {
   public boolean visit(AnnotationTypeDeclaration node) {
 
     // add the type name
-    IModifiableType type = _javaSourceResource.getOrCreateType(node.resolveBinding().getBinaryName(),
+    IModifiableType type = _javaSourceResource.adaptAs(IParsableTypeResource.class).getOrCreateType(node.resolveBinding().getBinaryName(),
         TypeEnum.ANNOTATION, true);
     _currentTypes.push(type);
     _realTypes.push(node.resolveBinding().getBinaryName());
@@ -346,7 +347,7 @@ public class JdtAstVisitor extends ASTVisitor {
   public boolean visit(EnumDeclaration node) {
 
     // add the type name
-    IModifiableType type = _javaSourceResource.getOrCreateType(node.resolveBinding().getBinaryName(), TypeEnum.ENUM, false);
+    IModifiableType type = _javaSourceResource.adaptAs(IParsableTypeResource.class).getOrCreateType(node.resolveBinding().getBinaryName(), TypeEnum.ENUM, false);
     _currentTypes.push(type);
     _realTypes.push(node.resolveBinding().getBinaryName());
 
@@ -1006,7 +1007,7 @@ public class JdtAstVisitor extends ASTVisitor {
 
       } else {
 
-        _javaSourceResource.recordReference(referencedType, new ReferenceAttributes(ReferenceType.TYPE_REFERENCE,
+        _javaSourceResource.adaptAs(IParsableTypeResource.class).recordReference(referencedType, new ReferenceAttributes(ReferenceType.TYPE_REFERENCE,
             isExtends, isImplements, isClassAnnotation, true, false, true, false));
       }
     }

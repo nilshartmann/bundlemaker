@@ -12,8 +12,8 @@ package org.bundlemaker.core.store.db4o.internal;
 
 import java.io.File;
 
+import org.bundlemaker.core._type.internal.Reference;
 import org.bundlemaker.core.internal.resource.DefaultProjectContentResource;
-import org.bundlemaker.core.internal.resource.Reference;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.eclipse.core.runtime.Assert;

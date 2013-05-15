@@ -73,7 +73,7 @@ public class DefaultProjectContentResource implements IProjectContentResource {
    * @param path
    * @param cache
    */
-  protected DefaultProjectContentResource(String contentId, String root, String path, FlyWeightCache cache) {
+  protected DefaultProjectContentResource(String contentId, String root, String path, FlyWeightStringCache cache) {
 
     Assert.isNotNull(contentId);
     Assert.isNotNull(root);

@@ -5,7 +5,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-import org.bundlemaker.core._type.modules.ITypeModule;
+import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core.framework.ResourceFactory;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.IModularizedSystem;

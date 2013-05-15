@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
@@ -27,11 +28,11 @@ public class ModuleUtils {
     for (IModuleResource resource : asSortedList((Set<IModuleResource>)module.getResources(ProjectContentType.SOURCE))) {
       builder.append(resource.getPath() + "\n");
 
-      for (IReference reference : asSortedList(resource.getReferences())) {
+      for (IReference reference : asSortedList(resource.adaptAs(ITypeResource.class).getReferences())) {
         builder.append(" * " + reference.toString() + "\n");
       }
 
-      for (IType type : asSortedList(resource.getContainedTypes())) {
+      for (IType type : asSortedList(resource.adaptAs(ITypeResource.class).getContainedTypes())) {
         builder.append(" - " + type.getFullyQualifiedName() + "\n");
 
         for (IReference reference : asSortedList(type.getReferences())) {
@@ -45,7 +46,7 @@ public class ModuleUtils {
     for (IModuleResource resource : asSortedList((Set<IModuleResource>)module.getResources(ProjectContentType.BINARY))) {
       builder.append(resource.getPath() + "\n");
 
-      for (IReference reference : asSortedList(resource.getReferences())) {
+      for (IReference reference : asSortedList(resource.adaptAs(ITypeResource.class).getReferences())) {
         builder.append(" * " + reference.toString() + "\n");
       }
 
@@ -53,7 +54,7 @@ public class ModuleUtils {
         builder.append(" ~sticky~ " + stickyResources.getPath() + "\n");
       }
 
-      for (IType type : asSortedList(resource.getContainedTypes())) {
+      for (IType type : asSortedList(resource.adaptAs(ITypeResource.class).getContainedTypes())) {
         builder.append(" - " + type.getFullyQualifiedName() + "\n");
 
         for (IReference reference : asSortedList(type.getReferences())) {

@@ -8,12 +8,14 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.resource;
+package org.bundlemaker.core._type.internal;
 
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ReferenceType;
 import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
+import org.bundlemaker.core.internal.resource.FlyWeightString;
+import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 

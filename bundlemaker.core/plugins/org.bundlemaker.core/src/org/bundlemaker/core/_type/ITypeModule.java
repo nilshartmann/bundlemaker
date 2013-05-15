@@ -8,12 +8,10 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core._type.modules;
+package org.bundlemaker.core._type;
 
 import java.util.Collection;
 import java.util.Set;
-
-import org.bundlemaker.core._type.IType;
 
 /**
  * <p>
@@ -73,4 +71,13 @@ public interface ITypeModule {
   boolean containsAll(Set<String> typeNames);
 
   void add(IType type2);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param excludeContainedTypes
+   * @return
+   */
+  Set<IReference> getReferences();
 }

@@ -84,7 +84,6 @@ public abstract class AbstractParser implements IParser {
    */
   protected abstract void doParseResource(IProjectContentEntry content, IParsableResource resource,
       IResourceCache cache);
-
   /**
    * <p>
    * </p>

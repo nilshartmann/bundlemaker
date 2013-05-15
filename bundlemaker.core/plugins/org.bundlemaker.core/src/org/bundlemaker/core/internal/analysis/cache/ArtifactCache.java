@@ -12,7 +12,8 @@ package org.bundlemaker.core.internal.analysis.cache;
 
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.modules.ITypeModule;
+import org.bundlemaker.core._type.ITypeModule;
+import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
@@ -368,7 +369,7 @@ public class ArtifactCache {
             progressMonitor.worked(1);
           }
 
-          if (!resource.containsTypes()) {
+          if (!resource.adaptAs(ITypeResource.class).containsTypes()) {
             // create the artifact
             this.getResourceArtifact(resource);
           }

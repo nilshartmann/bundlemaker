@@ -54,7 +54,7 @@ public interface IParser {
    * @param cache
    * @throws CoreException
    */
-  public List<IProblem> parseResource(IProjectContentEntry content, IParsableResource resource,
+  List<IProblem> parseResource(IProjectContentEntry content, IParsableResource resource,
       IResourceCache cache)
       throws CoreException;
 
@@ -64,7 +64,7 @@ public interface IParser {
    * 
    * @param bundleMakerProject
    */
-  public void parseBundleMakerProjectStart(IBundleMakerProject bundleMakerProject);
+  void parseBundleMakerProjectStart(IBundleMakerProject bundleMakerProject);
 
   /**
    * <p>
@@ -72,7 +72,7 @@ public interface IParser {
    * 
    * @param bundleMakerProject
    */
-  public void parseBundleMakerProjectStop(IBundleMakerProject bundleMakerProject);
+  void parseBundleMakerProjectStop(IBundleMakerProject bundleMakerProject);
 
   /**
    * <p>

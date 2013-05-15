@@ -28,14 +28,14 @@ public interface IParserFactory {
    * This method is called immediately after a {@link IParserFactory} has been created.
    * </p>
    */
-  public void initialize();
+  void initialize();
 
   /**
    * <p>
    * This method is called before a {@link IParserFactory} will be destroyed.
    * </p>
    */
-  public void dispose();
+  void dispose();
 
   /**
    * <p>
@@ -45,7 +45,7 @@ public interface IParserFactory {
    * 
    * @param bundleMakerProject
    */
-  public void initialize(IBundleMakerProject bundleMakerProject) throws CoreException;
+  void initialize(IBundleMakerProject bundleMakerProject) throws CoreException;
 
   /**
    * <p>
@@ -57,7 +57,7 @@ public interface IParserFactory {
    * @return the newly created {@link IParser}
    * @throws CoreException
    */
-  public IParser createParser(IBundleMakerProject bundleMakerProject) throws CoreException;
+  IParser createParser(IBundleMakerProject bundleMakerProject) throws CoreException;
 
   /**
    * <p>
@@ -66,7 +66,7 @@ public interface IParserFactory {
    * 
    * @param bundleMakerProject
    */
-  public void dispose(IBundleMakerProject bundleMakerProject);
+  void dispose(IBundleMakerProject bundleMakerProject);
 
   /**
    * <p>
@@ -74,7 +74,7 @@ public interface IParserFactory {
    * 
    * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
    */
-  public static abstract class Adapter implements IParserFactory {
+  static abstract class Adapter implements IParserFactory {
 
     /**
      * {@inheritDoc}

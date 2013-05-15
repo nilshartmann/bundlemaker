@@ -16,14 +16,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.TypeEnum;
+import org.bundlemaker.core._type.internal.Type;
 import org.bundlemaker.core.internal.modules.Module;
 import org.bundlemaker.core.internal.modules.modularizedsystem.DefaultTypeSelector;
 import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
-import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
@@ -123,7 +124,7 @@ public class JdkModuleCreator {
           typeName = typeName.replace('/', '.');
           typeName = typeName.replace('\\', '.');
 
-          Type type = resource.getOrCreateType(typeName, TypeEnum.CLASS, false);
+          Type type = resource.adaptAs(IParsableTypeResource.class).getOrCreateType(typeName, TypeEnum.CLASS, false);
 
           //
           if (type.isLocalOrAnonymousType()) {

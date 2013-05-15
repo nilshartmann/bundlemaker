@@ -18,14 +18,14 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.TypeEnum;
-import org.bundlemaker.core._type.modules.ITypeModule;
+import org.bundlemaker.core._type.internal.Type;
 import org.bundlemaker.core.internal.JdkModuleCreator;
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.Module;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
-import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.internal.transformation.IInternalTransformation;
 import org.bundlemaker.core.internal.transformation.IUndoableTransformation;

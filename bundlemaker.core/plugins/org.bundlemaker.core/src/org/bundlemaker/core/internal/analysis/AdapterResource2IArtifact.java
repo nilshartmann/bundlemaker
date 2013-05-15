@@ -21,8 +21,8 @@ import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.resource.MovableUnit;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
 
 /**
  * <p>
@@ -31,16 +31,16 @@ import org.bundlemaker.core.resource.IModuleResource;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class AdapterResource2IArtifact extends AbstractArtifactContainer implements IResourceArtifact,
-    IMovableUnit {
+    IMovableUnit, ITempTypeProvider {
 
   /** the bundle maker resource */
-  private IModuleResource    _resource;
+  private IModuleResource _resource;
 
   /** - */
-  private boolean      _isSourceResource;
+  private boolean         _isSourceResource;
 
   /** - */
-  private IMovableUnit _movableUnit;
+  private IMovableUnit    _movableUnit;
 
   /**
    * <p>
@@ -68,16 +68,18 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     _movableUnit = MovableUnit.createFromResource(resource, artifactCache.getModularizedSystem());
   }
 
+  @Override
   public List<IType> getAssociatedTypes() {
-    return _movableUnit.getAssociatedTypes();
+    return ((ITempTypeProvider) _movableUnit).getAssociatedTypes();
   }
 
   public List<? extends IModuleResource> getAssociatedBinaryResources() {
     return _movableUnit.getAssociatedBinaryResources();
   }
 
+  @Override
   public boolean hasAssociatedTypes() {
-    return _movableUnit.hasAssociatedTypes();
+    return ((ITempTypeProvider) _movableUnit).hasAssociatedTypes();
   }
 
   public boolean hasAssociatedBinaryResources() {

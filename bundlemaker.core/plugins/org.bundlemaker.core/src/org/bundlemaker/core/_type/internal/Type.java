@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.resource;
+package org.bundlemaker.core._type.internal;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -16,14 +16,17 @@ import java.util.Set;
 
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core._type.modifiable.IModifiableType;
 import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
+import org.bundlemaker.core.internal.resource.FlyWeightString;
+import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -53,7 +56,7 @@ public class Type implements IType, IModifiableType {
   private transient Resource           _sourceResource;
 
   /** transient: the binary resource */
-  private transient IResource  _binaryResource;
+  private transient IResource          _binaryResource;
 
   /** transient: the reference container */
   private transient ReferenceContainer _referenceContainer;
@@ -103,14 +106,14 @@ public class Type implements IType, IModifiableType {
    * 
    * @param flyWeightCache
    */
-  public Type(String fullyQualifiedName, TypeEnum typeEnum, FlyWeightCache flyWeightCache, boolean abstractType) {
+  public Type(String fullyQualifiedName, TypeEnum typeEnum, TypeFlyWeightCache flyWeightCache, boolean abstractType) {
 
     Assert.isNotNull(fullyQualifiedName);
     Assert.isNotNull(typeEnum);
     Assert.isNotNull(flyWeightCache);
 
     //
-    _fullyQualifiedName = flyWeightCache.getFlyWeightString(fullyQualifiedName);
+    _fullyQualifiedName = flyWeightCache.getFlyWeightStringCache().getFlyWeightString(fullyQualifiedName);
 
     // the type of the type
     _typeEnum = typeEnum;
@@ -272,12 +275,12 @@ public class Type implements IType, IModifiableType {
 
     // if the source resource does not contain a primary type,
     // handle the non primary type as a primary type
-    if (!sourceResource.hasPrimaryType()) {
+    if (!sourceResource.adaptAs(ITypeResource.class).hasPrimaryType()) {
       return true;
     }
 
     //
-    return sourceResource.isPrimaryType(this);
+    return sourceResource.adaptAs(ITypeResource.class).isPrimaryType(this);
   }
 
   /**
@@ -393,7 +396,7 @@ public class Type implements IType, IModifiableType {
 
     IModuleResource sourceResource = getSourceResource();
 
-    return sourceResource.isPrimaryType(this);
+    return sourceResource.adaptAs(ITypeResource.class).isPrimaryType(this);
   }
 
   /**
@@ -410,7 +413,7 @@ public class Type implements IType, IModifiableType {
    * 
    * @param flyWeightCache
    */
-  public void createReferenceContainer(FlyWeightCache flyWeightCache) {
+  public void createReferenceContainer(TypeFlyWeightCache flyWeightCache) {
     //
     _referenceContainer = new ReferenceContainer(flyWeightCache) {
       @Override

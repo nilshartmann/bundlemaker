@@ -38,8 +38,8 @@ import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSy
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
 import org.bundlemaker.core.internal.resource.MovableUnit;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -48,7 +48,7 @@ import org.eclipse.core.runtime.Path;
  * 
  */
 public class AdapterType2IArtifact extends AbstractArtifact implements IMovableUnit,
-    ITypeArtifact, IReferencingArtifact, IReferencedArtifact {
+    ITypeArtifact, IReferencingArtifact, IReferencedArtifact, ITempTypeProvider {
 
   /** the bundle maker type */
   private IType                    _type;
@@ -278,7 +278,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
   @Override
   public boolean hasAssociatedTypes() {
-    return _movableUnit.hasAssociatedTypes();
+    return ((ITempTypeProvider) _movableUnit).hasAssociatedTypes();
   }
 
   @Override
@@ -315,7 +315,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    */
   @Override
   public List<IType> getAssociatedTypes() {
-    return _movableUnit.getAssociatedTypes();
+    return ((ITempTypeProvider) _movableUnit).getAssociatedTypes();
   }
 
   /**

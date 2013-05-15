@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
@@ -64,14 +65,15 @@ public class SimpleReportExporter extends AbstractExporter {
     builder.append("\n");
     builder.append("Source-Content: \n");
 
-    for (IModuleResource resource : asSortedList((Set<IModuleResource>) getCurrentModule().getResources(ProjectContentType.SOURCE))) {
+    for (IModuleResource resource : asSortedList((Set<IModuleResource>) getCurrentModule().getResources(
+        ProjectContentType.SOURCE))) {
       builder.append(resource.getPath() + "\n");
 
-      for (IReference reference : resource.getReferences()) {
+      for (IReference reference : resource.adaptAs(ITypeResource.class).getReferences()) {
         builder.append(" * " + reference.toString() + "\n");
       }
 
-      for (IType type : resource.getContainedTypes()) {
+      for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
         builder.append(" - " + type.getFullyQualifiedName() + "\n");
 
         for (IReference reference : type.getReferences()) {
@@ -83,10 +85,11 @@ public class SimpleReportExporter extends AbstractExporter {
 
     builder.append("\n");
     builder.append("Binary-Content: \n");
-    for (IModuleResource resource : asSortedList((Set<IModuleResource>) getCurrentModule().getResources(ProjectContentType.BINARY))) {
+    for (IModuleResource resource : asSortedList((Set<IModuleResource>) getCurrentModule().getResources(
+        ProjectContentType.BINARY))) {
       builder.append(resource.getPath() + "\n");
 
-      for (IReference reference : resource.getReferences()) {
+      for (IReference reference : resource.adaptAs(ITypeResource.class).getReferences()) {
         builder.append(" * " + reference.toString() + "\n");
       }
 
@@ -94,7 +97,7 @@ public class SimpleReportExporter extends AbstractExporter {
         builder.append(" ~sticky~ " + stickyResources.getPath() + "\n");
       }
 
-      for (IType type : resource.getContainedTypes()) {
+      for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
         builder.append(" - " + type.getFullyQualifiedName() + "\n");
 
         for (IReference reference : type.getReferences()) {

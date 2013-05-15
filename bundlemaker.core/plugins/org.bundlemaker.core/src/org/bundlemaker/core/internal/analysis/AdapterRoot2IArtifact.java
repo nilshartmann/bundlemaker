@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
@@ -34,8 +35,8 @@ import org.bundlemaker.core.internal.modules.event.MovableUnitMovedEvent;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -346,9 +347,9 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
     }
 
     // TODO
-    if (movableUnit.hasAssociatedTypes()) {
+    if (((ITempTypeProvider) movableUnit).hasAssociatedTypes()) {
 
-      for (IType type : movableUnit.getAssociatedTypes()) {
+      for (IType type : ((ITempTypeProvider) movableUnit).getAssociatedTypes()) {
 
         // filter local or anonymous type names
         if (!type.isLocalOrAnonymousType()) {
@@ -368,7 +369,8 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
   private void _addResource(IModuleResource resource) {
 
     // skip local or anonymous types (no 'Bla$1.class' resources)
-    if (resource.hasPrimaryType() && resource.getPrimaryType().isLocalOrAnonymousType()) {
+    if (resource.adaptAs(ITypeResource.class).hasPrimaryType()
+        && resource.adaptAs(ITypeResource.class).getPrimaryType().isLocalOrAnonymousType()) {
       return;
     }
 
@@ -420,8 +422,8 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
       if (artifact != null && artifact.getParent() != null) {
         ((AdapterPackage2IArtifact) artifact.getParent()).internalRemoveArtifact(artifact);
       }
-    } else if (movableUnit.hasAssociatedTypes()) {
-      for (IType type : movableUnit.getAssociatedTypes()) {
+    } else if (((ITempTypeProvider) movableUnit).hasAssociatedTypes()) {
+      for (IType type : ((ITempTypeProvider) movableUnit).getAssociatedTypes()) {
 
         //
         TypeSubCache typeCache = _artifactCache.getTypeCache();

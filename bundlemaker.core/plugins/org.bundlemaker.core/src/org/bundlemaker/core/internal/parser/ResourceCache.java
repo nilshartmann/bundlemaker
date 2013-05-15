@@ -13,11 +13,13 @@ package org.bundlemaker.core.internal.parser;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.TypeEnum;
+import org.bundlemaker.core._type.internal.Type;
+import org.bundlemaker.core._type.internal.TypeFlyWeightCache;
 import org.bundlemaker.core.internal.resource.DefaultProjectContentResource;
-import org.bundlemaker.core.internal.resource.FlyWeightCache;
+import org.bundlemaker.core.internal.resource.FlyWeightStringCache;
 import org.bundlemaker.core.internal.resource.Resource;
-import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
@@ -48,7 +50,9 @@ public class ResourceCache implements IResourceCache {
   private IPersistentDependencyStore     _dependencyStore;
 
   /** - */
-  private FlyWeightCache                 _flyWeightCache;
+  private FlyWeightStringCache           _flyWeightCache;
+
+  private TypeFlyWeightCache             _typeFlyWeightCache;
 
   /**
    * <p>
@@ -74,7 +78,8 @@ public class ResourceCache implements IResourceCache {
     _typeMap = new HashMap<String, Type>();
 
     //
-    _flyWeightCache = new FlyWeightCache();
+    _flyWeightCache = new FlyWeightStringCache();
+    _typeFlyWeightCache = new TypeFlyWeightCache(_flyWeightCache);
   }
 
   /**
@@ -94,7 +99,8 @@ public class ResourceCache implements IResourceCache {
     _typeMap = new HashMap<String, Type>();
 
     //
-    _flyWeightCache = new FlyWeightCache();
+    _flyWeightCache = new FlyWeightStringCache();
+    _typeFlyWeightCache = new TypeFlyWeightCache(_flyWeightCache);
   }
 
   /**
@@ -202,7 +208,7 @@ public class ResourceCache implements IResourceCache {
     }
 
     // create a new one if necessary
-    type = new Type(fullyQualifiedName, typeEnum, _flyWeightCache, abstractType);
+    type = new Type(fullyQualifiedName, typeEnum, _typeFlyWeightCache, abstractType);
 
     // store the Resource
     _typeMap.put(fullyQualifiedName, type);
@@ -222,8 +228,18 @@ public class ResourceCache implements IResourceCache {
    * 
    * @return
    */
-  public FlyWeightCache getFlyWeightCache() {
+  public FlyWeightStringCache getFlyWeightCache() {
     return _flyWeightCache;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return the typeFlyWeightCache
+   */
+  public TypeFlyWeightCache getTypeFlyWeightCache() {
+    return _typeFlyWeightCache;
   }
 
   /**
@@ -255,9 +271,9 @@ public class ResourceCache implements IResourceCache {
       Resource storedResource = _storedResourcesMap.get(resource);
 
       if (storedResource != null) {
-        for (Type type : storedResource.getModifiableContainedTypes()) {
+        for (Type type : storedResource.adaptAs(IParsableTypeResource.class).getModifiableContainedTypes()) {
           _typeMap.put(type.getFullyQualifiedName(), type);
-          type.createReferenceContainer(_flyWeightCache);
+          type.createReferenceContainer(_typeFlyWeightCache);
         }
       }
     }
@@ -268,10 +284,10 @@ public class ResourceCache implements IResourceCache {
       Resource storedResource = _storedResourcesMap.get(resource);
 
       if (storedResource != null) {
-        for (Type type : storedResource.getModifiableContainedTypes()) {
+        for (Type type : storedResource.adaptAs(IParsableTypeResource.class).getModifiableContainedTypes()) {
           if (!_typeMap.containsKey(type.getFullyQualifiedName())) {
             _typeMap.put(type.getFullyQualifiedName(), type);
-            type.createReferenceContainer(_flyWeightCache);
+            type.createReferenceContainer(_typeFlyWeightCache);
           }
         }
       }

@@ -14,11 +14,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bundlemaker.core.BundleMakerCore;
-import org.bundlemaker.core._type.IReference;
-import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.TypeEnum;
-import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
+import org.bundlemaker.core._type.IParsableTypeResource;
+import org.bundlemaker.core._type.ITypeResource;
+import org.bundlemaker.core._type.internal.TypeResource;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.modules.IModularizedSystem;
@@ -27,9 +25,6 @@ import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IParsableResource;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 
 /**
  * <p>
@@ -39,35 +34,23 @@ import org.eclipse.core.runtime.Status;
  */
 public class Resource extends DefaultProjectContentResource implements IParsableResource {
 
-  /** - */
-  private Set<Reference>               _references;
+  // TODO
+  private ITypeResource             _typeResource;
 
   /** - */
-  private Set<Type>                    _containedTypes;
+  private Set<IModuleResource>      _stickyResources;
 
   /** - */
-  private IType                        _primaryType;
+  private boolean                   _erroneous;
 
   /** - */
-  private Set<IModuleResource>         _stickyResources;
-
-  /** - */
-  private boolean                      _erroneous;
-
-  /** - */
-  private long                         _lastTimestamp;
-
-  /** - */
-  private transient ReferenceContainer _referenceContainer;
-
-  /** - */
-  private transient ResourceCache      _resourceCache;
+  private long                      _lastTimestamp;
 
   /**  */
-  private transient ResourceStandin    _resourceStandin;
+  private transient ResourceStandin _resourceStandin;
 
   /** - */
-  private transient MovableUnit        _movableUnit;
+  private transient MovableUnit     _movableUnit;
 
   /**
    * <p>
@@ -83,15 +66,35 @@ public class Resource extends DefaultProjectContentResource implements IParsable
 
     Assert.isNotNull(resourceCache);
 
-    _resourceCache = resourceCache;
+    _typeResource = new TypeResource(resourceCache);
+  }
 
-    _referenceContainer = new ReferenceContainer(resourceCache.getFlyWeightCache()) {
-      @Override
-      protected Set<Reference> createReferencesSet() {
-        return references();
-      }
-    };
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public <T> T adaptAs(Class<T> clazz) {
 
+    //
+    if (ITypeResource.class.equals(clazz)) {
+      return (T) _typeResource;
+    }
+
+    //
+    if (IParsableTypeResource.class.equals(clazz)) {
+      return (T) _typeResource;
+    }
+
+    //
+    return null;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Object getAdapter(Class adapter) {
+    return adaptAs(adapter);
   }
 
   /**
@@ -153,119 +156,9 @@ public class Resource extends DefaultProjectContentResource implements IParsable
    * {@inheritDoc}
    */
   @Override
-  public Set<IReference> getReferences() {
-    Set<? extends IReference> result = references();
-    return Collections.unmodifiableSet(result);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Set<IType> getContainedTypes() {
-    Set<? extends IType> types = containedTypes();
-    return Collections.unmodifiableSet(types);
-  }
-
-  @Override
-  public IType getPrimaryType() {
-    return _primaryType;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param type
-   * @return
-   */
-  @Override
-  public boolean isPrimaryType(IType type) {
-    return type != null && type.equals(_primaryType);
-  }
-
-  @Override
-  public boolean hasPrimaryType() {
-    return _primaryType != null;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public IType getContainedType() throws CoreException {
-
-    //
-    if (_containedTypes == null || _containedTypes.isEmpty()) {
-      return null;
-    }
-
-    //
-    if (_containedTypes.size() == 1) {
-      return _containedTypes.toArray(new IType[0])[0];
-    }
-
-    // throw new exception
-    throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID,
-        String.format("Resource '%s' contains more than one type.")));
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   public Set<IModuleResource> getStickyResources() {
     Set<? extends IModuleResource> result = stickyResources();
     return Collections.unmodifiableSet(result);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public boolean containsTypes() {
-    return _containedTypes != null && !_containedTypes.isEmpty();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void recordReference(String fullyQualifiedName, ReferenceAttributes referenceAttributes) {
-
-    //
-    _referenceContainer.recordReference(fullyQualifiedName, referenceAttributes);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Type getOrCreateType(String fullyQualifiedName, TypeEnum typeEnum, boolean abstractType) {
-
-    //
-    Type type = _resourceCache.getOrCreateType(fullyQualifiedName, typeEnum, abstractType);
-
-    //
-    containedTypes().add(type);
-
-    //
-    return type;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Type getType(String fullyQualifiedName) {
-
-    for (Type containedType : containedTypes()) {
-      if (containedType.getFullyQualifiedName().equals(fullyQualifiedName)) {
-        return containedType;
-      }
-    }
-
-    return null;
   }
 
   @Override
@@ -282,24 +175,6 @@ public class Resource extends DefaultProjectContentResource implements IParsable
 
   public ResourceStandin getResourceStandin() {
     return _resourceStandin;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.bundlemaker.core.resource.IModifiableResource#getModifiableContainedTypes ()
-   */
-  public Set<Type> getModifiableContainedTypes() {
-    return containedTypes();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.bundlemaker.core.resource.IModifiableResource#getModifiableReferences ()
-   */
-  public Set<Reference> getModifiableReferences() {
-    return references();
   }
 
   @Override
@@ -323,43 +198,6 @@ public class Resource extends DefaultProjectContentResource implements IParsable
     }
 
     return _resourceStandin.compareTo(arg0);
-  }
-
-  @Override
-  public void setPrimaryType(IType type) {
-    _primaryType = type;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  private Set<Reference> references() {
-
-    //
-    if (_references == null) {
-      _references = new HashSet<Reference>();
-    }
-
-    //
-    return _references;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  private Set<Type> containedTypes() {
-
-    if (_containedTypes == null) {
-      _containedTypes = new HashSet<Type>();
-    }
-
-    return _containedTypes;
   }
 
   private Set<IModuleResource> stickyResources() {

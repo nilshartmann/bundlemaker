@@ -3,7 +3,8 @@ package org.bundlemaker.core.itest.misc_models;
 import java.util.Collection;
 
 import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.modules.ITypeModule;
+import org.bundlemaker.core._type.ITypeModule;
+import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
@@ -43,10 +44,10 @@ public class InnerClassTest extends AbstractBundleMakerModelTest {
     Assert.assertTrue(aType.hasBinaryResource());
     Assert.assertTrue(aType.hasSourceResource());
     IModuleResource aSourceResource = aType.getSourceResource();
-    Assert.assertTrue(aSourceResource.isPrimaryType(aType));
-    Assert.assertFalse(aSourceResource.isPrimaryType(bType));
-    Assert.assertNotNull(aSourceResource.getContainedTypes());
-    Assert.assertEquals(aSourceResource.getContainedTypes().size(), 4);
+    Assert.assertTrue(aSourceResource.adaptAs(ITypeResource.class).isPrimaryType(aType));
+    Assert.assertFalse(aSourceResource.adaptAs(ITypeResource.class).isPrimaryType(bType));
+    Assert.assertNotNull(aSourceResource.adaptAs(ITypeResource.class).getContainedTypes());
+    Assert.assertEquals(aSourceResource.adaptAs(ITypeResource.class).getContainedTypes().size(), 4);
 
     Assert.assertNotNull(bType);
     Assert.assertTrue(bType.hasBinaryResource());

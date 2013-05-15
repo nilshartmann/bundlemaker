@@ -2,7 +2,6 @@ package org.bundlemaker.core.resource;
 
 import java.util.List;
 
-import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.modules.IModule;
 
 /**
@@ -64,23 +63,4 @@ public interface IMovableUnit {
    * @return the source resource that is associated with this movable type.
    */
   IModuleResource getAssociatedSourceResource();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  @Deprecated
-  boolean hasAssociatedTypes();
-
-  /**
-   * <p>
-   * Returns the list of types that are associated with this movable unit.
-   * </p>
-   * 
-   * @return the list of types that are associated with this movable unit.
-   */
-  @Deprecated
-  List<IType> getAssociatedTypes();
 }

@@ -8,11 +8,12 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.resource;
+package org.bundlemaker.core._type.internal;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
+import org.bundlemaker.core.internal.resource.FlyWeightStringCache;
 
 /**
  * <p>
@@ -20,10 +21,7 @@ import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class FlyWeightCache {
-
-  /** - */
-  private static final int                                    FLY_WEIGHT_STRINGS_INITIAL_CAPACITY         = 10000;
+public class TypeFlyWeightCache {
 
   /** - */
   private static final int                                    REFERENCE_CACHE_INITIAL_CAPACITY            = 10000;
@@ -35,25 +33,35 @@ public class FlyWeightCache {
   ConcurrentHashMap<Reference, Reference>                     _referenceCache;
 
   /** - */
-  ConcurrentHashMap<String, FlyWeightString>                  _flyWeightStrings;
+  ConcurrentHashMap<ReferenceAttributes, ReferenceAttributes> _referenceAttributesCache;
 
   /** - */
-  ConcurrentHashMap<ReferenceAttributes, ReferenceAttributes> _referenceAttributesCache;
+  private FlyWeightStringCache                                _flyWeightStringCache;
 
   /**
    * <p>
-   * Creates a new instance of type {@link FlyWeightCache}.
+   * Creates a new instance of type {@link TypeFlyWeightCache}.
    * </p>
    */
-  public FlyWeightCache() {
+  public TypeFlyWeightCache(FlyWeightStringCache stringFlyWeightCache) {
+
+    _flyWeightStringCache = stringFlyWeightCache;
 
     // create the concurrent hash maps
     _referenceCache = new ConcurrentHashMap<Reference, Reference>(REFERENCE_CACHE_INITIAL_CAPACITY);
 
-    _flyWeightStrings = new ConcurrentHashMap<String, FlyWeightString>(FLY_WEIGHT_STRINGS_INITIAL_CAPACITY);
-
     _referenceAttributesCache = new ConcurrentHashMap<ReferenceAttributes, ReferenceAttributes>(
         REFERENCE_ATTRIBUTES_CACHE_INITIAL_CAPACITY);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return the flyWeightStringCache
+   */
+  public FlyWeightStringCache getFlyWeightStringCache() {
+    return _flyWeightStringCache;
   }
 
   /**
@@ -69,7 +77,7 @@ public class FlyWeightCache {
     // create the key
     ReferenceAttributes attributes = getReferenceAttributes(referenceAttributes);
 
-    Reference key = new Reference(getFlyWeightString(fullyQualifiedName), attributes);
+    Reference key = new Reference(_flyWeightStringCache.getFlyWeightString(fullyQualifiedName), attributes);
 
     // return if already there
     if (_referenceCache.containsKey(key)) {
@@ -82,29 +90,6 @@ public class FlyWeightCache {
 
     // return the value that won
     return _referenceCache.get(key);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param string
-   * @return
-   */
-  public FlyWeightString getFlyWeightString(String string) {
-
-    // return if already there
-    if (_flyWeightStrings.containsKey(string)) {
-      return _flyWeightStrings.get(string);
-    }
-
-    // map doesn't contain key, create one -- note that first writer wins,
-    // all others just throw away their value
-    FlyWeightString flyWeightString = new FlyWeightString(string);
-    _flyWeightStrings.putIfAbsent(string, flyWeightString);
-
-    // return the value that won
-    return _flyWeightStrings.get(string);
   }
 
   /**
@@ -131,10 +116,6 @@ public class FlyWeightCache {
 
   public ConcurrentHashMap<Reference, Reference> getReferenceCache() {
     return _referenceCache;
-  }
-
-  public ConcurrentHashMap<String, FlyWeightString> getFlyWeightStrings() {
-    return _flyWeightStrings;
   }
 
   public ConcurrentHashMap<ReferenceAttributes, ReferenceAttributes> getReferenceAttributesCache() {

@@ -6,13 +6,15 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core._type.utils.JavaTypeUtils;
+import org.bundlemaker.core.internal.analysis.ITempTypeProvider;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
@@ -23,7 +25,7 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class MovableUnit implements IMovableUnit {
+public class MovableUnit implements IMovableUnit, ITempTypeProvider {
 
   /** EMPTY_RESOURCE_LIST */
   private static final List<IResourceStandin> EMPTY_RESOURCE_LIST = Collections.emptyList();
@@ -35,7 +37,7 @@ public class MovableUnit implements IMovableUnit {
   private IType                               _mainType;
 
   /** the main resource */
-  private IModuleResource                           _mainResource;
+  private IModuleResource                     _mainResource;
 
   /** the modularized system */
   private IModularizedSystem                  _modularizedSystem;
@@ -44,7 +46,7 @@ public class MovableUnit implements IMovableUnit {
   private List<IType>                         _associatedTypes;
 
   /** the source resource */
-  private IModuleResource                           _sourceResource;
+  private IModuleResource                     _sourceResource;
 
   /** the binary resource */
   private List<IResourceStandin>              _binaryResources;
@@ -83,10 +85,10 @@ public class MovableUnit implements IMovableUnit {
     Assert.isNotNull(resource);
 
     //
-    if (resource.getName().endsWith(".class") && resource.containsTypes()) {
+    if (resource.getName().endsWith(".class") && resource.adaptAs(ITypeResource.class).containsTypes()) {
 
       try {
-        IType type = resource.getContainedType();
+        IType type = resource.adaptAs(ITypeResource.class).getContainedType();
         if (type.isLocalOrAnonymousType()) {
           String typeName = JavaTypeUtils.getEnclosingNonLocalAndNonAnonymousTypeName(type.getFullyQualifiedName());
 
@@ -228,7 +230,7 @@ public class MovableUnit implements IMovableUnit {
     if (_mainType != null) {
       handleType(_mainType);
       if (_sourceResource != null) {
-        for (IType type : _sourceResource.getContainedTypes()) {
+        for (IType type : _sourceResource.adaptAs(ITypeResource.class).getContainedTypes()) {
           handleType(type);
         }
       }
@@ -236,12 +238,12 @@ public class MovableUnit implements IMovableUnit {
 
     // ...or process main resource...
     else if (_mainResource != null) {
-      if (_mainResource.containsTypes()) {
-        for (IType type : _mainResource.getContainedTypes()) {
+      if (_mainResource.adaptAs(ITypeResource.class).containsTypes()) {
+        for (IType type : _mainResource.adaptAs(ITypeResource.class).getContainedTypes()) {
           handleType(type);
         }
         if (_sourceResource != null) {
-          for (IType type : _sourceResource.getContainedTypes()) {
+          for (IType type : _sourceResource.adaptAs(ITypeResource.class).getContainedTypes()) {
             handleType(type);
           }
         }
@@ -288,7 +290,7 @@ public class MovableUnit implements IMovableUnit {
     //
     if (type.hasSourceResource()) {
       _sourceResource = type.getSourceResource();
-      for (IType sourceType : _sourceResource.getContainedTypes()) {
+      for (IType sourceType : _sourceResource.adaptAs(ITypeResource.class).getContainedTypes()) {
         handleType(sourceType);
       }
     }

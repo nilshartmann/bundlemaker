@@ -14,16 +14,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bundlemaker.core._type.IReference;
-import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
@@ -34,7 +32,7 @@ import org.eclipse.core.runtime.CoreException;
 public class ResourceStandin extends DefaultProjectContentResource implements IResourceStandin {
 
   /** - */
-  private Resource       _resource;
+  private Resource             _resource;
 
   /** - */
   private Set<IModuleResource> _stickyResourceStandins;
@@ -73,6 +71,35 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
 
     //
     return ((ModularizedSystem) modularizedSystem).getAssociatedResourceModule(this);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  @SuppressWarnings("rawtypes")
+  public Object getAdapter(Class adapter) {
+    return adaptAs(adapter);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public <T> T adaptAs(Class<T> clazz) {
+
+    //
+    if (ITypeResource.class.equals(clazz)) {
+      if (_resource == null) {
+        // TODO
+        throw new RuntimeException();
+      }
+
+      return (T) _resource.adaptAs(clazz);
+    }
+
+    //
+    return null;
   }
 
   public IModuleResource getResource() {
@@ -118,83 +145,6 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
     }
 
     return _resource.getMovableUnit(modularizedSystem);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Set<IReference> getReferences() {
-
-    //
-    if (_resource == null) {
-      // TODO
-      throw new RuntimeException();
-    }
-
-    return _resource.getReferences();
-  }
-
-  @Override
-  public Set<IType> getContainedTypes() {
-
-    //
-    if (_resource == null) {
-      // TODO
-      throw new RuntimeException();
-    }
-
-    return _resource.getContainedTypes();
-  }
-
-  @Override
-  public IType getContainedType() throws CoreException {
-
-    //
-    if (_resource == null) {
-      // TODO
-      throw new RuntimeException();
-    }
-
-    return _resource.getContainedType();
-  }
-
-  @Override
-  public boolean containsTypes() {
-
-    //
-    if (_resource == null) {
-      // TODO
-      throw new RuntimeException();
-    }
-
-    return _resource.containsTypes();
-  }
-
-  @Override
-  public IType getPrimaryType() {
-    //
-    if (_resource == null) {
-      // TODO
-      throw new RuntimeException();
-    }
-
-    return _resource.getPrimaryType();
-  }
-
-  @Override
-  public boolean isPrimaryType(IType type) {
-    //
-    if (_resource == null) {
-      // TODO
-      throw new RuntimeException();
-    }
-
-    return _resource.isPrimaryType(type);
-  }
-
-  public boolean hasPrimaryType() {
-    return _resource.hasPrimaryType();
   }
 
   @Override

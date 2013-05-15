@@ -8,19 +8,25 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.modules;
+package org.bundlemaker.core._type.internal;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.modules.ITypeModule;
+import org.bundlemaker.core._type.ITypeModule;
+import org.bundlemaker.core._type.ITypeResource;
+import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -156,5 +162,38 @@ public class TypeContainer implements ITypeModule {
 
   public void setModule(IModule module) {
     _module = module;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Set<IReference> getReferences() {
+
+    //
+    Set<IReference> result = new HashSet<IReference>();
+
+    // iterate over all resources
+    for (IModuleResource resource : _module.getResources(ProjectContentType.BINARY)) {
+      for (IReference reference : resource.adaptAs(ITypeResource.class).getReferences()) {
+        result.add(reference);
+      }
+    }
+
+    for (IModuleResource resource : _module.getResources(ProjectContentType.SOURCE)) {
+      for (IReference reference : resource.adaptAs(ITypeResource.class).getReferences()) {
+        result.add(reference);
+      }
+    }
+
+    //
+    for (IType type : getContainedTypes()) {
+      for (IReference reference : type.getReferences()) {
+        result.add(reference);
+      }
+    }
+
+    // return result
+    return result;
   }
 }

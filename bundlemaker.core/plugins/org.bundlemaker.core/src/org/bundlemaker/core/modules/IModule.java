@@ -15,10 +15,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.IGenericAdaptable;
-import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.IPath;
 
 /**
@@ -138,13 +137,4 @@ public interface IModule extends IGenericAdaptable {
    * @return
    */
   List<IMovableUnit> getMovableUnits();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param excludeContainedTypes
-   * @return
-   */
-  Set<IReference> getReferences();
 }
