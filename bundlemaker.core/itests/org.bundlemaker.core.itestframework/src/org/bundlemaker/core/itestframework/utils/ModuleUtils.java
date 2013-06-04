@@ -8,10 +8,10 @@ import java.util.Set;
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeResource;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.ResourceType;
 
 public class ModuleUtils {
 
@@ -25,7 +25,7 @@ public class ModuleUtils {
     builder.append("\n");
     builder.append("Source-Content: \n");
 
-    for (IModuleResource resource : asSortedList((Set<IModuleResource>)module.getResources(ProjectContentType.SOURCE))) {
+    for (IModuleResource resource : asSortedList((Set<IModuleResource>)module.getResources(ResourceType.SOURCE))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : asSortedList(resource.adaptAs(ITypeResource.class).getReferences())) {
@@ -43,7 +43,7 @@ public class ModuleUtils {
 
     builder.append("\n");
     builder.append("Binary-Content: \n");
-    for (IModuleResource resource : asSortedList((Set<IModuleResource>)module.getResources(ProjectContentType.BINARY))) {
+    for (IModuleResource resource : asSortedList((Set<IModuleResource>)module.getResources(ResourceType.BINARY))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : asSortedList(resource.adaptAs(ITypeResource.class).getReferences())) {

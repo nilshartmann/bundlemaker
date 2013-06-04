@@ -8,18 +8,18 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.projectdescription;
+package org.bundlemaker.core.resource;
+
 
 /**
  * <p>
- * Defines the possible types of the content that is defined in a {@link IProjectContentEntry}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  * 
  * @noextend This class is not intended to be extended by clients.
  */
-public enum ProjectContentType {
+public enum ResourceType {
 
   /** source content */
   SOURCE,
@@ -29,10 +29,10 @@ public enum ProjectContentType {
 
   /**
    * <p>
-   * Returns {@code S} for {@link ProjectContentType#SOURCE} and {@code B} for {@link ProjectContentType#BINARY}.
+   * Returns {@code S} for {@link ResourceType#SOURCE} and {@code B} for {@link ResourceType#BINARY}.
    * </p>
    * 
-   * @return {@code S} for {@link ProjectContentType#SOURCE} and {@code B} for {@link ProjectContentType#BINARY}.
+   * @return {@code S} for {@link ResourceType#SOURCE} and {@code B} for {@link ResourceType#BINARY}.
    */
   public String getShortDescription() {
 

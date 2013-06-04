@@ -5,7 +5,6 @@ import java.util.Map;
 import org.bundlemaker.core.mvn.content.MvnArtifactType;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleIdentifier;
-import org.bundlemaker.core.resource.ModuleIdentifier;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -40,7 +39,7 @@ public class MvnArtifactConverter {
     Assert.isNotNull(mvnArtifactType);
 
     //
-    IModuleIdentifier moduleIdentifier = new ModuleIdentifier(mvnArtifactType.getGroupId() + DELIMITER
+    IModuleIdentifier moduleIdentifier = IModuleIdentifier.Factory.createNewModuleIdentifier(mvnArtifactType.getGroupId() + DELIMITER
         + mvnArtifactType.getArtifactId(),
         mvnArtifactType.getVersion());
 
@@ -63,7 +62,7 @@ public class MvnArtifactConverter {
     Assert.isNotNull(version);
 
     //
-    IModuleIdentifier moduleIdentifier = new ModuleIdentifier(groupId + DELIMITER
+    IModuleIdentifier moduleIdentifier = IModuleIdentifier.Factory.createNewModuleIdentifier(groupId + DELIMITER
         + artifactId,
         version);
 

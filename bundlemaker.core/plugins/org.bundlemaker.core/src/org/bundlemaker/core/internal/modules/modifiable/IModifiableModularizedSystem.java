@@ -17,14 +17,14 @@ import java.util.Set;
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.internal.modules.ChangeAction;
+import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.event.IModularizedSystemChangedListener;
+import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.modules.transformation.ITransformation;
-import org.bundlemaker.core.resource.IGroup;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.ModuleIdentifier;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -144,7 +144,7 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
    * @param append
    * @return
    */
-  IGroup getGroup(IPath append);
+  Group getGroup(IPath append);
 
   /**
    * <p>
@@ -153,7 +153,7 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
    * @param absolutePath
    * @return
    */
-  IGroup getOrCreateGroup(IPath absolutePath);
+  Group getOrCreateGroup(IPath absolutePath);
 
   /**
    * <p>
@@ -161,7 +161,7 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
    * 
    * @param group
    */
-  void removeGroup(IGroup group);
+  void removeGroup(Group group);
 
   /**
    * <p>

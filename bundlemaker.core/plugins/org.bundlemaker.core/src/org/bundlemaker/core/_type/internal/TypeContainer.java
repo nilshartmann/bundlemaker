@@ -24,9 +24,9 @@ import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.ResourceType;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -174,13 +174,13 @@ public class TypeContainer implements ITypeModule {
     Set<IReference> result = new HashSet<IReference>();
 
     // iterate over all resources
-    for (IModuleResource resource : _module.getResources(ProjectContentType.BINARY)) {
+    for (IModuleResource resource : _module.getResources(ResourceType.BINARY)) {
       for (IReference reference : resource.adaptAs(ITypeResource.class).getReferences()) {
         result.add(reference);
       }
     }
 
-    for (IModuleResource resource : _module.getResources(ProjectContentType.SOURCE)) {
+    for (IModuleResource resource : _module.getResources(ResourceType.SOURCE)) {
       for (IReference reference : resource.adaptAs(ITypeResource.class).getReferences()) {
         result.add(reference);
       }

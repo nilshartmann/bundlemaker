@@ -23,10 +23,10 @@ import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.exporter.AbstractExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.util.Helper;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.ResourceType;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -93,7 +93,7 @@ public class JdtProjectExporter extends AbstractExporter {
 			IModule module, IModuleExporterContext context) {
 
 		//
-		return !module.getResources(ProjectContentType.SOURCE).isEmpty();
+		return !module.getResources(ResourceType.SOURCE).isEmpty();
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class JdtProjectExporter extends AbstractExporter {
 
 		// copy the source
 		for (IModuleResource resourceStandin : getCurrentModule().getResources(
-				ProjectContentType.SOURCE)) {
+				ResourceType.SOURCE)) {
 
 				//
 				File targetFile = new File(srcFolder.getRawLocation().toFile(),

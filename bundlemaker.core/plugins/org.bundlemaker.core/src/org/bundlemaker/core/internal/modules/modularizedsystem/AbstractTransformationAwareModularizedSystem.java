@@ -26,6 +26,7 @@ import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.Module;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
+import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.internal.transformation.IInternalTransformation;
 import org.bundlemaker.core.internal.transformation.IUndoableTransformation;
@@ -33,10 +34,8 @@ import org.bundlemaker.core.modules.transformation.ITransformation;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.VariablePath;
-import org.bundlemaker.core.resource.IGroup;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleIdentifier;
-import org.bundlemaker.core.resource.ModuleIdentifier;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -325,7 +324,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * @return
    */
   @Override
-  public void removeGroup(IGroup group) {
+  public void removeGroup(Group group) {
 
     Assert.isNotNull(group);
 
@@ -338,7 +337,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
     Assert.isNotNull(path);
 
-    IGroup group = getGroup(path);
+    Group group = getGroup(path);
 
     if (group == null) {
       // TODO
@@ -509,7 +508,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * 
    * @param group
    */
-  protected void groupAdded(IGroup group) {
+  protected void groupAdded(Group group) {
     // do nothing...
   }
 
@@ -519,7 +518,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * 
    * @param group
    */
-  protected void groupRemoved(IGroup group) {
+  protected void groupRemoved(Group group) {
     // do nothing...
   }
 

@@ -13,9 +13,9 @@ import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.VariablePath;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.ResourceType;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -194,7 +194,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * {@inheritDoc}
    */
   @Override
-  public Set<? extends IModuleResource> getResources(ProjectContentType type) {
+  public Set<? extends IModuleResource> getResources(ResourceType type) {
     switch (type) {
     case BINARY: {
       return getBinaryResources();
@@ -352,7 +352,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * @return
    */
   protected IResourceStandin createNewResourceStandin(String contentId, String root, String path,
-      ProjectContentType type) {
+      ResourceType type) {
 
     Assert.isNotNull(contentId);
     Assert.isNotNull(root);
@@ -449,7 +449,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
       for (VariablePath root : _binaryPaths) {
         for (String filePath : FileUtils.getAllChildren(root.getAsFile())) {
           // create the resource standin
-          createNewResourceStandin(getId(), root.getResolvedPath().toString(), filePath, ProjectContentType.BINARY);
+          createNewResourceStandin(getId(), root.getResolvedPath().toString(), filePath, ResourceType.BINARY);
         }
       }
 
@@ -459,7 +459,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
           for (VariablePath root : _sourcePaths) {
             for (String filePath : FileUtils.getAllChildren(root.getAsFile())) {
               // create the resource standin
-              createNewResourceStandin(getId(), root.getResolvedPath().toString(), filePath, ProjectContentType.SOURCE);
+              createNewResourceStandin(getId(), root.getResolvedPath().toString(), filePath, ResourceType.SOURCE);
             }
           }
         }
@@ -474,14 +474,14 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * @param rootPath
    * @param type
    */
-  public void addRootPath(VariablePath rootPath, ProjectContentType type) {
+  public void addRootPath(VariablePath rootPath, ResourceType type) {
     Assert.isNotNull(rootPath);
     Assert.isNotNull(type);
 
     //
-    if (type.equals(ProjectContentType.BINARY)) {
+    if (type.equals(ResourceType.BINARY)) {
       _binaryPaths.add(rootPath);
-    } else if (type.equals(ProjectContentType.SOURCE)) {
+    } else if (type.equals(ResourceType.SOURCE)) {
       sourcePaths().add(rootPath);
     }
 
@@ -495,14 +495,14 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * @param rootPath
    * @param type
    */
-  public void removeRootPath(VariablePath rootPath, ProjectContentType type) {
+  public void removeRootPath(VariablePath rootPath, ResourceType type) {
     Assert.isNotNull(rootPath);
     Assert.isNotNull(type);
 
     //
-    if (type.equals(ProjectContentType.BINARY)) {
+    if (type.equals(ResourceType.BINARY)) {
       _binaryPaths.remove(rootPath);
-    } else if (type.equals(ProjectContentType.SOURCE)) {
+    } else if (type.equals(ResourceType.SOURCE)) {
       _sourcePaths.remove(rootPath);
     }
 

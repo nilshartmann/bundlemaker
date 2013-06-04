@@ -21,10 +21,10 @@ import java.util.Set;
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeResource;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.ResourceType;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -66,7 +66,7 @@ public class SimpleReportExporter extends AbstractExporter {
     builder.append("Source-Content: \n");
 
     for (IModuleResource resource : asSortedList((Set<IModuleResource>) getCurrentModule().getResources(
-        ProjectContentType.SOURCE))) {
+        ResourceType.SOURCE))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : resource.adaptAs(ITypeResource.class).getReferences()) {
@@ -86,7 +86,7 @@ public class SimpleReportExporter extends AbstractExporter {
     builder.append("\n");
     builder.append("Binary-Content: \n");
     for (IModuleResource resource : asSortedList((Set<IModuleResource>) getCurrentModule().getResources(
-        ProjectContentType.BINARY))) {
+        ResourceType.BINARY))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : resource.adaptAs(ITypeResource.class).getReferences()) {

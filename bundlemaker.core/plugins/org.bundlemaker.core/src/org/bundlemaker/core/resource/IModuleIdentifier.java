@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.resource;
 
+import org.bundlemaker.core.internal.resource.ModuleIdentifier;
+
 /**
  * <p>
  * </p>
@@ -33,4 +35,25 @@ public interface IModuleIdentifier {
    * @return
    */
   String getVersion();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   */
+  public static class Factory {
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @param name
+     * @param version
+     * @return
+     */
+    public static IModuleIdentifier createNewModuleIdentifier(String name, String version) {
+      return new ModuleIdentifier(name, version);
+    }
+  }
 }

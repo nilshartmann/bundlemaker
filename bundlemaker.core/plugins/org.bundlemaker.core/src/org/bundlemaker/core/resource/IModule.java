@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.IGenericAdaptable;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.eclipse.core.runtime.IPath;
 
 /**
@@ -107,7 +106,7 @@ public interface IModule extends IGenericAdaptable {
    * @param contentType
    * @return
    */
-  boolean containsResource(String path, ProjectContentType contentType);
+  boolean containsResource(String path, ResourceType contentType);
 
   /**
    * <p>
@@ -117,7 +116,7 @@ public interface IModule extends IGenericAdaptable {
    * @param conentType
    * @return
    */
-  IModuleResource getResource(String path, ProjectContentType conentType);
+  IModuleResource getResource(String path, ResourceType conentType);
 
   /**
    * <p>
@@ -126,7 +125,7 @@ public interface IModule extends IGenericAdaptable {
    * @param conentType
    * @return
    */
-  Set<? extends IModuleResource> getResources(ProjectContentType conentType);
+  Set<? extends IModuleResource> getResources(ResourceType conentType);
 
   /**
    * <p>

@@ -10,8 +10,8 @@ import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.VariablePath;
+import org.bundlemaker.core.resource.ResourceType;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -201,15 +201,15 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
    * @param path
    * @param type
    */
-  public void addRootPath(VariablePath path, ProjectContentType type) {
+  public void addRootPath(VariablePath path, ResourceType type) {
 
     //
-    if (ProjectContentType.BINARY.equals(type)) {
+    if (ResourceType.BINARY.equals(type)) {
       _binaryPaths.add(path);
     }
 
     //
-    else if (ProjectContentType.SOURCE.equals(type)) {
+    else if (ResourceType.SOURCE.equals(type)) {
       _sourcePaths.add(path);
     }
 
@@ -224,15 +224,15 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
    * @param path
    * @param contentType
    */
-  public void removeRootPath(VariablePath path, ProjectContentType type) {
+  public void removeRootPath(VariablePath path, ResourceType type) {
 
     //
-    if (ProjectContentType.BINARY.equals(type)) {
+    if (ResourceType.BINARY.equals(type)) {
       _binaryPaths.add(path);
     }
 
     //
-    else if (ProjectContentType.SOURCE.equals(type)) {
+    else if (ResourceType.SOURCE.equals(type)) {
       _sourcePaths.add(path);
     }
 

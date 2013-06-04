@@ -10,11 +10,11 @@ import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core._type.utils.JavaTypeUtils;
 import org.bundlemaker.core.internal.analysis.ITempTypeProvider;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.ResourceType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
@@ -95,7 +95,7 @@ public class MovableUnit implements IMovableUnit, ITempTypeProvider {
           // TODO!!
           IModule resourceModule = resource.getModule(modularizedSystem);
           IModuleResource nonAnonymousResource = resourceModule.getResource(typeName.replace('.', '/') + ".class",
-              ProjectContentType.BINARY);
+              ResourceType.BINARY);
 
           if (nonAnonymousResource != null) {
             resource = nonAnonymousResource;
@@ -253,10 +253,10 @@ public class MovableUnit implements IMovableUnit, ITempTypeProvider {
         IModule resourceModule = _mainResource.getModule(_modularizedSystem);
 
         //
-        _sourceResource = resourceModule.getResource(_mainResource.getPath(), ProjectContentType.SOURCE);
+        _sourceResource = resourceModule.getResource(_mainResource.getPath(), ResourceType.SOURCE);
 
         //
-        IModuleResource binaryResource = resourceModule.getResource(_mainResource.getPath(), ProjectContentType.BINARY);
+        IModuleResource binaryResource = resourceModule.getResource(_mainResource.getPath(), ResourceType.BINARY);
         if (binaryResource != null) {
           _binaryResources.add((IResourceStandin) binaryResource);
         }

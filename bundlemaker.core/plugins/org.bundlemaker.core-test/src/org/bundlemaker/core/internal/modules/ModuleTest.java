@@ -8,9 +8,9 @@ import static org.mockito.Mockito.mock;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core.framework.ResourceFactory;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.resource.IModularizedSystem;
-import org.bundlemaker.core.resource.ModuleIdentifier;
+import org.bundlemaker.core.resource.ResourceType;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
 
@@ -30,7 +30,7 @@ public class ModuleTest {
 
     //
     Module module = new Module(new ModuleIdentifier("Test", "1.2.3"), modularizedSystem);
-    module.addAll(ResourceFactory.getResources(), ProjectContentType.BINARY);
+    module.addAll(ResourceFactory.getResources(), ResourceType.BINARY);
 
     //
     assertThat(module.adaptAs(ITypeModule.class).getContainedTypes().size(), is(7));

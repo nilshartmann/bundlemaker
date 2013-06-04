@@ -1,6 +1,6 @@
 package org.bundlemaker.core.analysis;
 
-import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.resource.ResourceType;
 
 /**
  * <p>
@@ -14,23 +14,23 @@ public interface IAnalysisModelConfiguration {
   /** Default configuration SOURCE_RESOURCES_CONFIGURATION */
   public static final IAnalysisModelConfiguration SOURCE_RESOURCES_CONFIGURATION              = new AnalysisModelConfiguration(
                                                                                                   false,
-                                                                                                  ProjectContentType.SOURCE,
+                                                                                                  ResourceType.SOURCE,
                                                                                                   true);
 
   /** default configuration BINARY_RESOURCES_CONFIGURATION */
   public static final IAnalysisModelConfiguration BINARY_RESOURCES_CONFIGURATION              = new AnalysisModelConfiguration(
                                                                                                   false,
-                                                                                                  ProjectContentType.BINARY,
+                                                                                                  ResourceType.BINARY,
                                                                                                   true);
 
   public static final IAnalysisModelConfiguration HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION = new AnalysisModelConfiguration(
                                                                                                   true,
-                                                                                                  ProjectContentType.BINARY,
+                                                                                                  ResourceType.BINARY,
                                                                                                   true);
 
   public static final IAnalysisModelConfiguration HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION = new AnalysisModelConfiguration(
                                                                                                   true,
-                                                                                                  ProjectContentType.SOURCE,
+                                                                                                  ResourceType.SOURCE,
                                                                                                   true);
 
   /**
@@ -39,7 +39,7 @@ public interface IAnalysisModelConfiguration {
    * 
    * @return
    */
-  ProjectContentType getContentType();
+  ResourceType getContentType();
 
   /**
    * <p>

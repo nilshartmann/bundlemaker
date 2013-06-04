@@ -2,7 +2,7 @@ package org.bundlemaker.core.analysis;
 
 import java.util.concurrent.Callable;
 
-import org.bundlemaker.core.resource.IGroup;
+import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -93,7 +93,7 @@ public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleCont
    *          (must not be null)
    * @return the {@link IGroupArtifact} for the given {@link IGroup} (maybe null)
    */
-  IGroupArtifact getGroupArtifact(IGroup group);
+  IGroupArtifact getGroupArtifact(Group group);
 
   /**
    * <p>

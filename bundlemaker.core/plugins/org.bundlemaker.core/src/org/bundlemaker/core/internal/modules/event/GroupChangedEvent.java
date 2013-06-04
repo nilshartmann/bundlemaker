@@ -2,13 +2,12 @@ package org.bundlemaker.core.internal.modules.event;
 
 import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.internal.modules.Group;
-import org.bundlemaker.core.resource.IGroup;
 import org.eclipse.core.runtime.IPath;
 
 public class GroupChangedEvent {
 
   /** - */
-  private IGroup       _group;
+  private Group        _group;
 
   /** - */
   private ChangeAction _changeAction;
@@ -21,7 +20,7 @@ public class GroupChangedEvent {
    * @param group
    * @param changeAction
    */
-  public GroupChangedEvent(IGroup group, ChangeAction changeAction) {
+  public GroupChangedEvent(Group group, ChangeAction changeAction) {
     super();
     _group = group;
     _changeAction = changeAction;
@@ -47,7 +46,7 @@ public class GroupChangedEvent {
     return ((Group) _group).getPath();
   }
 
-  public IGroup getGroup() {
+  public Group getGroup() {
     return _group;
   }
 }

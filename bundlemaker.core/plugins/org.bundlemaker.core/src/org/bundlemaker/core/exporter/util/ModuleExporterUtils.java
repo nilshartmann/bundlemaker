@@ -14,9 +14,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.ResourceType;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -39,7 +39,7 @@ public class ModuleExporterUtils {
    * @return
    */
   public static boolean requiresRepackaging(IModule resourceModule, File currentModuleTemplateDirectory,
-      ProjectContentType contentType) {
+      ResourceType contentType) {
 
     Assert.isNotNull(resourceModule, "Parameter 'resourceModule' has to be set!");
     Assert.isNotNull(contentType, "Parameter 'type' has to be set!");
@@ -61,7 +61,7 @@ public class ModuleExporterUtils {
    * @param contentType
    * @return
    */
-  public static boolean requiresRepackaging(IModule resourceContainer, ProjectContentType contentType) {
+  public static boolean requiresRepackaging(IModule resourceContainer, ResourceType contentType) {
 
     Assert.isNotNull(resourceContainer, "Parameter 'resourceContainer' has to be set!");
     Assert.isNotNull(contentType, "Parameter 'type' has to be set!");
@@ -116,7 +116,7 @@ public class ModuleExporterUtils {
    * @return
    * @throws IOException
    */
-  public static File getRootFile(IModule resourceModule, ProjectContentType contentType) {
+  public static File getRootFile(IModule resourceModule, ResourceType contentType) {
 
     //
     Assert.isNotNull(resourceModule);

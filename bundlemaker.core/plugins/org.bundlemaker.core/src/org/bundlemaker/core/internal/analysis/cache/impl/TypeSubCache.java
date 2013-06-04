@@ -10,9 +10,9 @@ import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.cache.ModulePackageKey;
 import org.bundlemaker.core.internal.analysis.cache.TypeKey;
 import org.bundlemaker.core.internal.analysis.virtual.VirtualType2IArtifact;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.ResourceType;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -120,7 +120,7 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, ITypeArtifact> {
     // get the associated resources
     IModuleResource resource = null;
 
-    resource = getArtifactCache().getConfiguration().getContentType().equals(ProjectContentType.SOURCE)
+    resource = getArtifactCache().getConfiguration().getContentType().equals(ResourceType.SOURCE)
         && type.hasSourceResource() ? type.getSourceResource() : type.getBinaryResource();
 
     // get the associated module

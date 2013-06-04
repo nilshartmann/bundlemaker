@@ -10,6 +10,7 @@ import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescri
 import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.internal.projectdescription.gson.GsonProjectDescriptionHelper;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
+import org.bundlemaker.core.resource.ResourceType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -270,12 +271,12 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
     result.setVersion(contentVersion);
 
     for (File binaryPath : binaryPaths) {
-      result.addRootPath(new VariablePath(binaryPath.getAbsolutePath()), ProjectContentType.BINARY);
+      result.addRootPath(new VariablePath(binaryPath.getAbsolutePath()), ResourceType.BINARY);
     }
 
     if (sourcePaths != null) {
       for (File sourcePath : sourcePaths) {
-        result.addRootPath(new VariablePath(sourcePath.getAbsolutePath()), ProjectContentType.SOURCE);
+        result.addRootPath(new VariablePath(sourcePath.getAbsolutePath()), ResourceType.SOURCE);
       }
     }
 

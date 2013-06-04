@@ -21,7 +21,7 @@ import java.util.Set;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.resource.ResourceType;
 import org.bundlemaker.core.ui.artifact.Activator;
 import org.bundlemaker.core.ui.artifact.ArtifactImages;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
@@ -102,15 +102,15 @@ public class ArtifactModelConfigurationSubMenu extends CompoundContributionItem 
         ArtifactImages.ARTIFACT_TREE_CONFIGURATION_FLAT_PACKAGES.getImageDescriptor());
 
     _virtualModuleAction = new VirtualModuleAction();
-    _sourceContentTypeAction = new ContentTypeAction(ProjectContentType.SOURCE, "Sources");
-    _binaryContentTypeAction = new ContentTypeAction(ProjectContentType.BINARY, "Binaries");
+    _sourceContentTypeAction = new ContentTypeAction(ResourceType.SOURCE, "Sources");
+    _binaryContentTypeAction = new ContentTypeAction(ResourceType.BINARY, "Binaries");
 
     _initialized = true;
 
   }
 
   protected void saveConfiguration(boolean hierarchical,
-      ProjectContentType contentType, boolean includeVirtualModuleForMissingTypes) {
+      ResourceType contentType, boolean includeVirtualModuleForMissingTypes) {
 
     //
     if (_artifactModelConfigurationProvider instanceof ArtifactModelConfigurationProvider) {
@@ -224,9 +224,9 @@ public class ArtifactModelConfigurationSubMenu extends CompoundContributionItem 
   }
 
   class ContentTypeAction extends Action {
-    private final ProjectContentType _projectContentType;
+    private final ResourceType _projectContentType;
 
-    ContentTypeAction(ProjectContentType type, String typeString) {
+    ContentTypeAction(ResourceType type, String typeString) {
       super("Show " + typeString, Action.AS_CHECK_BOX);
       this._projectContentType = type;
     }

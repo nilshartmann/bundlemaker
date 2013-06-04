@@ -21,10 +21,10 @@ import org.bundlemaker.core.osgi.exporter.AbstractManifestAwareExporter;
 import org.bundlemaker.core.osgi.internal.Activator;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.ResourceType;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -107,7 +107,7 @@ public class PdePluginProjectModuleExporter extends AbstractManifestAwareExporte
   public boolean canExport(IModularizedSystem modularizedSystem, IModule module, IModuleExporterContext context) {
 
     //
-    return !module.getResources(ProjectContentType.SOURCE).isEmpty();
+    return !module.getResources(ResourceType.SOURCE).isEmpty();
   }
 
   /**
@@ -165,7 +165,7 @@ public class PdePluginProjectModuleExporter extends AbstractManifestAwareExporte
     IFolder srcFolder = project.getFolder(SRC_DIRECTORY_NAME);
 
     // copy the source
-    for (IModuleResource resourceStandin : getCurrentModule().getResources(ProjectContentType.SOURCE)) {
+    for (IModuleResource resourceStandin : getCurrentModule().getResources(ResourceType.SOURCE)) {
 
       if (!resourceStandin.getPath().startsWith("META-INF")) {
 

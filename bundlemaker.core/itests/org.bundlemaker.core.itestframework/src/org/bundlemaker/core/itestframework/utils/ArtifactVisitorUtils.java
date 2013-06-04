@@ -2,9 +2,6 @@ package org.bundlemaker.core.itestframework.utils;
 
 import static org.hamcrest.CoreMatchers.is;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
@@ -15,9 +12,6 @@ import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.spi.IReferencedArtifact;
 import org.bundlemaker.core.analysis.spi.IReferencingArtifact;
-import org.bundlemaker.core.resource.IModule;
-import org.bundlemaker.core.resource.IModuleIdentifier;
-import org.bundlemaker.core.resource.ModuleIdentifier;
 import org.junit.Assert;
 
 public class ArtifactVisitorUtils {

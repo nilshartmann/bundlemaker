@@ -8,10 +8,10 @@ import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.ResourceType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.virgo.bundlor.util.SimpleManifestContents;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifestFactory;
@@ -145,7 +145,7 @@ public class ManifestCreatorAdapter {
     if (_originalManifestContents == null) {
 
       // the existing bundle manifest resource
-      IModuleResource existingManifestResource = getModule().getResource("META-INF/MANIFEST.MF", ProjectContentType.BINARY);
+      IModuleResource existingManifestResource = getModule().getResource("META-INF/MANIFEST.MF", ResourceType.BINARY);
 
       // create default manifest
       if (existingManifestResource == null) {

@@ -31,13 +31,13 @@ import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingMo
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractTransformationAwareModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
+import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.internal.resource.MovableUnit;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.ModuleIdentifier;
+import org.bundlemaker.core.resource.ResourceType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 
@@ -320,7 +320,7 @@ public class Module implements IModifiableModule {
     Map<String, IModuleResource> entries = new HashMap<String, IModuleResource>();
 
     //
-    for (IModuleResource resource : getResources(ProjectContentType.SOURCE)) {
+    for (IModuleResource resource : getResources(ResourceType.SOURCE)) {
 
       if (entries.containsKey(resource.getPath())) {
 
@@ -340,7 +340,7 @@ public class Module implements IModifiableModule {
 
     //
     entries.clear();
-    for (IModuleResource resource : getResources(ProjectContentType.BINARY)) {
+    for (IModuleResource resource : getResources(ResourceType.BINARY)) {
 
       if (entries.containsKey(resource.getPath())) {
 
@@ -364,7 +364,7 @@ public class Module implements IModifiableModule {
    * {@inheritDoc}
    */
   @Override
-  public boolean containsResource(String resourceType, ProjectContentType contentType) {
+  public boolean containsResource(String resourceType, ResourceType contentType) {
     return getResource(resourceType, contentType) != null;
   }
 
@@ -372,7 +372,7 @@ public class Module implements IModifiableModule {
    * {@inheritDoc}
    */
   @Override
-  public IResourceStandin getResource(String path, ProjectContentType contentType) {
+  public IResourceStandin getResource(String path, ResourceType contentType) {
 
     //
     for (IResourceStandin resourceStandin : getModifiableResourcesSet(contentType)) {
@@ -391,7 +391,7 @@ public class Module implements IModifiableModule {
    * {@inheritDoc}
    */
   @Override
-  public Set<IResourceStandin> getResources(ProjectContentType contentType) {
+  public Set<IResourceStandin> getResources(ResourceType contentType) {
 
     //
     Set<IResourceStandin> result = getModifiableResourcesSet(contentType);
@@ -420,7 +420,7 @@ public class Module implements IModifiableModule {
     }
 
     // iterate over all resources
-    for (IModuleResource resource : getResources(ProjectContentType.BINARY)) {
+    for (IModuleResource resource : getResources(ResourceType.BINARY)) {
       if (!resource.adaptAs(ITypeResource.class).containsTypes()) {
 
         //
@@ -434,7 +434,7 @@ public class Module implements IModifiableModule {
     }
 
     // iterate over all resources
-    for (IModuleResource resource : getResources(ProjectContentType.SOURCE)) {
+    for (IModuleResource resource : getResources(ResourceType.SOURCE)) {
       if (!resource.adaptAs(ITypeResource.class).containsTypes()) {
 
         //
@@ -453,7 +453,7 @@ public class Module implements IModifiableModule {
 
   @Override
   public boolean containsSources() {
-    return !getResources(ProjectContentType.SOURCE).isEmpty();
+    return !getResources(ResourceType.SOURCE).isEmpty();
   }
 
   // /**
@@ -511,7 +511,7 @@ public class Module implements IModifiableModule {
   /**
    * {@inheritDoc}
    */
-  private void add(IResourceStandin resource, ProjectContentType contentType) {
+  private void add(IResourceStandin resource, ResourceType contentType) {
 
     Assert.isNotNull(resource);
     Assert.isNotNull(contentType);
@@ -536,7 +536,7 @@ public class Module implements IModifiableModule {
    */
   @Deprecated
   @Override
-  public void addAll(Set<IResourceStandin> resources, ProjectContentType contentType) {
+  public void addAll(Set<IResourceStandin> resources, ResourceType contentType) {
 
     Assert.isNotNull(resources);
     Assert.isNotNull(contentType);
@@ -561,7 +561,7 @@ public class Module implements IModifiableModule {
   /**
    * {@inheritDoc}
    */
-  private void remove(IModuleResource resource, ProjectContentType contentType) {
+  private void remove(IModuleResource resource, ResourceType contentType) {
 
     Assert.isNotNull(resource);
     Assert.isNotNull(contentType);
@@ -583,7 +583,7 @@ public class Module implements IModifiableModule {
   /**
    * {@inheritDoc}
    */
-  private void removeAll(Collection<? extends IModuleResource> resources, ProjectContentType contentType) {
+  private void removeAll(Collection<? extends IModuleResource> resources, ResourceType contentType) {
 
     Assert.isNotNull(resources);
     Assert.isNotNull(contentType);
@@ -626,11 +626,11 @@ public class Module implements IModifiableModule {
     @SuppressWarnings("unchecked")
     Set<IResourceStandin> resourceStandins = new HashSet<IResourceStandin>(
         (List<IResourceStandin>) movableUnit.getAssociatedBinaryResources());
-    addAll(resourceStandins, ProjectContentType.BINARY);
+    addAll(resourceStandins, ResourceType.BINARY);
 
     // add source resources
     if (movableUnit.hasAssociatedSourceResource()) {
-      add((IResourceStandin) movableUnit.getAssociatedSourceResource(), ProjectContentType.SOURCE);
+      add((IResourceStandin) movableUnit.getAssociatedSourceResource(), ResourceType.SOURCE);
     }
 
     //
@@ -650,11 +650,11 @@ public class Module implements IModifiableModule {
     }
 
     // add binary resources
-    removeAll(movableUnit.getAssociatedBinaryResources(), ProjectContentType.BINARY);
+    removeAll(movableUnit.getAssociatedBinaryResources(), ResourceType.BINARY);
 
     // add source resources
     if (movableUnit.hasAssociatedSourceResource()) {
-      remove(movableUnit.getAssociatedSourceResource(), ProjectContentType.SOURCE);
+      remove(movableUnit.getAssociatedSourceResource(), ResourceType.SOURCE);
     }
 
     //
@@ -668,10 +668,10 @@ public class Module implements IModifiableModule {
    * @param contentType
    * @return
    */
-  private Set<IResourceStandin> getModifiableResourcesSet(ProjectContentType contentType) {
+  private Set<IResourceStandin> getModifiableResourcesSet(ResourceType contentType) {
     Assert.isNotNull(contentType);
 
     // return the resource set
-    return ProjectContentType.BINARY.equals(contentType) ? _binaryResources : _sourceResources;
+    return ResourceType.BINARY.equals(contentType) ? _binaryResources : _sourceResources;
   }
 }

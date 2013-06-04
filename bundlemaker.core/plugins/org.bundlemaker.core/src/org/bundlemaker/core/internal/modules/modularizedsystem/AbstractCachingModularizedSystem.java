@@ -22,6 +22,7 @@ import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.internal.modules.ChangeAction;
+import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.event.ClassificationChangedEvent;
 import org.bundlemaker.core.internal.modules.event.GroupChangedEvent;
 import org.bundlemaker.core.internal.modules.event.IModularizedSystemChangedListener;
@@ -32,11 +33,10 @@ import org.bundlemaker.core.internal.modules.event.MovableUnitMovedEvent;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IGroup;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.ResourceType;
 import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
 
@@ -306,7 +306,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     fireModuleChanged(resourceModule, ChangeAction.ADDED);
 
     //
-    for (IModuleResource resource : resourceModule.getResources(ProjectContentType.SOURCE)) {
+    for (IModuleResource resource : resourceModule.getResources(ResourceType.SOURCE)) {
       internalResourceChanged(resource, resourceModule, ChangeAction.ADDED);
 
       //
@@ -316,7 +316,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     }
 
     //
-    for (IModuleResource resource : resourceModule.getResources(ProjectContentType.BINARY)) {
+    for (IModuleResource resource : resourceModule.getResources(ResourceType.BINARY)) {
       internalResourceChanged(resource, resourceModule, ChangeAction.ADDED);
 
       //
@@ -335,7 +335,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     Assert.isNotNull(resourceModule);
 
     //
-    for (IModuleResource resource : resourceModule.getResources(ProjectContentType.SOURCE)) {
+    for (IModuleResource resource : resourceModule.getResources(ResourceType.SOURCE)) {
       internalResourceChanged(resource, resourceModule, ChangeAction.REMOVED);
 
       //
@@ -345,7 +345,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     }
 
     //
-    for (IModuleResource resource : resourceModule.getResources(ProjectContentType.BINARY)) {
+    for (IModuleResource resource : resourceModule.getResources(ResourceType.BINARY)) {
       internalResourceChanged(resource, resourceModule, ChangeAction.REMOVED);
 
       //
@@ -377,7 +377,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
   // }
 
   @Override
-  protected void groupAdded(IGroup group) {
+  protected void groupAdded(Group group) {
     Assert.isNotNull(group);
 
     //
@@ -385,7 +385,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
   }
 
   @Override
-  protected void groupRemoved(IGroup group) {
+  protected void groupRemoved(Group group) {
     Assert.isNotNull(group);
 
     //
@@ -518,7 +518,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * @param group
    * @param added
    */
-  private void fireGroupChanged(IGroup group, ChangeAction added) {
+  private void fireGroupChanged(Group group, ChangeAction added) {
     Assert.isNotNull(group);
     Assert.isNotNull(added);
 

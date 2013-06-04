@@ -23,12 +23,12 @@ import org.bundlemaker.core.internal.modules.Module;
 import org.bundlemaker.core.internal.modules.modularizedsystem.DefaultTypeSelector;
 import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
+import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
-import org.bundlemaker.core.resource.ModuleIdentifier;
+import org.bundlemaker.core.resource.ResourceType;
 import org.bundlemaker.core.util.FileUtils;
 import org.bundlemaker.core.util.JdkCreator;
 import org.eclipse.core.runtime.Assert;
@@ -141,7 +141,7 @@ public class JdkModuleCreator {
     }
 
     //
-    virtualModule.addAll(resources, ProjectContentType.BINARY);
+    virtualModule.addAll(resources, ResourceType.BINARY);
 
     //
     return virtualModule;

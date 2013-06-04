@@ -7,7 +7,7 @@ import org.bundlemaker.core.analysis.AnalysisModelException;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
-import org.bundlemaker.core.resource.ModuleIdentifier;
+import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -44,9 +44,9 @@ public class ModuleCreateNewTest extends AbstractSimpleArtifactModelTest {
 
     //
     IModuleArtifact srcModule = AnalysisModelQueries.getModuleArtifact(getBinModel().getRootArtifact(),
-        new ModuleIdentifier("NewModule", "1.0.0"));
+        IModuleIdentifier.Factory.createNewModuleIdentifier("NewModule", "1.0.0"));
     IModuleArtifact binModule = AnalysisModelQueries.getModuleArtifact(getSrcModel().getRootArtifact(),
-        new ModuleIdentifier("NewModule", "1.0.0"));
+        IModuleIdentifier.Factory.createNewModuleIdentifier("NewModule", "1.0.0"));
 
     //
     Assert.assertNotNull(srcModule);

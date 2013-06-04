@@ -1,8 +1,8 @@
 package org.bundlemaker.core.projectdescription.file;
 
 import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.VariablePath;
+import org.bundlemaker.core.resource.ResourceType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ public class FileBasedProjectContentProviderTest {
     FileBasedProjectContentProvider provider = new FileBasedProjectContentProvider();
     provider.setId("honk");
     provider.setName("name");
-    provider.addRootPath(new VariablePath("${eclipse_home}"), ProjectContentType.SOURCE);
+    provider.addRootPath(new VariablePath("${eclipse_home}"), ResourceType.SOURCE);
 
     String gsonString = provider.toJson();
 

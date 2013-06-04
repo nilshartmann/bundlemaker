@@ -2,7 +2,6 @@ package org.bundlemaker.core.internal.modules;
 
 import org.bundlemaker.core.internal.modules.event.ClassificationChangedEvent;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
-import org.bundlemaker.core.resource.IGroup;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
@@ -14,7 +13,7 @@ import org.eclipse.core.runtime.Path;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class Group implements IGroup {
+public class Group {
 
   /** - */
   private String             _name;
@@ -51,7 +50,6 @@ public class Group implements IGroup {
   /**
    * {@inheritDoc}
    */
-  @Override
   public boolean hasParentGroup() {
     return _parent != null;
   }
@@ -62,7 +60,6 @@ public class Group implements IGroup {
    * 
    * @return
    */
-  @Override
   public IPath getPath() {
 
     //
@@ -143,8 +140,7 @@ public class Group implements IGroup {
    * 
    * @return
    */
-  @Override
-  public IGroup getParentGroup() {
+  public Group getParentGroup() {
     return _parent;
   }
 }

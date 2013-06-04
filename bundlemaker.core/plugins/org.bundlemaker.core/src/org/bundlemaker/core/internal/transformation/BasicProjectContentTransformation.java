@@ -13,9 +13,9 @@ package org.bundlemaker.core.internal.transformation;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
 import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
+import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.ModuleIdentifier;
+import org.bundlemaker.core.resource.ResourceType;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public class BasicProjectContentTransformation implements IInternalTransformation {
@@ -37,11 +37,11 @@ public class BasicProjectContentTransformation implements IInternalTransformatio
 
         // add all the binary content
         module.addAll(((ProjectContentEntry) fileBasedContent).getBinaryResourceStandins(),
-            ProjectContentType.BINARY);
+            ResourceType.BINARY);
 
         // add all the source content
         module.addAll(((ProjectContentEntry) fileBasedContent).getSourceResourceStandins(),
-            ProjectContentType.SOURCE);
+            ResourceType.SOURCE);
       }
     }
   }

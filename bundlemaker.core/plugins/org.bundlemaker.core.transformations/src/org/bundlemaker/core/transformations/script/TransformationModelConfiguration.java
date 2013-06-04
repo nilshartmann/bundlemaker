@@ -5,14 +5,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.resource.ResourceType;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface TransformationModelConfiguration {
   boolean hierarchicalPackages() default false;
 
-  ProjectContentType contentType() default ProjectContentType.BINARY;
+  ResourceType contentType() default ResourceType.BINARY;
 
   boolean useVirtualModuleForMissingTypes() default false;
 }

@@ -30,11 +30,11 @@ import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.osgi.utils.JarFileManifestWriter;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.ResourceType;
 import org.bundlemaker.core.util.JarFileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -91,7 +91,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
     // create new file if repackaging is required
     if (isIncludeSources() || !getTemplateProvider().getAdditionalResources(getCurrentModule(), getCurrentModularizedSystem(),
         getCurrentContext()).isEmpty()
-        || ModuleExporterUtils.requiresRepackaging(getCurrentModule(), ProjectContentType.BINARY)) {
+        || ModuleExporterUtils.requiresRepackaging(getCurrentModule(), ResourceType.BINARY)) {
 
       // create new File
       createNewJarFile();
@@ -101,7 +101,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
     else {
 
       // get the root file
-      File rootFile = ModuleExporterUtils.getRootFile(getCurrentModule(), ProjectContentType.BINARY);
+      File rootFile = ModuleExporterUtils.getRootFile(getCurrentModule(), ResourceType.BINARY);
 
       // get the manifest writer
       ManifestWriter manifestWriter = new JarFileManifestWriter(rootFile, getDestinationJarFile());
@@ -125,7 +125,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
       
       Manifest manifest = createSourceManifest();
       
-      JarFileUtils.createJarArchive(getCurrentModule().getResources(ProjectContentType.SOURCE), manifest, null, outputStream);
+      JarFileUtils.createJarArchive(getCurrentModule().getResources(ResourceType.SOURCE), manifest, null, outputStream);
       outputStream.close();
     } catch (IOException e) {
       throw new CoreException(new Status(IStatus.ERROR, "", "Could not create Source Bundle " + sourceFile + ": " + e, e));
@@ -184,7 +184,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
         additionalResources.addAll(resourceKeys);
         
         // add sources
-        Set<? extends IModuleResource> sources = getCurrentModule().getResources(ProjectContentType.SOURCE);
+        Set<? extends IModuleResource> sources = getCurrentModule().getResources(ResourceType.SOURCE);
         additionalResources.addAll(wrapSourceResources(sources));
       } else {
         
@@ -193,7 +193,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
       }
 
       // export the jar archive
-      JarFileUtils.createJarArchive(getCurrentModule().getResources(ProjectContentType.BINARY),
+      JarFileUtils.createJarArchive(getCurrentModule().getResources(ResourceType.BINARY),
           ManifestUtils.toManifest(getManifestContents()), additionalResources, outputStream);
 
       // close the output stream

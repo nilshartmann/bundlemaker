@@ -33,7 +33,6 @@ import org.bundlemaker.core.internal.modules.event.ModuleIdentifierChangedEvent;
 import org.bundlemaker.core.internal.modules.event.ModuleMovedEvent;
 import org.bundlemaker.core.internal.modules.event.MovableUnitMovedEvent;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.resource.IGroup;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
@@ -175,7 +174,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
   }
 
   @Override
-  public IGroupArtifact getGroupArtifact(IGroup group) {
+  public IGroupArtifact getGroupArtifact(Group group) {
     Assert.isNotNull(group);
     return (IGroupArtifact) _artifactCache.getGroupCache().get(group);
   }
