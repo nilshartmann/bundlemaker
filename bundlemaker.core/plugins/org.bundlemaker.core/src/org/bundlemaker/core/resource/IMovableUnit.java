@@ -2,7 +2,6 @@ package org.bundlemaker.core.resource;
 
 import java.util.List;
 
-import org.bundlemaker.core.modules.IModule;
 
 /**
  * <p>

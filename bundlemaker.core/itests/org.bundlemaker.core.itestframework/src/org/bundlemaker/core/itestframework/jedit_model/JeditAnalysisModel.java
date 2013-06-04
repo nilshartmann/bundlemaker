@@ -14,7 +14,7 @@ import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.junit.Assert;
 
 /**

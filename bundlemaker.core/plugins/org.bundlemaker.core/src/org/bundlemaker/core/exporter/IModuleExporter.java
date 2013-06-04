@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.exporter;
 
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 

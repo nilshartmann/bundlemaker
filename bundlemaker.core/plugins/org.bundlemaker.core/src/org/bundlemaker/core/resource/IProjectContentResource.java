@@ -10,13 +10,10 @@
  ******************************************************************************/
 package org.bundlemaker.core.resource;
 
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-
 /**
  * <p>
- * An {@link IProjectContentResource} defines a resource that is definied through a {@link IProjectContentEntry}. It
- * provides access to the <code>contentId</code>, the <code>root</code> directory or archive file, and a
- * <code>timestamp</code>.
+ * An {@link IProjectContentResource} defines a resource that is definied through a project content entry. It provides
+ * access to the <code>contentId</code> and the <code>root</code> directory or archive file.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -28,10 +25,10 @@ public interface IProjectContentResource extends IResource {
 
   /**
    * <p>
-   * Returns the identifier of the {@link IProjectContentEntry} that defines the resource.
+   * Returns the identifier of the project content entry that defines the resource.
    * </p>
    * 
-   * @return the identifier of the {@link IProjectContentEntry} that defines the resource.
+   * @return the identifier of the project content entry that defines the resource.
    */
   String getProjectContentEntryId();
 
@@ -45,12 +42,4 @@ public interface IProjectContentResource extends IResource {
    */
   String getRoot();
 
-  /**
-   * <p>
-   * The timestamp.
-   * </p>
-   * 
-   * @return
-   */
-  long getCurrentTimestamp();
 }

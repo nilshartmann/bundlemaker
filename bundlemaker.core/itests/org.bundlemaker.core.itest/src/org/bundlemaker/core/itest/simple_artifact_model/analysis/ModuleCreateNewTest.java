@@ -7,7 +7,7 @@ import org.bundlemaker.core.analysis.AnalysisModelException;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
-import org.bundlemaker.core.modules.ModuleIdentifier;
+import org.bundlemaker.core.resource.ModuleIdentifier;
 import org.junit.Assert;
 import org.junit.Test;
 

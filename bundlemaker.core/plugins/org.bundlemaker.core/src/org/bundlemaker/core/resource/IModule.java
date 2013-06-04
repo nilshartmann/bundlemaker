@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.modules;
+package org.bundlemaker.core.resource;
 
 import java.util.List;
 import java.util.Map;
@@ -16,8 +16,6 @@ import java.util.Set;
 
 import org.bundlemaker.core.IGenericAdaptable;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.IPath;
 
 /**

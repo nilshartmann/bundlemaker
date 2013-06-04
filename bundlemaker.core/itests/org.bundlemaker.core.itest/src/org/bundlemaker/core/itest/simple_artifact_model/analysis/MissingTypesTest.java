@@ -9,7 +9,7 @@ import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
 import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelWithTypeLibraryTest;
 import org.bundlemaker.core.itestframework.utils.ArtifactTestUtil;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -19,8 +19,8 @@ import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core._type.internal.TypeResource;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ResourceCache;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IParsableResource;
@@ -114,7 +114,7 @@ public class Resource extends DefaultProjectContentResource implements IParsable
    * {@inheritDoc}
    */
   @Override
-  public long getParsedTimestamp() {
+  public long getLastParsedTimestamp() {
     return _lastTimestamp;
   }
 

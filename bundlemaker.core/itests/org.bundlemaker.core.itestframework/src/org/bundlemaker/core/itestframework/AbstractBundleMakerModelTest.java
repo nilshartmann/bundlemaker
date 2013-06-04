@@ -7,7 +7,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.itestframework.internal.TestProjectCreator;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.After;
 import org.junit.Assert;

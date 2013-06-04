@@ -3,9 +3,9 @@ package org.bundlemaker.core.internal.modules.modifiable;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.IPath;
 

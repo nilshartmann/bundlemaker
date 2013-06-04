@@ -29,14 +29,14 @@ import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.internal.transformation.IInternalTransformation;
 import org.bundlemaker.core.internal.transformation.IUndoableTransformation;
-import org.bundlemaker.core.modules.IGroup;
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IModuleIdentifier;
-import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.transformation.ITransformation;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.VariablePath;
+import org.bundlemaker.core.resource.IGroup;
+import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleIdentifier;
+import org.bundlemaker.core.resource.ModuleIdentifier;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -207,7 +207,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     subMonitor.worked(10);
 
     // step 3: create the type modules
-    for (IProjectContentEntry fileBasedContent : getProjectDescription().getContent()) {
+    for (IProjectContentEntry fileBasedContent : getBundleMakerProject().getProjectDescription().getContent()) {
       if (!fileBasedContent.isAnalyze()) {
         IModuleIdentifier identifier = new ModuleIdentifier(fileBasedContent.getName(), fileBasedContent.getVersion());
         // TODO!!

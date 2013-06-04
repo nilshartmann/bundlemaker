@@ -2,8 +2,8 @@ package org.bundlemaker.core.internal.modules;
 
 import org.bundlemaker.core.internal.modules.event.ClassificationChangedEvent;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
-import org.bundlemaker.core.modules.IGroup;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.resource.IGroup;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -46,6 +46,14 @@ public class Group implements IGroup {
 
     //
     _modularizedSystem = modularizedSystem;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasParentGroup() {
+    return _parent != null;
   }
 
   /**
@@ -136,7 +144,7 @@ public class Group implements IGroup {
    * @return
    */
   @Override
-  public IGroup getParent() {
+  public IGroup getParentGroup() {
     return _parent;
   }
 }

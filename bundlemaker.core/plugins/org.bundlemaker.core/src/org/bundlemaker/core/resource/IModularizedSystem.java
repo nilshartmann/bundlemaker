@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.modules;
+package org.bundlemaker.core.resource;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +21,6 @@ import org.bundlemaker.core._type.ITypeSelector;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.transformation.ITransformation;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -59,15 +58,6 @@ public interface IModularizedSystem {
    * @return the associated {@link IBundleMakerProject}.
    */
   IBundleMakerProject getBundleMakerProject();
-
-  /**
-   * <p>
-   * Returns the {@link IProjectDescription}.
-   * </p>
-   * 
-   * @return the {@link IProjectDescription}
-   */
-  IProjectDescription getProjectDescription();
 
   /**
    * <p>

@@ -3,7 +3,7 @@ package org.bundlemaker.core.parser;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModuleResource;
 
 /**

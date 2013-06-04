@@ -2,10 +2,10 @@ package org.bundlemaker.core.mvn.internal;
 
 import java.util.Map;
 
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IModuleIdentifier;
-import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.mvn.content.MvnArtifactType;
+import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleIdentifier;
+import org.bundlemaker.core.resource.ModuleIdentifier;
 import org.eclipse.core.runtime.Assert;
 
 /**

@@ -24,12 +24,12 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IModuleIdentifier;
-import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.transformation.ITransformation;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleIdentifier;
+import org.bundlemaker.core.resource.ModuleIdentifier;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 
@@ -129,14 +129,6 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
   @Override
   public IBundleMakerProject getBundleMakerProject() {
     return _projectDescription.getBundleMakerProject();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public final IProjectDescription getProjectDescription() {
-    return _projectDescription;
   }
 
   /**

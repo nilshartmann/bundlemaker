@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.tools.ant.types.selectors.SelectorUtils;
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IModuleIdentifier;
+import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;

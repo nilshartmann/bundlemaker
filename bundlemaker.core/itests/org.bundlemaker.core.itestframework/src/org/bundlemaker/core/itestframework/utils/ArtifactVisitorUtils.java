@@ -15,9 +15,9 @@ import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.spi.IReferencedArtifact;
 import org.bundlemaker.core.analysis.spi.IReferencingArtifact;
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IModuleIdentifier;
-import org.bundlemaker.core.modules.ModuleIdentifier;
+import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleIdentifier;
+import org.bundlemaker.core.resource.ModuleIdentifier;
 import org.junit.Assert;
 
 public class ArtifactVisitorUtils {

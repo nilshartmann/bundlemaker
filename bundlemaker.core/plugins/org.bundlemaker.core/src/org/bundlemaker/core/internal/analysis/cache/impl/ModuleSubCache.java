@@ -9,7 +9,7 @@ import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.virtual.VirtualModule2IArtifact;
 import org.bundlemaker.core.internal.modules.Module;
-import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IModule;
 import org.eclipse.core.runtime.Assert;
 
 /**

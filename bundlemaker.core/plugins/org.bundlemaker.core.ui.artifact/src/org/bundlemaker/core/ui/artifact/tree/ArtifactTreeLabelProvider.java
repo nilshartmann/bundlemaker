@@ -3,7 +3,7 @@ package org.bundlemaker.core.ui.artifact.tree;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.ui.artifact.Activator;
 import org.bundlemaker.core.ui.artifact.ArtifactImages;
 import org.eclipse.swt.graphics.Image;

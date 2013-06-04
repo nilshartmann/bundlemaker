@@ -10,7 +10,7 @@ import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.transformation.CreateGroupTransformation;
 import org.bundlemaker.core.internal.transformation.CreateModuleTransformation;
-import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IModule;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;

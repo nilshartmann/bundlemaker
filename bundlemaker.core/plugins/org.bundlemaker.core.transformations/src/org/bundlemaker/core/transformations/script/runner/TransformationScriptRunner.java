@@ -20,7 +20,7 @@ import java.util.concurrent.Callable;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.transformations.internal.Activator;
 import org.bundlemaker.core.transformations.script.ITransformationScript;
 import org.bundlemaker.core.transformations.script.ITransformationScriptLogger;

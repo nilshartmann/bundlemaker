@@ -45,5 +45,5 @@ public interface IParsableResource extends IModuleResource {
    * 
    * @return
    */
-  long getParsedTimestamp();
+  long getLastParsedTimestamp();
 }

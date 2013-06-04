@@ -1,7 +1,7 @@
 package org.bundlemaker.core.internal.modules.event;
 
 import org.bundlemaker.core.internal.modules.Group;
-import org.bundlemaker.core.modules.IGroup;
+import org.bundlemaker.core.resource.IGroup;
 import org.eclipse.core.runtime.Assert;
 
 /**

@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IDependency;
-import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.mvn.MvnCoreActivator;
 import org.bundlemaker.core.mvn.internal.MvnArtifactConverter;
 import org.bundlemaker.core.mvn.internal.config.DispatchingRepositoryAdapter;
@@ -19,6 +18,7 @@ import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.util.prefs.BundleMakerPreferences;
 import org.bundlemaker.core.util.prefs.IBundleMakerPreferences;
 import org.eclipse.core.runtime.Assert;

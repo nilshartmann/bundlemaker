@@ -7,8 +7,8 @@ import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
 import org.junit.Assert;
 
 public class TOOLS {

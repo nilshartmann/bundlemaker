@@ -29,8 +29,8 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 
-import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.osgi.manifest.IManifestConstants;
+import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.virgo.bundlor.util.MatchUtils;

@@ -13,9 +13,9 @@ package org.bundlemaker.core.internal.transformation;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
 import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
-import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.resource.ModuleIdentifier;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public class BasicProjectContentTransformation implements IInternalTransformation {
@@ -23,7 +23,8 @@ public class BasicProjectContentTransformation implements IInternalTransformatio
   public void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor progressMonitor) {
 
     // iterate over the file based content
-    for (IProjectContentEntry fileBasedContent : modularizedSystem.getProjectDescription().getContent()) {
+    for (IProjectContentEntry fileBasedContent : modularizedSystem.getBundleMakerProject().getProjectDescription()
+        .getContent()) {
 
       if (fileBasedContent.isAnalyze()) {
 

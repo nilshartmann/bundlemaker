@@ -2,9 +2,9 @@ package org.bundlemaker.core.analysis;
 
 import java.util.concurrent.Callable;
 
-import org.bundlemaker.core.modules.IGroup;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IGroup;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;

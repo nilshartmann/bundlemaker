@@ -18,13 +18,13 @@ import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.internal.modules.event.IModularizedSystemChangedListener;
-import org.bundlemaker.core.modules.IGroup;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IModuleIdentifier;
-import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.transformation.ITransformation;
+import org.bundlemaker.core.resource.IGroup;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.ModuleIdentifier;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 

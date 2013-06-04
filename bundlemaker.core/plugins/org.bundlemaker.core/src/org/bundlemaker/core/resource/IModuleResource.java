@@ -13,13 +13,9 @@ package org.bundlemaker.core.resource;
 import java.util.Set;
 
 import org.bundlemaker.core.IGenericAdaptable;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
 
 /**
  * <p>
- * Defines the common interface for resources. A resource is either a file (e.g. a java source file or a class file) or
- * an entry in an archive file.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -31,15 +27,6 @@ public interface IModuleResource extends IProjectContentResource, Comparable<IMo
 
   /**
    * <p>
-   * </p>
-   * 
-   * @param modularizedSystem
-   * @return
-   */
-  IMovableUnit getMovableUnit(IModularizedSystem modularizedSystem);
-
-  /**
-   * <p>
    * Returns the {@link IResourceModule} that contains this {@link IModuleResource}.
    * </p>
    * 
@@ -47,6 +34,15 @@ public interface IModuleResource extends IProjectContentResource, Comparable<IMo
    * @return the {@link IResourceModule} that contains this {@link IModuleResource}.
    */
   IModule getModule(IModularizedSystem modularizedSystem);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modularizedSystem
+   * @return
+   */
+  IMovableUnit getMovableUnit(IModularizedSystem modularizedSystem);
 
   /**
    * <p>

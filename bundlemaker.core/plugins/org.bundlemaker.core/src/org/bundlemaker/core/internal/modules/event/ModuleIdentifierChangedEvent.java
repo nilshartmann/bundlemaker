@@ -1,6 +1,6 @@
 package org.bundlemaker.core.internal.modules.event;
 
-import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IModule;
 
 public class ModuleIdentifierChangedEvent {
 

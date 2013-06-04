@@ -12,7 +12,7 @@ package org.bundlemaker.core.transformations.internal;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProjectHook;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.transformations.script.runner.TransformationScriptRunner;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;

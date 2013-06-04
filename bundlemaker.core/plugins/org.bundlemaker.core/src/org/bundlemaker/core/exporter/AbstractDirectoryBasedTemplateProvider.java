@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.resource.DefaultProjectContentResource;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;

@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.resource.IModularizedSystem;
 
 /**
  * <p>

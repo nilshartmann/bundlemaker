@@ -1,6 +1,6 @@
 package org.bundlemaker.core.analysis;
 
-import org.bundlemaker.core.modules.IGroup;
+import org.bundlemaker.core.resource.IGroup;
 
 /**
  * <p>

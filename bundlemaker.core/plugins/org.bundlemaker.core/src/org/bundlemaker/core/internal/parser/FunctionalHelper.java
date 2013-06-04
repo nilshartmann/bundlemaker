@@ -246,7 +246,7 @@ public class FunctionalHelper {
     }
 
     // check the time stamp
-    return resource.getParsedTimestamp() != resourceStandin.getCurrentTimestamp();
+    return resource.getLastParsedTimestamp() != resourceStandin.getCurrentTimestamp();
   }
 
   /**

@@ -12,8 +12,8 @@ package org.bundlemaker.core._type;
 
 import java.util.Set;
 
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IModuleResource;
 

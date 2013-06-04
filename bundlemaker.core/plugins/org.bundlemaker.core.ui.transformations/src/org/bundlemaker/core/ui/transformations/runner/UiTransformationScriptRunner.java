@@ -13,7 +13,7 @@ package org.bundlemaker.core.ui.transformations.runner;
 import java.lang.reflect.InvocationTargetException;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.transformations.script.runner.TransformationScriptContext;
 import org.bundlemaker.core.transformations.script.runner.TransformationScriptRunner;
 import org.bundlemaker.core.ui.transformations.Activator;

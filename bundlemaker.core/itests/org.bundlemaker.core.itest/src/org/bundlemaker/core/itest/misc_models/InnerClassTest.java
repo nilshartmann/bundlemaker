@@ -11,7 +11,7 @@ import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
 import org.bundlemaker.core.itestframework.utils.ArtifactTestUtil;
-import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;

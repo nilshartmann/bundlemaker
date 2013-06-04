@@ -1,7 +1,7 @@
 package org.bundlemaker.core.osgi.manifest;
 
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
 import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 
 /**

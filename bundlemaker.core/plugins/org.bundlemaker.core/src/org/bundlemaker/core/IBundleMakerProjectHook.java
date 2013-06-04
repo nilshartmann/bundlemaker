@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core;
 
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**

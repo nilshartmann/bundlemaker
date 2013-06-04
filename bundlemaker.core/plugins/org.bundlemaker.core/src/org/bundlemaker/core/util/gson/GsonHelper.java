@@ -2,7 +2,7 @@ package org.bundlemaker.core.util.gson;
 
 import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.util.collections.GenericCache;
 
 import com.google.gson.Gson;

@@ -33,8 +33,8 @@ import org.bundlemaker.core.internal.modules.event.ModuleIdentifierChangedEvent;
 import org.bundlemaker.core.internal.modules.event.ModuleMovedEvent;
 import org.bundlemaker.core.internal.modules.event.MovableUnitMovedEvent;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.modules.IGroup;
-import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IGroup;
+import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.Assert;
@@ -537,7 +537,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
           event.getMovedGroup());
 
       //
-      if (((Group) event.getMovedGroup()).getParent() == null) {
+      if (((Group) event.getMovedGroup()).getParentGroup() == null) {
 
         //
         if (((Group) event.getMovedGroup()).hasRootParent()) {

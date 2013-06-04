@@ -12,7 +12,7 @@ package org.bundlemaker.core._type;
 
 import java.util.Set;
 
-import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IModule;
 
 /**
  * <p>

@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.analysis.spi.IReferencedArtifact;
 import org.bundlemaker.core.analysis.spi.IReferencingArtifact;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.eclipse.core.runtime.IPath;
 
 import com.tinkerpop.blueprints.Vertex;

@@ -7,10 +7,10 @@ import java.util.Map;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core._type.utils.JavaTypeUtils;
-import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.parser.IReferenceDetailParser;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.VariablePath;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.IResource;

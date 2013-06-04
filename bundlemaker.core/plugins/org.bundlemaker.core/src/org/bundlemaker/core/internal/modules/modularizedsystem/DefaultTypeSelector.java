@@ -4,9 +4,9 @@ import java.util.Set;
 
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeSelector;
-import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.resource.IModule;
 import org.eclipse.core.runtime.Assert;
 
 /**

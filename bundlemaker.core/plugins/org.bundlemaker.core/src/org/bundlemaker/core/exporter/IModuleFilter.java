@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.exporter;
 
-import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IModule;
 
 /**
  */

@@ -13,7 +13,7 @@ package org.bundlemaker.core.exporter;
 import java.io.File;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.resource.IModularizedSystem;
 
 /**
  * <p>

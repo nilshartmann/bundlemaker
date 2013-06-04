@@ -25,14 +25,14 @@ import java.util.jar.Manifest;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ITemplateProvider;
 import org.bundlemaker.core.exporter.util.ModuleExporterUtils;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.osgi.exporter.AbstractManifestAwareExporter;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.osgi.utils.JarFileManifestWriter;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.util.JarFileUtils;
@@ -241,6 +241,11 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
         @Override
         public byte[] getContent() {
           return source.getContent();
+        }
+        
+        @Override
+        public long getCurrentTimestamp() {
+          return source.getCurrentTimestamp();
         }
       };
       
