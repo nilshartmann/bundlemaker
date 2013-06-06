@@ -2,6 +2,7 @@ package org.bundlemaker.core.osgi.internal.exporter;
 
 import java.io.IOException;
 
+import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ITemplateProvider;
 import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
@@ -11,7 +12,6 @@ import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.ResourceType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.virgo.bundlor.util.SimpleManifestContents;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifestFactory;

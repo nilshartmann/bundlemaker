@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Stack;
 
 import org.bundlemaker.core._type.IReference;
+import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.parser.IReferenceDetailParser;
 import org.bundlemaker.core.parser.IReferenceDetailParser.IPosition;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IJavaElement;
@@ -125,9 +125,9 @@ public class JdtAstVisitor extends ASTVisitor {
    * 
    * @return
    */
-  public List<org.bundlemaker.core.IProblem> getProblems() {
+  public List<org.bundlemaker.core.parser.IProblem> getProblems() {
 
-    List<org.bundlemaker.core.IProblem> result = new LinkedList<org.bundlemaker.core.IProblem>();
+    List<org.bundlemaker.core.parser.IProblem> result = new LinkedList<org.bundlemaker.core.parser.IProblem>();
     //
     // for (IProblem iProblem : _problems) {
     //

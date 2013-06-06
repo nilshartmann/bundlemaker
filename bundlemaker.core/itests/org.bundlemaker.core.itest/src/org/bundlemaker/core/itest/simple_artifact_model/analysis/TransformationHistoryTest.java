@@ -5,9 +5,9 @@ import static org.bundlemaker.core.itestframework.simple_artifact_model.Artifact
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.selectors.DefaultArtifactSelector;
 import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
-import org.bundlemaker.core.modules.transformation.IAddArtifactsTransformation;
-import org.bundlemaker.core.modules.transformation.ICreateGroupTransformation;
-import org.bundlemaker.core.modules.transformation.ICreateModuleTransformation;
+import org.bundlemaker.core.resource.IAddArtifactsTransformation;
+import org.bundlemaker.core.resource.ICreateGroupTransformation;
+import org.bundlemaker.core.resource.ICreateModuleTransformation;
 import org.junit.Assert;
 import org.junit.Test;
 

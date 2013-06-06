@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.util.fileinfo;
 
-import org.bundlemaker.core.util.IFileBasedProjectContentInfo;
+import org.bundlemaker.core.common.utils.IFileBasedProjectContentInfo;
 import org.eclipse.core.runtime.Assert;
 
 /**

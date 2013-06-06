@@ -14,7 +14,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.resource.IModularizedSystem;
 
 /**
@@ -28,7 +28,7 @@ import org.bundlemaker.core.resource.IModularizedSystem;
 public class DefaultModuleExporterContext implements IModuleExporterContext {
 
   /** - */
-  private IBundleMakerProject _bundleMakerProject;
+  private IProjectDescriptionAwareBundleMakerProject _bundleMakerProject;
 
   /** - */
   private File                _destinationDirectory;
@@ -48,7 +48,7 @@ public class DefaultModuleExporterContext implements IModuleExporterContext {
    * @param destinationDirectory
    * @param modularizedSystem
    */
-  public DefaultModuleExporterContext(IBundleMakerProject bundleMakerProject, File destinationDirectory,
+  public DefaultModuleExporterContext(IProjectDescriptionAwareBundleMakerProject bundleMakerProject, File destinationDirectory,
       IModularizedSystem modularizedSystem) {
 
     //
@@ -68,7 +68,7 @@ public class DefaultModuleExporterContext implements IModuleExporterContext {
 	 * 
 	 */
   @Override
-  public IBundleMakerProject getBundleMakerProject() {
+  public IProjectDescriptionAwareBundleMakerProject getBundleMakerProject() {
     return _bundleMakerProject;
   }
 

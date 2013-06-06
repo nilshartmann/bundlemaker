@@ -15,9 +15,9 @@ import static java.lang.String.format;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 
-import org.bundlemaker.core.BundleMakerCore;
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
+import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.IModifiableProjectDescription;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.transformations.support.TransformationScriptSupport;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
@@ -193,7 +193,7 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard, I
             PreferenceConstants.getDefaultJRELibrary());
 
       }
-      IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(newProjectHandle);
+      IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(newProjectHandle);
       IModifiableProjectDescription modifiableProjectDescription = bundleMakerProject.getModifiableProjectDescription();
       modifiableProjectDescription.setJre(mainPage.getSelectedJreId());
       modifiableProjectDescription.save();

@@ -22,6 +22,9 @@ import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+import org.bundlemaker.core.common.IResource;
+import org.bundlemaker.core.common.Resource2JarFileExporter;
+import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ITemplateProvider;
 import org.bundlemaker.core.exporter.util.ModuleExporterUtils;
@@ -32,10 +35,7 @@ import org.bundlemaker.core.osgi.utils.JarFileManifestWriter;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
-import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.ResourceType;
-import org.bundlemaker.core.util.JarFileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -125,7 +125,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
       
       Manifest manifest = createSourceManifest();
       
-      JarFileUtils.createJarArchive(getCurrentModule().getResources(ResourceType.SOURCE), manifest, null, outputStream);
+      Resource2JarFileExporter.createJarArchive(getCurrentModule().getResources(ResourceType.SOURCE), manifest, null, outputStream);
       outputStream.close();
     } catch (IOException e) {
       throw new CoreException(new Status(IStatus.ERROR, "", "Could not create Source Bundle " + sourceFile + ": " + e, e));
@@ -193,7 +193,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
       }
 
       // export the jar archive
-      JarFileUtils.createJarArchive(getCurrentModule().getResources(ResourceType.BINARY),
+      Resource2JarFileExporter.createJarArchive(getCurrentModule().getResources(ResourceType.BINARY),
           ManifestUtils.toManifest(getManifestContents()), additionalResources, outputStream);
 
       // close the output stream

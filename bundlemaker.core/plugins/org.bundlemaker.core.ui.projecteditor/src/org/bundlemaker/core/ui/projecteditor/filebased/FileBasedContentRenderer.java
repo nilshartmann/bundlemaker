@@ -14,11 +14,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.VariablePath;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.filecontent.FileBasedProjectContentProvider;
+import org.bundlemaker.core.project.util.AnalyzeMode;
+import org.bundlemaker.core.project.util.VariablePath;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
@@ -48,7 +48,7 @@ public class FileBasedContentRenderer {
    * @param rootElement
    * @return
    */
-  public List<? extends Object> getChildren(IBundleMakerProject project, Object object) {
+  public List<? extends Object> getChildren(IProjectDescriptionAwareBundleMakerProject project, Object object) {
 
     if (object instanceof FileBasedProjectContentProvider) {
       FileBasedProjectContentProvider fileBasedContentProvider = (FileBasedProjectContentProvider) object;

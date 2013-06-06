@@ -1,6 +1,6 @@
 package org.bundlemaker.core.mvn.content;
 
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
+import org.bundlemaker.core.project.IModifiableProjectDescription;
 import org.eclipse.core.runtime.Assert;
 
 /**

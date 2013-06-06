@@ -18,7 +18,7 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.bundlemaker.core.resource.IProjectContentResource;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.eclipse.core.runtime.Assert;
 
 /**

@@ -2,6 +2,7 @@ package org.bundlemaker.core.projectdescription;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.project.util.VariablePath;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;

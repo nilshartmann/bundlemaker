@@ -1,6 +1,6 @@
 package org.bundlemaker.core.ui.internal.classpath;
 
-import org.bundlemaker.core.BundleMakerCore;
+import org.bundlemaker.core.project.BundleMakerCore;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;

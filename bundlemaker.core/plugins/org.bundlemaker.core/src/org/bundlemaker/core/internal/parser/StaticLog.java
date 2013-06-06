@@ -1,6 +1,6 @@
 package org.bundlemaker.core.internal.parser;
 
-import org.bundlemaker.core.util.StopWatch;
+import org.bundlemaker.core.common.utils.StopWatch;
 import org.eclipse.core.runtime.CoreException;
 
 /**

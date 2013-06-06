@@ -12,11 +12,9 @@ package org.bundlemaker.core.parser;
 
 import java.util.List;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.resource.IParsableResource;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.core.runtime.CoreException;
 
 /**
@@ -64,7 +62,7 @@ public interface IParser {
    * 
    * @param bundleMakerProject
    */
-  void parseBundleMakerProjectStart(IBundleMakerProject bundleMakerProject);
+  void parseBundleMakerProjectStart(IProjectDescriptionAwareBundleMakerProject bundleMakerProject);
 
   /**
    * <p>
@@ -72,7 +70,7 @@ public interface IParser {
    * 
    * @param bundleMakerProject
    */
-  void parseBundleMakerProjectStop(IBundleMakerProject bundleMakerProject);
+  void parseBundleMakerProjectStop(IProjectDescriptionAwareBundleMakerProject bundleMakerProject);
 
   /**
    * <p>

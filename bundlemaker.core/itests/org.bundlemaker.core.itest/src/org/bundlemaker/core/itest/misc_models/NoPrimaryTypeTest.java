@@ -2,6 +2,7 @@ package org.bundlemaker.core.itest.misc_models;
 
 import java.io.IOException;
 
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.DependencyKind;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -30,7 +31,7 @@ public class NoPrimaryTypeTest extends AbstractBundleMakerModelTest {
   public void testNoPrimaryType_aggregatedTypes() throws CoreException, IOException {
 
     // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) getModularizedSystem().getAnalysisModel(
+    IBundleMakerArtifact rootArtifact = AnalysisCore.getAnalysisModel(getModularizedSystem(),
         AnalysisModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 

@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.ITypeResource;
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
@@ -61,7 +62,7 @@ public class InnerClassTest extends AbstractBundleMakerModelTest {
     Assert.assertSame(aSourceResource, bSourceResource);
 
     // transform the model
-    IRootArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
+    IRootArtifact rootArtifact = AnalysisCore.getAnalysisModel(getModularizedSystem(),
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     System.out.println(ArtifactTestUtil.toString(rootArtifact));

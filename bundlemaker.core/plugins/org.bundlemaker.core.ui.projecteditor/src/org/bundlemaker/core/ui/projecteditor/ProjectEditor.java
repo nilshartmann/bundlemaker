@@ -3,12 +3,13 @@
  */
 package org.bundlemaker.core.ui.projecteditor;
 
-import org.bundlemaker.core.BundleMakerCore;
-import org.bundlemaker.core.BundleMakerProjectChangedEvent;
-import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
-import org.bundlemaker.core.BundleMakerProjectState;
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IBundleMakerProjectChangedListener;
+import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.BundleMakerProjectChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectChangedEvent.Type;
+import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.util.BundleMakerProjectState;
+import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -31,7 +32,7 @@ public class ProjectEditor extends FormEditor {
 
   private final BundleMakerProjectDirtyListener _bundleMakerProjectDirtyListener = new BundleMakerProjectDirtyListener();
 
-  private IBundleMakerProject                   _bundleMakerProject;
+  private IModuleAwareBundleMakerProject        _bundleMakerProject;
 
   private boolean                               _projectDirty                    = false;
 
@@ -94,7 +95,7 @@ public class ProjectEditor extends FormEditor {
   }
 
   /**
-   * Opens the {@link IBundleMakerProject}
+   * Opens the {@link IProjectDescriptionAwareBundleMakerProject}
    */
   @Override
   public void init(IEditorSite site, IEditorInput input) throws PartInitException {
@@ -114,8 +115,8 @@ public class ProjectEditor extends FormEditor {
     setPartName(project.getName());
     try {
       // TODO use ProgressMonitor
-      IBundleMakerProject bundleMakerProject = BundleMakerCore
-          .getBundleMakerProject(project);
+      IModuleAwareBundleMakerProject bundleMakerProject = BundleMakerCore
+          .getBundleMakerProject(project).adaptAs(IModuleAwareBundleMakerProject.class);
 
       _bundleMakerProject = bundleMakerProject;
 
@@ -129,13 +130,13 @@ public class ProjectEditor extends FormEditor {
   }
 
   /**
-   * Returns the {@link IBundleMakerProject} that this editor is working on.
+   * Returns the {@link IProjectDescriptionAwareBundleMakerProject} that this editor is working on.
    * <p>
    * </p>
    * 
    * @return The IBundleMakerProject instance. Never null.
    */
-  public IBundleMakerProject getBundleMakerProject() {
+  public IModuleAwareBundleMakerProject getBundleMakerProject() {
     Assert.isNotNull(_bundleMakerProject);
     return this._bundleMakerProject;
   }

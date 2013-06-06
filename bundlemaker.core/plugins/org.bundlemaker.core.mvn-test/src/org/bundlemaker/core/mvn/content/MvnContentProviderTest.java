@@ -9,11 +9,11 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.util.List;
 
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.common.prefs.IBundleMakerPreferences;
 import org.bundlemaker.core.internal.projectdescription.api.IInternalProjectDescription;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.util.prefs.IBundleMakerPreferences;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectDescription;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
 
@@ -23,7 +23,7 @@ public class MvnContentProviderTest {
   public void test() throws CoreException {
 
     //
-    IBundleMakerProject bundleMakerProject = mock(IBundleMakerProject.class);
+    IProjectDescriptionAwareBundleMakerProject bundleMakerProject = mock(IProjectDescriptionAwareBundleMakerProject.class);
     IInternalProjectDescription projectDescription = mock(IInternalProjectDescription.class);
     when(bundleMakerProject.getProjectDescription()).thenReturn(projectDescription);
 

@@ -3,7 +3,7 @@ package org.bundlemaker.core.internal.projectdescription.gson;
 import java.lang.reflect.Type;
 
 import org.bundlemaker.core.internal.projectdescription.contentprovider.ProjectContentProviderExtension;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectContentProvider;
 import org.eclipse.core.runtime.Assert;
 
 import com.google.gson.JsonDeserializationContext;

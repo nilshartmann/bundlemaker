@@ -3,11 +3,11 @@ package org.bundlemaker.core.ui.mvn;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.mvn.content.MvnArtifactType;
 import org.bundlemaker.core.mvn.content.MvnContentProvider;
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.util.AnalyzeMode;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentRenderer;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditorElement;
@@ -52,12 +52,12 @@ public class MvnProjectContentProviderEditor extends AbstractProjectContentProvi
    * {@inheritDoc}
    */
   @Override
-  public Object getRootElement(IBundleMakerProject project, IProjectContentProvider provider) {
+  public Object getRootElement(IProjectDescriptionAwareBundleMakerProject project, IProjectContentProvider provider) {
     return provider;
   }
 
   @Override
-  public List<? extends Object> getChildren(IBundleMakerProject project, IProjectContentProvider provider,
+  public List<? extends Object> getChildren(IProjectDescriptionAwareBundleMakerProject project, IProjectContentProvider provider,
       Object rootElement) throws Exception {
 
     if (!(rootElement instanceof MvnContentProvider)) {
@@ -139,7 +139,7 @@ public class MvnProjectContentProviderEditor extends AbstractProjectContentProvi
    * {@inheritDoc}
    */
   @Override
-  public boolean edit(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object selectedObject) {
+  public boolean edit(Shell shell, IProjectDescriptionAwareBundleMakerProject project, IProjectContentProvider provider, Object selectedObject) {
 
     //
     if (!(selectedObject instanceof MvnContentProvider)) {
@@ -180,7 +180,7 @@ public class MvnProjectContentProviderEditor extends AbstractProjectContentProvi
    * {@inheritDoc}
    */
   @Override
-  public List<IAction> getContextMenuActions(IBundleMakerProject project,
+  public List<IAction> getContextMenuActions(IProjectDescriptionAwareBundleMakerProject project,
       List<IProjectContentProviderEditorElement> selectedElements) {
 
     // lazy init

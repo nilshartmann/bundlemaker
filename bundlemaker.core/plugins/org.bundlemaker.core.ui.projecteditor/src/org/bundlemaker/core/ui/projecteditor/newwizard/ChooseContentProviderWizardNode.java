@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.projecteditor.newwizard;
 
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.ui.projecteditor.provider.INewProjectContentProviderWizardContribution;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardNode;
@@ -23,7 +23,7 @@ import org.eclipse.swt.graphics.Point;
  */
 public class ChooseContentProviderWizardNode implements IWizardNode {
 
-  private final IBundleMakerProject                         _bundleMakerProject;
+  private final IProjectDescriptionAwareBundleMakerProject                         _bundleMakerProject;
 
   private final INewProjectContentProviderWizardContribution _contribution;
 
@@ -33,7 +33,7 @@ public class ChooseContentProviderWizardNode implements IWizardNode {
    * @param bundleMakerProject
    * @param contribution
    */
-  public ChooseContentProviderWizardNode(IBundleMakerProject bundleMakerProject,
+  public ChooseContentProviderWizardNode(IProjectDescriptionAwareBundleMakerProject bundleMakerProject,
       INewProjectContentProviderWizardContribution contribution) {
     super();
     _bundleMakerProject = bundleMakerProject;

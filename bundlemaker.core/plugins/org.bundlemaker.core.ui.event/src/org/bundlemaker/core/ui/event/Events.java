@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.bundlemaker.core.ui.event.internal.BundleMakerProjectOpenedEvent;
 import org.bundlemaker.core.ui.event.selection.internal.Activator;
 import org.eclipse.core.runtime.Assert;
@@ -53,7 +53,7 @@ public abstract class Events {
    * @param bundleMakerProject
    *          the project that has been opened. Must not be null.
    */
-  public void fireProjectOpened(IBundleMakerProject bundleMakerProject) {
+  public void fireProjectOpened(IModuleAwareBundleMakerProject bundleMakerProject) {
     Assert.isNotNull(bundleMakerProject);
 
     // get registered listener

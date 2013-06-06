@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.BundleMakerProjectChangedEvent;
-import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
-import org.bundlemaker.core.BundleMakerProjectState;
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IBundleMakerProjectChangedListener;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.project.BundleMakerProjectChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectChangedEvent.Type;
+import org.bundlemaker.core.project.util.BundleMakerProjectState;
+import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
+import org.bundlemaker.core.project.IModifiableProjectDescription;
+import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.VerticalFormButtonBar;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
@@ -86,26 +86,26 @@ public class ProjectEditorPage extends FormPage {
   /**
    * The project that is edited
    */
-  private final IBundleMakerProject _bundleMakerProject;
+  private final IModuleAwareBundleMakerProject _bundleMakerProject;
 
   /**
    * The form holding our controls
    */
-  private ScrolledForm              _form;
+  private ScrolledForm                           _form;
 
-  private boolean                   _needsReopening = true;
+  private boolean                                _needsReopening = true;
 
-  private TreeViewer                _treeViewer;
+  private TreeViewer                             _treeViewer;
 
-  private Button                    _editButton;
+  private Button                                 _editButton;
 
-  private Button                    _removeButton;
+  private Button                                 _removeButton;
 
-  private Button                    _moveDownButton;
+  private Button                                 _moveDownButton;
 
-  private Button                    _moveUpButton;
+  private Button                                 _moveUpButton;
 
-  private Button                    _parseProjectButton;
+  private Button                                 _parseProjectButton;
 
   public ProjectEditorPage(ProjectEditor editor) {
     super(editor, "Content", "Content");
@@ -642,7 +642,7 @@ public class ProjectEditorPage extends FormPage {
   /**
    * @return
    */
-  private IBundleMakerProject getBundleMakerProject() {
+  private IModuleAwareBundleMakerProject getBundleMakerProject() {
     return _bundleMakerProject;
   }
 

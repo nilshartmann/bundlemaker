@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.ui.projecteditor.provider.INewProjectContentProviderWizardContribution;
 import org.bundlemaker.core.ui.projecteditor.provider.internal.ProjectEditorContributionRegistry;
 import org.eclipse.debug.internal.ui.SWTFactory;
@@ -47,13 +47,13 @@ import org.eclipse.swt.widgets.Text;
  */
 public class ChooseContentProviderSelectionPage extends WizardSelectionPage {
 
-  private final IBundleMakerProject               _bundleMakerProject;
+  private final IProjectDescriptionAwareBundleMakerProject               _bundleMakerProject;
 
   private final ProjectEditorContributionRegistry _newProjectContentProviderWizardRegistry;
 
   private Text                                    _description;
 
-  protected ChooseContentProviderSelectionPage(IBundleMakerProject bundleMakerProject,
+  protected ChooseContentProviderSelectionPage(IProjectDescriptionAwareBundleMakerProject bundleMakerProject,
       ProjectEditorContributionRegistry registry) {
     super("SelectionPage"); //$NON-NLS-1$
 

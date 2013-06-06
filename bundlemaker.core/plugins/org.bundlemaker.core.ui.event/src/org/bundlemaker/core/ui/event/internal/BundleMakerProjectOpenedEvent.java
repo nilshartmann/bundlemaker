@@ -10,36 +10,41 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.event.internal;
 
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
+import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.bundlemaker.core.ui.event.IBundleMakerProjectOpenedEvent;
 import org.eclipse.core.runtime.Assert;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
- *
+ * 
  */
 public class BundleMakerProjectOpenedEvent implements IBundleMakerProjectOpenedEvent {
-  
-  private final IBundleMakerProject _bundleMakerProject;
+
+  private final IModuleAwareBundleMakerProject _bundleMakerProject;
 
   /**
    * @param bundleMakerProject
    */
-  public BundleMakerProjectOpenedEvent(IBundleMakerProject bundleMakerProject) {
+  public BundleMakerProjectOpenedEvent(IModuleAwareBundleMakerProject bundleMakerProject) {
     Assert.isNotNull(bundleMakerProject);
-    
+
     _bundleMakerProject = bundleMakerProject;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.bundlemaker.core.ui.event.IBundleMakerProjectOpenedEvent#getBundleMakerProject()
    */
   @Override
-  public IBundleMakerProject getBundleMakerProject() {
+  public IModuleAwareBundleMakerProject getBundleMakerProject() {
     return this._bundleMakerProject;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#toString()
    */
   @Override

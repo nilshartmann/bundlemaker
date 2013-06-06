@@ -19,6 +19,9 @@ import java.util.Set;
 import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core._type.internal.Type;
+import org.bundlemaker.core.common.ResourceType;
+import org.bundlemaker.core.common.utils.FileUtils;
+import org.bundlemaker.core.common.utils.VMInstallUtils;
 import org.bundlemaker.core.internal.modules.Module;
 import org.bundlemaker.core.internal.modules.modularizedsystem.DefaultTypeSelector;
 import org.bundlemaker.core.internal.parser.ResourceCache;
@@ -28,9 +31,6 @@ import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
-import org.bundlemaker.core.resource.ResourceType;
-import org.bundlemaker.core.util.FileUtils;
-import org.bundlemaker.core.util.JdkCreator;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.launching.IVMInstall;
@@ -52,7 +52,7 @@ public class JdkModuleCreator {
       String jre = modularizedSystem.getBundleMakerProject().getProjectDescription().getJRE();
 
       // get the vm install (has to exist exist)
-      IVMInstall vmInstall = JdkCreator.getIVMInstall(jre);
+      IVMInstall vmInstall = VMInstallUtils.getIVMInstall(jre);
 
       if (vmInstall == null) {
         vmInstall = JavaRuntime.getDefaultVMInstall();

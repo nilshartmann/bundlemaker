@@ -12,9 +12,9 @@ package org.bundlemaker.core.ui.projecteditor.provider;
 
 import java.util.List;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.util.AnalyzeMode;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
@@ -28,17 +28,17 @@ public interface IProjectContentProviderEditor {
 
   public boolean canHandle(IProjectContentProvider provider);
 
-  public Object getRootElement(IBundleMakerProject project, IProjectContentProvider provider);
+  public Object getRootElement(IProjectDescriptionAwareBundleMakerProject project, IProjectContentProvider provider);
 
   /**
    * @param provider
    *          the provider instance that has been passed to
-   *          {@link #getRootElement(IBundleMakerProject, IProjectContentProvider)} or this method, which in turn has
+   *          {@link #getRootElement(IProjectDescriptionAwareBundleMakerProject, IProjectContentProvider)} or this method, which in turn has
    *          returned the given root element
    * 
    * @throws Exception
    */
-  public List<? extends Object> getChildren(IBundleMakerProject project, IProjectContentProvider provider,
+  public List<? extends Object> getChildren(IProjectDescriptionAwareBundleMakerProject project, IProjectContentProvider provider,
       Object rootElement) throws Exception;
 
   /**
@@ -88,7 +88,7 @@ public interface IProjectContentProviderEditor {
    * @param selectedObject
    * @return true if the BundleMaker project (description) has been changed during the edit or false if not
    */
-  public boolean edit(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object selectedObject);
+  public boolean edit(Shell shell, IProjectDescriptionAwareBundleMakerProject project, IProjectContentProvider provider, Object selectedObject);
 
   /**
    * Determines if the given object can be removed by this provider.
@@ -116,7 +116,7 @@ public interface IProjectContentProviderEditor {
    * @param selectedObject
    *          The object that should be removed
    */
-  public void remove(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object selectedObject);
+  public void remove(Shell shell, IProjectDescriptionAwareBundleMakerProject project, IProjectContentProvider provider, Object selectedObject);
 
   /**
    * Returns a list of actions that should be contributed to the project editor tree.
@@ -135,7 +135,7 @@ public interface IProjectContentProviderEditor {
    *          all elements that are currently selected in the project editor tree viewer.
    * @return
    */
-  public List<IAction> getContextMenuActions(IBundleMakerProject project,
+  public List<IAction> getContextMenuActions(IProjectDescriptionAwareBundleMakerProject project,
       List<IProjectContentProviderEditorElement> selectedElements);
 
 }

@@ -6,17 +6,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.common.ResourceType;
+import org.bundlemaker.core.common.utils.FileUtils;
 import org.bundlemaker.core.internal.projectdescription.api.IInternalProjectDescription;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
-import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.projectdescription.VariablePath;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectDescription;
+import org.bundlemaker.core.project.spi.AbstractProjectContentProvider;
+import org.bundlemaker.core.project.util.AnalyzeMode;
+import org.bundlemaker.core.project.util.VariablePath;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.ResourceType;
-import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 

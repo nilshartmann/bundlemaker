@@ -13,10 +13,8 @@ package org.bundlemaker.core.parser;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.resource.IParsableResource;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 
 /**
  * <p>
@@ -43,7 +41,7 @@ public abstract class AbstractParser implements IParser {
    * {@inheritDoc}
    */
   @Override
-  public void parseBundleMakerProjectStart(IBundleMakerProject bundleMakerProject) {
+  public void parseBundleMakerProjectStart(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     // ignore
   }
 
@@ -51,7 +49,7 @@ public abstract class AbstractParser implements IParser {
    * {@inheritDoc}
    */
   @Override
-  public void parseBundleMakerProjectStop(IBundleMakerProject bundleMakerProject) {
+  public void parseBundleMakerProjectStop(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     // ignore
   }
 

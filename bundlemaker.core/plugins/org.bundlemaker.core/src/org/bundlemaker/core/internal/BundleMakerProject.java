@@ -18,14 +18,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.core.BundleMakerCore;
-import org.bundlemaker.core.BundleMakerProjectChangedEvent;
-import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
-import org.bundlemaker.core.BundleMakerProjectState;
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IBundleMakerProjectChangedListener;
-import org.bundlemaker.core.IBundleMakerProjectHook;
-import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ModelSetup;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
@@ -34,11 +26,19 @@ import org.bundlemaker.core.internal.projectdescription.ProjectDescriptionStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
-import org.bundlemaker.core.modules.transformation.ITransformation;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.parser.IProblem;
+import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.BundleMakerProjectChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectChangedEvent.Type;
+import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
+import org.bundlemaker.core.project.IModifiableProjectDescription;
+import org.bundlemaker.core.project.IProjectDescription;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.util.BundleMakerProjectState;
+import org.bundlemaker.core.resource.IBundleMakerProjectHook;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.ITransformation;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.Status;
 
 /**
  * <p>
- * Implementation of the interface {@link IBundleMakerProject}.
+ * Implementation of the interface {@link IProjectDescriptionAwareBundleMakerProject}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -109,6 +109,30 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
 
     //
     _projectState = BundleMakerProjectState.CREATED;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public <T> T adaptAs(Class<T> clazz) {
+
+    //
+    if (clazz.isAssignableFrom(this.getClass())) {
+      return (T) this;
+    }
+
+    //
+    return null;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Object getAdapter(Class adapter) {
+
+    return adaptAs(adapter);
   }
 
   /**

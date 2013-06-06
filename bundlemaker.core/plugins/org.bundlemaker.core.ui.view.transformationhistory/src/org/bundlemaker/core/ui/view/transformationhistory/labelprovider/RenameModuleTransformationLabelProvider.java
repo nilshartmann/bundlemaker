@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.view.transformationhistory.labelprovider;
 
-import org.bundlemaker.core.modules.transformation.IRenameModuleTransformation;
+import org.bundlemaker.core.resource.IRenameModuleTransformation;
 import org.eclipse.swt.graphics.Image;
 
 /**

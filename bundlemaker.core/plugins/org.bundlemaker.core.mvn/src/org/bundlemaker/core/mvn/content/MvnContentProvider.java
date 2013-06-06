@@ -7,20 +7,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IDependency;
+import org.bundlemaker.core.common.prefs.BundleMakerPreferences;
+import org.bundlemaker.core.common.prefs.IBundleMakerPreferences;
 import org.bundlemaker.core.mvn.MvnCoreActivator;
 import org.bundlemaker.core.mvn.internal.MvnArtifactConverter;
 import org.bundlemaker.core.mvn.internal.config.DispatchingRepositoryAdapter;
 import org.bundlemaker.core.mvn.internal.config.IAetherRepositoryAdapter;
-import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectDescription;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.spi.AbstractProjectContentProvider;
+import org.bundlemaker.core.project.util.AnalyzeMode;
 import org.bundlemaker.core.resource.IModuleIdentifier;
-import org.bundlemaker.core.util.prefs.BundleMakerPreferences;
-import org.bundlemaker.core.util.prefs.IBundleMakerPreferences;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -149,7 +149,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    * @throws CoreException
    */
   public void reloadContent(final boolean useRemoteRepository, final boolean reloadFromRemote,
-      IBundleMakerProject bundleMakerProject) throws CoreException {
+      IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException {
 
     // create a new session
     _currentSystemSession = _repositoryAdapter.newSession();

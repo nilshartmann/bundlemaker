@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.projecteditor.provider;
 
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectContentProvider;
 
 /**
  * Represents an Element that is shown in the project content editor tree.

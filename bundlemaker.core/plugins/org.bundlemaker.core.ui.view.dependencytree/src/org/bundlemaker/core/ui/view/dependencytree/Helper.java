@@ -11,7 +11,7 @@ import java.util.Set;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
-import org.bundlemaker.core.util.collections.GenericCache;
+import org.bundlemaker.core.common.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;

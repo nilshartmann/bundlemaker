@@ -1,7 +1,7 @@
 package org.bundlemaker.core.ui.projecteditor.dnd.internal;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.ui.projecteditor.dnd.DropLocation;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropEvent;
 import org.eclipse.swt.dnd.Transfer;
@@ -12,7 +12,7 @@ public class ProjectEditorDropEvent implements IProjectEditorDropEvent {
 
   private final Shell                   _shell;
 
-  private final IBundleMakerProject     _bundleMakerProject;
+  private final IProjectDescriptionAwareBundleMakerProject     _bundleMakerProject;
 
   private final IProjectContentProvider _projectContentProvider;
 
@@ -24,7 +24,7 @@ public class ProjectEditorDropEvent implements IProjectEditorDropEvent {
 
   private final DropLocation            _dropLocation;
 
-  public ProjectEditorDropEvent(final Shell shell, IBundleMakerProject bundleMakerProject,
+  public ProjectEditorDropEvent(final Shell shell, IProjectDescriptionAwareBundleMakerProject bundleMakerProject,
       IProjectContentProvider projectContentProvider,
       Object target,
       DropLocation dropLocation, TransferData transferData) {
@@ -48,7 +48,7 @@ public class ProjectEditorDropEvent implements IProjectEditorDropEvent {
   }
 
   @Override
-  public IBundleMakerProject getBundleMakerProject() {
+  public IProjectDescriptionAwareBundleMakerProject getBundleMakerProject() {
     return _bundleMakerProject;
   }
 

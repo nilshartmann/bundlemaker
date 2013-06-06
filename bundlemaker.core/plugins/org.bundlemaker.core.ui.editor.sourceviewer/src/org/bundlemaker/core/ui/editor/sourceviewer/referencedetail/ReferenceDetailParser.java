@@ -5,16 +5,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core._type.utils.JavaTypeUtils;
+import org.bundlemaker.core.common.IResource;
+import org.bundlemaker.core.common.utils.VMInstallUtils;
 import org.bundlemaker.core.parser.IReferenceDetailParser;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.VariablePath;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.util.VariablePath;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.util.JdkCreator;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -45,7 +45,7 @@ public class ReferenceDetailParser implements IReferenceDetailParser {
     return Collections.emptyMap();
   }
 
-  protected CompilationUnit parse(IResource resource, IBundleMakerProject iBundleMakerProject) throws CoreException {
+  protected CompilationUnit parse(IResource resource, IProjectDescriptionAwareBundleMakerProject iBundleMakerProject) throws CoreException {
 
     ASTParser parser = ASTParser.newParser(AST.JLS4);
     parser.setKind(ASTParser.K_COMPILATION_UNIT);
@@ -60,7 +60,7 @@ public class ReferenceDetailParser implements IReferenceDetailParser {
     return (CompilationUnit) node; // parse
   }
 
-  private String[][] get(IBundleMakerProject bundleMakerProject) throws CoreException {
+  private String[][] get(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException {
 
     //
     List<String> classpathEntries = new LinkedList<String>();
@@ -76,7 +76,7 @@ public class ReferenceDetailParser implements IReferenceDetailParser {
     }
 
     // step 3.1: add the vm path
-    IVMInstall vm = JdkCreator.getIVMInstall(bundleMakerProject.getProjectDescription().getJRE());
+    IVMInstall vm = VMInstallUtils.getIVMInstall(bundleMakerProject.getProjectDescription().getJRE());
     for (LibraryLocation libraryLocation : JavaRuntime.getLibraryLocations(vm)) {
       classpathEntries.add(libraryLocation.getSystemLibraryPath().toFile().getAbsolutePath());
     }

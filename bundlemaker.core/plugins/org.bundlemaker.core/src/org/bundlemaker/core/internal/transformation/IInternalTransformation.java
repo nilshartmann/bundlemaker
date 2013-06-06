@@ -1,7 +1,7 @@
 package org.bundlemaker.core.internal.transformation;
 
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.modules.transformation.ITransformation;
+import org.bundlemaker.core.resource.ITransformation;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public interface IInternalTransformation extends ITransformation {

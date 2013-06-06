@@ -20,13 +20,13 @@ import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core._type.modifiable.IModifiableType;
 import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
+import org.bundlemaker.core.common.IResource;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.resource.FlyWeightString;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 
 /**

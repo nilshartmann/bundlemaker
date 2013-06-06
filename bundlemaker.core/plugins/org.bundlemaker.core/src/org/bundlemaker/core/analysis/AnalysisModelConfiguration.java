@@ -1,6 +1,6 @@
 package org.bundlemaker.core.analysis;
 
-import org.bundlemaker.core.resource.ResourceType;
+import org.bundlemaker.core.common.ResourceType;
 import org.eclipse.core.runtime.Assert;
 
 import com.google.gson.annotations.Expose;

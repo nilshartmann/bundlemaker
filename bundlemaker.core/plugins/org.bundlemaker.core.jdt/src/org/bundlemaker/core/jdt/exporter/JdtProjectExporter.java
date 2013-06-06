@@ -20,14 +20,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.common.ResourceType;
+import org.bundlemaker.core.common.utils.FileUtils;
 import org.bundlemaker.core.exporter.AbstractExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.util.Helper;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.ResourceType;
-import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;

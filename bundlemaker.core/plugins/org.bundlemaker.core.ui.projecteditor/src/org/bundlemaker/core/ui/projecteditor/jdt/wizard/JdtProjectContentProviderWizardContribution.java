@@ -1,8 +1,8 @@
 package org.bundlemaker.core.ui.projecteditor.jdt.wizard;
 
-import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
+import org.bundlemaker.core.project.IModifiableProjectDescription;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.projecteditor.provider.INewProjectContentProviderWizardContribution;
 import org.eclipse.core.resources.IProject;
@@ -26,7 +26,7 @@ public class JdtProjectContentProviderWizardContribution implements INewProjectC
    * .core.IBundleMakerProject)
    */
   @Override
-  public String getLabel(IBundleMakerProject bundleMakerProject) {
+  public String getLabel(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     return "JDT Projects (experimental)";
   }
 
@@ -38,7 +38,7 @@ public class JdtProjectContentProviderWizardContribution implements INewProjectC
    * .core.IBundleMakerProject)
    */
   @Override
-  public Image getImage(IBundleMakerProject bundleMakerProject) {
+  public Image getImage(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     return BundleMakerImages.JDT_PROJECT_CONTENT_PROVIDER.getImage();
   }
 
@@ -49,7 +49,7 @@ public class JdtProjectContentProviderWizardContribution implements INewProjectC
    * bundlemaker.core.IBundleMakerProject)
    */
   @Override
-  public String getDescription(IBundleMakerProject bundleMakerProject) {
+  public String getDescription(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     return "Add JDT projects from your workspace";
   }
 
@@ -61,7 +61,7 @@ public class JdtProjectContentProviderWizardContribution implements INewProjectC
    * .core.IBundleMakerProject)
    */
   @Override
-  public IWizard createWizard(final IBundleMakerProject bundleMakerProject) {
+  public IWizard createWizard(final IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     final IModifiableProjectDescription modifiableProjectDescription = bundleMakerProject
         .getModifiableProjectDescription();
     return new Wizard() {

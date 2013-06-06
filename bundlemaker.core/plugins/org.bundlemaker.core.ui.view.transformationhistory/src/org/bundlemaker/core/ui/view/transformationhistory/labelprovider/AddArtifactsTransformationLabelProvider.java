@@ -12,7 +12,7 @@ package org.bundlemaker.core.ui.view.transformationhistory.labelprovider;
 
 import java.util.List;
 
-import org.bundlemaker.core.modules.transformation.IAddArtifactsTransformation;
+import org.bundlemaker.core.resource.IAddArtifactsTransformation;
 import org.eclipse.swt.graphics.Image;
 
 /**

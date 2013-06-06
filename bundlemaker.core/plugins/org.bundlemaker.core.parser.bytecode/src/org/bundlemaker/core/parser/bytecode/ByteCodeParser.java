@@ -10,16 +10,16 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser.bytecode;
 
-import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core._type.utils.JavaTypeUtils;
 import org.bundlemaker.core._type.utils.JavaUtils;
 import org.bundlemaker.core.parser.AbstractParser;
+import org.bundlemaker.core.parser.IParsableResource;
+import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.parser.bytecode.asm.ArtefactAnalyserClassVisitor;
 import org.bundlemaker.core.parser.bytecode.asm.AsmReferenceRecorder;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.resource.IParsableResource;
+import org.bundlemaker.core.project.IProjectContentEntry;
 import org.objectweb.asm.ClassReader;
 
 /**

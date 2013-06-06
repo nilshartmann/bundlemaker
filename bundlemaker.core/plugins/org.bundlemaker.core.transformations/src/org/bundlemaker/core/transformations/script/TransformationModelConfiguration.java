@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.bundlemaker.core.resource.ResourceType;
+import org.bundlemaker.core.common.ResourceType;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

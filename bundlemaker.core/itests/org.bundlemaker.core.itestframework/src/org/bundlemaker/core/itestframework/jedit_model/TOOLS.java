@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
@@ -55,13 +56,14 @@ public class TOOLS {
   public static void assertTypeCount(IModularizedSystem modularizedSystem, int typeCountWithoutJdkTypes) {
 
     // assert the specified number of types
-    Assert.assertEquals("Expected: "
-        + typeCountWithoutJdkTypes
-        + ", actual: "
-        + (modularizedSystem.getTypes().size() - modularizedSystem.getExecutionEnvironment().adaptAs(ITypeModule.class)
-            .getContainedTypes().size()), modularizedSystem.getExecutionEnvironment().adaptAs(ITypeModule.class)
-        .getContainedTypes().size()
-        + typeCountWithoutJdkTypes, modularizedSystem.getTypes().size());
+    Assert.assertEquals(
+        "Expected: "
+            + typeCountWithoutJdkTypes
+            + ", actual: "
+            + (modularizedSystem.adaptAs(ITypeModularizedSystem.class).getTypes().size() - modularizedSystem
+                .getExecutionEnvironment().adaptAs(ITypeModule.class).getContainedTypes().size()), modularizedSystem
+            .getExecutionEnvironment().adaptAs(ITypeModule.class).getContainedTypes().size()
+            + typeCountWithoutJdkTypes, modularizedSystem.adaptAs(ITypeModularizedSystem.class).getTypes().size());
   }
 
   /**

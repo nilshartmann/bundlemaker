@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser;
 
-import org.bundlemaker.core.resource.IParsableResource;
 
 /**
  * <p>

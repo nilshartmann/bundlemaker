@@ -3,9 +3,9 @@ package org.bundlemaker.core.mvn.internal.config;
 import java.io.File;
 import java.util.List;
 
+import org.bundlemaker.core.common.prefs.IBundleMakerPreferences;
 import org.bundlemaker.core.mvn.MvnCoreActivator;
 import org.bundlemaker.core.mvn.preferences.MvnConfigurationSettingEnum;
-import org.bundlemaker.core.util.prefs.IBundleMakerPreferences;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.preferences.InstanceScope;

@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.projecteditor.provider;
 
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.graphics.Image;
 
@@ -20,9 +20,9 @@ import org.eclipse.swt.graphics.Image;
  */
 public interface INewProjectContentProviderWizardContribution {
 
-  public String getLabel(IBundleMakerProject bundleMakerProject);
+  public String getLabel(IProjectDescriptionAwareBundleMakerProject bundleMakerProject);
 
-  public Image getImage(IBundleMakerProject bundleMakerProject);
+  public Image getImage(IProjectDescriptionAwareBundleMakerProject bundleMakerProject);
 
   /**
    * Returns a readable description of this Wizard
@@ -30,8 +30,8 @@ public interface INewProjectContentProviderWizardContribution {
    * @param bundleMakerProject
    * @return
    */
-  public String getDescription(IBundleMakerProject bundleMakerProject);
+  public String getDescription(IProjectDescriptionAwareBundleMakerProject bundleMakerProject);
 
-  public IWizard createWizard(IBundleMakerProject bundleMakerProject);
+  public IWizard createWizard(IProjectDescriptionAwareBundleMakerProject bundleMakerProject);
 
 }

@@ -10,13 +10,13 @@ import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
+import org.bundlemaker.core.internal.gson.GsonHelper;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.transformation.add.AddArtifactToGroupAndModuleContainer;
 import org.bundlemaker.core.internal.transformation.add.AddMovableUnitsToModule;
 import org.bundlemaker.core.internal.transformation.add.IAddArtifactAction;
 import org.bundlemaker.core.internal.transformation.add.ModelNotificationSuppressor;
-import org.bundlemaker.core.modules.transformation.IAddArtifactsTransformation;
-import org.bundlemaker.core.util.gson.GsonHelper;
+import org.bundlemaker.core.resource.IAddArtifactsTransformation;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 

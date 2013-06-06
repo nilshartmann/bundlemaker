@@ -4,12 +4,12 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
-import org.bundlemaker.core.projectdescription.VariablePath;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
-import org.bundlemaker.core.resource.ResourceType;
-import org.bundlemaker.core.util.IFileBasedProjectContentInfo;
+import org.bundlemaker.core.common.ResourceType;
+import org.bundlemaker.core.common.utils.IFileBasedProjectContentInfo;
+import org.bundlemaker.core.project.IModifiableProjectDescription;
+import org.bundlemaker.core.project.filecontent.FileBasedProjectContentProvider;
+import org.bundlemaker.core.project.util.AnalyzeMode;
+import org.bundlemaker.core.project.util.VariablePath;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 

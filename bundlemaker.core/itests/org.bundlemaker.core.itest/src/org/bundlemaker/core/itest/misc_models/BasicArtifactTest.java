@@ -12,6 +12,7 @@ package org.bundlemaker.core.itest.misc_models;
 
 import static org.junit.Assert.assertEquals;
 
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
@@ -34,7 +35,7 @@ public class BasicArtifactTest extends AbstractBundleMakerModelTest {
   public void qualifiedNameWithFlatPackages() throws Exception {
 
     // step 1: get the rootArtifact
-    IBundleMakerArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
+    IBundleMakerArtifact rootArtifact = AnalysisCore.getAnalysisModel(getModularizedSystem(),
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     // step 2: get the package child 
@@ -55,7 +56,7 @@ public class BasicArtifactTest extends AbstractBundleMakerModelTest {
   public void qualifiedNameWithHierarchicalPackages() throws Exception {
 
     // step 1: get the rootArtifact
-    IBundleMakerArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
+    IBundleMakerArtifact rootArtifact = AnalysisCore.getAnalysisModel(getModularizedSystem(),
         AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
 
     // step 2: get the package child 

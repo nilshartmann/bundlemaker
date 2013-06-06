@@ -28,7 +28,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 
-import org.bundlemaker.core.util.JarFileUtils;
+import org.bundlemaker.core.common.Resource2JarFileExporter;
 import org.eclipse.virgo.bundlor.ManifestWriter;
 import org.eclipse.virgo.bundlor.util.BundleManifestUtils;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
@@ -61,7 +61,7 @@ public class JarFileManifestWriter implements ManifestWriter {
       Enumeration<JarEntry> entries = inputJar.entries();
       while (entries.hasMoreElements()) {
         JarEntry entry = entries.nextElement();
-        if (!JarFileUtils.skipResource(entry.getName())) {
+        if (!Resource2JarFileExporter.skipResource(entry.getName())) {
           if (entry.isDirectory()) {
             out.putNextEntry(entry);
             out.write(new byte[0]);

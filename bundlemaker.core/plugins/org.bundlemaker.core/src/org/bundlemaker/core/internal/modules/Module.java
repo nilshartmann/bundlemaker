@@ -23,6 +23,7 @@ import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core._type.internal.TypeContainer;
+import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.internal.analysis.ITempTypeProvider;
 import org.bundlemaker.core.internal.modules.event.ModuleClassificationChangedEvent;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
@@ -37,7 +38,6 @@ import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.ResourceType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 

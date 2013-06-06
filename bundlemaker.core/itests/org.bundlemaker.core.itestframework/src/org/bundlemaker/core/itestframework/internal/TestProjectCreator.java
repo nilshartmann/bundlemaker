@@ -4,12 +4,13 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 
-import org.bundlemaker.core.BundleMakerCore;
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
-import org.bundlemaker.core.util.JdkCreator;
+import org.bundlemaker.core.common.utils.VMInstallUtils;
+import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
+import org.bundlemaker.core.parser.IProblem;
+import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.IModifiableProjectDescription;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.util.AnalyzeMode;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.launching.IVMInstall;
@@ -39,7 +40,7 @@ public class TestProjectCreator {
    * 
    * @param bundleMakerProject
    */
-  public static void initializeParseAndOPen(IBundleMakerProject bundleMakerProject) {
+  public static void initializeParseAndOPen(IParserAwareBundleMakerProject bundleMakerProject) {
 
     try {
 
@@ -70,13 +71,13 @@ public class TestProjectCreator {
    * 
    * @return
    */
-  public static final IBundleMakerProject getBundleMakerProject(String testProjectName) {
+  public static final IParserAwareBundleMakerProject getBundleMakerProject(String testProjectName) {
     try {
       // create simple project
       IProject simpleProject = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(testProjectName);
 
       // get the BM project
-      return BundleMakerCore.getBundleMakerProject(simpleProject);
+      return BundleMakerCore.getBundleMakerProject(simpleProject).adaptAs(IParserAwareBundleMakerProject.class);
     } catch (CoreException e) {
       e.printStackTrace();
       Assert.fail(e.getMessage());
@@ -84,7 +85,8 @@ public class TestProjectCreator {
     }
   }
 
-  public static void addProjectDescription(IBundleMakerProject bundleMakerProject, String testProjectName) {
+  public static void addProjectDescription(IProjectDescriptionAwareBundleMakerProject bundleMakerProject,
+      String testProjectName) {
 
     //
     File testDataDirectory = new File(new File(System.getProperty("user.dir"), "test-data"), testProjectName);
@@ -147,7 +149,7 @@ public class TestProjectCreator {
     addProjectDescription(bundleMakerProject, testDataDirectory, testProjectName);
   }
 
-  public static void addProjectDescription(IBundleMakerProject bundleMakerProject, File directory) {
+  public static void addProjectDescription(IProjectDescriptionAwareBundleMakerProject bundleMakerProject, File directory) {
     addProjectDescription(bundleMakerProject, directory, TEST_PROJECT_NAME);
   }
 
@@ -158,7 +160,8 @@ public class TestProjectCreator {
    * @param bundleMakerProject
    * @throws CoreException
    */
-  public static void addProjectDescription(IBundleMakerProject bundleMakerProject, File directory, String projectName) {
+  public static void addProjectDescription(IProjectDescriptionAwareBundleMakerProject bundleMakerProject,
+      File directory, String projectName) {
 
     Assert.assertTrue(directory.isDirectory());
 
@@ -245,7 +248,7 @@ public class TestProjectCreator {
     } else {
       System.out.println("Creating Test IVMInstall for location '" + configuredTestVmLocation + "'");
       try {
-        vmInstall = JdkCreator.getOrCreateIVMInstall("BundleMakerTestJDK", configuredTestVmLocation);
+        vmInstall = VMInstallUtils.getOrCreateIVMInstall("BundleMakerTestJDK", configuredTestVmLocation);
       } catch (CoreException e) {
         e.printStackTrace();
         Assert.fail(e.getMessage());

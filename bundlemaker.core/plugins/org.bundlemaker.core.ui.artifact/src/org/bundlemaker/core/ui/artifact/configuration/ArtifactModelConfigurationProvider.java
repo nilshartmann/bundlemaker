@@ -11,7 +11,7 @@
 package org.bundlemaker.core.ui.artifact.configuration;
 
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
-import org.bundlemaker.core.resource.ResourceType;
+import org.bundlemaker.core.common.ResourceType;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 /**

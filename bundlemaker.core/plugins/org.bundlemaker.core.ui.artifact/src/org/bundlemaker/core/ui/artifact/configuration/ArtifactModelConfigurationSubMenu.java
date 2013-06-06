@@ -18,10 +18,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.resource.ResourceType;
+import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.ui.artifact.Activator;
 import org.bundlemaker.core.ui.artifact.ArtifactImages;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
@@ -167,8 +168,9 @@ public class ArtifactModelConfigurationSubMenu extends CompoundContributionItem 
     } else {
       // find artifact in new AnalysisModel created by the modified configuration
       IBundleMakerArtifact artifact = (IBundleMakerArtifact) objectInTree;
-      IRootArtifact newRootArtifact = artifact.getModularizedSystem().getAnalysisModel(
-          _artifactModelConfigurationProvider.getArtifactModelConfiguration());
+      IRootArtifact newRootArtifact =
+          AnalysisCore.getAnalysisModel(artifact.getModularizedSystem(),
+              _artifactModelConfigurationProvider.getArtifactModelConfiguration());
       List<IBundleMakerArtifact> result = AnalysisModelQueries.findArtifactsByQualifiedName(
           IBundleMakerArtifact.class, newRootArtifact, artifact.getQualifiedName());
       target.addAll(result);

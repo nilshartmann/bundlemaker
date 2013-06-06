@@ -2,6 +2,7 @@ package org.bundlemaker.core.osgi.manifest;
 
 import java.util.Map;
 
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
@@ -40,7 +41,7 @@ public abstract class AbstractManifestCreator implements IBundleManifestCreator 
   private IModularizedSystem   _modularizedSystem;
 
   /** the resource module */
-  private IModule      _resourceModule;
+  private IModule              _resourceModule;
 
   /** the manifest preferences */
   private IManifestPreferences _manifestPreferences;
@@ -56,8 +57,8 @@ public abstract class AbstractManifestCreator implements IBundleManifestCreator 
    */
   @Override
   public final ManifestContents createManifest(final IModularizedSystem modularizedSystem,
-      final IModule resourceModule, final ManifestContents manifestTemplate,
-      final ManifestContents originalManifest, final IManifestPreferences manifestPreferences) {
+      final IModule resourceModule, final ManifestContents manifestTemplate, final ManifestContents originalManifest,
+      final IManifestPreferences manifestPreferences) {
 
     // assert not null
     Assert.isNotNull(modularizedSystem);
@@ -77,7 +78,8 @@ public abstract class AbstractManifestCreator implements IBundleManifestCreator 
 
     //
     // TODO: make Configurable
-    _rootArtifact = modularizedSystem.getAnalysisModel(IAnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+    _rootArtifact = AnalysisCore.getAnalysisModel(modularizedSystem,
+        IAnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     //
     _moduleArtifact = ArtifactUtils.getAssociatedModuleArtifact(_rootArtifact, resourceModule);

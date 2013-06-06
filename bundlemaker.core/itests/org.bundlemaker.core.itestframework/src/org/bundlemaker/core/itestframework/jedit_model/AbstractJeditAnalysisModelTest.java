@@ -2,6 +2,7 @@ package org.bundlemaker.core.itestframework.jedit_model;
 
 import static org.bundlemaker.core.itestframework.jedit_model.TOOLS.assertTypeCount;
 
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IGroupArtifact;
@@ -45,7 +46,7 @@ public abstract class AbstractJeditAnalysisModelTest extends AbstractBundleMaker
     assertTypeCount(getModularizedSystem(), 1466);
 
     // apply the basic group transformation
-    IRootArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
+    IRootArtifact rootArtifact = AnalysisCore.getAnalysisModel(getModularizedSystem(),
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     IGroupArtifact groupArtifact = rootArtifact.getOrCreateGroup("group1/group2");

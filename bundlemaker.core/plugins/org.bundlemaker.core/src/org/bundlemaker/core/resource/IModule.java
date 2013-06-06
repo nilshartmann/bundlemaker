@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.IGenericAdaptable;
+import org.bundlemaker.core.common.IGenericAdaptable;
+import org.bundlemaker.core.common.ResourceType;
 import org.eclipse.core.runtime.IPath;
 
 /**

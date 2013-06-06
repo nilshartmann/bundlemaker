@@ -10,12 +10,12 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.store;
 
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
- * Factory to create instances of type {@link IPersistentDependencyStore} for a given {@link IBundleMakerProject}.
+ * Factory to create instances of type {@link IPersistentDependencyStore} for a given {@link IProjectDescriptionAwareBundleMakerProject}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -24,14 +24,14 @@ public interface IPersistentDependencyStoreFactory {
 
   /**
    * <p>
-   * Returns a {@link IPersistentDependencyStore} for the specified {@link IBundleMakerProject}. Multiple calls to this
+   * Returns a {@link IPersistentDependencyStore} for the specified {@link IProjectDescriptionAwareBundleMakerProject}. Multiple calls to this
    * method will return the identical {@link IPersistentDependencyStore}.
    * </p>
    * 
    * @param project
    * @return
    */
-  public IPersistentDependencyStore getPersistentDependencyStore(IBundleMakerProject project);
+  public IPersistentDependencyStore getPersistentDependencyStore(IProjectDescriptionAwareBundleMakerProject project);
 
   /**
    * <p>
@@ -39,15 +39,15 @@ public interface IPersistentDependencyStoreFactory {
    * 
    * @param project
    */
-  public void releasePersistentDependencyStore(IBundleMakerProject project);
+  public void releasePersistentDependencyStore(IProjectDescriptionAwareBundleMakerProject project);
 
   /**
    * <p>
-   * Resets the {@link IPersistentDependencyStore} for the specified {@link IBundleMakerProject}.
+   * Resets the {@link IPersistentDependencyStore} for the specified {@link IProjectDescriptionAwareBundleMakerProject}.
    * </p>
    * 
    * @param project
    * @throws CoreException
    */
-  public void resetPersistentDependencyStore(IBundleMakerProject project) throws CoreException;
+  public void resetPersistentDependencyStore(IProjectDescriptionAwareBundleMakerProject project) throws CoreException;
 }

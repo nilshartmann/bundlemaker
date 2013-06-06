@@ -14,7 +14,7 @@ import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.algorithms.AdjacencyList;
 import org.bundlemaker.core.internal.analysis.ModelTransformerCache;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.project.IProjectDescription;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -47,6 +47,29 @@ public class ModularizedSystem extends AbstractQueryableModularizedSystem {
    * {@inheritDoc}
    */
   @Override
+  public <T> T adaptAs(Class<T> clazz) {
+
+    //
+    if (clazz.isAssignableFrom(this.getClass())) {
+      return (T) this;
+    }
+
+    //
+    return null;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Object getAdapter(Class adapter) {
+
+    return adaptAs(adapter);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public IRootArtifact getAnalysisModel(IAnalysisModelConfiguration configuration) {
     return (IRootArtifact) _transformerCache.getArtifactModel(this, configuration, null);
   }
@@ -54,7 +77,6 @@ public class ModularizedSystem extends AbstractQueryableModularizedSystem {
   /**
    * {@inheritDoc}
    */
-  @Override
   public IRootArtifact getAnalysisModel(IAnalysisModelConfiguration configuration, IProgressMonitor progressMonitor) {
 
     //

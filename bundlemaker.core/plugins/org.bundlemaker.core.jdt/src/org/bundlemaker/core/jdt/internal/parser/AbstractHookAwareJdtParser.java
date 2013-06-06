@@ -12,12 +12,12 @@ package org.bundlemaker.core.jdt.internal.parser;
 
 import java.util.List;
 
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.jdt.internal.ExtensionRegistryTracker;
 import org.bundlemaker.core.jdt.parser.IJdtSourceParserHook;
 import org.bundlemaker.core.parser.AbstractParser;
 import org.bundlemaker.core.parser.IParser;
-import org.bundlemaker.core.resource.IProjectContentResource;
-import org.bundlemaker.core.util.ExtensionRegistryTracker;
+import org.bundlemaker.core.project.IProjectContentResource;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -55,7 +55,7 @@ public abstract class AbstractHookAwareJdtParser extends AbstractParser implemen
    * {@inheritDoc}
    */
   @Override
-  public void parseBundleMakerProjectStart(IBundleMakerProject bundleMakerProject) {
+  public void parseBundleMakerProjectStart(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
 
     // initialize current hooks
     _currentHooks = _hookRegistry.getExtensionObjects();
@@ -70,7 +70,7 @@ public abstract class AbstractHookAwareJdtParser extends AbstractParser implemen
    * {@inheritDoc}
    */
   @Override
-  public void parseBundleMakerProjectStop(IBundleMakerProject bundleMakerProject) {
+  public void parseBundleMakerProjectStop(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
 
     // notify 'stop'
     for (IJdtSourceParserHook sourceParserHook : _currentHooks) {

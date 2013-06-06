@@ -13,12 +13,12 @@ package org.bundlemaker.core.jdt.internal.parser;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.BundleMakerCore;
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.common.utils.VMInstallUtils;
 import org.bundlemaker.core.jdt.parser.CoreParserJdt;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.VariablePath;
-import org.bundlemaker.core.util.JdkCreator;
+import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.util.VariablePath;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -54,7 +54,7 @@ public class JdtProjectHelper {
    * @param bundleMakerProject
    * @throws CoreException
    */
-  public static void setupAssociatedJavaProject(IBundleMakerProject project) throws CoreException {
+  public static void setupAssociatedJavaProject(IProjectDescriptionAwareBundleMakerProject project) throws CoreException {
 
     try {
 
@@ -68,7 +68,7 @@ public class JdtProjectHelper {
       List<IClasspathEntry> entries = new LinkedList<IClasspathEntry>();
 
       // step 3.1: add the vm path
-      IVMInstall vmInstall = JdkCreator.getIVMInstall(project.getProjectDescription().getJRE());
+      IVMInstall vmInstall = VMInstallUtils.getIVMInstall(project.getProjectDescription().getJRE());
       IPath path = JavaRuntime.newJREContainerPath(vmInstall);
       IClasspathEntry classpathEntry = JavaCore.newContainerEntry(path);
       entries.add(classpathEntry);
@@ -99,7 +99,7 @@ public class JdtProjectHelper {
     }
   }
 
-  public static boolean hasAssociatedJavaProject(IBundleMakerProject bundleMakerProject) {
+  public static boolean hasAssociatedJavaProject(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     return hasAssociatedJavaProject(bundleMakerProject.getProject());
   }
 
@@ -139,7 +139,7 @@ public class JdtProjectHelper {
     }
   }
 
-  public static IJavaProject getAssociatedJavaProject(IBundleMakerProject bundleMakerProject) {
+  public static IJavaProject getAssociatedJavaProject(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
 
     return getAssociatedJavaProject(bundleMakerProject.getProject());
   }
@@ -167,7 +167,7 @@ public class JdtProjectHelper {
     return javaProject;
   }
 
-  public static IProject getAssociatedJavaProjectAsProject(IBundleMakerProject bundleMakerProject) {
+  public static IProject getAssociatedJavaProjectAsProject(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
 
     return getAssociatedJavaProjectAsProject(bundleMakerProject.getProject());
   }
@@ -187,7 +187,7 @@ public class JdtProjectHelper {
     return associatedProject;
   }
 
-  public static IJavaProject newAssociatedJavaProject(IBundleMakerProject bundleMakerProject) throws CoreException {
+  public static IJavaProject newAssociatedJavaProject(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException {
     return newAssociatedJavaProject(bundleMakerProject.getProject());
   }
 
@@ -272,7 +272,7 @@ public class JdtProjectHelper {
 
             try {
 
-              IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject((IProject) resource);
+              IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject((IProject) resource);
 
               if (JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
 

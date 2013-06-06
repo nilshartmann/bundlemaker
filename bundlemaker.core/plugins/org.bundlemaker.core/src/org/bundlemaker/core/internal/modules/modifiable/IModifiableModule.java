@@ -2,11 +2,11 @@ package org.bundlemaker.core.internal.modules.modifiable;
 
 import java.util.Set;
 
+import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.ResourceType;
 import org.eclipse.core.runtime.IPath;
 
 /**

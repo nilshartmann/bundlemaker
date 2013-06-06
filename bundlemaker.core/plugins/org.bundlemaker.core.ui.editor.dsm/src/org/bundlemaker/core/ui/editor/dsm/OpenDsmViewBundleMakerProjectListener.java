@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.editor.dsm;
 
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.ui.artifact.Activator;
@@ -51,9 +52,10 @@ public class OpenDsmViewBundleMakerProjectListener implements IBundleMakerProjec
     //
     IAnalysisModelConfiguration analysisModelConfiguration = Activator.getDefault()
         .getArtifactModelConfigurationProvider().getArtifactModelConfiguration();
-    
+
     try {
-      IRootArtifact artifact = event.getBundleMakerProject().getModularizedSystemWorkingCopy().getAnalysisModel(analysisModelConfiguration);
+      IRootArtifact artifact = AnalysisCore.getAnalysisModel(event.getBundleMakerProject()
+          .getModularizedSystemWorkingCopy(), analysisModelConfiguration);
       CommonNavigatorUtils.findCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID).selectReveal(
           new StructuredSelection(artifact));
     } catch (CoreException e) {

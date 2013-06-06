@@ -16,10 +16,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IBundleMakerProjectHook;
 import org.bundlemaker.core.internal.parser.ParserFactoryRegistry;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory;
+import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.resource.IBundleMakerProjectHook;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -73,7 +74,7 @@ public class Activator extends Plugin {
   private ServiceTracker<IBundleMakerProjectHook, IBundleMakerProjectHook> _projectHookTracker;
 
   /** the project cache */
-  private Map<IProject, IBundleMakerProject>                               _projectCache;
+  private Map<IProject, IParserAwareBundleMakerProject>                    _projectCache;
 
   /** - */
   private ParserFactoryRegistry                                            _parserFactoryRegistry;
@@ -103,7 +104,7 @@ public class Activator extends Plugin {
     _projectHookTracker.open();
 
     // create the maps and caches
-    _projectCache = new HashMap<IProject, IBundleMakerProject>();
+    _projectCache = new HashMap<IProject, IParserAwareBundleMakerProject>();
     ResourcesPlugin.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
 
       @Override
@@ -111,7 +112,7 @@ public class Activator extends Plugin {
         if (event.getType() == IResourceChangeEvent.PRE_DELETE && event.getResource() instanceof IProject
             && _projectCache.containsKey(event.getResource())) {
 
-          IBundleMakerProject iBundleMakerProject = _projectCache.get(event.getResource());
+          IProjectDescriptionAwareBundleMakerProject iBundleMakerProject = _projectCache.get(event.getResource());
 
           // notifies listeners and removes itself from the cache
           iBundleMakerProject.dispose();
@@ -219,7 +220,7 @@ public class Activator extends Plugin {
    * @param project
    * @return
    */
-  public IBundleMakerProject getBundleMakerProject(IProject project) {
+  public IParserAwareBundleMakerProject getBundleMakerProject(IProject project) {
     return _projectCache.get(project);
   }
 
@@ -229,7 +230,7 @@ public class Activator extends Plugin {
    * 
    * @return
    */
-  public Collection<IBundleMakerProject> getBundleMakerProjects() {
+  public Collection<IParserAwareBundleMakerProject> getBundleMakerProjects() {
 
     //
     return Collections.unmodifiableCollection(_projectCache.values());
@@ -242,8 +243,8 @@ public class Activator extends Plugin {
    * @param project
    * @param bundleMakerProject
    */
-  public void cacheBundleMakerProject(IProject project, IBundleMakerProject bundleMakerProject) {
-    _projectCache.put(project, bundleMakerProject);
+  public void cacheBundleMakerProject(IProject project, IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
+    _projectCache.put(project, bundleMakerProject.adaptAs(IParserAwareBundleMakerProject.class));
   }
 
   /**

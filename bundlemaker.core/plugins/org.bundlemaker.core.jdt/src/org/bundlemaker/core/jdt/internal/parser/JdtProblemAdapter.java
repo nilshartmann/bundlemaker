@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.jdt.internal.parser;
 
-import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.resource.IProjectContentResource;
+import org.bundlemaker.core.parser.IProblem;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.eclipse.core.runtime.Assert;
 
 /**

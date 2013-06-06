@@ -20,7 +20,7 @@ import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core._type.modifiable.IModifiableType;
 import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
 import org.bundlemaker.core._type.utils.JavaTypeUtils;
-import org.bundlemaker.core.resource.IParsableResource;
+import org.bundlemaker.core.parser.IParsableResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IType;
@@ -127,9 +127,9 @@ public class JdtAstVisitor extends ASTVisitor {
    * 
    * @return
    */
-  public List<org.bundlemaker.core.IProblem> getProblems() {
+  public List<org.bundlemaker.core.parser.IProblem> getProblems() {
 
-    List<org.bundlemaker.core.IProblem> result = new LinkedList<org.bundlemaker.core.IProblem>();
+    List<org.bundlemaker.core.parser.IProblem> result = new LinkedList<org.bundlemaker.core.parser.IProblem>();
 
     for (IProblem iProblem : _problems) {
 

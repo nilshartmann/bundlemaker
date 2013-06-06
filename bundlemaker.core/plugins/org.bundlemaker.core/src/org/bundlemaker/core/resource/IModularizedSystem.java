@@ -13,14 +13,8 @@ package org.bundlemaker.core.resource;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.ITypeSelector;
-import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
-import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.modules.transformation.ITransformation;
+import org.bundlemaker.core.common.IGenericAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -30,7 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IModularizedSystem {
+public interface IModularizedSystem extends IGenericAdaptable {
 
   /**
    * <p>
@@ -52,30 +46,12 @@ public interface IModularizedSystem {
 
   /**
    * <p>
-   * Returns the associated {@link IBundleMakerProject}.
+   * Returns the associated {@link IModuleAwareBundleMakerProject}.
    * </p>
    * 
-   * @return the associated {@link IBundleMakerProject}.
+   * @return the associated {@link IModuleAwareBundleMakerProject}.
    */
-  IBundleMakerProject getBundleMakerProject();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  IRootArtifact getAnalysisModel(IAnalysisModelConfiguration configuration);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param configuration
-   * @param progressMonitor
-   * @return
-   */
-  IRootArtifact getAnalysisModel(IAnalysisModelConfiguration configuration, IProgressMonitor progressMonitor);
+  IModuleAwareBundleMakerProject getBundleMakerProject();
 
   /**
    * <p>
@@ -184,24 +160,4 @@ public interface IModularizedSystem {
    * @return a collection with all modules that have the specified name.
    */
   Collection<IModule> getModules(String name);
-
-  /******************************************************************************/
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  @Deprecated
-  public List<ITypeSelector> getTypeSelectors();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  @Deprecated
-  Set<IType> getTypes();
 }

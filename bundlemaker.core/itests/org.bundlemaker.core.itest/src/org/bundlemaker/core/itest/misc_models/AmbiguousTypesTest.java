@@ -2,7 +2,9 @@ package org.bundlemaker.core.itest.misc_models;
 
 import java.util.LinkedList;
 
+import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeModule;
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -31,11 +33,11 @@ public class AmbiguousTypesTest extends AbstractBundleMakerModelTest {
     // set the 'new' type selector
     AmbiguousTypesTest_TestTypeSelector selector = new AmbiguousTypesTest_TestTypeSelector(getBundleMakerProject().getProjectDescription());
     selector.setPreferJdkTypes(true);
-    getModularizedSystem().getTypeSelectors().clear();
-    getModularizedSystem().getTypeSelectors().add(selector);
+    getModularizedSystem().adaptAs(ITypeModularizedSystem.class).getTypeSelectors().clear();
+    getModularizedSystem().adaptAs(ITypeModularizedSystem.class).getTypeSelectors().add(selector);
 
     // get the root artifact
-    IBundleMakerArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
+    IBundleMakerArtifact rootArtifact = AnalysisCore.getAnalysisModel(getModularizedSystem(),
         AnalysisModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION);
     Assert.assertNotNull(rootArtifact);
 

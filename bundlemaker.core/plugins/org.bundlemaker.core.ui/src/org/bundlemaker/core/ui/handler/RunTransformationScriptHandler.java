@@ -12,9 +12,9 @@ package org.bundlemaker.core.ui.handler;
 
 import java.util.List;
 
-import org.bundlemaker.core.BundleMakerCore;
-import org.bundlemaker.core.BundleMakerProjectState;
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.util.BundleMakerProjectState;
 import org.bundlemaker.core.ui.internal.Activator;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IFile;
@@ -74,7 +74,7 @@ public class RunTransformationScriptHandler extends AbstractBundleMakerHandler {
     }
 
     // Select the bundlemaker project
-    IBundleMakerProject bundleMakerProject = selectBundleMakerProject();
+    IProjectDescriptionAwareBundleMakerProject bundleMakerProject = selectBundleMakerProject();
 
     if (bundleMakerProject == null) {
       return;
@@ -88,7 +88,7 @@ public class RunTransformationScriptHandler extends AbstractBundleMakerHandler {
   /**
    * @return
    */
-  private IBundleMakerProject selectBundleMakerProject() throws Exception {
+  private IProjectDescriptionAwareBundleMakerProject selectBundleMakerProject() throws Exception {
     ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(new Shell(), new WorkbenchLabelProvider(),
         new WorkbenchContentProvider());
     dialog.setHelpAvailable(false);
@@ -146,7 +146,7 @@ public class RunTransformationScriptHandler extends AbstractBundleMakerHandler {
 
         try {
           if (project.hasNature(BundleMakerCore.NATURE_ID)) {
-            IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project);
+            IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project);
             return (bundleMakerProject.getState() == BundleMakerProjectState.READY);
           }
         } catch (CoreException e) {

@@ -19,8 +19,8 @@ import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bundlemaker.core.projectdescription.VariablePath;
-import org.bundlemaker.core.resource.ResourceType;
+import org.bundlemaker.core.common.ResourceType;
+import org.bundlemaker.core.project.util.VariablePath;
 import org.eclipse.core.runtime.CoreException;
 
 /**

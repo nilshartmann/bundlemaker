@@ -22,7 +22,7 @@
          point="org.bundlemaker.core.projectcontentprovider">
       <projectContentProvider
       	    id="org.bundlemaker.core.projectcontentprovider.file"
-            class="org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider" />
+            class="org.bundlemaker.core.project.filecontent.FileBasedProjectContentProvider" />
    </extension>
    
 

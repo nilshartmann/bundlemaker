@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.itestframework.internal;
 
-import org.bundlemaker.core.util.StopWatch;
+import org.bundlemaker.core.common.utils.StopWatch;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.NullProgressMonitor;
 

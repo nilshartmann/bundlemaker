@@ -14,12 +14,12 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bundlemaker.core.BundleMakerCore;
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.common.utils.FileUtils;
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory;
-import org.bundlemaker.core.util.FileUtils;
+import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
@@ -38,7 +38,7 @@ public class PersistentDependencyStoreFactoryComponent implements IPersistentDep
   private static final String                                     PREFIX_BUNDLEMAKER_DB4O_STORE               = "db4o.store";
 
   /** the cache */
-  private Map<IBundleMakerProject, PersistentDependencyStoreImpl> _cache;
+  private Map<IProjectDescriptionAwareBundleMakerProject, PersistentDependencyStoreImpl> _cache;
 
   /** the db4o service */
   private Db4oService                                             _db4oService;
@@ -57,13 +57,13 @@ public class PersistentDependencyStoreFactoryComponent implements IPersistentDep
   public PersistentDependencyStoreFactoryComponent() {
 
     // create the cache
-    _cache = new HashMap<IBundleMakerProject, PersistentDependencyStoreImpl>();
+    _cache = new HashMap<IProjectDescriptionAwareBundleMakerProject, PersistentDependencyStoreImpl>();
   }
 
   /**
-   * @see org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory#resetPersistentDependencyStore(org.bundlemaker.core.IBundleMakerProject)
+   * @see org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory#resetPersistentDependencyStore(org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject)
    */
-  public void resetPersistentDependencyStore(IBundleMakerProject project) throws CoreException {
+  public void resetPersistentDependencyStore(IProjectDescriptionAwareBundleMakerProject project) throws CoreException {
 
     // step 1: dispose the cache if necessary
     if (_cache.containsKey(project)) {
@@ -97,7 +97,7 @@ public class PersistentDependencyStoreFactoryComponent implements IPersistentDep
     }
   }
 
-  public void releasePersistentDependencyStore(IBundleMakerProject project) {
+  public void releasePersistentDependencyStore(IProjectDescriptionAwareBundleMakerProject project) {
     // step 1: dispose the cache if necessary
     if (_cache.containsKey(project)) {
 
@@ -116,9 +116,9 @@ public class PersistentDependencyStoreFactoryComponent implements IPersistentDep
   }
 
   /**
-   * @see org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory#getPersistentDependencyStore(org.bundlemaker.core.IBundleMakerProject)
+   * @see org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory#getPersistentDependencyStore(org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject)
    */
-  public IPersistentDependencyStore getPersistentDependencyStore(IBundleMakerProject project) {
+  public IPersistentDependencyStore getPersistentDependencyStore(IProjectDescriptionAwareBundleMakerProject project) {
 
     // step 1: return the cached version if one exists
     if (_cache.containsKey(project)) {

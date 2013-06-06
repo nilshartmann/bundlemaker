@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
-import org.bundlemaker.core.projectdescription.VariablePath;
-import org.bundlemaker.core.util.IFileBasedProjectContentInfo;
+import org.bundlemaker.core.common.utils.IFileBasedProjectContentInfo;
+import org.bundlemaker.core.project.IModifiableProjectDescription;
+import org.bundlemaker.core.project.util.AnalyzeMode;
+import org.bundlemaker.core.project.util.VariablePath;
 
 /**
  * Util class that creates FileBasedContent instances based on a set of selected files.

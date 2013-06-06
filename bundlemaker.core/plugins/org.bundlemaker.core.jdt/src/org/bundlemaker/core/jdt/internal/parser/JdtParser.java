@@ -10,18 +10,18 @@
  ******************************************************************************/
 package org.bundlemaker.core.jdt.internal.parser;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.utils.JavaTypeUtils;
 import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
+import org.bundlemaker.core.jdt.internal.ExtensionRegistryTracker;
 import org.bundlemaker.core.jdt.parser.CoreParserJdt;
 import org.bundlemaker.core.jdt.parser.IJdtSourceParserHook;
+import org.bundlemaker.core.parser.IParsableResource;
+import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.parser.IResourceCache;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.resource.IParsableResource;
-import org.bundlemaker.core.util.ExtensionRegistryTracker;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
@@ -51,7 +51,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
    * @param bundleMakerProject
    * @throws CoreException
    */
-  public JdtParser(IBundleMakerProject bundleMakerProject, ExtensionRegistryTracker<IJdtSourceParserHook> hookRegistry)
+  public JdtParser(IProjectDescriptionAwareBundleMakerProject bundleMakerProject, ExtensionRegistryTracker<IJdtSourceParserHook> hookRegistry)
       throws CoreException {
 
     super(hookRegistry);

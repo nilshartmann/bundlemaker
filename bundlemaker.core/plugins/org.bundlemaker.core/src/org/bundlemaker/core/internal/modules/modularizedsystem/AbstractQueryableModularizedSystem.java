@@ -20,7 +20,7 @@ import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.ITypeSelector;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.resource.IModule;
 import org.eclipse.core.runtime.Assert;
 
@@ -60,7 +60,6 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
   /**
    * {@inheritDoc}
    */
-  @Override
   public List<ITypeSelector> getTypeSelectors() {
     return _moduleSelectors;
   }
@@ -107,7 +106,6 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
     return types.toArray(new IType[0])[0];
   }
 
-  @Override
   public Set<IType> getTypes() {
     return Collections.unmodifiableSet(getTypeToModuleCache().keySet());
   }

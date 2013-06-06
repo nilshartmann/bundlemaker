@@ -1,12 +1,11 @@
 package org.bundlemaker.core.ui.preferences;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import org.bundlemaker.core.BundleMakerCore;
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.ui.internal.preferences.fwk.DialogField;
 import org.bundlemaker.core.ui.internal.preferences.fwk.IDialogFieldListener;
 import org.bundlemaker.core.ui.internal.preferences.fwk.ProjectSelectionDialog;
@@ -426,9 +425,9 @@ public abstract class AbstractPropertyAndPreferencesPage extends PreferencePage 
     else {
 
       //
-      HashSet<IBundleMakerProject> projectsWithSpecifics = new HashSet<IBundleMakerProject>();
-      Collection<IBundleMakerProject> projects = BundleMakerCore.getBundleMakerProjects();
-      for (IBundleMakerProject bundleMakerProject : projects) {
+      HashSet<IProjectDescriptionAwareBundleMakerProject> projectsWithSpecifics = new HashSet<IProjectDescriptionAwareBundleMakerProject>();
+      for (IProjectDescriptionAwareBundleMakerProject bundleMakerProject : BundleMakerCore
+          .getBundleMakerProjects()) {
         if (hasProjectSpecificOptions(bundleMakerProject.getProject())) {
           projectsWithSpecifics.add(bundleMakerProject);
         }
@@ -440,7 +439,8 @@ public abstract class AbstractPropertyAndPreferencesPage extends PreferencePage 
 
       //
       if (dialog.open() == Window.OK) {
-        IBundleMakerProject res = (IBundleMakerProject) dialog.getFirstResult();
+        IProjectDescriptionAwareBundleMakerProject res = (IProjectDescriptionAwareBundleMakerProject) dialog
+            .getFirstResult();
         openProjectProperties(res.getProject(), data);
       }
     }

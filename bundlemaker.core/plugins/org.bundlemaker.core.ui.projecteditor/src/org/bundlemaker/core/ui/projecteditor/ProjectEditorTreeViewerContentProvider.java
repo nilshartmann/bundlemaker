@@ -4,11 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core.BundleMakerProjectChangedEvent;
-import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IBundleMakerProjectChangedListener;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.project.BundleMakerProjectChangedEvent;
+import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
+import org.bundlemaker.core.project.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
 import org.bundlemaker.core.ui.projecteditor.provider.internal.ProjectEditorContributionRegistry;
 import org.eclipse.core.runtime.Assert;
@@ -93,12 +93,12 @@ public class ProjectEditorTreeViewerContentProvider implements ITreeContentProvi
 
     //
     if (newInput != null) {
-      ((IBundleMakerProject) newInput).addBundleMakerProjectChangedListener(_listener);
+      ((IProjectDescriptionAwareBundleMakerProject) newInput).addBundleMakerProjectChangedListener(_listener);
     }
 
     //
     if (oldInput != null) {
-      ((IBundleMakerProject) oldInput).removeBundleMakerProjectChangedListener(_listener);
+      ((IProjectDescriptionAwareBundleMakerProject) oldInput).removeBundleMakerProjectChangedListener(_listener);
     }
   }
 
@@ -109,7 +109,7 @@ public class ProjectEditorTreeViewerContentProvider implements ITreeContentProvi
   public Object[] getElements(Object inputElement) {
 
     // cast to IBundleMakerProject
-    IBundleMakerProject bundleMakerProject = (IBundleMakerProject) inputElement;
+    IProjectDescriptionAwareBundleMakerProject bundleMakerProject = (IProjectDescriptionAwareBundleMakerProject) inputElement;
 
     // create the result
     List<Object> result = new LinkedList<Object>();

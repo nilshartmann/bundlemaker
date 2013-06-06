@@ -20,16 +20,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
-import org.bundlemaker.core.modules.transformation.ITransformation;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.bundlemaker.core.resource.IModuleIdentifier;
+import org.bundlemaker.core.resource.ITransformation;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 
@@ -40,7 +41,7 @@ import org.eclipse.core.runtime.IPath;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractModularizedSystem implements IModifiableModularizedSystem {
+public abstract class AbstractModularizedSystem implements IModifiableModularizedSystem, ITypeModularizedSystem {
 
   /** the name of working copy */
   private String                  _name;
@@ -127,8 +128,8 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
    * {@inheritDoc}
    */
   @Override
-  public IBundleMakerProject getBundleMakerProject() {
-    return _projectDescription.getBundleMakerProject();
+  public IModuleAwareBundleMakerProject getBundleMakerProject() {
+    return (IModuleAwareBundleMakerProject) _projectDescription.getBundleMakerProject();
   }
 
   /**

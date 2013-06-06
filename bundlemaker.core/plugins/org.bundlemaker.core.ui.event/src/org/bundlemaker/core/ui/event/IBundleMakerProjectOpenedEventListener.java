@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.event;
 
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 
 /**
  * A Listener for {@link IBundleMakerProjectOpenedEvent IBundleMakerProjectOpenedEvents}

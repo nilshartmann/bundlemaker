@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
@@ -12,6 +11,7 @@ import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core._type.modifiable.IReferenceRecorder;
 import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
 import org.bundlemaker.core.internal.parser.ResourceCache;
+import org.bundlemaker.core.project.BundleMakerCore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;

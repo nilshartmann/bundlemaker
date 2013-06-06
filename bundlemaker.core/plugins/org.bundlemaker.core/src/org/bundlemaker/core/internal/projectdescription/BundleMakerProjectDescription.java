@@ -21,15 +21,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.core.BundleMakerProjectChangedEvent;
-import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
-import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.internal.projectdescription.api.IInternalProjectDescription;
-import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.project.BundleMakerProjectChangedEvent;
+import org.bundlemaker.core.project.IModifiableProjectDescription;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.BundleMakerProjectChangedEvent.Type;
+import org.bundlemaker.core.project.spi.AbstractProjectContentProvider;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -110,7 +110,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
    * {@inheritDoc}
    */
   @Override
-  public IBundleMakerProject getBundleMakerProject() {
+  public IProjectDescriptionAwareBundleMakerProject getBundleMakerProject() {
     return _bundleMakerProject;
   }
 
@@ -318,7 +318,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
    * @param bundlemakerProject
    * @throws CoreException
    */
-  public void initialize(IProgressMonitor progressMonitor, IBundleMakerProject bundlemakerProject) throws CoreException {
+  public void initialize(IProgressMonitor progressMonitor, IProjectDescriptionAwareBundleMakerProject bundlemakerProject) throws CoreException {
 
     //
     if (_initialized) {

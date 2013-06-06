@@ -11,7 +11,7 @@
 package org.bundlemaker.core.internal.store;
 
 import org.bundlemaker.core.internal.resource.Resource;
-import org.bundlemaker.core.resource.IParsableResource;
+import org.bundlemaker.core.parser.IParsableResource;
 import org.bundlemaker.core.resource.IModuleResource;
 
 /**

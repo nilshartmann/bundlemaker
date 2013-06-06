@@ -7,12 +7,13 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.BundleMakerCore;
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.IVirtualRoot;
+import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
+import org.bundlemaker.core.project.BundleMakerCore;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.ui.artifact.Activator;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
@@ -88,7 +89,8 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
         if (project.hasNature(BundleMakerCore.NATURE_ID)) {
 
           //
-          IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project);
+          IParserAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project).adaptAs(
+              IParserAwareBundleMakerProject.class);
 
           //
           Collection<IModularizedSystem> modularizedSystems = bundleMakerProject.getModularizedSystemWorkingCopies();
@@ -101,8 +103,9 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
             IArtifactModelConfigurationProvider artifactModelConfigurationProvider = Activator.getDefault()
                 .getArtifactModelConfigurationProvider();
 
-            IRootArtifact artifact = modularizedSystem.getAnalysisModel(artifactModelConfigurationProvider
-                .getArtifactModelConfiguration());
+            IRootArtifact artifact = AnalysisCore.getAnalysisModel(modularizedSystem,
+                artifactModelConfigurationProvider
+                    .getArtifactModelConfiguration());
 
             // // TODO!
             artifact.addAnalysisModelModifiedListener(ARTIFACT_TREE_MODEL_MODIFIED_LISTENER);

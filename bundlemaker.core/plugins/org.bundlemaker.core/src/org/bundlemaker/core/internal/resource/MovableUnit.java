@@ -8,13 +8,13 @@ import java.util.Set;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core._type.utils.JavaTypeUtils;
+import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.internal.analysis.ITempTypeProvider;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.ResourceType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 

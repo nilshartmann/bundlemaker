@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.internal;
 
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -98,7 +98,7 @@ public class BundleMakerUiUtils {
     Activator.getDefault().getLog().log(error);
   }
 
-  public static void refreshProjectExplorer(IBundleMakerProject bundleMakerProject) {
+  public static void refreshProjectExplorer(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     // TODO: better way to refresh BundleMaker Navigator entries?
     IViewPart projectExplorerView = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
         .findView("org.eclipse.ui.navigator.ProjectExplorer");

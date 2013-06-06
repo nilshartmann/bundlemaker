@@ -6,9 +6,9 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.bundlemaker.core.common.prefs.IBundleMakerPreferences;
 import org.bundlemaker.core.mvn.MvnCoreActivator;
 import org.bundlemaker.core.mvn.preferences.MvnConfigurationSettingEnum;
-import org.bundlemaker.core.util.prefs.IBundleMakerPreferences;
 
 public class MockHelper {
 

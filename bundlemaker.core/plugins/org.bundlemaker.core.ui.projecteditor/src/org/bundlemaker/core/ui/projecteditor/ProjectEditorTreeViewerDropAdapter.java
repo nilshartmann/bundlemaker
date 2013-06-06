@@ -2,8 +2,8 @@ package org.bundlemaker.core.ui.projecteditor;
 
 import java.util.Set;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.ui.projecteditor.dnd.DropLocation;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropEvent;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
@@ -15,7 +15,7 @@ import org.eclipse.swt.dnd.TransferData;
 
 public class ProjectEditorTreeViewerDropAdapter extends ViewerDropAdapter {
 
-  private final IBundleMakerProject             _bundleMakerProject;
+  private final IProjectDescriptionAwareBundleMakerProject             _bundleMakerProject;
 
   private final Set<IProjectEditorDropProvider> _dndProviders;
 
@@ -26,7 +26,7 @@ public class ProjectEditorTreeViewerDropAdapter extends ViewerDropAdapter {
 
   private IProjectEditorDropProvider            _providerCandidate;
 
-  public ProjectEditorTreeViewerDropAdapter(Viewer viewer, IBundleMakerProject bundleMakerProject,
+  public ProjectEditorTreeViewerDropAdapter(Viewer viewer, IProjectDescriptionAwareBundleMakerProject bundleMakerProject,
 
       Set<IProjectEditorDropProvider> dndProviders) {
     super(viewer);

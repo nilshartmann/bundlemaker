@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.classpath;
 
-import org.bundlemaker.core.BundleMakerCore;
+import org.bundlemaker.core.project.BundleMakerCore;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;

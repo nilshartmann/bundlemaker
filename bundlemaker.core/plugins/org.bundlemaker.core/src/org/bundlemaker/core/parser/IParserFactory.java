@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.project.IProjectDescription;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.core.runtime.CoreException;
 
 /**
@@ -40,24 +40,24 @@ public interface IParserFactory {
   /**
    * <p>
    * Initializes the {@link IParserFactory} for the specified project. If the {@link IProjectDescription} of an
-   * {@link IBundleMakerProject} has changed, the {@link IBundleMakerProject} <b>always</b> will be re-initialized.
+   * {@link IProjectDescriptionAwareBundleMakerProject} has changed, the {@link IProjectDescriptionAwareBundleMakerProject} <b>always</b> will be re-initialized.
    * </p>
    * 
    * @param bundleMakerProject
    */
-  void initialize(IBundleMakerProject bundleMakerProject) throws CoreException;
+  void initialize(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException;
 
   /**
    * <p>
-   * Creates a new instance of type {@link IParser} for a given {@link IBundleMakerProject}.
+   * Creates a new instance of type {@link IParser} for a given {@link IProjectDescriptionAwareBundleMakerProject}.
    * </p>
    * 
    * @param bundleMakerProject
-   *          the {@link IBundleMakerProject}
+   *          the {@link IProjectDescriptionAwareBundleMakerProject}
    * @return the newly created {@link IParser}
    * @throws CoreException
    */
-  IParser createParser(IBundleMakerProject bundleMakerProject) throws CoreException;
+  IParser createParser(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException;
 
   /**
    * <p>
@@ -66,7 +66,7 @@ public interface IParserFactory {
    * 
    * @param bundleMakerProject
    */
-  void dispose(IBundleMakerProject bundleMakerProject);
+  void dispose(IProjectDescriptionAwareBundleMakerProject bundleMakerProject);
 
   /**
    * <p>
@@ -94,7 +94,7 @@ public interface IParserFactory {
      * {@inheritDoc}
      */
     @Override
-    public void initialize(IBundleMakerProject bundleMakerProject) throws CoreException {
+    public void initialize(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException {
 
     }
 
@@ -102,7 +102,7 @@ public interface IParserFactory {
      * {@inheritDoc}
      */
     @Override
-    public void dispose(IBundleMakerProject bundleMakerProject) {
+    public void dispose(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     }
   }
 }

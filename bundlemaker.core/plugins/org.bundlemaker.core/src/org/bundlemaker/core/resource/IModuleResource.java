@@ -12,7 +12,8 @@ package org.bundlemaker.core.resource;
 
 import java.util.Set;
 
-import org.bundlemaker.core.IGenericAdaptable;
+import org.bundlemaker.core.common.IGenericAdaptable;
+import org.bundlemaker.core.project.IProjectContentResource;
 
 /**
  * <p>

@@ -10,12 +10,12 @@
  ******************************************************************************/
 package org.bundlemaker.core.jdt.internal.parser;
 
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.jdt.internal.ExtensionRegistryTracker;
 import org.bundlemaker.core.jdt.parser.CoreParserJdt;
 import org.bundlemaker.core.jdt.parser.IJdtSourceParserHook;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParserFactory;
-import org.bundlemaker.core.util.ExtensionRegistryTracker;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.core.runtime.CoreException;
 
 /**
@@ -50,7 +50,7 @@ public class JdtParserFactory extends IParserFactory.Adapter {
    * {@inheritDoc}
    */
   @Override
-  public void initialize(IBundleMakerProject bundleMakerProject) throws CoreException {
+  public void initialize(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException {
 
     // create or get the java project
     if (!JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
@@ -64,7 +64,7 @@ public class JdtParserFactory extends IParserFactory.Adapter {
    * {@inheritDoc}
    */
   @Override
-  public void dispose(IBundleMakerProject bundleMakerProject) {
+  public void dispose(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     JdtProjectHelper.deleteAssociatedProjectIfNecessary(bundleMakerProject.getProject());
   }
 
@@ -72,7 +72,7 @@ public class JdtParserFactory extends IParserFactory.Adapter {
    * {@inheritDoc}
    */
   @Override
-  public IParser createParser(IBundleMakerProject bundleMakerProject) throws CoreException {
+  public IParser createParser(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException {
     return new JdtParser(bundleMakerProject, _hookRegistry);
   }
 }

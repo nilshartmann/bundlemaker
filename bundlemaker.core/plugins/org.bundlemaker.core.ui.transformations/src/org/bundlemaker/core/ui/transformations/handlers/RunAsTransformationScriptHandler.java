@@ -2,10 +2,10 @@ package org.bundlemaker.core.ui.transformations.handlers;
 
 import java.util.Collection;
 
-import org.bundlemaker.core.BundleMakerCore;
-import org.bundlemaker.core.BundleMakerProjectState;
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.util.BundleMakerProjectState;
 import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.bundlemaker.core.ui.handler.AbstractBundleMakerHandler;
@@ -34,9 +34,10 @@ public class RunAsTransformationScriptHandler extends AbstractBundleMakerHandler
     }
 
     IProject project = transformationScriptType.getResource().getProject();
-    
-    IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project);
-    
+
+    IModuleAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project).adaptAs(
+        IModuleAwareBundleMakerProject.class);
+
     if (bundleMakerProject.getState() != BundleMakerProjectState.READY) {
       showError(event, "Project " + bundleMakerProject.getName() + " is not parsed. Please open and parse it first");
       return;
@@ -63,11 +64,9 @@ public class RunAsTransformationScriptHandler extends AbstractBundleMakerHandler
       if (listDialog.open() != Window.OK) {
         return;
       }
-      
+
       modularizedSystem = (IModularizedSystem) listDialog.getResult()[0];
     }
-
-
 
     // Run the script
 
@@ -77,7 +76,6 @@ public class RunAsTransformationScriptHandler extends AbstractBundleMakerHandler
 
     // refresh the explorer
     CommonNavigatorUtils.refreshProject(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID, bundleMakerProject);
-
 
     // List<Object> selectedObject = getSelectedObject(selection, Object.class);
     // for (Object object : selectedObject) {
@@ -89,7 +87,5 @@ public class RunAsTransformationScriptHandler extends AbstractBundleMakerHandler
   protected void showError(ExecutionEvent event, String text) {
     MessageDialog.openError(HandlerUtil.getActiveShell(event), "Run as Transformation Script", text);
   }
-
-
 
 }
