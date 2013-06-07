@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.api.store;
+package org.bundlemaker.core.spi.store;
 
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.parser.IParsableResource;

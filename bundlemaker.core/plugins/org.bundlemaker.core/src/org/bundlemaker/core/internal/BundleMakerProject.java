@@ -20,8 +20,6 @@ import java.util.Map;
 
 import org.bundlemaker.core.internal.api.project.IInternalBundleMakerProject;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
-import org.bundlemaker.core.internal.api.store.IPersistentDependencyStore;
-import org.bundlemaker.core.internal.api.store.IPersistentDependencyStoreFactory;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ModelSetup;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
@@ -40,6 +38,8 @@ import org.bundlemaker.core.resource.IBundleMakerProjectHook;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.ITransformation;
+import org.bundlemaker.core.spi.store.IPersistentDependencyStore;
+import org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;

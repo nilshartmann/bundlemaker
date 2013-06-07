@@ -16,11 +16,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bundlemaker.core.internal.api.store.IPersistentDependencyStoreFactory;
 import org.bundlemaker.core.internal.parser.ParserFactoryRegistry;
 import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.resource.IBundleMakerProjectHook;
+import org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
