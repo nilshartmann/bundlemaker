@@ -21,6 +21,7 @@ import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ZipFileCache;
+import org.bundlemaker.core.parser.IParsableResource;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.parser.IProblem;
@@ -414,17 +415,17 @@ public class ModelSetup {
 
     if (dependencyStore != null) {
 
-      List<Resource> resources = dependencyStore.getResources();
+      List<IParsableResource> resources = dependencyStore.getResources();
 
       monitor.beginTask("Opening database ", resources.size());
 
-      for (Resource resource : resources) {
+      for (IParsableResource resource : resources) {
 
         // check if canceled
         // checkIfCanceled(monitor);
 
         // put in the map
-        map.put(resource, resource);
+        map.put(resource, (Resource) resource);
 
         // set monitor
         monitor.worked(1);

@@ -41,9 +41,7 @@ public class PersistentDependencyStoreImpl extends AbstractPersistentDependencyS
   /**
    * {@inheritDoc}
    */
-  @SuppressWarnings("unchecked")
-  public List<Resource> getResources() {
-
+  public List<IParsableResource> getResources() {
     Query query = getDatabase().query();
     query.constrain(Resource.class);
     return query.execute();

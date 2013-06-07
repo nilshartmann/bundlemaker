@@ -10,14 +10,12 @@
  ******************************************************************************/
 package org.bundlemaker.core.spi.store;
 
-import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.parser.IParsableResource;
-import org.bundlemaker.core.resource.IModuleResource;
 
 /**
  * <p>
- * Extends the {@link IDependencyStore} and adds some methods that allows to add and update {@link IModuleResource
- * IResources} .
+ * Extends the {@link IDependencyStore} and adds some methods that allows to add and update {@link IParsableResource
+ * IParsableResources} .
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -26,11 +24,11 @@ public interface IPersistentDependencyStore extends IDependencyStore {
 
   /**
    * <p>
-   * Updates the {@link Resource}.
+   * Updates the {@link IParsableResource}.
    * </p>
    * 
    * @param resource
-   *          the {@link Resource} to add/update
+   *          the {@link IParsableResource} to add/update
    */
   void updateResource(IParsableResource resource);
 

@@ -12,7 +12,7 @@ package org.bundlemaker.core.spi.store;
 
 import java.util.List;
 
-import org.bundlemaker.core.internal.resource.Resource;
+import org.bundlemaker.core.parser.IParsableResource;
 
 /**
  * <p>
@@ -30,5 +30,5 @@ public interface IDependencyStore {
    * 
    * @return the list of all {@link ReferencingResource IBundleElements}.
    */
-  List<Resource> getResources();
+  List<IParsableResource> getResources();
 }
