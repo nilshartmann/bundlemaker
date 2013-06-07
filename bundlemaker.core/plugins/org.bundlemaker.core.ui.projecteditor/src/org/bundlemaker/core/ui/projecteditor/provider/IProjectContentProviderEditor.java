@@ -12,9 +12,9 @@ package org.bundlemaker.core.ui.projecteditor.provider;
 
 import java.util.List;
 
+import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
-import org.bundlemaker.core.project.util.AnalyzeMode;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;

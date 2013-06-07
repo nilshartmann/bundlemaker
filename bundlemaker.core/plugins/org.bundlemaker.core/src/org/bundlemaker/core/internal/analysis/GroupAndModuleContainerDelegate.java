@@ -7,7 +7,7 @@ import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
-import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.transformation.CreateGroupTransformation;
 import org.bundlemaker.core.internal.transformation.CreateModuleTransformation;
 import org.bundlemaker.core.resource.IModule;

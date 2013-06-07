@@ -1,7 +1,7 @@
 package org.bundlemaker.core.ui.projecteditor.filebased;
 
 import org.bundlemaker.core.common.ResourceType;
-import org.bundlemaker.core.project.util.VariablePath;
+import org.bundlemaker.core.project.VariablePath;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)

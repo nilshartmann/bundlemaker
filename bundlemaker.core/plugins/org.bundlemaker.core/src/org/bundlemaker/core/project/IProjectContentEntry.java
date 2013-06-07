@@ -14,8 +14,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.common.ResourceType;
-import org.bundlemaker.core.project.util.AnalyzeMode;
-import org.bundlemaker.core.project.util.VariablePath;
 
 /**
  * <p>

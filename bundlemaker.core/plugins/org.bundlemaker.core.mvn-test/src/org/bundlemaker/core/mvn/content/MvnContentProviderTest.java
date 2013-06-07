@@ -10,7 +10,7 @@ import java.io.File;
 import java.util.List;
 
 import org.bundlemaker.core.common.prefs.IBundleMakerPreferences;
-import org.bundlemaker.core.internal.projectdescription.api.IInternalProjectDescription;
+import org.bundlemaker.core.internal.api.project.IInternalProjectDescription;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;

@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bundlemaker.core.common.ResourceType;
-import org.bundlemaker.core.project.util.VariablePath;
+import org.bundlemaker.core.project.VariablePath;
 import org.eclipse.core.runtime.CoreException;
 
 /**

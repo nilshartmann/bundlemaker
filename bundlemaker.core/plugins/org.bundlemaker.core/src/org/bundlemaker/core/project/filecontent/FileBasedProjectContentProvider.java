@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.common.ResourceType;
+import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.VariablePath;
 import org.bundlemaker.core.project.spi.AbstractProjectContentProvider;
-import org.bundlemaker.core.project.util.AnalyzeMode;
-import org.bundlemaker.core.project.util.VariablePath;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 

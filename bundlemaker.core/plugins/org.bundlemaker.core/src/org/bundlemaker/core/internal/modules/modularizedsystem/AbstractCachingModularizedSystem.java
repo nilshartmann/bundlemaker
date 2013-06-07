@@ -23,6 +23,7 @@ import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.common.collections.GenericCache;
+import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.event.ClassificationChangedEvent;
@@ -32,7 +33,6 @@ import org.bundlemaker.core.internal.modules.event.ModuleClassificationChangedEv
 import org.bundlemaker.core.internal.modules.event.ModuleIdentifierChangedEvent;
 import org.bundlemaker.core.internal.modules.event.ModuleMovedEvent;
 import org.bundlemaker.core.internal.modules.event.MovableUnitMovedEvent;
-import org.bundlemaker.core.internal.modules.modifiable.IModifiableModule;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.resource.IModule;

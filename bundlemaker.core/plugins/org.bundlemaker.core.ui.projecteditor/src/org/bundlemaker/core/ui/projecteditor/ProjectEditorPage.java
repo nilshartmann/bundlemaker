@@ -14,7 +14,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.project.BundleMakerProjectChangedEvent;
 import org.bundlemaker.core.project.BundleMakerProjectChangedEvent.Type;
-import org.bundlemaker.core.project.util.BundleMakerProjectState;
+import org.bundlemaker.core.project.BundleMakerProjectState;
 import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
 import org.bundlemaker.core.project.IProjectContentProvider;

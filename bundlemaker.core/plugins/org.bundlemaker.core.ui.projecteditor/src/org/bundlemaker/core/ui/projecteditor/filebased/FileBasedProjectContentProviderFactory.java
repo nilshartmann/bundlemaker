@@ -6,10 +6,10 @@ import java.util.List;
 
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.common.utils.IFileBasedProjectContentInfo;
+import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
+import org.bundlemaker.core.project.VariablePath;
 import org.bundlemaker.core.project.filecontent.FileBasedProjectContentProvider;
-import org.bundlemaker.core.project.util.AnalyzeMode;
-import org.bundlemaker.core.project.util.VariablePath;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 

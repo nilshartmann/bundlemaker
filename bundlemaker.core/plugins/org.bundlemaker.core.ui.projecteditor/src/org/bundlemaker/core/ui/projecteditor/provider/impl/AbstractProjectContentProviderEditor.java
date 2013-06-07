@@ -13,10 +13,10 @@ package org.bundlemaker.core.ui.projecteditor.provider.impl;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
-import org.bundlemaker.core.project.util.AnalyzeMode;
 import org.bundlemaker.core.ui.ErrorDialogUtil;
 import org.bundlemaker.core.ui.projecteditor.Activator;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;

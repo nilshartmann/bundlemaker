@@ -15,7 +15,7 @@ import java.util.Collection;
 import org.bundlemaker.core.common.utils.EclipseProjectUtils;
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory;
+import org.bundlemaker.core.internal.api.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;

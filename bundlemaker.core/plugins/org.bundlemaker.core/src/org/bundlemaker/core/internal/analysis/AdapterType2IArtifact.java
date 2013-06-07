@@ -34,7 +34,7 @@ import org.bundlemaker.core.analysis.spi.IReferencingArtifact;
 import org.bundlemaker.core.analysis.spi.ReferencedArtifactTrait;
 import org.bundlemaker.core.analysis.spi.ReferencingArtifactTrait;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
-import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
 import org.bundlemaker.core.internal.resource.MovableUnit;
 import org.bundlemaker.core.resource.IModule;

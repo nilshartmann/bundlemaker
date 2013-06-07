@@ -16,8 +16,8 @@ import java.util.Map;
 
 import org.bundlemaker.core.common.utils.FileUtils;
 import org.bundlemaker.core.internal.Activator;
-import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
-import org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory;
+import org.bundlemaker.core.internal.api.store.IPersistentDependencyStore;
+import org.bundlemaker.core.internal.api.store.IPersistentDependencyStoreFactory;
 import org.bundlemaker.core.project.BundleMakerCore;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.core.resources.IFile;
@@ -61,7 +61,7 @@ public class PersistentDependencyStoreFactoryComponent implements IPersistentDep
   }
 
   /**
-   * @see org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory#resetPersistentDependencyStore(org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject)
+   * @see org.bundlemaker.core.internal.api.store.IPersistentDependencyStoreFactory#resetPersistentDependencyStore(org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject)
    */
   public void resetPersistentDependencyStore(IProjectDescriptionAwareBundleMakerProject project) throws CoreException {
 
@@ -116,7 +116,7 @@ public class PersistentDependencyStoreFactoryComponent implements IPersistentDep
   }
 
   /**
-   * @see org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory#getPersistentDependencyStore(org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject)
+   * @see org.bundlemaker.core.internal.api.store.IPersistentDependencyStoreFactory#getPersistentDependencyStore(org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject)
    */
   public IPersistentDependencyStore getPersistentDependencyStore(IProjectDescriptionAwareBundleMakerProject project) {
 

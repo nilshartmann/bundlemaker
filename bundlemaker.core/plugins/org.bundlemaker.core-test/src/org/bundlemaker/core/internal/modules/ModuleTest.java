@@ -8,7 +8,7 @@ import static org.mockito.Mockito.mock;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.framework.ResourceFactory;
-import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.eclipse.core.runtime.CoreException;

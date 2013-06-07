@@ -4,8 +4,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import org.bundlemaker.core.internal.api.store.IPersistentDependencyStore;
 import org.bundlemaker.core.internal.resource.DefaultProjectContentResource;
-import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IParsableResource;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;

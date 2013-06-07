@@ -18,7 +18,7 @@ import org.bundlemaker.core.jdt.parser.CoreParserJdt;
 import org.bundlemaker.core.project.BundleMakerCore;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
-import org.bundlemaker.core.project.util.VariablePath;
+import org.bundlemaker.core.project.VariablePath;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;

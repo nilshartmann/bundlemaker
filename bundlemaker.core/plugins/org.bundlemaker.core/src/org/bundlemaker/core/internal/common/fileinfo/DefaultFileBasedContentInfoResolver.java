@@ -1,4 +1,4 @@
-package org.bundlemaker.core.internal.util.fileinfo;
+package org.bundlemaker.core.internal.common.fileinfo;
 
 import java.io.File;
 import java.io.IOException;

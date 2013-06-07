@@ -1,4 +1,4 @@
-package org.bundlemaker.core.internal.util;
+package org.bundlemaker.core.internal.common.classloading;
 
 import java.io.IOException;
 import java.net.URL;

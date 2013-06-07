@@ -1,4 +1,4 @@
-package org.bundlemaker.core.project.util;
+package org.bundlemaker.core.project;
 
 import java.io.File;
 

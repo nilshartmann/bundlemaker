@@ -8,14 +8,15 @@ import java.util.Set;
 
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.common.utils.FileUtils;
-import org.bundlemaker.core.internal.projectdescription.api.IInternalProjectDescription;
+import org.bundlemaker.core.internal.api.project.IInternalProjectDescription;
+import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
+import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectDescription;
+import org.bundlemaker.core.project.VariablePath;
 import org.bundlemaker.core.project.spi.AbstractProjectContentProvider;
-import org.bundlemaker.core.project.util.AnalyzeMode;
-import org.bundlemaker.core.project.util.VariablePath;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;

@@ -1,5 +1,6 @@
-package org.bundlemaker.core.internal.projectdescription;
+package org.bundlemaker.core.internal.api.resource;
 
+import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.resource.IModuleResource;
 
 /**

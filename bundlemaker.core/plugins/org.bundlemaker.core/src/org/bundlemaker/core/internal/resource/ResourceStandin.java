@@ -14,9 +14,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bundlemaker.core._type.ITypeResource;
+import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
-import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -73,6 +72,10 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
     return ((ModularizedSystem) modularizedSystem).getAssociatedResourceModule(this);
   }
 
+  public IModuleResource getResource() {
+    return _resource;
+  }
+
   /**
    * {@inheritDoc}
    */
@@ -89,21 +92,13 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
   public <T> T adaptAs(Class<T> clazz) {
 
     //
-    if (ITypeResource.class.equals(clazz)) {
-      if (_resource == null) {
-        // TODO
-        throw new RuntimeException();
-      }
-
-      return (T) _resource.adaptAs(clazz);
+    if (_resource == null) {
+      // TODO
+      throw new RuntimeException();
     }
 
     //
-    return null;
-  }
-
-  public IModuleResource getResource() {
-    return _resource;
+    return (T) _resource.adaptAs(clazz);
   }
 
   /**

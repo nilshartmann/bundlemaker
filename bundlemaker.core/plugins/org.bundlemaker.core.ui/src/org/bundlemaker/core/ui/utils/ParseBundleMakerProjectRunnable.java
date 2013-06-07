@@ -15,7 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
-import org.bundlemaker.core.project.util.BundleMakerProjectState;
+import org.bundlemaker.core.project.BundleMakerProjectState;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.ui.ErrorDialogUtil;
 import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;

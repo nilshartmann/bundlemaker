@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.common.utils.IFileBasedProjectContentInfo;
+import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.project.spi.AbstractProjectContentProvider;
-import org.bundlemaker.core.project.util.AnalyzeMode;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;

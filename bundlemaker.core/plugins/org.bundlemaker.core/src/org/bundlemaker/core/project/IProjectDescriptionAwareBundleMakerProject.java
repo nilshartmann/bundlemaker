@@ -11,7 +11,6 @@
 package org.bundlemaker.core.project;
 
 import org.bundlemaker.core.common.IGenericAdaptable;
-import org.bundlemaker.core.project.util.BundleMakerProjectState;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;

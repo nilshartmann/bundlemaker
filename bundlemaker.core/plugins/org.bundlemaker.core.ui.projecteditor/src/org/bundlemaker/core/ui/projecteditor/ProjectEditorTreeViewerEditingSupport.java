@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.projecteditor;
 
-import org.bundlemaker.core.project.util.AnalyzeMode;
+import org.bundlemaker.core.project.AnalyzeMode;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;

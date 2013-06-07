@@ -12,7 +12,7 @@ import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.internal.Reference;
 import org.bundlemaker.core._type.internal.Type;
-import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
+import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.parser.IParsableResource;

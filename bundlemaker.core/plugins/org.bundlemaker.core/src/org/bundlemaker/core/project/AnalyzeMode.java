@@ -8,10 +8,8 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.project.util;
+package org.bundlemaker.core.project;
 
-import org.bundlemaker.core.project.IProjectContentEntry;
-import org.bundlemaker.core.project.IProjectDescription;
 
 /**
  * <p>

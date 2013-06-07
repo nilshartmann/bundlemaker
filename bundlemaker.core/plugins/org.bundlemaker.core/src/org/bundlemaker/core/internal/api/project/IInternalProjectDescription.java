@@ -1,6 +1,6 @@
-package org.bundlemaker.core.internal.projectdescription.api;
+package org.bundlemaker.core.internal.api.project;
 
-import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
+import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.project.IProjectDescription;
 
 public interface IInternalProjectDescription extends IProjectDescription {

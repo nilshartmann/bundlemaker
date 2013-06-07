@@ -59,7 +59,7 @@ public class PersistentDependencyStoreImpl extends AbstractPersistentDependencyS
   /**
    * {@inheritDoc}
    */
-  public void delete(Resource resource) {
+  public void delete(IParsableResource resource) {
     getDatabase().delete(resource);
   }
 }

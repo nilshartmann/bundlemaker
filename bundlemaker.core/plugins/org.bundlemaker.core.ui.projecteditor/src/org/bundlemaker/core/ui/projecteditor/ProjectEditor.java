@@ -5,10 +5,10 @@ package org.bundlemaker.core.ui.projecteditor;
 
 import org.bundlemaker.core.project.BundleMakerCore;
 import org.bundlemaker.core.project.BundleMakerProjectChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectState;
 import org.bundlemaker.core.project.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
-import org.bundlemaker.core.project.util.BundleMakerProjectState;
 import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;

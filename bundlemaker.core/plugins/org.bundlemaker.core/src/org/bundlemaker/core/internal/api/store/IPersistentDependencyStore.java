@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.store;
+package org.bundlemaker.core.internal.api.store;
 
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.parser.IParsableResource;
@@ -16,8 +16,8 @@ import org.bundlemaker.core.resource.IModuleResource;
 
 /**
  * <p>
- * Extends the {@link IDependencyStore} and adds some methods that allows to add and update {@link IModuleResource IResources}
- * .
+ * Extends the {@link IDependencyStore} and adds some methods that allows to add and update {@link IModuleResource
+ * IResources} .
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -40,7 +40,7 @@ public interface IPersistentDependencyStore extends IDependencyStore {
    * 
    * @param resource
    */
-  void delete(Resource resource);
+  void delete(IParsableResource resource);
 
   /**
    * <p>

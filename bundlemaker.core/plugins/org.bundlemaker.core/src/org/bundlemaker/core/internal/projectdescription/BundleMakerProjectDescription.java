@@ -22,7 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.internal.projectdescription.api.IInternalProjectDescription;
+import org.bundlemaker.core.internal.api.project.IInternalProjectDescription;
+import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.project.BundleMakerProjectChangedEvent;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
 import org.bundlemaker.core.project.IProjectContentEntry;

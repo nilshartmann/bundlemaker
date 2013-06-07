@@ -1,9 +1,8 @@
-package org.bundlemaker.core.internal.modules.modifiable;
+package org.bundlemaker.core.internal.api.resource;
 
 import java.util.Set;
 
 import org.bundlemaker.core.common.ResourceType;
-import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.resource.IMovableUnit;

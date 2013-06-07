@@ -41,9 +41,6 @@ public class DefaultProjectContentResource implements IProjectContentResource {
   /** the path of the resource */
   private String          _path;
 
-  // /** - */
-  // private long _timestamp = -1;
-
   /**
    * <p>
    * Creates a new instance of type {@link DefaultProjectContentResource}.

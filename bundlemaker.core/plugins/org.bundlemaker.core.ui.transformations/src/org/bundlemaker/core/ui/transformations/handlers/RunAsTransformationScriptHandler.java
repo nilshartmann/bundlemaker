@@ -3,7 +3,7 @@ package org.bundlemaker.core.ui.transformations.handlers;
 import java.util.Collection;
 
 import org.bundlemaker.core.project.BundleMakerCore;
-import org.bundlemaker.core.project.util.BundleMakerProjectState;
+import org.bundlemaker.core.project.BundleMakerProjectState;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;

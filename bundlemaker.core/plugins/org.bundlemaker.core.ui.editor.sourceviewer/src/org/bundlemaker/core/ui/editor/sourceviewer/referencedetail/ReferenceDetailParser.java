@@ -11,7 +11,7 @@ import org.bundlemaker.core.common.utils.VMInstallUtils;
 import org.bundlemaker.core.parser.IReferenceDetailParser;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
-import org.bundlemaker.core.project.util.VariablePath;
+import org.bundlemaker.core.project.VariablePath;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
