@@ -60,6 +60,9 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
   /** the associated eclipse project (the bundle make project) */
   private IProject                                 _project;
 
+  /** the user attributes */
+  private Map<String, Object>                      _userAttributes;
+
   /** the bundle maker project description */
   private BundleMakerProjectDescription            _projectDescription;
 
@@ -93,6 +96,9 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
 
     // read the projectDescription
     _projectDescription = loadProjectDescription();
+
+    // initialize user attributes
+    _userAttributes = new HashMap<String, Object>();
 
     // create the working copies map
     _modifiableModualizedSystemWorkingCopies = new HashMap<String, ModularizedSystem>();
@@ -134,6 +140,14 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
   public Object getAdapter(Class adapter) {
 
     return adaptAs(adapter);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Map<String, Object> getUserAttributes() {
+    return _userAttributes;
   }
 
   /**

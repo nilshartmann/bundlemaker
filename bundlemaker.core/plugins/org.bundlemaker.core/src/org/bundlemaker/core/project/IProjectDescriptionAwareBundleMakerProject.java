@@ -10,7 +10,10 @@
  ******************************************************************************/
 package org.bundlemaker.core.project;
 
+import java.util.Map;
+
 import org.bundlemaker.core.common.IGenericAdaptable;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -26,6 +29,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @noextend This interface is not intended to be extended by clients.
  */
 public interface IProjectDescriptionAwareBundleMakerProject extends IGenericAdaptable {
+
+  /**
+   * <p>
+   * Returns the user attributes of this {@link IModularizedSystem}.
+   * </p>
+   * 
+   * @return the user attributes of this {@link IModularizedSystem}.
+   */
+  Map<String, Object> getUserAttributes();
 
   /**
    * <p>
