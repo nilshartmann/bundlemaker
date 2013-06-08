@@ -18,6 +18,8 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.bundlemaker.core.common.FlyWeightString;
+import org.bundlemaker.core.common.FlyWeightStringCache;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.eclipse.core.runtime.Assert;
 
