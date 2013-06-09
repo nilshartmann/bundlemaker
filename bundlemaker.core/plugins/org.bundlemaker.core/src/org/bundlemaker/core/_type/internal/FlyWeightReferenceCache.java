@@ -21,7 +21,7 @@ import org.bundlemaker.core.common.FlyWeightStringCache;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class TypeFlyWeightCache {
+public class FlyWeightReferenceCache {
 
   /** - */
   private static final int                                    REFERENCE_CACHE_INITIAL_CAPACITY            = 10000;
@@ -40,10 +40,10 @@ public class TypeFlyWeightCache {
 
   /**
    * <p>
-   * Creates a new instance of type {@link TypeFlyWeightCache}.
+   * Creates a new instance of type {@link FlyWeightReferenceCache}.
    * </p>
    */
-  public TypeFlyWeightCache(FlyWeightStringCache stringFlyWeightCache) {
+  public FlyWeightReferenceCache(FlyWeightStringCache stringFlyWeightCache) {
 
     _flyWeightStringCache = stringFlyWeightCache;
 

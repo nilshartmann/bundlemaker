@@ -198,6 +198,8 @@ public class ModelSetup {
       Map<IProjectContentResource, Resource> storedResourcesMap, ResourceCache resourceCache,
       IProgressMonitor mainMonitor) {
 
+    // IResourceModelLifecycleCallback callback = null;
+
     //
     List<IProblem> result = Collections.emptyList();
 
@@ -210,7 +212,12 @@ public class ModelSetup {
 
     try {
 
+      // activate the zip cache. We need this here to keep the
+      // zip files open while parsing the content
       ZipFileCache.instance().activateCache();
+
+      // TODO: prepare model
+      // callback.prepare(_bundleMakerProject);
 
       //
       for (IProjectContentEntry projectContent : projectContents) {
@@ -263,6 +270,10 @@ public class ModelSetup {
             resourceCache.getOrCreateResource(resourceStandin);
           }
 
+          // TODO: setup model
+          // callback.setupModel(projectContent, storedResourcesMap,
+          // newAndModifiedSourceResources);
+
           resourceCache.setupTypeCache(projectContent);
 
           // adjust work remaining
@@ -280,7 +291,11 @@ public class ModelSetup {
       }
     } finally {
 
+      // deactivate the zip cache.
       ZipFileCache.instance().deactivateCache();
+
+      //
+      // callback.cleanUp(_bundleMakerProject);
 
       subMonitor.done();
     }

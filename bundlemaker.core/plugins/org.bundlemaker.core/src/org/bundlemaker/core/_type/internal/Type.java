@@ -106,7 +106,7 @@ public class Type implements IType, IModifiableType {
    * 
    * @param flyWeightCache
    */
-  public Type(String fullyQualifiedName, TypeEnum typeEnum, TypeFlyWeightCache flyWeightCache, boolean abstractType) {
+  public Type(String fullyQualifiedName, TypeEnum typeEnum, FlyWeightReferenceCache flyWeightCache, boolean abstractType) {
 
     Assert.isNotNull(fullyQualifiedName);
     Assert.isNotNull(typeEnum);
@@ -413,7 +413,7 @@ public class Type implements IType, IModifiableType {
    * 
    * @param flyWeightCache
    */
-  public void createReferenceContainer(TypeFlyWeightCache flyWeightCache) {
+  public void createReferenceContainer(FlyWeightReferenceCache flyWeightCache) {
     //
     _referenceContainer = new ReferenceContainer(flyWeightCache) {
       @Override

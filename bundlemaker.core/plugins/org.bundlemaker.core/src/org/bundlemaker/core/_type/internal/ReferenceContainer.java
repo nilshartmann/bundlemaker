@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.Assert;
 public abstract class ReferenceContainer implements IReferenceRecorder {
 
   /** the fly weight cahce */
-  private transient TypeFlyWeightCache _flyWeightCache;
+  private transient FlyWeightReferenceCache _flyWeightCache;
 
   /** the reference map */
   private Map<ReferenceKey, Reference> _referenceMap;
@@ -43,7 +43,7 @@ public abstract class ReferenceContainer implements IReferenceRecorder {
    * 
    * @param cache
    */
-  public ReferenceContainer(TypeFlyWeightCache cache) {
+  public ReferenceContainer(FlyWeightReferenceCache cache) {
     Assert.isNotNull(cache);
 
     //
