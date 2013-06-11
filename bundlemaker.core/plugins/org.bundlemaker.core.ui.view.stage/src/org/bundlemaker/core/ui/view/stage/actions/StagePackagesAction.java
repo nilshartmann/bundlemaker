@@ -11,9 +11,9 @@
 
 package org.bundlemaker.core.ui.view.stage.actions;
 
+import org.bundlemaker.core._type.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.analysis.ITypeArtifact;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)

@@ -1,11 +1,11 @@
 package org.bundlemaker.core.itest.jedit_artifact_model;
 
+import org.bundlemaker.core._type.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.itestframework.jedit_model.AbstractJeditAnalysisModelTest;
 import org.junit.Assert;
 import org.junit.Test;

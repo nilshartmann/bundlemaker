@@ -11,13 +11,13 @@
 
 package org.bundlemaker.core.ui.artifact.tree;
 
+import org.bundlemaker.core._type.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.ui.artifact.ArtifactImages;
 import org.eclipse.jface.resource.ImageDescriptor;

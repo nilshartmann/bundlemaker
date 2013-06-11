@@ -1,11 +1,11 @@
 package org.bundlemaker.core.internal.analysis;
 
+import org.bundlemaker.core._type.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.resource.IModule;
 
 /**

@@ -6,10 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.bundlemaker.core._type.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.common.history.History;
 import org.bundlemaker.core.common.history.IHistoryChangedListener;
 import org.bundlemaker.core.selection.Selection;

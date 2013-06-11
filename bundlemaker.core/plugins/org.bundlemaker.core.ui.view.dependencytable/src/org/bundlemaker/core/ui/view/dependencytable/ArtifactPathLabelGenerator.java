@@ -1,10 +1,10 @@
 package org.bundlemaker.core.ui.view.dependencytable;
 
+import org.bundlemaker.core._type.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.analysis.ITypeArtifact;
 
 /**
  * Generates a path to an IArtifact that can be used either as a title or as a

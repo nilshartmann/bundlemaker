@@ -1,6 +1,9 @@
-package org.bundlemaker.core.analysis;
+package org.bundlemaker.core._type.analysis;
 
 import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact.IResourceArtifactContent;
 import org.bundlemaker.core.resource.IMovableUnit;
 
 /**
