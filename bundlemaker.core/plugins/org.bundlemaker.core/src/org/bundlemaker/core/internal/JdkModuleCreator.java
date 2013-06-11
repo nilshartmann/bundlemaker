@@ -76,10 +76,11 @@ public class JdkModuleCreator {
   private static IModule createModuleForVMInstall(IVMInstall vmInstall, IModularizedSystem modularizedSystem)
       throws CoreException, IOException {
 
-    Module virtualModule = new Module(new ModuleIdentifier(vmInstall.getName(), vmInstall.getName()),
+    Module jdkModule = new Module(new ModuleIdentifier(vmInstall.getName(), vmInstall.getName()),
         modularizedSystem);
 
-    virtualModule.setResourceModule(false);
+    // TODO
+    jdkModule.setResourceModule(true);
 
     //
     Set<IResourceStandin> resources = new HashSet<IResourceStandin>();
@@ -141,9 +142,9 @@ public class JdkModuleCreator {
     }
 
     //
-    virtualModule.addAll(resources, ResourceType.BINARY);
+    jdkModule.addAll(resources, ResourceType.BINARY);
 
     //
-    return virtualModule;
+    return jdkModule;
   }
 }
