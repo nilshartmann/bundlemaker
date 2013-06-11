@@ -20,6 +20,7 @@ import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.ITypeSelector;
+import org.bundlemaker.core._type.internal.modules.DefaultTypeSelector;
 import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.resource.IModule;
 import org.eclipse.core.runtime.Assert;
