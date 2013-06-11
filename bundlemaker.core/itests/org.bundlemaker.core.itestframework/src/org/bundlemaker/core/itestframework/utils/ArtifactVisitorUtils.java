@@ -10,8 +10,8 @@ import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.analysis.spi.IReferencedArtifact;
-import org.bundlemaker.core.analysis.spi.IReferencingArtifact;
+import org.bundlemaker.core.spi.analysis.IReferencedArtifact;
+import org.bundlemaker.core.spi.analysis.IReferencingArtifact;
 import org.junit.Assert;
 
 public class ArtifactVisitorUtils {

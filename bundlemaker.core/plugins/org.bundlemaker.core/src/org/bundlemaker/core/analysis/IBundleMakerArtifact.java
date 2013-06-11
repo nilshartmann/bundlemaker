@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core.analysis.spi.IReferencedArtifact;
-import org.bundlemaker.core.analysis.spi.IReferencingArtifact;
 import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.spi.analysis.IReferencedArtifact;
+import org.bundlemaker.core.spi.analysis.IReferencingArtifact;
 import org.eclipse.core.runtime.IPath;
 
 import com.tinkerpop.blueprints.Vertex;

@@ -3,7 +3,6 @@ package org.bundlemaker.core.internal.analysis.cache.impl;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.internal.analysis.AdapterType2IArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
@@ -13,6 +12,7 @@ import org.bundlemaker.core.internal.analysis.cache.TypeKey;
 import org.bundlemaker.core.internal.analysis.virtual.VirtualType2IArtifact;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
 import org.eclipse.core.runtime.Assert;
 
 /**

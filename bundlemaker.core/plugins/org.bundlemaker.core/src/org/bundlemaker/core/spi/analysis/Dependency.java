@@ -1,4 +1,4 @@
-package org.bundlemaker.core.analysis.spi;
+package org.bundlemaker.core.spi.analysis;
 
 import java.util.ArrayList;
 import java.util.Collection;
