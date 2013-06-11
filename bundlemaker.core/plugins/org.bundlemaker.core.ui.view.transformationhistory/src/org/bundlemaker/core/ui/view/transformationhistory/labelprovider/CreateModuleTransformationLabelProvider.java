@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.view.transformationhistory.labelprovider;
 
-import org.bundlemaker.core.resource.ICreateModuleTransformation;
+import org.bundlemaker.core.resource.ITransformationCreateModule;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -18,13 +18,13 @@ import org.eclipse.swt.graphics.Image;
  * 
  */
 public class CreateModuleTransformationLabelProvider extends
-    AbstractTransformationLabelProvider<ICreateModuleTransformation> {
+    AbstractTransformationLabelProvider<ITransformationCreateModule> {
 
   /**
    * @param supportedType
    */
   public CreateModuleTransformationLabelProvider() {
-    super(ICreateModuleTransformation.class);
+    super(ITransformationCreateModule.class);
   }
 
   /*
@@ -35,7 +35,7 @@ public class CreateModuleTransformationLabelProvider extends
    * bundlemaker.core.transformation.ITransformation)
    */
   @Override
-  protected String getTitle(ICreateModuleTransformation transformation) {
+  protected String getTitle(ITransformationCreateModule transformation) {
     return "Create Module";
   }
 
@@ -47,7 +47,7 @@ public class CreateModuleTransformationLabelProvider extends
    * (org.bundlemaker.core.transformation.ITransformation)
    */
   @Override
-  protected Image getTitleImage(ICreateModuleTransformation transformation) {
+  protected Image getTitleImage(ITransformationCreateModule transformation) {
     // TODO Auto-generated method stub
     return null;
   }
@@ -60,7 +60,7 @@ public class CreateModuleTransformationLabelProvider extends
    * .bundlemaker.core.transformation.ITransformation)
    */
   @Override
-  protected String getDetails(ICreateModuleTransformation transformation) {
+  protected String getDetails(ITransformationCreateModule transformation) {
     return transformation.getModuleArtifact().getAssociatedModule().getModuleIdentifier().toString();
   }
 

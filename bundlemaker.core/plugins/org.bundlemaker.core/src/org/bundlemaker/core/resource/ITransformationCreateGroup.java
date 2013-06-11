@@ -8,7 +8,7 @@ import org.eclipse.core.runtime.IPath;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface ICreateGroupTransformation extends ITransformation {
+public interface ITransformationCreateGroup extends ITransformation {
 
   IPath getParentGroupPath();
 

@@ -6,7 +6,7 @@ import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.internal.gson.GsonHelper;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleIdentifier;
-import org.bundlemaker.core.resource.IRenameModuleTransformation;
+import org.bundlemaker.core.resource.ITransformationRenameModule;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -15,7 +15,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class RenameModuleTransformation extends
-    AbstractConfigurableTransformation<RenameModuleTransformation.Configuration> implements IRenameModuleTransformation {
+    AbstractConfigurableTransformation<RenameModuleTransformation.Configuration> implements ITransformationRenameModule {
 
   /** - */
   private IModifiableModule _modifiableModule;

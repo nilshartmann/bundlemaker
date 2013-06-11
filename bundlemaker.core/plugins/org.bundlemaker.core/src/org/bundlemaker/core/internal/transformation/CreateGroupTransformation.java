@@ -8,7 +8,7 @@ import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.gson.GsonHelper;
 import org.bundlemaker.core.internal.modules.Group;
-import org.bundlemaker.core.resource.ICreateGroupTransformation;
+import org.bundlemaker.core.resource.ITransformationCreateGroup;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -25,7 +25,7 @@ import com.google.gson.annotations.SerializedName;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class CreateGroupTransformation extends
-    AbstractConfigurableTransformation<CreateGroupTransformation.Configuration> implements ICreateGroupTransformation {
+    AbstractConfigurableTransformation<CreateGroupTransformation.Configuration> implements ITransformationCreateGroup {
 
   /** - */
   private IGroupArtifact _newGroupArtifact;

@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.view.transformationhistory.internal;
 
-import org.bundlemaker.core.resource.ICreateGroupTransformation;
+import org.bundlemaker.core.resource.ITransformationCreateGroup;
 import org.bundlemaker.core.resource.ITransformation;
 import org.bundlemaker.core.ui.view.transformationhistory.ITransformationLabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -32,7 +32,7 @@ public class DefaultTransformationLabelProvider implements ITransformationLabelP
    */
   @Override
   public boolean canHandle(ITransformation transformation) {
-    return (transformation instanceof ICreateGroupTransformation);
+    return (transformation instanceof ITransformationCreateGroup);
   }
 
   /*

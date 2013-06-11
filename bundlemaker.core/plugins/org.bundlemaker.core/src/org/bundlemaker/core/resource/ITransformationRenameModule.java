@@ -1,7 +1,7 @@
 package org.bundlemaker.core.resource;
 
 
-public interface IRenameModuleTransformation extends ITransformation {
+public interface ITransformationRenameModule extends ITransformation {
 
   IModuleIdentifier getOldModuleIdentifier();
 

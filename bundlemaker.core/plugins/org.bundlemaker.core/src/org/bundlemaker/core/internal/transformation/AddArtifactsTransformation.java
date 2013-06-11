@@ -15,7 +15,7 @@ import org.bundlemaker.core.internal.transformation.add.AddArtifactToGroupAndMod
 import org.bundlemaker.core.internal.transformation.add.AddMovableUnitsToModule;
 import org.bundlemaker.core.internal.transformation.add.IAddArtifactAction;
 import org.bundlemaker.core.internal.transformation.add.ModelNotificationSuppressor;
-import org.bundlemaker.core.resource.IAddArtifactsTransformation;
+import org.bundlemaker.core.resource.ITransformationAddArtifacts;
 import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,7 +31,7 @@ import com.google.gson.annotations.SerializedName;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class AddArtifactsTransformation extends
-    AbstractConfigurableTransformation<AddArtifactsTransformation.Configuration> implements IAddArtifactsTransformation {
+    AbstractConfigurableTransformation<AddArtifactsTransformation.Configuration> implements ITransformationAddArtifacts {
 
   /** - */
   private List<IAddArtifactAction<?>> _actions;

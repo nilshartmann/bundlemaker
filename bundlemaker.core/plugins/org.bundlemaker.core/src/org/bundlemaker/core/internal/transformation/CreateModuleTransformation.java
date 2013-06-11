@@ -8,7 +8,7 @@ import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.internal.gson.GsonHelper;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
-import org.bundlemaker.core.resource.ICreateModuleTransformation;
+import org.bundlemaker.core.resource.ITransformationCreateModule;
 import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
 import org.eclipse.core.runtime.Assert;
@@ -27,7 +27,7 @@ import com.google.gson.annotations.SerializedName;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class CreateModuleTransformation extends
-    AbstractConfigurableTransformation<CreateModuleTransformation.Configuration> implements ICreateModuleTransformation {
+    AbstractConfigurableTransformation<CreateModuleTransformation.Configuration> implements ITransformationCreateModule {
 
   /** - */
   private IModuleArtifact           _moduleArtifact;

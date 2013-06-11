@@ -31,24 +31,6 @@ public interface IModuleAwareBundleMakerProject extends IProjectDescriptionAware
 
   /**
    * <p>
-   * Returns a list with all binary resources that are contained in this project.
-   * </p>
-   * 
-   * @return a list with all binary resources that are contained in this project.
-   */
-  List<IModuleResource> getBinaryResources();
-
-  /**
-   * <p>
-   * Returns a list with all source resources that are contained in this project.
-   * </p>
-   * 
-   * @return a list with all source resources that are contained in this project.
-   */
-  List<IModuleResource> getSourceResources();
-
-  /**
-   * <p>
    * Returns a list with all {@link IModularizedSystem IModularizedSystems} that are defined in this
    * {@link IModuleAwareBundleMakerProject}.
    * </p>
@@ -121,4 +103,22 @@ public interface IModuleAwareBundleMakerProject extends IProjectDescriptionAware
    * @precondition BundleMakerProjectState.OPENED
    */
   void deleteModularizedSystemWorkingCopy(String name) throws CoreException;
+
+  /**
+   * <p>
+   * Returns a list with all binary resources that are contained in this project.
+   * </p>
+   * 
+   * @return a list with all binary resources that are contained in this project.
+   */
+  List<IModuleResource> getBinaryResources();
+
+  /**
+   * <p>
+   * Returns a list with all source resources that are contained in this project.
+   * </p>
+   * 
+   * @return a list with all source resources that are contained in this project.
+   */
+  List<IModuleResource> getSourceResources();
 }

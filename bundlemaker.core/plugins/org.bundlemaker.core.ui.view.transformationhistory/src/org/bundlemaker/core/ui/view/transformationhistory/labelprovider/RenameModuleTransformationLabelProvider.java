@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.view.transformationhistory.labelprovider;
 
-import org.bundlemaker.core.resource.IRenameModuleTransformation;
+import org.bundlemaker.core.resource.ITransformationRenameModule;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -18,13 +18,13 @@ import org.eclipse.swt.graphics.Image;
  * 
  */
 public class RenameModuleTransformationLabelProvider extends
-    AbstractTransformationLabelProvider<IRenameModuleTransformation> {
+    AbstractTransformationLabelProvider<ITransformationRenameModule> {
 
   /**
    * @param supportedType
    */
   public RenameModuleTransformationLabelProvider() {
-    super(IRenameModuleTransformation.class);
+    super(ITransformationRenameModule.class);
   }
 
   /*
@@ -35,7 +35,7 @@ public class RenameModuleTransformationLabelProvider extends
    * bundlemaker.core.transformation.ITransformation)
    */
   @Override
-  protected String getTitle(IRenameModuleTransformation transformation) {
+  protected String getTitle(ITransformationRenameModule transformation) {
     return "Rename Module";
   }
 
@@ -47,7 +47,7 @@ public class RenameModuleTransformationLabelProvider extends
    * (org.bundlemaker.core.transformation.ITransformation)
    */
   @Override
-  protected Image getTitleImage(IRenameModuleTransformation transformation) {
+  protected Image getTitleImage(ITransformationRenameModule transformation) {
     return null;
   }
 
@@ -59,7 +59,7 @@ public class RenameModuleTransformationLabelProvider extends
    * .bundlemaker.core.transformation.ITransformation)
    */
   @Override
-  protected String getDetails(IRenameModuleTransformation transformation) {
+  protected String getDetails(ITransformationRenameModule transformation) {
     return "Renamed " + transformation.getOldModuleIdentifier() + " to " + transformation.getNewModuleIdentifier();
   }
 
