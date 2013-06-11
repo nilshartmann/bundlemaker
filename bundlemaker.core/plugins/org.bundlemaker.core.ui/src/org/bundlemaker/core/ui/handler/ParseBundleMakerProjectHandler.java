@@ -12,7 +12,7 @@ package org.bundlemaker.core.ui.handler;
 
 import java.util.List;
 
-import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.bundlemaker.core.ui.utils.BundleMakerProjectOpener;
 import org.eclipse.core.commands.ExecutionEvent;

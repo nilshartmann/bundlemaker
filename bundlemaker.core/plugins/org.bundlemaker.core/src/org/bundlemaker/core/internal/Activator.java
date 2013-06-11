@@ -230,7 +230,7 @@ public class Activator extends Plugin {
    * 
    * @return
    */
-  public Collection<IParserAwareBundleMakerProject> getBundleMakerProjects() {
+  public Collection<? extends IParserAwareBundleMakerProject> getBundleMakerProjects() {
 
     //
     return Collections.unmodifiableCollection(_projectCache.values());

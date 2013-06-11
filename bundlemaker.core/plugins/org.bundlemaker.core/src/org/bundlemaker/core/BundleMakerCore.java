@@ -8,13 +8,15 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.project;
+package org.bundlemaker.core;
 
 import java.util.Collection;
 
 import org.bundlemaker.core.common.utils.EclipseProjectUtils;
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -77,7 +79,7 @@ public final class BundleMakerCore {
    * @return
    * @throws CoreException
    */
-  public static IProjectDescriptionAwareBundleMakerProject getBundleMakerProject(IProject project)
+  public static IBundleMakerProject getBundleMakerProject(IProject project)
       throws CoreException {
     Assert.isNotNull(project);
 
@@ -96,8 +98,7 @@ public final class BundleMakerCore {
     }
 
     // // try to get project from cache
-    IProjectDescriptionAwareBundleMakerProject bundleMakerProject = Activator
-        .getDefault()
+    IBundleMakerProject bundleMakerProject = (IBundleMakerProject) Activator.getDefault()
         .getBundleMakerProject(project);
 
     // create project if necessary
@@ -182,7 +183,8 @@ public final class BundleMakerCore {
    * @return
    * @throws CoreException
    */
-  public static Collection<? extends IProjectDescriptionAwareBundleMakerProject> getBundleMakerProjects() {
+  @SuppressWarnings("unchecked")
+  public static Collection<IBundleMakerProject> getBundleMakerProjects() {
 
     //
     IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
@@ -197,7 +199,7 @@ public final class BundleMakerCore {
     }
 
     //
-    return Activator.getDefault().getBundleMakerProjects();
+    return (Collection<IBundleMakerProject>) Activator.getDefault().getBundleMakerProjects();
   }
 
   /**
@@ -208,8 +210,7 @@ public final class BundleMakerCore {
    * @return
    * @throws CoreException
    */
-  public static IProjectDescriptionAwareBundleMakerProject getBundleMakerProject(String simpleProjectName)
-      throws CoreException {
+  public static IBundleMakerProject getBundleMakerProject(String simpleProjectName) throws CoreException {
 
     // get the project
     IProject project = EclipseProjectUtils.getProject(simpleProjectName);
@@ -247,5 +248,19 @@ public final class BundleMakerCore {
 
     // returns true
     return true;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleMakerProject
+   * @throws CoreException
+   */
+  public static void clearDependencyStore(IProjectDescriptionAwareBundleMakerProject bundleMakerProject)
+      throws CoreException {
+
+    IPersistentDependencyStoreFactory factory = Activator.getDefault().getPersistentDependencyStoreFactory();
+    factory.resetPersistentDependencyStore(bundleMakerProject);
   }
 }

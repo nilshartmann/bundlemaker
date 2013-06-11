@@ -8,7 +8,8 @@ Bundle-ClassPath: .
 Bundle-Vendor: bundlemaker.org
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.bundlemaker.core._type,
+Export-Package: org.bundlemaker.core,
+ org.bundlemaker.core._type,
  org.bundlemaker.core._type.modifiable,
  org.bundlemaker.core._type.utils,
  org.bundlemaker.core.analysis,
@@ -31,6 +32,8 @@ Export-Package: org.bundlemaker.core._type,
  org.bundlemaker.core.projectdescription,
  org.bundlemaker.core.projectdescription.file,
  org.bundlemaker.core.resource,
+ org.bundlemaker.core.spi.resource,
+ org.bundlemaker.core.spi.store,
  org.bundlemaker.core.util.history
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.6.0",
