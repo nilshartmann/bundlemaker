@@ -9,7 +9,7 @@
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
 
-package org.bundlemaker.core.analysis.selectors;
+package org.bundlemaker.core._type.analysis.selectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -17,19 +17,22 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.analysis.DependencyKind;
 import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 
 /**
+ * Selects all supertypes (classes and interfaces) of a specified type.
+ * 
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class SubtypesAndImplementorsSelector implements IArtifactSelector {
+public class SuperTypeSelector implements IArtifactSelector {
 
   private final IBundleMakerArtifact _typeArtifact;
 
-  public SubtypesAndImplementorsSelector(IBundleMakerArtifact typeArtifact) {
+  public SuperTypeSelector(IBundleMakerArtifact typeArtifact) {
     _typeArtifact = checkNotNull(typeArtifact);
   }
 
@@ -39,34 +42,34 @@ public class SubtypesAndImplementorsSelector implements IArtifactSelector {
    * @see org.bundlemaker.core.analysis.IArtifactSelector#getBundleMakerArtifacts()
    */
   @Override
-  public List<IBundleMakerArtifact> getBundleMakerArtifacts() {
+  public List<? extends IBundleMakerArtifact> getBundleMakerArtifacts() {
 
     final List<IBundleMakerArtifact> result = new LinkedList<IBundleMakerArtifact>();
 
-    findSubtypesAndImplementors(_typeArtifact, result);
+    // recursively find all super types
+    findSupertype(_typeArtifact, result);
 
-    System.out.println("Subtypes and implementors of '" + _typeArtifact + "': " + result);
+    System.out.println("Supertype of " + _typeArtifact.getQualifiedName() + " -> " + result);
 
     return result;
   }
 
-  protected void findSubtypesAndImplementors(IBundleMakerArtifact supertype, List<IBundleMakerArtifact> result) {
+  protected void findSupertype(IBundleMakerArtifact baseType, List<IBundleMakerArtifact> result) {
 
-    Collection<IDependency> incomingReferencences = supertype.getDependenciesFrom();
-    for (IDependency iDependency : incomingReferencences) {
-      IBundleMakerArtifact candidate = iDependency.getFrom();
+    Collection<IDependency> dependencies = baseType.getDependenciesTo();
 
-      Collection<IDependency> dependenciesTo = candidate.getDependenciesTo(supertype);
-      for (IDependency candidateDependency : dependenciesTo) {
-        if (candidateDependency.getDependencyKind().isInheritance()) {
-          if (!result.contains(candidate)) {
-            result.add(candidate);
+    for (IDependency iDependency : dependencies) {
 
-            findSubtypesAndImplementors(candidate, result);
-          }
+      if (DependencyKind.EXTENDS.equals(iDependency.getDependencyKind())
+          || DependencyKind.IMPLEMENTS.equals(iDependency.getDependencyKind())) {
+        IBundleMakerArtifact supertype = iDependency.getTo();
+
+        if (!result.contains(supertype)) {
+          result.add(supertype);
+
+          findSupertype(supertype, result);
         }
       }
     }
-
   }
 }
