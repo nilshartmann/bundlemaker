@@ -22,7 +22,7 @@ import java.util.Set;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.ITypeResource;
-import org.bundlemaker.core._type.internal.TypeContainer;
+import org.bundlemaker.core._type.internal.TypeModule;
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.internal.analysis.ITempTypeProvider;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
@@ -60,7 +60,7 @@ public class Module implements IModifiableModule {
   private Map<String, Object>   _userAttributes;
 
   /** the self container */
-  private TypeContainer         _typeContainer;
+  private TypeModule         _typeContainer;
 
   /** the modularized system the module belongs to */
   private IModularizedSystem    _modularizedSystem;
@@ -103,7 +103,7 @@ public class Module implements IModifiableModule {
     _sourceResources = new HashSet<IResourceStandin>();
 
     //
-    _typeContainer = new TypeContainer(this);
+    _typeContainer = new TypeModule(this);
     _isResourceModule = true;
   }
 

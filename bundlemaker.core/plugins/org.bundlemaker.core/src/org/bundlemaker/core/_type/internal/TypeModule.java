@@ -35,7 +35,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class TypeContainer implements ITypeModule {
+public class TypeModule implements ITypeModule {
 
   /** the contained type names */
   private Map<String, IType> _containedTypes;
@@ -45,16 +45,16 @@ public class TypeContainer implements ITypeModule {
 
   /**
    * <p>
-   * Creates a new instance of type {@link TypeContainer}.
+   * Creates a new instance of type {@link TypeModule}.
    * </p>
    */
-  public TypeContainer() {
+  public TypeModule() {
 
     // create the contained types sets
     _containedTypes = new HashMap<String, IType>();
   }
 
-  public TypeContainer(IModule module) {
+  public TypeModule(IModule module) {
 
     Assert.isNotNull(module);
 
