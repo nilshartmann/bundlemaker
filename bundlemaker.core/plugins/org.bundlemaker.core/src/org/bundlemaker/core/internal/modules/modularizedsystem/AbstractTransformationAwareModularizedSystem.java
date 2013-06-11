@@ -195,6 +195,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     preApplyTransformations();
 
     // // step 2: set up the JRE
+    // TODO
     try {
       IModule jdkModule = JdkModuleCreator.getJdkModules(this);
       setExecutionEnvironment(jdkModule);
@@ -206,6 +207,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     subMonitor.worked(10);
 
     // step 3: create the type modules
+    // TODO
     for (IProjectContentEntry fileBasedContent : getBundleMakerProject().getProjectDescription().getContent()) {
       if (!fileBasedContent.isAnalyze()) {
         IModuleIdentifier identifier = new ModuleIdentifier(fileBasedContent.getName(), fileBasedContent.getVersion());
