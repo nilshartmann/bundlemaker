@@ -116,7 +116,7 @@ public class ProjectEditor extends FormEditor {
     try {
       // TODO use ProgressMonitor
       IModuleAwareBundleMakerProject bundleMakerProject = BundleMakerCore
-          .getBundleMakerProject(project).adaptAs(IModuleAwareBundleMakerProject.class);
+          .getProjectDescriptionAwareBundleMakerProject(project).adaptAs(IModuleAwareBundleMakerProject.class);
 
       _bundleMakerProject = bundleMakerProject;
 

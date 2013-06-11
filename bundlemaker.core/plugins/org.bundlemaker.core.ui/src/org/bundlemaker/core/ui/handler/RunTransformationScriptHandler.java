@@ -127,7 +127,7 @@ public class RunTransformationScriptHandler extends AbstractBundleMakerHandler {
         return null;
       }
       IProject selectedProject = (IProject) firstResult;
-      return BundleMakerCore.getBundleMakerProject(selectedProject);
+      return BundleMakerCore.getProjectDescriptionAwareBundleMakerProject(selectedProject);
     }
     return null;
 
@@ -146,7 +146,7 @@ public class RunTransformationScriptHandler extends AbstractBundleMakerHandler {
 
         try {
           if (project.hasNature(BundleMakerCore.NATURE_ID)) {
-            IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project);
+            IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getProjectDescriptionAwareBundleMakerProject(project);
             return (bundleMakerProject.getState() == BundleMakerProjectState.READY);
           }
         } catch (CoreException e) {

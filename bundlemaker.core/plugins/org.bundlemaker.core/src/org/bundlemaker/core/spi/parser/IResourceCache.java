@@ -8,14 +8,12 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.parser;
+package org.bundlemaker.core.spi.parser;
 
-import org.bundlemaker.core.resource.IModuleResource;
 
 
 /**
  * <p>
- * 
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -23,29 +21,14 @@ import org.bundlemaker.core.resource.IModuleResource;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IParsableResource extends IModuleResource {
+public interface IResourceCache {
 
   /**
    * <p>
    * </p>
    * 
-   * @param stickyResource
-   */
-  public void addStickyResource(IModuleResource stickyResource);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param erroneous
-   */
-  public void setErroneous(boolean erroneous);
-
-  /**
-   * <p>
-   * </p>
-   * 
+   * @param resourceKey
    * @return
    */
-  long getLastParsedTimestamp();
+  IParsableResource getOrCreateResource(String contentId, String root, String path);
 }

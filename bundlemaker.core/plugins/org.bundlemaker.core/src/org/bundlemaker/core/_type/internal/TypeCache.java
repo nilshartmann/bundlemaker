@@ -17,10 +17,9 @@ import java.util.Set;
 import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core.common.FlyWeightStringCache;
-import org.bundlemaker.core.internal.api.resource.IResourceStandin;
-import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
+import org.bundlemaker.core.spi.parser.IParsableResource;
 
 /**
  * <p>
@@ -31,12 +30,12 @@ import org.bundlemaker.core.project.IProjectContentResource;
 public class TypeCache {
 
   /** the element map */
-  private Map<String, Type>    _typeMap;
+  private Map<String, Type>       _typeMap;
 
   /** - */
-  private FlyWeightStringCache _flyWeightStringCache;
+  private FlyWeightStringCache    _flyWeightStringCache;
 
-  private FlyWeightReferenceCache   _typeFlyWeightCache;
+  private FlyWeightReferenceCache _typeFlyWeightCache;
 
   /**
    * <p>
@@ -109,7 +108,8 @@ public class TypeCache {
    * @param map
    */
   public void setupTypeCache(IProjectContentEntry projectContentEntry,
-      Map<IProjectContentResource, Resource> storedResourcesMap, Set<IResourceStandin> newAndModifiedSourceResources) {
+      Map<IProjectContentResource, IParsableResource> storedResourcesMap,
+      Set<IParsableResource> newAndModifiedSourceResources) {
 
     // clear the type map
     _typeMap.clear();
@@ -117,7 +117,7 @@ public class TypeCache {
     //
     for (IProjectContentResource resource : projectContentEntry.getBinaryResources()) {
 
-      Resource storedResource = storedResourcesMap.get(resource);
+      IParsableResource storedResource = storedResourcesMap.get(resource);
 
       if (storedResource != null) {
         for (Type type : storedResource.adaptAs(IParsableTypeResource.class).getModifiableContainedTypes()) {
@@ -130,7 +130,7 @@ public class TypeCache {
     //
     for (IProjectContentResource resource : projectContentEntry.getSourceResources()) {
 
-      Resource storedResource = storedResourcesMap.get(resource);
+      IParsableResource storedResource = storedResourcesMap.get(resource);
 
       if (storedResource != null) {
         for (Type type : storedResource.adaptAs(IParsableTypeResource.class).getModifiableContainedTypes()) {

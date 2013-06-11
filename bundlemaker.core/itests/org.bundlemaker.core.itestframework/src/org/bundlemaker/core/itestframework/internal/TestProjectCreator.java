@@ -77,7 +77,7 @@ public class TestProjectCreator {
       IProject simpleProject = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(testProjectName);
 
       // get the BM project
-      return BundleMakerCore.getBundleMakerProject(simpleProject).adaptAs(IParserAwareBundleMakerProject.class);
+      return BundleMakerCore.getProjectDescriptionAwareBundleMakerProject(simpleProject).adaptAs(IParserAwareBundleMakerProject.class);
     } catch (CoreException e) {
       e.printStackTrace();
       Assert.fail(e.getMessage());

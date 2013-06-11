@@ -1,4 +1,4 @@
-package org.bundlemaker.core.project.spi;
+package org.bundlemaker.core.spi.project;
 
 import java.io.File;
 import java.util.Collections;

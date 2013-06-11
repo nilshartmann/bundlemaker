@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.bundlemaker.core.internal.parser.ModelSetup.Directory;
-import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IProblem;
-import org.bundlemaker.core.parser.IParser.ParserType;
 import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.spi.parser.IParser;
+import org.bundlemaker.core.spi.parser.IParser.ParserType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 

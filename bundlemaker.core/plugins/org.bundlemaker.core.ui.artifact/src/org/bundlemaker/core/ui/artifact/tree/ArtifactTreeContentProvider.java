@@ -89,7 +89,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
         if (project.hasNature(BundleMakerCore.NATURE_ID)) {
 
           //
-          IParserAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project).adaptAs(
+          IParserAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getProjectDescriptionAwareBundleMakerProject(project).adaptAs(
               IParserAwareBundleMakerProject.class);
 
           //

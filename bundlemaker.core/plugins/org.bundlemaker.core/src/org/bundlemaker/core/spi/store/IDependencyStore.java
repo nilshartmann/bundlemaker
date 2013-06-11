@@ -12,7 +12,7 @@ package org.bundlemaker.core.spi.store;
 
 import java.util.List;
 
-import org.bundlemaker.core.parser.IParsableResource;
+import org.bundlemaker.core.spi.parser.IParsableResource;
 
 /**
  * <p>

@@ -77,7 +77,7 @@ public final class BundleMakerCore {
    * @return
    * @throws CoreException
    */
-  public static IProjectDescriptionAwareBundleMakerProject getBundleMakerProject(IProject project)
+  public static IProjectDescriptionAwareBundleMakerProject getProjectDescriptionAwareBundleMakerProject(IProject project)
       throws CoreException {
     Assert.isNotNull(project);
 
@@ -189,7 +189,7 @@ public final class BundleMakerCore {
     for (IProject iProject : projects) {
       try {
         if (iProject.exists() && iProject.hasNature(BundleMakerCore.NATURE_ID)) {
-          getBundleMakerProject(iProject);
+          getProjectDescriptionAwareBundleMakerProject(iProject);
         }
       } catch (CoreException e) {
         //
@@ -208,14 +208,14 @@ public final class BundleMakerCore {
    * @return
    * @throws CoreException
    */
-  public static IProjectDescriptionAwareBundleMakerProject getBundleMakerProject(String simpleProjectName)
+  public static IProjectDescriptionAwareBundleMakerProject getProjectDescriptionAwareBundleMakerProject(String simpleProjectName)
       throws CoreException {
 
     // get the project
     IProject project = EclipseProjectUtils.getProject(simpleProjectName);
 
     // get the bundle maker project
-    return BundleMakerCore.getBundleMakerProject(project);
+    return BundleMakerCore.getProjectDescriptionAwareBundleMakerProject(project);
   }
 
   /**

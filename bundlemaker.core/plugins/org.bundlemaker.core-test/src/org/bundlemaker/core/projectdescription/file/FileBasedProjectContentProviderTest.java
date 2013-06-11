@@ -3,7 +3,7 @@ package org.bundlemaker.core.projectdescription.file;
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.project.VariablePath;
 import org.bundlemaker.core.project.filecontent.FileBasedProjectContentProvider;
-import org.bundlemaker.core.project.spi.AbstractProjectContentProvider;
+import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -8,11 +8,12 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.parser;
+package org.bundlemaker.core.spi.parser;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 

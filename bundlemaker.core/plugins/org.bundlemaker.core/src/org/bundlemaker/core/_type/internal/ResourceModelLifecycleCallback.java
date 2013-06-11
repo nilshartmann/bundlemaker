@@ -3,11 +3,10 @@ package org.bundlemaker.core._type.internal;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.internal.api.resource.IResourceStandin;
-import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
+import org.bundlemaker.core.spi.parser.IParsableResource;
 import org.bundlemaker.core.spi.resource.IResourceModelLifecycleCallback;
 
 public class ResourceModelLifecycleCallback implements IResourceModelLifecycleCallback {
@@ -28,7 +27,8 @@ public class ResourceModelLifecycleCallback implements IResourceModelLifecycleCa
    */
   @Override
   public void setupModel(IProjectContentEntry projectContentEntry,
-      Map<IProjectContentResource, Resource> storedResourcesMap, Set<IResourceStandin> newAndModifiedSourceResources) {
+      Map<IProjectContentResource, IParsableResource> storedResourcesMap,
+      Set<IParsableResource> newAndModifiedSourceResources) {
 
     _resourceCache.setupTypeCache(projectContentEntry, storedResourcesMap, newAndModifiedSourceResources);
   }

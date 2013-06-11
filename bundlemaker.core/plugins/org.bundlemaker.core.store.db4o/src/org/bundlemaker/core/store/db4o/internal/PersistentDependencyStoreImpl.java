@@ -13,7 +13,7 @@ package org.bundlemaker.core.store.db4o.internal;
 import java.util.List;
 
 import org.bundlemaker.core.internal.resource.Resource;
-import org.bundlemaker.core.parser.IParsableResource;
+import org.bundlemaker.core.spi.parser.IParsableResource;
 
 import com.db4o.osgi.Db4oService;
 import com.db4o.query.Query;

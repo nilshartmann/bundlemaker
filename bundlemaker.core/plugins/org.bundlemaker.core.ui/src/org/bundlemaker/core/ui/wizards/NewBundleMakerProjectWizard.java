@@ -193,7 +193,7 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard, I
             PreferenceConstants.getDefaultJRELibrary());
 
       }
-      IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(newProjectHandle);
+      IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getProjectDescriptionAwareBundleMakerProject(newProjectHandle);
       IModifiableProjectDescription modifiableProjectDescription = bundleMakerProject.getModifiableProjectDescription();
       modifiableProjectDescription.setJre(mainPage.getSelectedJreId());
       modifiableProjectDescription.save();

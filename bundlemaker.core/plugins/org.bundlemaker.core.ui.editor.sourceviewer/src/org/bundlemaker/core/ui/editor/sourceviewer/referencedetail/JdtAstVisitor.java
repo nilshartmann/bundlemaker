@@ -16,10 +16,10 @@ import java.util.Stack;
 
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core.common.collections.GenericCache;
-import org.bundlemaker.core.parser.IReferenceDetailParser;
-import org.bundlemaker.core.parser.IReferenceDetailParser.IPosition;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.spi.parser.IReferenceDetailParser;
+import org.bundlemaker.core.spi.parser.IReferenceDetailParser.IPosition;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IJavaElement;

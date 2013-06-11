@@ -19,11 +19,11 @@ import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core._type.internal.TypeResource;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ResourceCache;
-import org.bundlemaker.core.parser.IParsableResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.spi.parser.IParsableResource;
 import org.eclipse.core.runtime.Assert;
 
 /**

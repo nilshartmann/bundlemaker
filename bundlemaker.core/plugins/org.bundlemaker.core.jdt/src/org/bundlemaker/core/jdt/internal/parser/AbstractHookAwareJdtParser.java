@@ -14,10 +14,10 @@ import java.util.List;
 
 import org.bundlemaker.core.jdt.internal.ExtensionRegistryTracker;
 import org.bundlemaker.core.jdt.parser.IJdtSourceParserHook;
-import org.bundlemaker.core.parser.AbstractParser;
-import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.spi.parser.AbstractParser;
+import org.bundlemaker.core.spi.parser.IParser;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.dom.CompilationUnit;

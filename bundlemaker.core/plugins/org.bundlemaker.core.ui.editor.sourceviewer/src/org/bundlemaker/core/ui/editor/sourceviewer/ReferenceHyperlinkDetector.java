@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.parser.IReferenceDetailParser.IPosition;
+import org.bundlemaker.core.spi.parser.IReferenceDetailParser.IPosition;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;

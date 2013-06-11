@@ -1,4 +1,4 @@
-package org.bundlemaker.core.parser;
+package org.bundlemaker.core.spi.parser;
 
 import java.util.List;
 import java.util.Map;

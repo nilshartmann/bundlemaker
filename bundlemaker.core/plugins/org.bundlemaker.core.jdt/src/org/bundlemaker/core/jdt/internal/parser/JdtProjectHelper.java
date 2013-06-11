@@ -272,7 +272,7 @@ public class JdtProjectHelper {
 
             try {
 
-              IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject((IProject) resource);
+              IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getProjectDescriptionAwareBundleMakerProject((IProject) resource);
 
               if (JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
 

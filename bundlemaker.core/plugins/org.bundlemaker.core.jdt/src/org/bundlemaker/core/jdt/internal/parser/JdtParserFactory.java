@@ -13,9 +13,9 @@ package org.bundlemaker.core.jdt.internal.parser;
 import org.bundlemaker.core.jdt.internal.ExtensionRegistryTracker;
 import org.bundlemaker.core.jdt.parser.CoreParserJdt;
 import org.bundlemaker.core.jdt.parser.IJdtSourceParserHook;
-import org.bundlemaker.core.parser.IParser;
-import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.spi.parser.IParser;
+import org.bundlemaker.core.spi.parser.IParserFactory;
 import org.eclipse.core.runtime.CoreException;
 
 /**

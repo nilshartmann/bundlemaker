@@ -5,7 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import org.bundlemaker.core.internal.resource.DefaultProjectContentResource;
-import org.bundlemaker.core.parser.IParsableResource;
+import org.bundlemaker.core.spi.parser.IParsableResource;
 import org.bundlemaker.core.spi.store.IPersistentDependencyStore;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
