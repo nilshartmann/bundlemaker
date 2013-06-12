@@ -82,7 +82,7 @@ public class ByteCodeParser extends AbstractParser {
 
       // if we have to parse the enclosing type
       if (enclosingResource.adaptAs(ITypeResource.class).getContainedTypes().isEmpty()) {
-        parseResource(content, enclosingResource, cache);
+        parseResource(content, enclosingResource, cache, true);
 
         if (enclosingResource.adaptAs(ITypeResource.class).getContainedTypes().isEmpty()) {
           // TODO
