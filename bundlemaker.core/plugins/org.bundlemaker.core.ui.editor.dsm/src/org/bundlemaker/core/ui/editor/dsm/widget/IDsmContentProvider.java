@@ -7,7 +7,7 @@ public interface IDsmContentProvider {
   void addObserver(Observer observer);
 
   void deleteObserver(Observer dsmViewWidget);
-  
+
   int getItemCount();
 
   Object getDependency(int j, int i);
@@ -15,7 +15,7 @@ public interface IDsmContentProvider {
   Object[][] getDependencies();
 
   Object[] getNodes();
-  
+
   int[][] getCycles();
 
   boolean isInCycle(int x, int y);

@@ -156,6 +156,7 @@ public class CropableDependencyTreeComposite extends Composite {
       /**
        * {@inheritDoc}
        */
+      @Override
       public void widgetSelected(SelectionEvent e) {
         MenuItem item = (MenuItem) e.widget;
         if (item.getSelection()) {
@@ -188,6 +189,7 @@ public class CropableDependencyTreeComposite extends Composite {
 
     //
     selectionListener = new SelectionAdapter() {
+      @Override
       public void widgetSelected(SelectionEvent e) {
         MenuItem item = (MenuItem) e.widget;
         if (item.getSelection()) {
@@ -322,6 +324,7 @@ public class CropableDependencyTreeComposite extends Composite {
     menuItemResource.setText("Resource");
 
     toolItem.addListener(SWT.Selection, new Listener() {
+      @Override
       public void handleEvent(Event event) {
         if (event.detail == SWT.ARROW) {
           Rectangle rect = toolItem.getBounds();
@@ -393,6 +396,8 @@ public class CropableDependencyTreeComposite extends Composite {
 
     enableButtons();
   }
+  
+  
 
   @Override
   public void dispose() {
@@ -472,5 +477,9 @@ public class CropableDependencyTreeComposite extends Composite {
     _dependencyTreeComposite.setDependencies(currentSelection);
 
     enableButtons();
+  }
+
+  public void setShowReferenceCount(boolean showReferenceCount) {
+    _dependencyTreeComposite.setShowReferenceCount(showReferenceCount);
   }
 }

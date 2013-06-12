@@ -6,7 +6,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 /**
  * <p>
  * </p>
- *
+ * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class DefaultDependencyLabelProvider extends LabelProvider {

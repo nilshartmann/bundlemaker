@@ -173,6 +173,10 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
   private static IPath getBundlePath(Bundle bundle) {
     String location = bundle.getLocation();
 
+    if (location.startsWith("initial@")) {
+      location = location.substring("initial@".length());
+    }
+
     if (location.startsWith("reference:")) {
       location = location.substring("reference:".length());
     }

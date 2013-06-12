@@ -17,26 +17,26 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 public class DsmDetailComposite extends Composite {
-	
-	private final Set<PropertyChangeListener> _propertyChangeListeners = new CopyOnWriteArraySet<PropertyChangeListener>();
+
+  private final Set<PropertyChangeListener> _propertyChangeListeners = new CopyOnWriteArraySet<PropertyChangeListener>();
 
   /** - */
-  private Label  _fromLabel;
+  private Label                             _fromLabel;
 
   /** - */
-  private Label  _toLabel;
+  private Label                             _toLabel;
 
   /** - */
-  private Label  _selectionCountLabel;
+  private Label                             _selectionCountLabel;
 
   /** - */
-  private Button _qualifiedNamesButton;
-  
+  private Button                            _qualifiedNamesButton;
+
   /** - */
-  private Button _shortendNamesButton;
-  
+  private Button                            _shortendNamesButton;
+
   /** - */
-  private LabelPresentationMode _labelPresentationMode;
+  private LabelPresentationMode             _labelPresentationMode;
 
   /**
    * <p>
@@ -62,7 +62,7 @@ public class DsmDetailComposite extends Composite {
     gridLayout.marginWidth = 0;
     composite.setLayout(gridLayout);
     GridDataFactory.swtDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(composite);
-    
+
     //
     _selectionCountLabel = new Label(composite, SWT.TRAIL);
     GridDataFactory.swtDefaults().grab(false, false).align(SWT.FILL, SWT.FILL).applyTo(_selectionCountLabel);
@@ -78,35 +78,33 @@ public class DsmDetailComposite extends Composite {
     gridLayout.marginHeight = 0;
     gridLayout.marginWidth = 0;
     presentationModeComposite.setLayout(gridLayout);
-    
+
     _qualifiedNamesButton = new Button(presentationModeComposite, SWT.CHECK);
     _qualifiedNamesButton.setText("Show qualified names");
     _qualifiedNamesButton.setSelection(true);
-    
+
     _shortendNamesButton = new Button(presentationModeComposite, SWT.CHECK);
     _shortendNamesButton.setText("Shorten labels");
-    
+
     _qualifiedNamesButton.addSelectionListener(new SelectionAdapter() {
 
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-			_shortendNamesButton.setEnabled(_qualifiedNamesButton.getSelection());
-			labelPresentationModeChanged();
-		}
-    	
-	});
-    
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        _shortendNamesButton.setEnabled(_qualifiedNamesButton.getSelection());
+        labelPresentationModeChanged();
+      }
+
+    });
+
     _shortendNamesButton.addSelectionListener(new SelectionAdapter() {
 
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-			labelPresentationModeChanged();
-		}
-    	
-	});
-    
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        labelPresentationModeChanged();
+      }
 
-    
+    });
+
     _labelPresentationMode = determineLabelPresentationMode();
   }
 
@@ -140,7 +138,6 @@ public class DsmDetailComposite extends Composite {
     return _selectionCountLabel;
   }
 
- 
   /**
    * <p>
    * </p>
@@ -163,44 +160,45 @@ public class DsmDetailComposite extends Composite {
     return result;
   }
 
-	public LabelPresentationMode determineLabelPresentationMode() {
-		
-		if (!_qualifiedNamesButton.getSelection()) {
-			return LabelPresentationMode.simpleName;
-		}
-		
-		if (_shortendNamesButton.getSelection()) {
-			return LabelPresentationMode.shortendedQualifiedName;
-		}
-		
-		return LabelPresentationMode.qualifiedName;
-	}
-	
-	protected void labelPresentationModeChanged() {
-		LabelPresentationMode current = _labelPresentationMode;
-		
-		LabelPresentationMode newLabelPresentationMode = determineLabelPresentationMode();
-		
-		if (current != newLabelPresentationMode) {
-			_labelPresentationMode = newLabelPresentationMode;
-			
-			PropertyChangeEvent event = new PropertyChangeEvent(this, "labelPresentationMode", current, newLabelPresentationMode);
-			firePropertyChangeEvent(event);
-		}
-	}
-	
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		_propertyChangeListeners.add(listener);
-	}
-	
-	private void firePropertyChangeEvent(final PropertyChangeEvent event) {
-		for (PropertyChangeListener listener : _propertyChangeListeners) {
-			listener.propertyChange(event);
-			
-		}
-	}
+  public LabelPresentationMode determineLabelPresentationMode() {
 
-	public LabelPresentationMode getLabelPresentationMode() {
-		return this._labelPresentationMode;
-	}
+    if (!_qualifiedNamesButton.getSelection()) {
+      return LabelPresentationMode.simpleName;
+    }
+
+    if (_shortendNamesButton.getSelection()) {
+      return LabelPresentationMode.shortendedQualifiedName;
+    }
+
+    return LabelPresentationMode.qualifiedName;
+  }
+
+  protected void labelPresentationModeChanged() {
+    LabelPresentationMode current = _labelPresentationMode;
+
+    LabelPresentationMode newLabelPresentationMode = determineLabelPresentationMode();
+
+    if (current != newLabelPresentationMode) {
+      _labelPresentationMode = newLabelPresentationMode;
+
+      PropertyChangeEvent event = new PropertyChangeEvent(this, "labelPresentationMode", current,
+          newLabelPresentationMode);
+      firePropertyChangeEvent(event);
+    }
+  }
+
+  public void addPropertyChangeListener(PropertyChangeListener listener) {
+    _propertyChangeListeners.add(listener);
+  }
+
+  private void firePropertyChangeEvent(final PropertyChangeEvent event) {
+    for (PropertyChangeListener listener : _propertyChangeListeners) {
+      listener.propertyChange(event);
+
+    }
+  }
+
+  public LabelPresentationMode getLabelPresentationMode() {
+    return this._labelPresentationMode;
+  }
 }

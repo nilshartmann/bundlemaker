@@ -121,7 +121,8 @@ public class DefaultBundleMakerArtifactDsmContentProvider extends Observable imp
     _dependencies = new IDependency[_cycleDetector.getOrderedArtifacts().length][_cycleDetector.getOrderedArtifacts().length];
     for (int i = 0; i < _cycleDetector.getOrderedArtifacts().length; i++) {
       for (int j = 0; j < _cycleDetector.getOrderedArtifacts().length; j++) {
-        IDependency dependency = _cycleDetector.getOrderedArtifacts()[i].getDependencyTo(_cycleDetector.getOrderedArtifacts()[j]);
+        IDependency dependency = _cycleDetector.getOrderedArtifacts()[i].getDependencyTo(_cycleDetector
+            .getOrderedArtifacts()[j]);
         _dependencies[j][i] = dependency != null && dependency.getWeight() != 0 ? dependency : null;
       }
     }
