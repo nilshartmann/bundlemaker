@@ -51,31 +51,31 @@ import org.eclipse.core.runtime.IPath;
 public class Module implements IModifiableModule {
 
   /** the module identifier */
-  private IModuleIdentifier     _moduleIdentifier;
+  private IModuleIdentifier    _moduleIdentifier;
 
   /** the classification */
-  private Group                 _classification;
+  private Group                _classification;
 
   /** the user attributes */
-  private Map<String, Object>   _userAttributes;
+  private Map<String, Object>  _userAttributes;
 
   /** the self container */
-  private TypeModule         _typeContainer;
+  private TypeModule           _typeContainer;
 
   /** the modularized system the module belongs to */
-  private IModularizedSystem    _modularizedSystem;
+  private IModularizedSystem   _modularizedSystem;
 
   /** specified whether or not the module is attached to a modularized system */
-  private boolean               _isDetached;
+  private boolean              _isDetached;
 
   /** the binary resources */
-  private Set<IResourceStandin> _binaryResources;
+  private Set<IModuleResource> _binaryResources;
 
   /** the source resources */
-  private Set<IResourceStandin> _sourceResources;
+  private Set<IModuleResource> _sourceResources;
 
   /** - */
-  private boolean               _isResourceModule;
+  private boolean              _isResourceModule;
 
   /**
    * <p>
@@ -99,8 +99,8 @@ public class Module implements IModifiableModule {
     _userAttributes = new HashMap<String, Object>();
 
     // create the resource sets
-    _binaryResources = new HashSet<IResourceStandin>();
-    _sourceResources = new HashSet<IResourceStandin>();
+    _binaryResources = new HashSet<IModuleResource>();
+    _sourceResources = new HashSet<IModuleResource>();
 
     //
     _typeContainer = new TypeModule(this);
@@ -372,10 +372,10 @@ public class Module implements IModifiableModule {
    * {@inheritDoc}
    */
   @Override
-  public IResourceStandin getResource(String path, ResourceType contentType) {
+  public IModuleResource getResource(String path, ResourceType contentType) {
 
     //
-    for (IResourceStandin resourceStandin : getModifiableResourcesSet(contentType)) {
+    for (IModuleResource resourceStandin : getModifiableResourcesSet(contentType)) {
 
       //
       if (resourceStandin.getPath().equalsIgnoreCase(path)) {
@@ -391,10 +391,10 @@ public class Module implements IModifiableModule {
    * {@inheritDoc}
    */
   @Override
-  public Set<IResourceStandin> getResources(ResourceType contentType) {
+  public Set<IModuleResource> getResources(ResourceType contentType) {
 
     //
-    Set<IResourceStandin> result = getModifiableResourcesSet(contentType);
+    Set<IModuleResource> result = getModifiableResourcesSet(contentType);
     return Collections.unmodifiableSet(result);
   }
 
@@ -536,7 +536,7 @@ public class Module implements IModifiableModule {
    */
   @Deprecated
   @Override
-  public void addAll(Set<IResourceStandin> resources, ResourceType contentType) {
+  public void addAll(Set<IModuleResource> resources, ResourceType contentType) {
 
     Assert.isNotNull(resources);
     Assert.isNotNull(contentType);
@@ -624,8 +624,8 @@ public class Module implements IModifiableModule {
 
     // add binary resources
     @SuppressWarnings("unchecked")
-    Set<IResourceStandin> resourceStandins = new HashSet<IResourceStandin>(
-        (List<IResourceStandin>) movableUnit.getAssociatedBinaryResources());
+    Set<IModuleResource> resourceStandins = new HashSet<IModuleResource>(
+        (List<IModuleResource>) movableUnit.getAssociatedBinaryResources());
     addAll(resourceStandins, ResourceType.BINARY);
 
     // add source resources
@@ -668,7 +668,7 @@ public class Module implements IModifiableModule {
    * @param contentType
    * @return
    */
-  private Set<IResourceStandin> getModifiableResourcesSet(ResourceType contentType) {
+  private Set<IModuleResource> getModifiableResourcesSet(ResourceType contentType) {
     Assert.isNotNull(contentType);
 
     // return the resource set

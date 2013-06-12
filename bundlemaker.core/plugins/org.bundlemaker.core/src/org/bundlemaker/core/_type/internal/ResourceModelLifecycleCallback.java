@@ -12,7 +12,7 @@ import org.bundlemaker.core.spi.resource.IResourceModelLifecycleCallback;
 public class ResourceModelLifecycleCallback implements IResourceModelLifecycleCallback {
 
   /** - */
-  private TypeCache _resourceCache = new TypeCache();
+  private TypeCache _typeCache = new TypeCache();
 
   /**
    * {@inheritDoc}
@@ -30,7 +30,7 @@ public class ResourceModelLifecycleCallback implements IResourceModelLifecycleCa
       Map<IProjectContentResource, IParsableResource> storedResourcesMap,
       Set<IParsableResource> newAndModifiedSourceResources) {
 
-    _resourceCache.setupTypeCache(projectContentEntry, storedResourcesMap, newAndModifiedSourceResources);
+    _typeCache.setupTypeCache(projectContentEntry, storedResourcesMap, newAndModifiedSourceResources);
   }
 
   /**

@@ -43,5 +43,4 @@ public interface IProjectContentResource extends IResource {
    * @return the root directory or archive file that contains the resource.
    */
   String getRoot();
-
 }

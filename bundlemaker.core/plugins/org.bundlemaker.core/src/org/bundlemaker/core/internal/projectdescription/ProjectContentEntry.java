@@ -31,48 +31,48 @@ import org.eclipse.core.runtime.CoreException;
 public class ProjectContentEntry implements IProjectContentEntry {
 
   /** the empty resource standin set */
-  private static final Set<IResourceStandin> EMPTY_RESOURCE_STANDIN_SET = Collections
-                                                                            .unmodifiableSet(new HashSet<IResourceStandin>());
+  private static final Set<IModuleResource> EMPTY_RESOURCE_STANDIN_SET = Collections
+                                                                           .unmodifiableSet(new HashSet<IModuleResource>());
 
   /** the internal identifier of this content entry */
-  private String                             _id;
+  private String                            _id;
 
   /** the name of this entry */
-  private String                             _name;
+  private String                            _name;
 
   /** the version of this entry */
-  private String                             _version;
+  private String                            _version;
 
   /** the analyze mode of this entry */
-  private AnalyzeMode                        _analyze;
+  private AnalyzeMode                       _analyze;
 
   /** the binary pathes */
-  protected Set<VariablePath>                _binaryPaths;
+  protected Set<VariablePath>               _binaryPaths;
 
   /** the source pathes */
-  private Set<VariablePath>                  _sourcePaths;
+  private Set<VariablePath>                 _sourcePaths;
 
   /** - */
-  private static final Set<VariablePath>     EMPTY_ROOTPATH_SET         = Collections
-                                                                            .unmodifiableSet(new HashSet<VariablePath>());
+  private static final Set<VariablePath>    EMPTY_ROOTPATH_SET         = Collections
+                                                                           .unmodifiableSet(new HashSet<VariablePath>());
 
   /** indicates that the content has been initialized */
-  private boolean                            _isInitialized;
+  private boolean                           _isInitialized;
 
   /** the set of binary resource standins */
-  private Set<IResourceStandin>              _binaryResourceStandins;
+  private Set<IModuleResource>              _binaryResourceStandins;
 
   /** the set of source resource standins */
-  private Set<IResourceStandin>              _sourceResourceStandins;
+  private Set<IModuleResource>              _sourceResourceStandins;
 
   /** the project description */
-  private IInternalProjectDescription        _projectDescription;
+  private IInternalProjectDescription       _projectDescription;
 
   /** the bundle maker project content provider */
-  private IProjectContentProvider            _provider;
+  private IProjectContentProvider           _provider;
 
   /** the user attributes */
-  private Map<String, Object>                _userAttributes;
+  private Map<String, Object>               _userAttributes;
 
   /**
    * indicates wether changes to this instance should be notified.
@@ -81,7 +81,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * This flag may be set to 'false' to prevent change notification while initializing this Content instance.
    * 
    */
-  private boolean                            _notifyChanges             = true;
+  private boolean                           _notifyChanges             = true;
 
   /**
    * <p>
@@ -287,7 +287,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * 
    * @return the set of all contained binary {@link IResourceStandin}.
    */
-  public final Set<IResourceStandin> getBinaryResourceStandins() {
+  public final Set<IModuleResource> getBinaryResourceStandins() {
     return _binaryResourceStandins != null ? _binaryResourceStandins : EMPTY_RESOURCE_STANDIN_SET;
   }
 
@@ -298,7 +298,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * 
    * @return the set of all contained source {@link IResourceStandin}.
    */
-  public final Set<IResourceStandin> getSourceResourceStandins() {
+  public final Set<IModuleResource> getSourceResourceStandins() {
     return _sourceResourceStandins != null ? _sourceResourceStandins : EMPTY_RESOURCE_STANDIN_SET;
   }
 
@@ -397,11 +397,11 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * 
    * @return
    */
-  private Set<IResourceStandin> binaryResourceStandins() {
+  private Set<IModuleResource> binaryResourceStandins() {
 
     //
     if (_binaryResourceStandins == null) {
-      _binaryResourceStandins = new HashSet<IResourceStandin>();
+      _binaryResourceStandins = new HashSet<IModuleResource>();
     }
 
     //
@@ -414,11 +414,11 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * 
    * @return
    */
-  private Set<IResourceStandin> sourceResourceStandins() {
+  private Set<IModuleResource> sourceResourceStandins() {
 
     //
     if (_sourceResourceStandins == null) {
-      _sourceResourceStandins = new HashSet<IResourceStandin>();
+      _sourceResourceStandins = new HashSet<IModuleResource>();
     }
 
     //

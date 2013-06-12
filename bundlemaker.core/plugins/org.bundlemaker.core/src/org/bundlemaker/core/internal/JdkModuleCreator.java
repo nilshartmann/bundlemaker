@@ -23,7 +23,6 @@ import org.bundlemaker.core._type.internal.modules.DefaultTypeSelector;
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.common.utils.FileUtils;
 import org.bundlemaker.core.common.utils.VMInstallUtils;
-import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.modules.Module;
 import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
@@ -31,6 +30,7 @@ import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.launching.IVMInstall;
@@ -83,7 +83,7 @@ public class JdkModuleCreator {
     jdkModule.setResourceModule(true);
 
     //
-    Set<IResourceStandin> resources = new HashSet<IResourceStandin>();
+    Set<IModuleResource> resources = new HashSet<IModuleResource>();
 
     //
     for (LibraryLocation libraryLocation : JavaRuntime.getLibraryLocations(vmInstall)) {

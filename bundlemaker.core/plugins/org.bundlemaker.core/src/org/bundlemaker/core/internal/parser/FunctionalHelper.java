@@ -18,6 +18,7 @@ import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.spi.parser.IParsableResource;
 import org.bundlemaker.core.spi.parser.IParser;
 import org.bundlemaker.core.spi.parser.IParser.ParserType;
@@ -29,7 +30,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 public class FunctionalHelper {
 
   static List<IProblem> parseNewOrModifiedResources(IProjectContentEntry content,
-      Collection<IResourceStandin> resources, ResourceCache resourceCache, ParserType parserType, IParser[] parsers,
+      Collection<IModuleResource> resources, ResourceCache resourceCache, ParserType parserType, IParser[] parsers,
       IProgressMonitor monitor) throws CoreException {
 
     //
@@ -42,7 +43,7 @@ public class FunctionalHelper {
 
       if (parser.getParserType().equals(parserType)) {
 
-        for (IResourceStandin resourceStandin : resources) {
+        for (IModuleResource resourceStandin : resources) {
 
           // check if the operation has been canceled
           FunctionalHelper.checkIfCanceled(monitor);
@@ -77,21 +78,21 @@ public class FunctionalHelper {
    * @param monitor
    * @return
    */
-  static Set<IResourceStandin> computeNewAndModifiedResources(Collection<IResourceStandin> resourceStandins,
+  static Set<IModuleResource> computeNewAndModifiedResources(Collection<IModuleResource> resourceStandins,
       Map<IProjectContentResource, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor monitor) {
 
     //
     monitor.beginTask("", resourceStandins.size());
 
     //
-    Set<IResourceStandin> result;
+    Set<IModuleResource> result;
 
     try {
 
-      result = new HashSet<IResourceStandin>();
+      result = new HashSet<IModuleResource>();
 
       //
-      for (IResourceStandin resourceStandin : resourceStandins) {
+      for (IModuleResource resourceStandin : resourceStandins) {
 
         // check if the operation has been canceled
         checkIfCanceled(monitor);
@@ -233,7 +234,7 @@ public class FunctionalHelper {
     }
   }
 
-  static boolean hasToBeReparsed(IResourceStandin resourceStandin, Resource resource) {
+  static boolean hasToBeReparsed(IModuleResource resourceStandin, Resource resource) {
 
     // resource has to be re-parsed if no resource was stored in the database
     if (resource == null) {
