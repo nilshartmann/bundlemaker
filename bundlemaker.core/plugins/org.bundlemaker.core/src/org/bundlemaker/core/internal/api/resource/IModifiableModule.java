@@ -5,7 +5,6 @@ import java.util.Set;
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleIdentifier;
-import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.IPath;
 
@@ -29,7 +28,7 @@ public interface IModifiableModule extends IModule {
 
   void setModuleIdentifier(IModuleIdentifier moduleIdentifier);
 
-  void addAll(Set<IModuleResource> resources, ResourceType binary);
+  void addAll(Set<IResourceStandin> resources, ResourceType binary);
 
   /**
    * <p>

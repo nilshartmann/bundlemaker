@@ -133,7 +133,9 @@ public class ResourceCache implements IResourceCache {
     for (Resource modifiableResource : _newResourceMap.values()) {
 
       //
-      _dependencyStore.updateResource(modifiableResource);
+      if (modifiableResource.isAnalyzeReferences()) {
+        _dependencyStore.updateResource(modifiableResource);
+      }
 
       //
       if (progressMonitor != null) {
@@ -182,6 +184,7 @@ public class ResourceCache implements IResourceCache {
     // create a new one if necessary
     resource = new Resource(resourceKey.getProjectContentEntryId().toString(), resourceKey.getRoot(),
         resourceKey.getPath(), this);
+    resource.setAnalyzeReferences(resourceKey.isAnalyzeReferences());
 
     // store the Resource
     _newResourceMap.put(resource, resource);

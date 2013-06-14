@@ -54,7 +54,8 @@ public class ByteCodeParser extends AbstractParser {
   }
 
   @Override
-  protected void doParseResource(IProjectContentEntry content, IParsableResource resource, IResourceCache cache) {
+  protected void doParseResource(IProjectContentEntry content, IParsableResource resource, IResourceCache cache,
+      boolean parseReferences) {
 
     // if the resource already contains a type, it already has been parsed.
     // In this case we can return immediately
@@ -71,7 +72,7 @@ public class ByteCodeParser extends AbstractParser {
 
     // if the type is an anonymous or local type,
     // we have to get the enclosing type name
-    if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName)) {
+    if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName) && parseReferences) {
 
       // get the name of the enclosing type
       String enclosingName = JavaTypeUtils.getEnclosingNonLocalAndNonAnonymousTypeName(fullyQualifiedName);
@@ -100,13 +101,12 @@ public class ByteCodeParser extends AbstractParser {
       // parse the class file
       byte[] bytes = resource.getContent();
       ClassReader reader = new ClassReader(bytes);
-      reader.accept(new ArtefactAnalyserClassVisitor(referenceRecorder), 0);
+      reader.accept(new ArtefactAnalyserClassVisitor(referenceRecorder, parseReferences), 0);
 
     } catch (Exception e) {
       e.printStackTrace();
       IProblem byteCodeParserProblem = new IProblem.DefaultProblem(resource, e.toString());
       getProblems().add(byteCodeParserProblem);
     }
-
   }
 }

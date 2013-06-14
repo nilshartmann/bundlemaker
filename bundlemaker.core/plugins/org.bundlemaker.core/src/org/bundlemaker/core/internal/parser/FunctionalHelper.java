@@ -30,7 +30,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 public class FunctionalHelper {
 
   static List<IProblem> parseNewOrModifiedResources(IProjectContentEntry content,
-      Collection<IModuleResource> resources, ResourceCache resourceCache, ParserType parserType, IParser[] parsers,
+      Collection<IResourceStandin> resources, ResourceCache resourceCache, ParserType parserType, IParser[] parsers,
       IProgressMonitor monitor) throws CoreException {
 
     //
@@ -43,7 +43,7 @@ public class FunctionalHelper {
 
       if (parser.getParserType().equals(parserType)) {
 
-        for (IModuleResource resourceStandin : resources) {
+        for (IResourceStandin resourceStandin : resources) {
 
           // check if the operation has been canceled
           FunctionalHelper.checkIfCanceled(monitor);
@@ -54,9 +54,10 @@ public class FunctionalHelper {
           //
           if (parser.canParse(resource)) {
             ((Resource) resource).storeCurrentTimestamp();
-            List<IProblem> problems = parser.parseResource(content, resource, resourceCache, true);
+            List<IProblem> problems = parser.parseResource(content, resource, resourceCache,
+                resourceStandin.isAnalyzeReferences());
             result.addAll(problems);
-            resourceCache.getOrCreateResource(resourceStandin).setErroneous(!problems.isEmpty());
+            resource.setErroneous(!problems.isEmpty());
           }
 
           monitor.worked(1);
@@ -78,21 +79,21 @@ public class FunctionalHelper {
    * @param monitor
    * @return
    */
-  static Set<IModuleResource> computeNewAndModifiedResources(Collection<IModuleResource> resourceStandins,
+  static Set<IResourceStandin> computeNewAndModifiedResources(Collection<IResourceStandin> resourceStandins,
       Map<IProjectContentResource, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor monitor) {
 
     //
     monitor.beginTask("", resourceStandins.size());
 
     //
-    Set<IModuleResource> result;
+    Set<IResourceStandin> result;
 
     try {
 
-      result = new HashSet<IModuleResource>();
+      result = new HashSet<IResourceStandin>();
 
       //
-      for (IModuleResource resourceStandin : resourceStandins) {
+      for (IResourceStandin resourceStandin : resourceStandins) {
 
         // check if the operation has been canceled
         checkIfCanceled(monitor);
@@ -243,6 +244,11 @@ public class FunctionalHelper {
 
     //
     if (resource.isErroneous()) {
+      return true;
+    }
+
+    //
+    if (resourceStandin.isAnalyzeReferences() != resource.isAnalyzeReferences()) {
       return true;
     }
 

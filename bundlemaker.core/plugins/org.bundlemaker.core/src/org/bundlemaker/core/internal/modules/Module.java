@@ -536,7 +536,7 @@ public class Module implements IModifiableModule {
    */
   @Deprecated
   @Override
-  public void addAll(Set<IModuleResource> resources, ResourceType contentType) {
+  public void addAll(Set<IResourceStandin> resources, ResourceType contentType) {
 
     Assert.isNotNull(resources);
     Assert.isNotNull(contentType);
@@ -624,8 +624,8 @@ public class Module implements IModifiableModule {
 
     // add binary resources
     @SuppressWarnings("unchecked")
-    Set<IModuleResource> resourceStandins = new HashSet<IModuleResource>(
-        (List<IModuleResource>) movableUnit.getAssociatedBinaryResources());
+    Set<IResourceStandin> resourceStandins = new HashSet<IResourceStandin>(
+        (List<IResourceStandin>) movableUnit.getAssociatedBinaryResources());
     addAll(resourceStandins, ResourceType.BINARY);
 
     // add source resources

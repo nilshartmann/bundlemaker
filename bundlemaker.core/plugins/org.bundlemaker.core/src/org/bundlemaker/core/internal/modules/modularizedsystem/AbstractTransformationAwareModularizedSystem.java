@@ -10,17 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.modules.modularizedsystem;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
-import org.bundlemaker.core._type.ITypeModule;
-import org.bundlemaker.core._type.TypeEnum;
-import org.bundlemaker.core._type.internal.Type;
 import org.bundlemaker.core.internal.JdkModuleCreator;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
@@ -30,9 +21,7 @@ import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.internal.transformation.IInternalTransformation;
 import org.bundlemaker.core.internal.transformation.IUndoableTransformation;
-import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectDescription;
-import org.bundlemaker.core.project.VariablePath;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.resource.ITransformation;
@@ -204,29 +193,8 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
       e1.printStackTrace();
     }
 
-    subMonitor.worked(10);
+    subMonitor.worked(20);
 
-    // step 3: create the type modules
-    // TODO
-    for (IProjectContentEntry fileBasedContent : getBundleMakerProject().getProjectDescription().getContent()) {
-      if (!fileBasedContent.isAnalyze()) {
-        IModuleIdentifier identifier = new ModuleIdentifier(fileBasedContent.getName(), fileBasedContent.getVersion());
-        // TODO!!
-        try {
-          IModule typeModule = createTypeModule(fileBasedContent.getId().toString(),
-              identifier,
-              // TODO!!
-              new File[] { fileBasedContent.getBinaryRootPaths().toArray(
-                  new VariablePath[0])[0]
-                  .getAsFile() });
-          getModifiableResourceModules().add((IModifiableModule) typeModule);
-        } catch (CoreException ex) {
-          // TODO
-          ex.printStackTrace();
-        }
-      }
-    }
-    subMonitor.worked(10);
     //
     postApplyTransformations();
   }
@@ -248,22 +216,6 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
       // step 4.1: apply transformation
       ((IInternalTransformation) transformation).apply((IModifiableModularizedSystem) this,
           transformationMonitor.newChild(1));
-
-      // // step 4.2: clean up empty modules
-      // for (Iterator<Entry<IModuleIdentifier, IModifiableResourceModule>> iterator = getModifiableResourceModulesMap()
-      // .entrySet().iterator(); iterator.hasNext();) {
-      //
-      // // get next module
-      // Entry<IModuleIdentifier, IModifiableResourceModule> module = iterator.next();
-      //
-      // // if the module is empty - remove it
-      // if (module.getValue().getResources(ContentType.BINARY).isEmpty()
-      // && module.getValue().getResources(ContentType.SOURCE).isEmpty()) {
-      //
-      // // remove the module
-      // iterator.remove();
-      // }
-      // }
 
       //
       if (!(transformation instanceof BasicProjectContentTransformation)) {
@@ -417,21 +369,6 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
       resourceModuleAdded(resourceModule);
 
     }
-    // else if (module instanceof TypeModule) {
-    //
-    // //
-    // Assert.isTrue(!hasTypeModule(module.getModuleIdentifier()));
-    //
-    // //
-    // TypeModule typeModule = (TypeModule) module;
-    //
-    // //
-    // ((Module) typeModule).attach(this);
-    // getNonResourceModules().add(typeModule);
-    //
-    // // notify
-    // typeModuleAdded(typeModule);
-    // }
   }
 
   /**
@@ -453,17 +390,6 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
       resourceModuleRemoved((IModifiableModule) resourceModule);
 
     }
-
-    // else if (hasTypeModule(identifier)) {
-    //
-    // // remove the entry
-    // Module module = (Module) getModule(identifier);
-    // getModifiableNonResourceModules().remove(module);
-    // ((Module) module).detach();
-    //
-    // // notify
-    // typeModuleRemoved((TypeModule) module);
-    // }
   }
 
   /**
@@ -476,15 +402,6 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     // remove the module
     removeModule(module.getModuleIdentifier());
   }
-
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // public Collection<IModifiableResourceModule> getModifiableResourceModules() {
-  // // return an unmodifiable copy
-  // return Collections.unmodifiableCollection(getModifiableResourceModulesMap().values());
-  // }
 
   /**
    * <p>
@@ -542,77 +459,5 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    */
   protected void resourceModuleRemoved(IModifiableModule resourceModule) {
     // do nothing...
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param identifier
-   * @param files
-   * @return
-   */
-  private IModule createTypeModule(String contentId, IModuleIdentifier identifier, File... files) {
-
-    // create the type module
-    Module typeModule = new Module(identifier, this);
-
-    //
-    for (int i = 0; i < files.length; i++) {
-
-      // add all the contained types
-      try {
-
-        // TODO DIRECTORIES!!
-        // TODO:PARSE!!
-        List<String> types = getContainedTypesFromJarFile(files[i]);
-
-        for (String type : types) {
-
-          // TODO: TypeEnum!!
-          Type type2 = new Type(type, TypeEnum.CLASS, contentId, false);
-
-          // type2.setTypeModule(typeModule);
-
-          typeModule.adaptAs(ITypeModule.class).add(type2);
-        }
-
-      } catch (IOException e) {
-
-        //
-        e.printStackTrace();
-      }
-    }
-    // return the module
-    return typeModule;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param file
-   * @return
-   * @throws IOException
-   */
-  private static List<String> getContainedTypesFromJarFile(File file) throws IOException {
-
-    // create the result list
-    List<String> result = new LinkedList<String>();
-
-    // create the jar file
-    JarFile jarFile = new JarFile(file);
-
-    // get the entries
-    Enumeration<JarEntry> entries = jarFile.entries();
-    while (entries.hasMoreElements()) {
-      JarEntry jarEntry = (JarEntry) entries.nextElement();
-      if (jarEntry.getName().endsWith(".class")) {
-        result.add(jarEntry.getName().substring(0, jarEntry.getName().length() - ".class".length()).replace('/', '.'));
-      }
-    }
-
-    // return the result
-    return result;
   }
 }

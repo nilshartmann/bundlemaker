@@ -17,6 +17,7 @@ import org.bundlemaker.core.common.utils.StopWatch;
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.internal.api.project.IInternalBundleMakerProject;
+import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ZipFileCache;
@@ -225,70 +226,70 @@ public class ModelSetup {
         SubMonitor contentMonitor = subMonitor.newChild(1);
 
         // we only have check resource content
-        if (projectContent.isAnalyze()) {
+        // if (projectContent.isAnalyze()) {
 
-          //
-          if (LOG) {
-            stopWatch = new StopWatch();
-            stopWatch.start();
-          }
-
-          SubMonitor resourceContentMonitor = SubMonitor.convert(contentMonitor, (projectContent.getBinaryResources()
-              .size() + projectContent.getSourceResources().size()));
-
-          // step 4.1: compute new and modified resources
-          Set<IModuleResource> newAndModifiedBinaryResources = FunctionalHelper.computeNewAndModifiedResources(
-              ((ProjectContentEntry) projectContent).getBinaryResourceStandins(), storedResourcesMap, resourceCache,
-              new NullProgressMonitor());
-
-          //
-          Set<IModuleResource> newAndModifiedSourceResources = Collections.emptySet();
-
-          //
-          if (AnalyzeMode.BINARIES_AND_SOURCES.equals(projectContent.getAnalyzeMode())) {
-            newAndModifiedSourceResources = FunctionalHelper.computeNewAndModifiedResources(
-                ((ProjectContentEntry) projectContent).getSourceResourceStandins(), storedResourcesMap, resourceCache,
-                new NullProgressMonitor());
-          }
-
-          //
-          if (LOG) {
-            StaticLog.log(String.format(" - compare and update '%s_%s' - computeNewAndModifiedResources [%s ms]",
-                projectContent.getName(), projectContent.getVersion(), stopWatch.getElapsedTime()));
-
-            StaticLog
-                .log(String.format("   - new/modified binary resources: %s", newAndModifiedBinaryResources.size()));
-            StaticLog
-                .log(String.format("   - new/modified source resources: %s", newAndModifiedSourceResources.size()));
-          }
-
-          // step 4.2:
-          for (IModuleResource resourceStandin : newAndModifiedBinaryResources) {
-            resourceCache.getOrCreateResource(resourceStandin);
-          }
-          for (IModuleResource resourceStandin : newAndModifiedSourceResources) {
-            resourceCache.getOrCreateResource(resourceStandin);
-          }
-
-          // TODO: setup model
-          // callback.setupModel(projectContent, storedResourcesMap,
-          // newAndModifiedSourceResources);
-
-          resourceCache.setupTypeCache(projectContent);
-
-          // adjust work remaining
-          int remaining = newAndModifiedSourceResources.size() + newAndModifiedBinaryResources.size();
-
-          resourceContentMonitor.setWorkRemaining(remaining);
-
-          result = multiThreadedReparse(storedResourcesMap, newAndModifiedSourceResources,
-              newAndModifiedBinaryResources, resourceCache, projectContent, resourceContentMonitor.newChild(remaining));
-
+        //
+        if (LOG) {
+          stopWatch = new StopWatch();
+          stopWatch.start();
         }
 
-        // adjust monitor in case that fileBasedContent is NOT resource content
-        subMonitor.setWorkRemaining(contentCount--);
+        SubMonitor resourceContentMonitor = SubMonitor.convert(contentMonitor, (projectContent.getBinaryResources()
+            .size() + projectContent.getSourceResources().size()));
+
+        // step 4.1: compute new and modified resources
+        Set<IResourceStandin> newAndModifiedBinaryResources = FunctionalHelper.computeNewAndModifiedResources(
+            ((ProjectContentEntry) projectContent).getBinaryResourceStandins(), storedResourcesMap, resourceCache,
+            new NullProgressMonitor());
+
+        //
+        Set<IResourceStandin> newAndModifiedSourceResources = Collections.emptySet();
+
+        //
+        if (AnalyzeMode.BINARIES_AND_SOURCES.equals(projectContent.getAnalyzeMode())) {
+          newAndModifiedSourceResources = FunctionalHelper.computeNewAndModifiedResources(
+              ((ProjectContentEntry) projectContent).getSourceResourceStandins(), storedResourcesMap, resourceCache,
+              new NullProgressMonitor());
+        }
+
+        //
+        if (LOG) {
+          StaticLog.log(String.format(" - compare and update '%s_%s' - computeNewAndModifiedResources [%s ms]",
+              projectContent.getName(), projectContent.getVersion(), stopWatch.getElapsedTime()));
+
+          StaticLog
+              .log(String.format("   - new/modified binary resources: %s", newAndModifiedBinaryResources.size()));
+          StaticLog
+              .log(String.format("   - new/modified source resources: %s", newAndModifiedSourceResources.size()));
+        }
+
+        // step 4.2:
+        for (IModuleResource resourceStandin : newAndModifiedBinaryResources) {
+          resourceCache.getOrCreateResource(resourceStandin);
+        }
+        for (IModuleResource resourceStandin : newAndModifiedSourceResources) {
+          resourceCache.getOrCreateResource(resourceStandin);
+        }
+
+        // TODO: setup model
+        // callback.setupModel(projectContent, storedResourcesMap,
+        // newAndModifiedSourceResources);
+
+        resourceCache.setupTypeCache(projectContent);
+
+        // adjust work remaining
+        int remaining = newAndModifiedSourceResources.size() + newAndModifiedBinaryResources.size();
+
+        resourceContentMonitor.setWorkRemaining(remaining);
+
+        result = multiThreadedReparse(storedResourcesMap, newAndModifiedSourceResources,
+            newAndModifiedBinaryResources, resourceCache, projectContent, resourceContentMonitor.newChild(remaining));
+
       }
+
+      // adjust monitor in case that fileBasedContent is NOT resource content
+      subMonitor.setWorkRemaining(contentCount--);
+      // }
     } finally {
 
       // deactivate the zip cache.
@@ -304,7 +305,7 @@ public class ModelSetup {
   }
 
   private List<IProblem> multiThreadedReparse(Map<IProjectContentResource, Resource> storedResourcesMap,
-      Collection<IModuleResource> sourceResources, Collection<IModuleResource> binaryResources,
+      Collection<IResourceStandin> sourceResources, Collection<IResourceStandin> binaryResources,
       ResourceCache resourceCache, IProjectContentEntry fileBasedContent, IProgressMonitor monitor) {
 
     List<IProblem> result = new LinkedList<IProblem>();
@@ -323,10 +324,10 @@ public class ModelSetup {
       };
 
       //
-      for (IModuleResource resourceStandin : binaryResources) {
+      for (IResourceStandin resourceStandin : binaryResources) {
         directories.getOrCreate(resourceStandin.getDirectory()).addBinaryResource(resourceStandin);
       }
-      for (IModuleResource resourceStandin : sourceResources) {
+      for (IResourceStandin resourceStandin : sourceResources) {
         directories.getOrCreate(resourceStandin.getDirectory()).addSourceResource(resourceStandin);
       }
 
@@ -541,13 +542,13 @@ public class ModelSetup {
   public static class Directory {
 
     /** - */
-    private List<IModuleResource> _binaryResources;
+    private List<IResourceStandin> _binaryResources;
 
     /** - */
-    private List<IModuleResource> _sourceResources;
+    private List<IResourceStandin> _sourceResources;
 
     /** - */
-    private int                   _count = 0;
+    private int                    _count = 0;
 
     /**
      * <p>
@@ -555,8 +556,8 @@ public class ModelSetup {
      * </p>
      */
     public Directory() {
-      _binaryResources = new LinkedList<IModuleResource>();
-      _sourceResources = new LinkedList<IModuleResource>();
+      _binaryResources = new LinkedList<IResourceStandin>();
+      _sourceResources = new LinkedList<IResourceStandin>();
     }
 
     /**
@@ -565,7 +566,7 @@ public class ModelSetup {
      * 
      * @param resourceStandin
      */
-    public void addBinaryResource(IModuleResource resourceStandin) {
+    public void addBinaryResource(IResourceStandin resourceStandin) {
       _binaryResources.add(resourceStandin);
       _count++;
     }
@@ -576,7 +577,7 @@ public class ModelSetup {
      * 
      * @param resourceStandin
      */
-    public void addSourceResource(IModuleResource resourceStandin) {
+    public void addSourceResource(IResourceStandin resourceStandin) {
       _sourceResources.add(resourceStandin);
       _count++;
     }
@@ -587,7 +588,7 @@ public class ModelSetup {
      * 
      * @return
      */
-    public List<IModuleResource> getBinaryResources() {
+    public List<IResourceStandin> getBinaryResources() {
       return _binaryResources;
     }
 
@@ -597,7 +598,7 @@ public class ModelSetup {
      * 
      * @return
      */
-    public List<IModuleResource> getSourceResources() {
+    public List<IResourceStandin> getSourceResources() {
       return _sourceResources;
     }
 

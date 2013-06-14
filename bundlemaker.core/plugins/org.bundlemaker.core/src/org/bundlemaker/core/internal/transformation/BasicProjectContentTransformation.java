@@ -26,23 +26,20 @@ public class BasicProjectContentTransformation implements IInternalTransformatio
     for (IProjectContentEntry fileBasedContent : modularizedSystem.getBundleMakerProject().getProjectDescription()
         .getContent()) {
 
-      if (fileBasedContent.isAnalyze()) {
+      // create new module
+      IModifiableModule module = modularizedSystem.createResourceModule(new ModuleIdentifier(fileBasedContent
+          .getName(), fileBasedContent.getVersion()));
 
-        // create new module
-        IModifiableModule module = modularizedSystem.createResourceModule(new ModuleIdentifier(fileBasedContent
-            .getName(), fileBasedContent.getVersion()));
+      // put the user attributes
+      module.getUserAttributes().putAll(fileBasedContent.getUserAttributes());
 
-        // put the user attributes
-        module.getUserAttributes().putAll(fileBasedContent.getUserAttributes());
+      // add all the binary content
+      module.addAll(((ProjectContentEntry) fileBasedContent).getBinaryResourceStandins(),
+          ResourceType.BINARY);
 
-        // add all the binary content
-        module.addAll(((ProjectContentEntry) fileBasedContent).getBinaryResourceStandins(),
-            ResourceType.BINARY);
-
-        // add all the source content
-        module.addAll(((ProjectContentEntry) fileBasedContent).getSourceResourceStandins(),
-            ResourceType.SOURCE);
-      }
+      // add all the source content
+      module.addAll(((ProjectContentEntry) fileBasedContent).getSourceResourceStandins(),
+          ResourceType.SOURCE);
     }
   }
 }

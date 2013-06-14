@@ -43,6 +43,9 @@ public class DefaultProjectContentResource implements IProjectContentResource {
   /** the path of the resource */
   private String          _path;
 
+  /** - */
+  private boolean         _analyzeReferences = true;
+
   /**
    * <p>
    * Creates a new instance of type {@link DefaultProjectContentResource}.
@@ -270,35 +273,25 @@ public class DefaultProjectContentResource implements IProjectContentResource {
     return string.replace('\\', '/');
   }
 
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param file
-  // */
-  // private void setTimeStamp(File file) {
-  // long timestamp = file.lastModified();
-  // if (timestamp != 0l) {
-  // _timestamp = timestamp;
-  // } else {
-  // System.out.println(this);
-  // throw new RuntimeException();
-  // }
-  // }
-  //
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param zipEntry
-  // */
-  // private void setTimeStamp(ZipEntry zipEntry) {
-  // long timestamp = zipEntry.getTime();
-  // if (timestamp != -1l) {
-  // _timestamp = timestamp;
-  // } else {
-  // System.out.println(this);
-  // throw new RuntimeException();
-  // }
-  // }
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return the analyzeReferences
+   */
+  @Override
+  public boolean isAnalyzeReferences() {
+    return _analyzeReferences;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param analyzeReferences
+   *          the analyzeReferences to set
+   */
+  public void setAnalyzeReferences(boolean analyzeReferences) {
+    _analyzeReferences = analyzeReferences;
+  }
 }
