@@ -25,7 +25,7 @@ public class ResourceFactory {
    * @return
    * @throws CoreException
    */
-  public static Set<IModuleResource> getResources() throws CoreException {
+  public static Set<IResourceStandin> getResources() throws CoreException {
 
     //
     File testDir = new File(System.getProperty("user.dir"), "test-data/com.example/classes");
@@ -34,7 +34,7 @@ public class ResourceFactory {
     List<String> children = FileUtils.getAllChildren(testDir);
 
     //
-    Set<IModuleResource> result = new HashSet<IModuleResource>();
+    Set<IResourceStandin> result = new HashSet<IResourceStandin>();
 
     //
     ResourceCache resourceCache = new ResourceCache();
