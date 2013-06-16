@@ -21,8 +21,8 @@ import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.ITypeSelector;
 import org.bundlemaker.core._type.internal.modules.DefaultTypeSelector;
-import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -45,16 +45,16 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
    * </p>
    * 
    * @param name
-   * @param projectDescription
+   * @param project
    */
-  public AbstractQueryableModularizedSystem(String name, IProjectDescription projectDescription) {
-    super(name, projectDescription);
+  public AbstractQueryableModularizedSystem(String name, IModuleAwareBundleMakerProject project) {
+    super(name, project);
 
     //
     _moduleSelectors = new LinkedList<ITypeSelector>();
 
     //
-    _defaultTypeSelector = new DefaultTypeSelector(projectDescription);
+    _defaultTypeSelector = new DefaultTypeSelector(project.getProjectDescription());
     // _defaultTypeSelector.setPreferJdkTypes(true);
   }
 

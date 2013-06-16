@@ -14,7 +14,7 @@ import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.algorithms.AdjacencyList;
 import org.bundlemaker.core.internal.analysis.ModelTransformerCache;
-import org.bundlemaker.core.project.IProjectDescription;
+import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -37,8 +37,8 @@ public class ModularizedSystem extends AbstractQueryableModularizedSystem {
    * 
    * @param name
    */
-  public ModularizedSystem(String name, IProjectDescription projectDescription) {
-    super(name, projectDescription);
+  public ModularizedSystem(String name, IModuleAwareBundleMakerProject project) {
+    super(name, project);
 
     _transformerCache = new ModelTransformerCache();
   }

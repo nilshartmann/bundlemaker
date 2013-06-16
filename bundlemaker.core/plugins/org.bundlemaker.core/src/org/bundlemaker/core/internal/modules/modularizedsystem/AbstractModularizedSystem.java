@@ -25,7 +25,6 @@ import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
-import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
@@ -44,25 +43,25 @@ import org.eclipse.core.runtime.IPath;
 public abstract class AbstractModularizedSystem implements IModifiableModularizedSystem, ITypeModularizedSystem {
 
   /** the name of working copy */
-  private String                  _name;
+  private String                         _name;
 
   /** the user attributes */
-  private Map<String, Object>     _userAttributes;
+  private Map<String, Object>            _userAttributes;
 
   /** the project description */
-  private IProjectDescription     _projectDescription;
+  private IModuleAwareBundleMakerProject _project;
 
   /** the list of defined transformations */
-  private List<ITransformation>   _transformations;
+  private List<ITransformation>          _transformations;
 
   /** the defined resource modules */
-  private List<IModifiableModule> _modules;
+  private List<IModifiableModule>        _modules;
 
   /** the execution environment type module */
-  private IModule                 _executionEnvironment;
+  private IModule                        _executionEnvironment;
 
   /** - */
-  private Set<Group>              _groups;
+  private Set<Group>                     _groups;
 
   /**
    * <p>
@@ -72,16 +71,16 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
    * @param name
    * @param projectDescription
    */
-  public AbstractModularizedSystem(String name, IProjectDescription projectDescription) {
+  public AbstractModularizedSystem(String name, IModuleAwareBundleMakerProject project) {
 
     Assert.isNotNull(name);
-    Assert.isNotNull(projectDescription);
+    Assert.isNotNull(project);
 
     // set the name
     _name = name;
 
     // set the project description
-    _projectDescription = projectDescription;
+    _project = project;
 
     // initialize fields
     _userAttributes = new HashMap<String, Object>();
@@ -129,7 +128,7 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
    */
   @Override
   public IModuleAwareBundleMakerProject getBundleMakerProject() {
-    return (IModuleAwareBundleMakerProject) _projectDescription.getBundleMakerProject();
+    return _project;
   }
 
   /**

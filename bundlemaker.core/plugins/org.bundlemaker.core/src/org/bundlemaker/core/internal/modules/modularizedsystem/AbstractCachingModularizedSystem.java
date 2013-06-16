@@ -34,8 +34,8 @@ import org.bundlemaker.core.internal.modules.event.ModuleIdentifierChangedEvent;
 import org.bundlemaker.core.internal.modules.event.ModuleMovedEvent;
 import org.bundlemaker.core.internal.modules.event.MovableUnitMovedEvent;
 import org.bundlemaker.core.internal.resource.Resource;
-import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.Assert;
@@ -76,12 +76,12 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * </p>
    * 
    * @param name
-   * @param projectDescription
+   * @param project
    */
-  public AbstractCachingModularizedSystem(String name, IProjectDescription projectDescription) {
+  public AbstractCachingModularizedSystem(String name, IModuleAwareBundleMakerProject project) {
 
     // call the super constructor
-    super(name, projectDescription);
+    super(name, project);
 
     //
     _changedListeners = new CopyOnWriteArrayList<IModularizedSystemChangedListener>();

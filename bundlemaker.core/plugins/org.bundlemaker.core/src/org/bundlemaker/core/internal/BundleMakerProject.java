@@ -337,7 +337,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     }
 
     // create the modularized system
-    ModularizedSystem modularizedSystem = new ModularizedSystem(name, _projectDescription);
+    ModularizedSystem modularizedSystem = new ModularizedSystem(name, this);
 
     // add the result to the hash map
     _modifiableModualizedSystemWorkingCopies.put(name, modularizedSystem);

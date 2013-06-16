@@ -21,8 +21,8 @@ import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.internal.transformation.IInternalTransformation;
 import org.bundlemaker.core.internal.transformation.IUndoableTransformation;
-import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.resource.ITransformation;
 import org.eclipse.core.runtime.Assert;
@@ -46,10 +46,10 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * </p>
    * 
    * @param name
-   * @param projectDescription
+   * @param project
    */
-  public AbstractTransformationAwareModularizedSystem(String name, IProjectDescription projectDescription) {
-    super(name, projectDescription);
+  public AbstractTransformationAwareModularizedSystem(String name, IModuleAwareBundleMakerProject project) {
+    super(name, project);
   }
 
   /**
