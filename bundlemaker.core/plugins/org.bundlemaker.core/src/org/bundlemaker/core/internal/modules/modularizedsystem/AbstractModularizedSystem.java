@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.internal.modules.Group;
@@ -40,7 +39,7 @@ import org.eclipse.core.runtime.IPath;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractModularizedSystem implements IModifiableModularizedSystem, ITypeModularizedSystem {
+public abstract class AbstractModularizedSystem implements IModifiableModularizedSystem {
 
   /** the name of working copy */
   private String                         _name;

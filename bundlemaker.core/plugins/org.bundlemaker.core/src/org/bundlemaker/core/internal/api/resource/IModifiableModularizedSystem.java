@@ -12,10 +12,7 @@ package org.bundlemaker.core.internal.api.resource;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
-import org.bundlemaker.core._type.IReference;
-import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.event.IModularizedSystemChangedListener;
@@ -196,10 +193,4 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
   void applyTransformations(IProgressMonitor monitor, ITransformation... transformation);
 
   void resourcesChanged(Collection<? extends IModuleResource> resources, IModule module, ChangeAction added);
-
-  void typeChanged(IType type, IModule module, ChangeAction added);
-
-  IType getType(String fullyQualifiedName);
-
-  Set<IReference> getUnsatisfiedReferences(IModule resourceModule);
 }

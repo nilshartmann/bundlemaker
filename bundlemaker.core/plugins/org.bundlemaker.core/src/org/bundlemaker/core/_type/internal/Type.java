@@ -16,13 +16,13 @@ import java.util.Set;
 
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core._type.modifiable.IModifiableType;
 import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
 import org.bundlemaker.core.common.FlyWeightString;
 import org.bundlemaker.core.common.IResource;
-import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
@@ -301,7 +301,7 @@ public class Type implements IType, IModifiableType {
     }
 
     if (result == null) {
-      result = ((ModularizedSystem) modularizedSystem).getAssociatedModule(this);
+      result = modularizedSystem.adaptAs(ITypeModularizedSystem.class).getAssociatedModule(this);
     }
 
     if (result == null) {

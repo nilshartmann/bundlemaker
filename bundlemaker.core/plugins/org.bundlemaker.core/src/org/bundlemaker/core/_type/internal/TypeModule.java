@@ -19,12 +19,11 @@ import java.util.Set;
 
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.common.ResourceType;
-import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.ChangeAction;
-import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
@@ -138,7 +137,7 @@ public class TypeModule implements ITypeModule {
 
       // notify
       if (getModule().hasModularizedSystem()) {
-        ((IModifiableModularizedSystem) getModule().getModularizedSystem()).typeChanged(type, getModule(),
+        getModule().getModularizedSystem().adaptAs(ITypeModularizedSystem.class).typeChanged(type, getModule(),
             ChangeAction.ADDED);
       }
     }
@@ -154,7 +153,7 @@ public class TypeModule implements ITypeModule {
 
       // notify
       if (getModule().hasModularizedSystem()) {
-        ((AbstractCachingModularizedSystem) getModule().getModularizedSystem()).typeChanged(type, getModule(),
+        getModule().getModularizedSystem().adaptAs(ITypeModularizedSystem.class).typeChanged(type, getModule(),
             ChangeAction.REMOVED);
       }
     }

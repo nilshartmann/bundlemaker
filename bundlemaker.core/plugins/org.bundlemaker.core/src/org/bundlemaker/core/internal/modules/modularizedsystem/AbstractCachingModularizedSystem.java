@@ -11,14 +11,11 @@
 package org.bundlemaker.core.internal.modules.modularizedsystem;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.common.ResourceType;
@@ -49,17 +46,8 @@ import org.eclipse.core.runtime.Assert;
  */
 public abstract class AbstractCachingModularizedSystem extends AbstractTransformationAwareModularizedSystem {
 
-  /** type name -> type */
-  private GenericCache<String, Set<IType>>            _typeNameToTypeCache;
-
-  /** type name -> referring type */
-  private GenericCache<String, Set<IType>>            _typeNameToReferringCache;
-
   /** resource -> resource module */
   private GenericCache<IModuleResource, Set<IModule>> _resourceToResourceModuleCache;
-
-  /** type -> module */
-  private GenericCache<IType, Set<IModule>>           _typeToModuleCache;
 
   /** - */
   private List<IModularizedSystemChangedListener>     _changedListeners;
@@ -69,6 +57,8 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
   /** - */
   private boolean                                     _handleModelModification             = true;
+
+  private TypeModularizedSystem                       _typeModularizedSystem;
 
   /**
    * <p>
@@ -85,6 +75,19 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
     //
     _changedListeners = new CopyOnWriteArrayList<IModularizedSystemChangedListener>();
+
+    //
+    _typeModularizedSystem = new TypeModularizedSystem(project);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return the typeModularizedSystem
+   */
+  public TypeModularizedSystem getTypeModularizedSystem() {
+    return _typeModularizedSystem;
   }
 
   /**
@@ -136,99 +139,15 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
   }
 
   /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  // TODO set to protected
-  public final GenericCache<String, Set<IType>> getTypeNameToTypeCache() {
-
-    //
-    if (_typeNameToTypeCache == null) {
-
-      // create _typeNameToTypeCache
-      _typeNameToTypeCache = new GenericCache<String, Set<IType>>() {
-        @Override
-        protected Set<IType> create(String key) {
-          return new HashSet<IType>();
-        }
-      };
-    }
-
-    //
-    return _typeNameToTypeCache;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public Map<String, Set<IType>> getReferencedTypes() {
-    return Collections.unmodifiableMap(_typeNameToReferringCache);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  // TODO: incremental updates - replace with API
-  public GenericCache<String, Set<IType>> getTypeNameToReferringCache() {
-
-    //
-    if (_typeNameToReferringCache == null) {
-
-      // create _typeNameToReferringCache
-      _typeNameToReferringCache = new GenericCache<String, Set<IType>>() {
-        @Override
-        protected Set<IType> create(String key) {
-          return new HashSet<IType>();
-        }
-      };
-    }
-
-    //
-    return _typeNameToReferringCache;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  protected final GenericCache<IType, Set<IModule>> getTypeToModuleCache() {
-
-    //
-    if (_typeToModuleCache == null) {
-
-      // create _typeToModuleCache
-      _typeToModuleCache = new GenericCache<IType, Set<IModule>>() {
-        @Override
-        protected Set<IModule> create(IType type) {
-          return new HashSet<IModule>();
-        }
-      };
-    }
-
-    return _typeToModuleCache;
-  }
-
-  /**
    * {@inheritDoc}
    */
   @Override
   protected void preApplyTransformations() {
 
     // clear all the caches
-    getTypeNameToTypeCache().clear();
-    getTypeNameToReferringCache().clear();
     getResourceToResourceModuleCache().clear();
-    getTypeToModuleCache().clear();
+
+    _typeModularizedSystem.clearCaches();
   }
 
   /**
@@ -257,41 +176,12 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * <p>
    * </p>
    * 
-   * @param types
-   * @param module
-   * @param action
-   */
-  protected void typesChanged(Collection<IType> types, IModule module, ChangeAction action) {
-    //
-    for (IType type : types) {
-      internalTypeChanged(type, module, action);
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
    * @param resource
    * @param resourceModule
    * @param action
    */
   public void resourceChanged(IModuleResource resource, IModule resourceModule, ChangeAction action) {
     internalResourceChanged(resource, resourceModule, action);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param type
-   * @param module
-   * @param action
-   */
-  public void typeChanged(IType type, IModule module, ChangeAction action) {
-
-    //
-    internalTypeChanged(type, module, action);
   }
 
   /**
@@ -311,7 +201,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
       //
       for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
-        internalTypeChanged(type, resourceModule, ChangeAction.ADDED);
+        _typeModularizedSystem.internalTypeChanged(type, resourceModule, ChangeAction.ADDED);
       }
     }
 
@@ -321,7 +211,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
       //
       for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
-        internalTypeChanged(type, resourceModule, ChangeAction.ADDED);
+        _typeModularizedSystem.internalTypeChanged(type, resourceModule, ChangeAction.ADDED);
       }
     }
   }
@@ -340,7 +230,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
       //
       for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
-        internalTypeChanged(type, resourceModule, ChangeAction.REMOVED);
+        _typeModularizedSystem.internalTypeChanged(type, resourceModule, ChangeAction.REMOVED);
       }
     }
 
@@ -350,7 +240,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
       //
       for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
-        internalTypeChanged(type, resourceModule, ChangeAction.REMOVED);
+        _typeModularizedSystem.internalTypeChanged(type, resourceModule, ChangeAction.REMOVED);
       }
     }
 
@@ -418,31 +308,6 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
           resourceModules));
     } else {
       return resourceModules.toArray(new IModule[0])[0];
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param type
-   * @return
-   */
-  public IModule getAssociatedModule(IType type) {
-
-    //
-    Assert.isNotNull(type);
-
-    //
-    Set<IModule> modules = _typeToModuleCache.get(type);
-
-    //
-    if (modules == null || modules.isEmpty()) {
-      return null;
-    } else if (modules.size() > 1) {
-      throw new RuntimeException("Type is contained in multiple modules.");
-    } else {
-      return modules.toArray(new IModule[0])[0];
     }
   }
 
@@ -586,7 +451,8 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     }
 
     // step 2: cache the contained types
-    typesChanged(resource.adaptAs(ITypeResource.class).getContainedTypes(), resourceModule, action);
+    _typeModularizedSystem.typesChanged(resource.adaptAs(ITypeResource.class).getContainedTypes(), resourceModule,
+        action);
   }
 
   /**
@@ -633,70 +499,6 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
     } else {
       _handleModelModification = handleModelModification;
-    }
-  }
-
-  private void internalTypeChanged(IType type, IModule module, ChangeAction action) {
-    switch (action) {
-    case ADDED: {
-
-      // step 1: type -> module
-      _typeToModuleCache.getOrCreate(type).add(module);
-
-      // step 2: type name -> type
-      _typeNameToTypeCache.getOrCreate(type.getFullyQualifiedName()).add(type);
-
-      // step 3: referenced type name -> type
-      for (IReference reference : type.getReferences()) {
-        _typeNameToReferringCache.getOrCreate(reference.getFullyQualifiedName()).add(type);
-      }
-
-      //
-      break;
-    }
-    case REMOVED: {
-
-      // step 2a: type -> module
-      Set<IModule> typeModules = _typeToModuleCache.get(type);
-      if (typeModules != null) {
-        typeModules.remove(module);
-        if (typeModules.isEmpty()) {
-          _typeToModuleCache.remove(type);
-
-          // step 2b: type name -> type
-          Set<IType> types = _typeNameToTypeCache.get(type.getFullyQualifiedName());
-          if (types != null) {
-
-            // remove the type
-            types.remove(type);
-
-            // remove types if empty
-            if (types.isEmpty()) {
-              _typeNameToTypeCache.remove(type.getFullyQualifiedName());
-            }
-          }
-
-          // step 2c: referenced type name -> type
-          for (IReference reference : type.getReferences()) {
-            Set<IType> referredTypes = _typeNameToReferringCache.get(reference.getFullyQualifiedName());
-            if (referredTypes != null) {
-              // remove the referred type
-              referredTypes.remove(type);
-              // remove referred types if empty
-              if (referredTypes.isEmpty()) {
-                _typeNameToReferringCache.remove(reference.getFullyQualifiedName());
-              }
-            }
-          }
-        }
-      }
-
-      break;
-    }
-
-    default: {
-      throw new RuntimeException(String.format("Unkown ChangeAction '%s'!", action));
-    }
     }
   }
 }

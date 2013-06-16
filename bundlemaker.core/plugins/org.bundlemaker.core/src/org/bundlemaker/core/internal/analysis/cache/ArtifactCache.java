@@ -12,6 +12,7 @@ package org.bundlemaker.core.internal.analysis.cache;
 
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core._type.analysis.ITypeArtifact;
@@ -223,7 +224,8 @@ public class ArtifactCache {
   public final ITypeArtifact getTypeArtifact(String fullyQualifiedName, boolean createIfMissing) {
 
     //
-    IType targetType = ((IModifiableModularizedSystem) getModularizedSystem()).getType(fullyQualifiedName);
+    IType targetType = ((IModifiableModularizedSystem) getModularizedSystem()).adaptAs(ITypeModularizedSystem.class)
+        .getType(fullyQualifiedName);
 
     //
     if (targetType == null) {
@@ -328,7 +330,7 @@ public class ArtifactCache {
       for (IModule module : modules) {
         if (module instanceof IModifiableModule) {
           for (IReference iReference : ((IModifiableModularizedSystem) getModularizedSystem())
-              .getUnsatisfiedReferences((IModifiableModule) module)) {
+              .adaptAs(ITypeModularizedSystem.class).getUnsatisfiedReferences((IModifiableModule) module)) {
             getTypeCache().getOrCreate(new TypeKey(iReference.getFullyQualifiedName()));
           }
         }
