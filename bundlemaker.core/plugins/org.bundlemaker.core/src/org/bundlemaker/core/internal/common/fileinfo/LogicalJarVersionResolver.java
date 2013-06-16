@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 public class LogicalJarVersionResolver {
 
   /** - */
-  private static final String VERSION_PATTERN_STRING = "(\\d+\\.){1,3}\\w*";
+  private static final String VERSION_PATTERN_STRING = "(\\d+\\.){1,3}.*";
 
   /** - */
   private static Pattern      VERSION_PATTERN        = Pattern.compile(VERSION_PATTERN_STRING);
@@ -37,7 +37,7 @@ public class LogicalJarVersionResolver {
    * @return
    */
   public static String extractNameFromBundleVersion(Manifest manifest) {
-    // get the 'Implementation-Title' attribute
+    // get the 'Bundle-Version' attribute
     String result = manifest.getMainAttributes().getValue("Bundle-Version");
 
     //
