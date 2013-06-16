@@ -18,6 +18,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeResource;
+import org.bundlemaker.core._type.internal.TypeModularizedSystem;
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;

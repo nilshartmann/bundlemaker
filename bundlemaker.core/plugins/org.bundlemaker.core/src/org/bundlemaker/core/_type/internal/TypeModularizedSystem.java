@@ -1,4 +1,4 @@
-package org.bundlemaker.core.internal.modules.modularizedsystem;
+package org.bundlemaker.core._type.internal;
 
 import java.util.Collection;
 import java.util.Collections;
