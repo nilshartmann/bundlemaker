@@ -17,8 +17,8 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeResource;
-import org.bundlemaker.core._type.internal.TypeModularizedSystem;
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
@@ -59,8 +59,6 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
   /** - */
   private boolean                                     _handleModelModification             = true;
 
-  private TypeModularizedSystem                       _typeModularizedSystem;
-
   /**
    * <p>
    * Creates a new instance of type {@link AbstractCachingModularizedSystem}.
@@ -76,19 +74,6 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
     //
     _changedListeners = new CopyOnWriteArrayList<IModularizedSystemChangedListener>();
-
-    //
-    _typeModularizedSystem = new TypeModularizedSystem(project);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return the typeModularizedSystem
-   */
-  public TypeModularizedSystem getTypeModularizedSystem() {
-    return _typeModularizedSystem;
   }
 
   /**
@@ -148,7 +133,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     // clear all the caches
     getResourceToResourceModuleCache().clear();
 
-    _typeModularizedSystem.clearCaches();
+    this.adaptAs(ITypeModularizedSystem.class).clearCaches();
   }
 
   /**
@@ -202,7 +187,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
       //
       for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
-        _typeModularizedSystem.internalTypeChanged(type, resourceModule, ChangeAction.ADDED);
+        this.adaptAs(ITypeModularizedSystem.class).internalTypeChanged(type, resourceModule, ChangeAction.ADDED);
       }
     }
 
@@ -212,7 +197,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
       //
       for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
-        _typeModularizedSystem.internalTypeChanged(type, resourceModule, ChangeAction.ADDED);
+        this.adaptAs(ITypeModularizedSystem.class).internalTypeChanged(type, resourceModule, ChangeAction.ADDED);
       }
     }
   }
@@ -231,7 +216,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
       //
       for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
-        _typeModularizedSystem.internalTypeChanged(type, resourceModule, ChangeAction.REMOVED);
+        this.adaptAs(ITypeModularizedSystem.class).internalTypeChanged(type, resourceModule, ChangeAction.REMOVED);
       }
     }
 
@@ -241,7 +226,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
       //
       for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
-        _typeModularizedSystem.internalTypeChanged(type, resourceModule, ChangeAction.REMOVED);
+        this.adaptAs(ITypeModularizedSystem.class).internalTypeChanged(type, resourceModule, ChangeAction.REMOVED);
       }
     }
 
@@ -452,7 +437,8 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     }
 
     // step 2: cache the contained types
-    _typeModularizedSystem.typesChanged(resource.adaptAs(ITypeResource.class).getContainedTypes(), resourceModule,
+    this.adaptAs(ITypeModularizedSystem.class).typesChanged(resource.adaptAs(ITypeResource.class).getContainedTypes(),
+        resourceModule,
         action);
   }
 

@@ -1,5 +1,6 @@
 package org.bundlemaker.core._type;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -28,4 +29,10 @@ public interface ITypeModularizedSystem {
   IModule getAssociatedModule(IType type);
 
   GenericCache<String, Set<IType>> getTypeNameToReferringCache();
+
+  void clearCaches();
+
+  void typesChanged(Collection<IType> types, IModule module, ChangeAction action);
+
+  void internalTypeChanged(IType type, IModule module, ChangeAction action);
 }

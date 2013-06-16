@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.modules.modularizedsystem;
 
-import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.algorithms.AdjacencyList;
@@ -18,6 +17,7 @@ import org.bundlemaker.core.internal.analysis.ModelTransformerCache;
 import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
 
 /**
@@ -51,8 +51,9 @@ public class ModularizedSystem extends AbstractCachingModularizedSystem {
   public <T> T adaptAs(Class<T> clazz) {
 
     //
-    if (ITypeModularizedSystem.class.equals(clazz)) {
-      return (T) getTypeModularizedSystem();
+    T result = (T) Platform.getAdapterManager().getAdapter(this, clazz);
+    if (result != null) {
+      return result;
     }
 
     //

@@ -6,6 +6,18 @@
    <extension-point id="parserfactory" name="parserfactory" schema="schema/parserfactory.exsd"/>
    <extension-point id="org.bundlemaker.core.projectcontentprovider" name="org.bundlemaker.core.projectcontentprovider" schema="schema/org.bundlemaker.core.projectcontentprovider.exsd"/>
 
+
+	<extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.bundlemaker.core.resource.IModularizedSystem"
+            class="org.bundlemaker.core._type.internal.adapter.TypeModularizedSystemAdapterFactory">
+         <adapter
+               type="org.bundlemaker.core._type.ITypeModularizedSystem">
+         </adapter>
+      </factory>
+   </extension>
+
    <extension
          id="bundlemakernature"
          point="org.eclipse.core.resources.natures"
