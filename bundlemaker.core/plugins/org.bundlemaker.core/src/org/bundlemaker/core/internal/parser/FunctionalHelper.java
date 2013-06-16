@@ -120,7 +120,8 @@ public class FunctionalHelper {
   }
 
   static boolean failOnMissingBinaries() {
-    return Boolean.getBoolean("org.bundlemaker.ignoreMissingBinaries") == false;
+    return false;
+    // Boolean.getBoolean("org.bundlemaker.ignoreMissingBinaries") == false;
   }
 
   static void associateResourceStandinsWithResources(Collection<IResourceStandin> resourceStandins,
