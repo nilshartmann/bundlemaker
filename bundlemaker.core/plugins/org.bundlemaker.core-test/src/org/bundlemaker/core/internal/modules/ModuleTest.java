@@ -12,6 +12,7 @@ import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.eclipse.core.runtime.CoreException;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -23,6 +24,7 @@ import org.junit.Test;
 public class ModuleTest {
 
   @Test
+  @Ignore
   public void test() throws CoreException {
 
     //
