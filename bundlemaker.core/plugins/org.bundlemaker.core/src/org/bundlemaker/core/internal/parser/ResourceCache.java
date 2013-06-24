@@ -12,6 +12,8 @@ package org.bundlemaker.core.internal.parser;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.TypeEnum;
@@ -55,6 +57,9 @@ public class ResourceCache implements IResourceCache {
   /** - */
   private FlyWeightReferenceCache        _flyWeightReferenceCache;
 
+  /** - */
+  private ConcurrentMap<?, ?>            _projectContentSpecificUserAttributes;
+
   /**
    * <p>
    * Creates a new instance of type {@link ResourceCache}.
@@ -62,6 +67,7 @@ public class ResourceCache implements IResourceCache {
    * 
    * @param dependencyStore
    */
+  @SuppressWarnings("rawtypes")
   public ResourceCache(IPersistentDependencyStore dependencyStore) {
 
     Assert.isNotNull(dependencyStore);
@@ -77,6 +83,7 @@ public class ResourceCache implements IResourceCache {
 
     //
     _typeMap = new HashMap<String, Type>();
+    _projectContentSpecificUserAttributes = new ConcurrentHashMap();
 
     //
     _flyWeightStringCache = new FlyWeightStringCache();
@@ -102,6 +109,14 @@ public class ResourceCache implements IResourceCache {
     //
     _flyWeightStringCache = new FlyWeightStringCache();
     _flyWeightReferenceCache = new FlyWeightReferenceCache(_flyWeightStringCache);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public ConcurrentMap<?, ?> getProjectContentSpecificUserAttributes() {
+    return _projectContentSpecificUserAttributes;
   }
 
   /**
@@ -265,6 +280,9 @@ public class ResourceCache implements IResourceCache {
    * @param map
    */
   public void setupTypeCache(IProjectContentEntry fileBasedContent) {
+
+    //
+    _projectContentSpecificUserAttributes.clear();
 
     // clear the type map
     _typeMap.clear();

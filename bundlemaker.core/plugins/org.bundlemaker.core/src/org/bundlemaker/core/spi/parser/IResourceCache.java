@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.spi.parser;
 
-
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * <p>
@@ -31,4 +31,12 @@ public interface IResourceCache {
    * @return
    */
   IParsableResource getOrCreateResource(String contentId, String root, String path);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  ConcurrentMap<?, ?> getProjectContentSpecificUserAttributes();
 }
