@@ -34,7 +34,6 @@ Export-Package: org.bundlemaker.core,
  org.bundlemaker.core.spi.analysis,
  org.bundlemaker.core.spi.parser,
  org.bundlemaker.core.spi.project,
- org.bundlemaker.core.spi.resource,
  org.bundlemaker.core.spi.store
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.6.0",
