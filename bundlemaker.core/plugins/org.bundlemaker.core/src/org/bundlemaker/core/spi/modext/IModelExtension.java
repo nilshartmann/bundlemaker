@@ -6,6 +6,8 @@ import java.util.Set;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
+import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.spi.parser.IParsableResource;
 import org.bundlemaker.core.spi.parser.IParserContext;
 
@@ -56,4 +58,22 @@ public interface IModelExtension {
    */
   public void afterParse(IProjectContentEntry projectContent, IParserContext resourceCache,
       Set<IResourceStandin> newAndModifiedBinaryResources, Set<IResourceStandin> newAndModifiedSourceResources);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param module
+   * @param resource
+   */
+  public void resourceAdded(IModule module, IModuleResource resource);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param module
+   * @param resource
+   */
+  public void resourceRemoved(IModule module, IModuleResource resource);
 }

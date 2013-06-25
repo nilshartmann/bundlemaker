@@ -143,6 +143,7 @@ public class TypeModule implements ITypeModule {
     }
   }
 
+  @Override
   public void remove(IType type) {
 
     //

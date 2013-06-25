@@ -80,4 +80,6 @@ public interface ITypeModule {
    * @return
    */
   Set<IReference> getReferences();
+
+  void remove(IType type);
 }

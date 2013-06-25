@@ -4,12 +4,15 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core._type.IParsableTypeResource;
+import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeModularizedSystem;
+import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.spi.modext.IModelExtension;
 import org.bundlemaker.core.spi.parser.IParsableResource;
@@ -34,6 +37,7 @@ public class ModelExtension implements IModelExtension {
     //
     Platform.getAdapterManager().registerAdapters(new TypeModularizedSystemAdapterFactory(), IModularizedSystem.class);
     Platform.getAdapterManager().registerAdapters(new TypeResourceAdapterFactory(), IModuleResource.class);
+    Platform.getAdapterManager().registerAdapters(new TypeModuleAdapterFactory(), IModule.class);
   }
 
   @Override
@@ -65,6 +69,26 @@ public class ModelExtension implements IModelExtension {
 
     //
     parserContext.getProjectContentSpecificUserAttributes().remove(TYPE_CACHE_KEY);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void resourceAdded(IModule module, IModuleResource resource) {
+    for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
+      module.adaptAs(ITypeModule.class).add(type);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void resourceRemoved(IModule module, IModuleResource resource) {
+    for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
+      module.adaptAs(ITypeModule.class).remove(type);
+    }
   }
 
   /**
@@ -143,6 +167,44 @@ public class ModelExtension implements IModelExtension {
      */
     public Class[] getAdapterList() {
       return new Class[] { ITypeModularizedSystem.class };
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   */
+  private class TypeModuleAdapterFactory implements IAdapterFactory {
+
+    /**
+     * {@inheritDoc}
+     */
+    public Object getAdapter(Object adaptableObject, Class adapterType) {
+
+      //
+      if (adapterType == ITypeModule.class) {
+
+        IModule module = (IModule) adaptableObject;
+
+        if (!module.getUserAttributes().containsKey(ITypeModule.class.getName())) {
+          module.getUserAttributes().put(ITypeModule.class.getName(),
+              new TypeModule(module));
+        }
+
+        return module.getUserAttributes().get(ITypeModule.class.getName());
+      }
+
+      //
+      return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Class[] getAdapterList() {
+      return new Class[] { ITypeModule.class };
     }
   }
 }

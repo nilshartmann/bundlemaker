@@ -18,14 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.ITypeModule;
-import org.bundlemaker.core._type.ITypeResource;
-import org.bundlemaker.core._type.internal.TypeModule;
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
+import org.bundlemaker.core.internal.modelext.ModelExtFactory;
 import org.bundlemaker.core.internal.modules.event.ModuleClassificationChangedEvent;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractTransformationAwareModularizedSystem;
@@ -37,6 +34,7 @@ import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Platform;
 
 /**
  * <p>
@@ -55,9 +53,6 @@ public class Module implements IModifiableModule {
 
   /** the user attributes */
   private Map<String, Object>  _userAttributes;
-
-  /** the self container */
-  private TypeModule           _typeContainer;
 
   /** the modularized system the module belongs to */
   private IModularizedSystem   _modularizedSystem;
@@ -99,8 +94,6 @@ public class Module implements IModifiableModule {
     _binaryResources = new HashSet<IModuleResource>();
     _sourceResources = new HashSet<IModuleResource>();
 
-    //
-    _typeContainer = new TypeModule(this);
     _isResourceModule = true;
   }
 
@@ -113,8 +106,9 @@ public class Module implements IModifiableModule {
   public <T> T adaptAs(Class<T> clazz) {
 
     //
-    if (ITypeModule.class.equals(clazz)) {
-      return (T) _typeContainer;
+    T result = (T) Platform.getAdapterManager().getAdapter(this, clazz);
+    if (result != null) {
+      return result;
     }
 
     //
@@ -265,18 +259,18 @@ public class Module implements IModifiableModule {
   @Override
   public void addMovableUnit(IMovableUnit movableUnit) {
     Assert.isNotNull(movableUnit);
-  
+
     // add binary resources
     @SuppressWarnings("unchecked")
     Set<IResourceStandin> resourceStandins = new HashSet<IResourceStandin>(
         (List<IResourceStandin>) movableUnit.getAssociatedBinaryResources());
     addAll(resourceStandins, ResourceType.BINARY);
-  
+
     // add source resources
     if (movableUnit.hasAssociatedSourceResource()) {
       add((IResourceStandin) movableUnit.getAssociatedSourceResource(), ResourceType.SOURCE);
     }
-  
+
     //
     ((ModularizedSystem) getModularizedSystem()).fireMovableUnitEvent(movableUnit, this, ChangeAction.ADDED);
   }
@@ -287,15 +281,15 @@ public class Module implements IModifiableModule {
   @Override
   public void removeMovableUnit(IMovableUnit movableUnit) {
     Assert.isNotNull(movableUnit);
-  
+
     // add binary resources
     removeAll(movableUnit.getAssociatedBinaryResources(), ResourceType.BINARY);
-  
+
     // add source resources
     if (movableUnit.hasAssociatedSourceResource()) {
       remove(movableUnit.getAssociatedSourceResource(), ResourceType.SOURCE);
     }
-  
+
     //
     ((ModularizedSystem) getModularizedSystem()).fireMovableUnitEvent(movableUnit, this, ChangeAction.REMOVED);
   }
@@ -408,9 +402,7 @@ public class Module implements IModifiableModule {
     getModifiableResourcesSet(contentType).add(resource);
 
     // ... and add all contained types to the cache
-    for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
-      _typeContainer.add(type);
-    }
+    resourceAdded(resource);
 
     // notify
     if (hasModularizedSystem()) {
@@ -434,9 +426,7 @@ public class Module implements IModifiableModule {
 
     // ... and add all contained types to the cache
     for (IModuleResource resource : resources) {
-      for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
-        _typeContainer.add(type);
-      }
+      resourceAdded(resource);
     }
 
     // notify
@@ -457,9 +447,7 @@ public class Module implements IModifiableModule {
     //
     if (getModifiableResourcesSet(contentType).contains(resource)) {
 
-      for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
-        _typeContainer.remove(type);
-      }
+      resourceRemoved(resource);
 
       // add the resource to the resource set...
       getModifiableResourcesSet(contentType).remove(resource);
@@ -482,9 +470,7 @@ public class Module implements IModifiableModule {
 
     // ... and add all contained types to the cache
     for (IModuleResource resource : resources) {
-      for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
-        _typeContainer.remove(type);
-      }
+      resourceRemoved(resource);
     }
 
     // add the resource to the resource set...
@@ -509,5 +495,19 @@ public class Module implements IModifiableModule {
 
     // return the resource set
     return ResourceType.BINARY.equals(contentType) ? _binaryResources : _sourceResources;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resource
+   */
+  private void resourceRemoved(IModuleResource resource) {
+    ModelExtFactory.getModelExtension().resourceRemoved(this, resource);
+  }
+
+  private void resourceAdded(IModuleResource resource) {
+    ModelExtFactory.getModelExtension().resourceAdded(this, resource);
   }
 }
