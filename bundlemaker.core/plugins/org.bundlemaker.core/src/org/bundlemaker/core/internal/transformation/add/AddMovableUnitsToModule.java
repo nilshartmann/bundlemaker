@@ -2,11 +2,11 @@ package org.bundlemaker.core.internal.transformation.add;
 
 import java.util.List;
 
-import org.bundlemaker.core._type.ITypeArtifact;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact.IResourceArtifactContent;
 import org.bundlemaker.core.internal.analysis.AdapterUtils;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.resource.IModule;
@@ -39,7 +39,7 @@ public class AddMovableUnitsToModule implements IAddArtifactAction<IBundleMakerA
 
     // add a package or a resource or a type to the module
     if (artifact.isInstanceOf(IPackageArtifact.class) || artifact.isInstanceOf(IResourceArtifact.class)
-        || artifact.isInstanceOf(ITypeArtifact.class)) {
+        || artifact.isInstanceOf(IResourceArtifactContent.class)) {
 
       //
       _movedMovableUnits = AdapterUtils.getAllMovableUnits(artifact);

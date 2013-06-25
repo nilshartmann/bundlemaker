@@ -45,7 +45,7 @@ public interface IResourceArtifact extends IBundleMakerArtifact, IMovableUnit {
    * 
    * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
    */
-  public static interface IResourceArtifactContent {
+  public static interface IResourceArtifactContent extends IBundleMakerArtifact {
 
   }
 }
