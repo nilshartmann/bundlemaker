@@ -12,7 +12,6 @@ package org.bundlemaker.core.spi.parser;
 
 import org.bundlemaker.core.resource.IModuleResource;
 
-
 /**
  * <p>
  * 
@@ -48,4 +47,12 @@ public interface IParsableResource extends IModuleResource {
    * @return
    */
   long getLastParsedTimestamp();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modelExtension
+   */
+  void setModelExtension(Object modelExtension);
 }

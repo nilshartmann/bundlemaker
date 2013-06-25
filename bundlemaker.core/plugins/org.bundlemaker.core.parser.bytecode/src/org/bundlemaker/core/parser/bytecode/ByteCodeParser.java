@@ -19,7 +19,7 @@ import org.bundlemaker.core.parser.bytecode.asm.AsmReferenceRecorder;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.spi.parser.AbstractParser;
 import org.bundlemaker.core.spi.parser.IParsableResource;
-import org.bundlemaker.core.spi.parser.IResourceCache;
+import org.bundlemaker.core.spi.parser.IParserContext;
 import org.objectweb.asm.ClassReader;
 
 /**
@@ -54,7 +54,7 @@ public class ByteCodeParser extends AbstractParser {
   }
 
   @Override
-  protected void doParseResource(IProjectContentEntry content, IParsableResource resource, IResourceCache cache,
+  protected void doParseResource(IProjectContentEntry content, IParsableResource resource, IParserContext cache,
       boolean parseReferences) {
 
     // if the resource already contains a type, it already has been parsed.

@@ -50,12 +50,12 @@ public interface IParser {
    * 
    * @param content
    * @param resource
-   * @param cache
+   * @param context
    * @param parseReferences TODO
    * @throws CoreException
    */
   List<IProblem> parseResource(IProjectContentEntry content, IParsableResource resource,
-      IResourceCache cache, boolean parseReferences)
+      IParserContext context, boolean parseReferences)
       throws CoreException;
 
   /**

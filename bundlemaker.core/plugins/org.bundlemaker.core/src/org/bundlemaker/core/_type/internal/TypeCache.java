@@ -12,7 +12,6 @@ package org.bundlemaker.core._type.internal;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.TypeEnum;
@@ -80,25 +79,25 @@ public class TypeCache {
     return type;
   }
 
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @return
-  // */
-  // public FlyWeightStringCache getFlyWeightCache() {
-  // return _flyWeightCache;
-  // }
-  //
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @return the typeFlyWeightCache
-  // */
-  // public TypeFlyWeightCache getTypeFlyWeightCache() {
-  // return _typeFlyWeightCache;
-  // }
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public FlyWeightStringCache getFlyWeightCache() {
+    return _flyWeightStringCache;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return the typeFlyWeightCache
+   */
+  public FlyWeightReferenceCache getFlyWeightReferenceCache() {
+    return _typeFlyWeightCache;
+  }
 
   /**
    * <p>
@@ -108,8 +107,7 @@ public class TypeCache {
    * @param map
    */
   public void setupTypeCache(IProjectContentEntry projectContentEntry,
-      Map<IProjectContentResource, IParsableResource> storedResourcesMap,
-      Set<IParsableResource> newAndModifiedSourceResources) {
+      Map<IProjectContentResource, ? extends IParsableResource> storedResourcesMap) {
 
     // clear the type map
     _typeMap.clear();

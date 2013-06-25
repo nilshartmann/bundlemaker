@@ -14,9 +14,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bundlemaker.core._type.IParsableTypeResource;
-import org.bundlemaker.core._type.ITypeResource;
-import org.bundlemaker.core._type.internal.TypeResource;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.resource.IModularizedSystem;
@@ -25,6 +22,7 @@ import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.spi.parser.IParsableResource;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.Platform;
 
 /**
  * <p>
@@ -34,8 +32,8 @@ import org.eclipse.core.runtime.Assert;
  */
 public class Resource extends DefaultProjectContentResource implements IParsableResource {
 
-  // TODO
-  private ITypeResource             _typeResource;
+  //
+  private Object                    _modelExtension;
 
   /** - */
   private Set<IModuleResource>      _stickyResources;
@@ -63,10 +61,19 @@ public class Resource extends DefaultProjectContentResource implements IParsable
    */
   public Resource(String contentId, String root, String path, ResourceCache resourceCache) {
     super(contentId, root, path, resourceCache.getFlyWeightCache());
+  }
 
-    Assert.isNotNull(resourceCache);
-
-    _typeResource = new TypeResource(resourceCache);
+  /**
+   * <p>
+   * Creates a new instance of type {@link Resource}.
+   * </p>
+   * 
+   * @param contentId
+   * @param root
+   * @param path
+   */
+  public Resource(String contentId, String root, String path) {
+    super(contentId, root, path);
   }
 
   /**
@@ -76,13 +83,9 @@ public class Resource extends DefaultProjectContentResource implements IParsable
   public <T> T adaptAs(Class<T> clazz) {
 
     //
-    if (ITypeResource.class.equals(clazz)) {
-      return (T) _typeResource;
-    }
-
-    //
-    if (IParsableTypeResource.class.equals(clazz)) {
-      return (T) _typeResource;
+    T result = (T) Platform.getAdapterManager().getAdapter(this, clazz);
+    if (result != null) {
+      return result;
     }
 
     //
@@ -99,15 +102,28 @@ public class Resource extends DefaultProjectContentResource implements IParsable
 
   /**
    * <p>
-   * Creates a new instance of type {@link Resource}.
    * </p>
    * 
-   * @param contentId
-   * @param root
-   * @param path
+   * @return the modelExtension
    */
-  public Resource(String contentId, String root, String path) {
-    super(contentId, root, path);
+  public Object getModelExtension() {
+    return _modelExtension;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modelExtension
+   *          the modelExtension to set
+   */
+  public void setModelExtension(Object modelExtension) {
+
+    if (_modelExtension != null) {
+      throw new RuntimeException();
+    }
+
+    _modelExtension = modelExtension;
   }
 
   /**

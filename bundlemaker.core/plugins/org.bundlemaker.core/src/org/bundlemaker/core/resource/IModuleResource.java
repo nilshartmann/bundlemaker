@@ -55,4 +55,6 @@ public interface IModuleResource extends IProjectContentResource, Comparable<IMo
    * @return
    */
   Set<? extends IModuleResource> getStickyResources();
+
+  Object getModelExtension();
 }

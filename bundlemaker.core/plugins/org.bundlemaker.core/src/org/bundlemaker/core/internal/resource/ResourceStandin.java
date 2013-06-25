@@ -65,6 +65,20 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
     super(contentId, root, path);
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Object getModelExtension() {
+    //
+    if (_resource == null) {
+      // TODO
+      throw new RuntimeException();
+    }
+
+    return _resource.getModelExtension();
+  }
+
   @Override
   public IModule getModule(IModularizedSystem modularizedSystem) {
 

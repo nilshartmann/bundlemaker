@@ -10,7 +10,6 @@ import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core._type.modifiable.IReferenceRecorder;
 import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
-import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.project.BundleMakerCore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -28,7 +27,7 @@ public class TypeResource implements IParsableTypeResource, IReferenceRecorder {
   private IType                        _primaryType;
 
   /** - */
-  private transient ResourceCache      _resourceCache;
+  private transient TypeCache          _resourceCache;
 
   /** - */
   private transient ReferenceContainer _referenceContainer;
@@ -40,11 +39,11 @@ public class TypeResource implements IParsableTypeResource, IReferenceRecorder {
    * 
    * @param resourceCache
    */
-  public TypeResource(ResourceCache resourceCache) {
+  public TypeResource(TypeCache resourceCache) {
 
     _resourceCache = resourceCache;
 
-    _referenceContainer = new ReferenceContainer(resourceCache.getTypeFlyWeightCache()) {
+    _referenceContainer = new ReferenceContainer(resourceCache.getFlyWeightReferenceCache()) {
       @Override
       protected Set<Reference> createReferencesSet() {
         return references();

@@ -18,6 +18,7 @@ import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.internal.api.project.IInternalBundleMakerProject;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
+import org.bundlemaker.core.internal.modelext.ModelExtFactory;
 import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ZipFileCache;
@@ -225,6 +226,9 @@ public class ModelSetup {
 
         SubMonitor contentMonitor = subMonitor.newChild(1);
 
+        //
+        resourceCache.getProjectContentSpecificUserAttributes().clear();
+
         // we only have check resource content
         // if (projectContent.isAnalyze()) {
 
@@ -272,18 +276,20 @@ public class ModelSetup {
         }
 
         // TODO: setup model
-        // callback.setupModel(projectContent, storedResourcesMap,
-        // newAndModifiedSourceResources);
-
-        resourceCache.setupTypeCache(projectContent);
+        ModelExtFactory.getModelExtension().prepareStoredModel(projectContent, storedResourcesMap);
 
         // adjust work remaining
         int remaining = newAndModifiedSourceResources.size() + newAndModifiedBinaryResources.size();
-
         resourceContentMonitor.setWorkRemaining(remaining);
+
+        ModelExtFactory.getModelExtension().beforeParse(projectContent, resourceCache, newAndModifiedBinaryResources,
+            newAndModifiedSourceResources);
 
         result = multiThreadedReparse(storedResourcesMap, newAndModifiedSourceResources,
             newAndModifiedBinaryResources, resourceCache, projectContent, resourceContentMonitor.newChild(remaining));
+
+        ModelExtFactory.getModelExtension().afterParse(projectContent, resourceCache, newAndModifiedBinaryResources,
+            newAndModifiedSourceResources);
 
       }
 
