@@ -1,6 +1,6 @@
 package org.bundlemaker.core.internal.analysis;
 
-import org.bundlemaker.core._type.analysis.ITypeArtifact;
+import org.bundlemaker.core._type.ITypeArtifact;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;

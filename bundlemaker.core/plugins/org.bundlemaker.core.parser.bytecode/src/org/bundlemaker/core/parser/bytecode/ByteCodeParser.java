@@ -11,8 +11,8 @@
 package org.bundlemaker.core.parser.bytecode;
 
 import org.bundlemaker.core._type.ITypeResource;
-import org.bundlemaker.core._type.utils.JavaTypeUtils;
-import org.bundlemaker.core._type.utils.JavaUtils;
+import org.bundlemaker.core._type.JavaTypeUtils;
+import org.bundlemaker.core._type.JavaUtils;
 import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.parser.bytecode.asm.ArtefactAnalyserClassVisitor;
 import org.bundlemaker.core.parser.bytecode.asm.AsmReferenceRecorder;

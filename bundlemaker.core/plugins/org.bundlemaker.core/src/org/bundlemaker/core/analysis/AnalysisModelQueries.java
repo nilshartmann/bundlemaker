@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.tools.ant.types.selectors.SelectorUtils;
-import org.bundlemaker.core._type.analysis.ITypeArtifact;
+import org.bundlemaker.core._type.ITypeArtifact;
 import org.bundlemaker.core.common.utils.FileUtils;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleIdentifier;

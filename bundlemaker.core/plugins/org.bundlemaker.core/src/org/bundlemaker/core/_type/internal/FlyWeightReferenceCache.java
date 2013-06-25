@@ -12,7 +12,7 @@ package org.bundlemaker.core._type.internal;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
+import org.bundlemaker.core._type.ReferenceAttributes;
 import org.bundlemaker.core.common.FlyWeightStringCache;
 
 /**

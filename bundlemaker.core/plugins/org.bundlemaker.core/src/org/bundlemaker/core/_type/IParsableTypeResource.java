@@ -4,7 +4,6 @@ import java.util.Set;
 
 import org.bundlemaker.core._type.internal.Reference;
 import org.bundlemaker.core._type.internal.Type;
-import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
 
 public interface IParsableTypeResource extends ITypeResource {
 

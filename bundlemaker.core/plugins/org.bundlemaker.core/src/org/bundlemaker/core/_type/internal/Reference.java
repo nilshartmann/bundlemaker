@@ -12,8 +12,8 @@ package org.bundlemaker.core._type.internal;
 
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
+import org.bundlemaker.core._type.ReferenceAttributes;
 import org.bundlemaker.core._type.ReferenceType;
-import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
 import org.bundlemaker.core.common.FlyWeightString;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.resource.IModuleResource;

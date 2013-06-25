@@ -1,4 +1,4 @@
-package org.bundlemaker.core._type.internal.adapter;
+package org.bundlemaker.core._type.internal;
 
 import java.util.Map;
 import java.util.Set;
@@ -6,9 +6,6 @@ import java.util.Set;
 import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeResource;
-import org.bundlemaker.core._type.internal.TypeCache;
-import org.bundlemaker.core._type.internal.TypeModularizedSystem;
-import org.bundlemaker.core._type.internal.TypeResource;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;

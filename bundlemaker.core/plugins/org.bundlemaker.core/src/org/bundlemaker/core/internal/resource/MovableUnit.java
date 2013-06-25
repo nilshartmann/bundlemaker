@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeResource;
-import org.bundlemaker.core._type.utils.JavaTypeUtils;
+import org.bundlemaker.core._type.JavaTypeUtils;
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.internal.analysis.ITempTypeProvider;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;

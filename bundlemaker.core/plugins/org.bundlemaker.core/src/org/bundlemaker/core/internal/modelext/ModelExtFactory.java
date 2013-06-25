@@ -1,6 +1,6 @@
 package org.bundlemaker.core.internal.modelext;
 
-import org.bundlemaker.core._type.internal.adapter.ModelExtension;
+import org.bundlemaker.core._type.internal.ModelExtension;
 import org.bundlemaker.core.spi.modext.IModelExtension;
 
 public class ModelExtFactory {

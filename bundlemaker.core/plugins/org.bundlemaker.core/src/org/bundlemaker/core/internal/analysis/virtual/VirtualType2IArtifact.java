@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.analysis.ITypeArtifact;
+import org.bundlemaker.core._type.ITypeArtifact;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;

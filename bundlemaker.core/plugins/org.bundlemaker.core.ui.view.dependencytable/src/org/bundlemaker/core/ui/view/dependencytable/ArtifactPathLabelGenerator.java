@@ -1,6 +1,6 @@
 package org.bundlemaker.core.ui.view.dependencytable;
 
-import org.bundlemaker.core._type.analysis.ITypeArtifact;
+import org.bundlemaker.core._type.ITypeArtifact;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;

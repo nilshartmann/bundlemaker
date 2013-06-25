@@ -14,13 +14,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bundlemaker.core._type.IModifiableType;
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeResource;
+import org.bundlemaker.core._type.ReferenceAttributes;
 import org.bundlemaker.core._type.TypeEnum;
-import org.bundlemaker.core._type.modifiable.IModifiableType;
-import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
 import org.bundlemaker.core.common.FlyWeightString;
 import org.bundlemaker.core.common.IResource;
 import org.bundlemaker.core.internal.resource.Resource;

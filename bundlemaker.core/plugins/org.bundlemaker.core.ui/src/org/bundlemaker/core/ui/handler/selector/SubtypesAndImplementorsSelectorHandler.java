@@ -13,7 +13,7 @@ package org.bundlemaker.core.ui.handler.selector;
 
 import java.util.List;
 
-import org.bundlemaker.core._type.analysis.selectors.SubtypesAndImplementorsSelector;
+import org.bundlemaker.core._type.SubtypesAndImplementorsSelector;
 import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.handler.AbstractArtifactSelectorHandler;

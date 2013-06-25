@@ -1,7 +1,7 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
 import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.analysis.ITypeArtifact;
+import org.bundlemaker.core._type.ITypeArtifact;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.internal.analysis.AdapterType2IArtifact;

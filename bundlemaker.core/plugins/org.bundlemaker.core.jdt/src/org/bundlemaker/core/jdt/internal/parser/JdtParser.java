@@ -12,7 +12,7 @@ package org.bundlemaker.core.jdt.internal.parser;
 
 import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.utils.JavaTypeUtils;
+import org.bundlemaker.core._type.JavaTypeUtils;
 import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
 import org.bundlemaker.core.jdt.internal.ExtensionRegistryTracker;
 import org.bundlemaker.core.jdt.parser.CoreParserJdt;

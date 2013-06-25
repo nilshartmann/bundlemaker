@@ -10,15 +10,15 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser.bytecode.asm;
 
+import org.bundlemaker.core._type.IModifiableType;
 import org.bundlemaker.core._type.IParsableTypeResource;
+import org.bundlemaker.core._type.IReferenceRecorder;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeResource;
+import org.bundlemaker.core._type.JavaTypeUtils;
+import org.bundlemaker.core._type.ReferenceAttributes;
 import org.bundlemaker.core._type.ReferenceType;
 import org.bundlemaker.core._type.TypeEnum;
-import org.bundlemaker.core._type.modifiable.IModifiableType;
-import org.bundlemaker.core._type.modifiable.IReferenceRecorder;
-import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
-import org.bundlemaker.core._type.utils.JavaTypeUtils;
 import org.bundlemaker.core.spi.parser.IParsableResource;
 import org.eclipse.core.runtime.Assert;
 

@@ -14,9 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core._type.modifiable.IReferenceRecorder;
-import org.bundlemaker.core._type.modifiable.ReferenceAttributes;
-import org.bundlemaker.core._type.utils.JavaTypeUtils;
+import org.bundlemaker.core._type.IReferenceRecorder;
+import org.bundlemaker.core._type.JavaTypeUtils;
+import org.bundlemaker.core._type.ReferenceAttributes;
 import org.eclipse.core.runtime.Assert;
 
 /**

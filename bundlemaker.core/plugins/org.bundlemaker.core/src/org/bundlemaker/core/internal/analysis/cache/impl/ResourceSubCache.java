@@ -1,6 +1,6 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
-import org.bundlemaker.core._type.utils.JavaUtils;
+import org.bundlemaker.core._type.JavaUtils;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;

@@ -2,7 +2,7 @@ package org.bundlemaker.core.itestframework.utils;
 
 import static org.hamcrest.CoreMatchers.is;
 
-import org.bundlemaker.core._type.analysis.ITypeArtifact;
+import org.bundlemaker.core._type.ITypeArtifact;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;

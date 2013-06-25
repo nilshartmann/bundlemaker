@@ -18,8 +18,8 @@ import java.util.Set;
 
 import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.TypeEnum;
+import org.bundlemaker.core._type.internal.DefaultTypeSelector;
 import org.bundlemaker.core._type.internal.Type;
-import org.bundlemaker.core._type.internal.modules.DefaultTypeSelector;
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.common.utils.FileUtils;
 import org.bundlemaker.core.common.utils.VMInstallUtils;

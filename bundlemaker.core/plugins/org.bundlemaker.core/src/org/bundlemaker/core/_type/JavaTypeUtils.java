@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core._type.utils;
+package org.bundlemaker.core._type;
 
 import org.eclipse.core.runtime.Assert;
 

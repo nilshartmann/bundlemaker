@@ -13,7 +13,6 @@ import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.ITypeSelector;
-import org.bundlemaker.core._type.internal.modules.DefaultTypeSelector;
 import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.resource.IModule;

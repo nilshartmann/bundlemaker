@@ -1,4 +1,4 @@
-package org.bundlemaker.core._type.internal.modules;
+package org.bundlemaker.core._type.internal;
 
 import java.util.Set;
 

@@ -1,6 +1,6 @@
 package org.bundlemaker.core.analysis;
 
-import org.bundlemaker.core._type.analysis.ITypeArtifact;
+import org.bundlemaker.core._type.ITypeArtifact;
 
 /**
  * <p>
