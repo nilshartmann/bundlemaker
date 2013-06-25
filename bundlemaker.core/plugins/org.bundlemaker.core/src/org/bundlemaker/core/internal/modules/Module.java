@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,7 +23,6 @@ import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core._type.internal.TypeModule;
 import org.bundlemaker.core.common.ResourceType;
-import org.bundlemaker.core.internal.analysis.ITempTypeProvider;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
@@ -33,7 +31,6 @@ import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingMo
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractTransformationAwareModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
-import org.bundlemaker.core.internal.resource.MovableUnit;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -189,19 +186,6 @@ public class Module implements IModifiableModule {
     return _userAttributes;
   }
 
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // public Set<String> getContainedTypeNames() {
-  // return getContainedTypeNames(new IQueryFilter<String>() {
-  // @Override
-  // public boolean matches(String content) {
-  // return true;
-  // }
-  // });
-  // }
-
   public Group getClassificationGroup() {
     return _classification;
   }
@@ -223,38 +207,6 @@ public class Module implements IModifiableModule {
       ((ModularizedSystem) getModularizedSystem()).fireModuleIdentifierChanged(this);
     }
   }
-
-  // public IType getType(String fullyQualifiedName) {
-  // return _typeContainer.getType(fullyQualifiedName);
-  // }
-  //
-  // public boolean containsType(String fullyQualifiedName) {
-  // return _typeContainer.containsType(fullyQualifiedName);
-  // }
-  //
-  // public boolean containsAll(Set<String> typeNames) {
-  // return _typeContainer.containsAll(typeNames);
-  // }
-  //
-  // public Collection<IType> getContainedTypes() {
-  // return _typeContainer.getContainedTypes();
-  // }
-  //
-  // public Collection<IType> getContainedTypes(IQueryFilter<IType> filter) {
-  // return _typeContainer.getContainedTypes(filter);
-  // }
-  //
-  // public Set<String> getContainedTypeNames(IQueryFilter filter) {
-  // return _typeContainer.getContainedTypeNames(filter);
-  // }
-  //
-  // public void add(IType type) {
-  // _typeContainer.add(type);
-  // }
-  //
-  // public void remove(IType type) {
-  // _typeContainer.remove(type);
-  // }
 
   /**
    * <p>
@@ -305,6 +257,47 @@ public class Module implements IModifiableModule {
 
     //
     _isDetached = false;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addMovableUnit(IMovableUnit movableUnit) {
+    Assert.isNotNull(movableUnit);
+  
+    // add binary resources
+    @SuppressWarnings("unchecked")
+    Set<IResourceStandin> resourceStandins = new HashSet<IResourceStandin>(
+        (List<IResourceStandin>) movableUnit.getAssociatedBinaryResources());
+    addAll(resourceStandins, ResourceType.BINARY);
+  
+    // add source resources
+    if (movableUnit.hasAssociatedSourceResource()) {
+      add((IResourceStandin) movableUnit.getAssociatedSourceResource(), ResourceType.SOURCE);
+    }
+  
+    //
+    ((ModularizedSystem) getModularizedSystem()).fireMovableUnitEvent(movableUnit, this, ChangeAction.ADDED);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void removeMovableUnit(IMovableUnit movableUnit) {
+    Assert.isNotNull(movableUnit);
+  
+    // add binary resources
+    removeAll(movableUnit.getAssociatedBinaryResources(), ResourceType.BINARY);
+  
+    // add source resources
+    if (movableUnit.hasAssociatedSourceResource()) {
+      remove(movableUnit.getAssociatedSourceResource(), ResourceType.SOURCE);
+    }
+  
+    //
+    ((ModularizedSystem) getModularizedSystem()).fireMovableUnitEvent(movableUnit, this, ChangeAction.REMOVED);
   }
 
   @Override
@@ -398,115 +391,10 @@ public class Module implements IModifiableModule {
     return Collections.unmodifiableSet(result);
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public List<IMovableUnit> getMovableUnits() {
-
-    // the result
-    List<IMovableUnit> result = new LinkedList<IMovableUnit>();
-
-    // iterate over all types
-    for (IType type : _typeContainer.getContainedTypes()) {
-
-      //
-      IMovableUnit movableUnit = MovableUnit.createFromType(type, getModularizedSystem());
-
-      //
-      if (!result.contains(movableUnit)) {
-        result.add(movableUnit);
-      }
-    }
-
-    // iterate over all resources
-    for (IModuleResource resource : getResources(ResourceType.BINARY)) {
-      if (!resource.adaptAs(ITypeResource.class).containsTypes()) {
-
-        //
-        IMovableUnit movableUnit = MovableUnit.createFromResource(resource, getModularizedSystem());
-
-        //
-        if (!result.contains(movableUnit)) {
-          result.add(movableUnit);
-        }
-      }
-    }
-
-    // iterate over all resources
-    for (IModuleResource resource : getResources(ResourceType.SOURCE)) {
-      if (!resource.adaptAs(ITypeResource.class).containsTypes()) {
-
-        //
-        IMovableUnit movableUnit = MovableUnit.createFromResource(resource, getModularizedSystem());
-
-        //
-        if (!result.contains(movableUnit)) {
-          result.add(movableUnit);
-        }
-      }
-    }
-
-    // return the result
-    return Collections.unmodifiableList(result);
-  }
-
   @Override
   public boolean containsSources() {
     return !getResources(ResourceType.SOURCE).isEmpty();
   }
-
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // public Set<String> getReferencedTypeNames(IQueryFilter<IReference> filter) {
-  //
-  // //
-  // Set<IReference> references = getReferences(filter);
-  //
-  // //
-  // Set<String> result = new HashSet<String>();
-  // for (IReference reference : references) {
-  // result.add(reference.getFullyQualifiedName());
-  // }
-  //
-  // //
-  // return Collections.unmodifiableSet(result);
-  // }
-
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // public Set<String> getReferencedPackageNames(IQueryFilter<IReference> filter) {
-  //
-  // //
-  // Set<IReference> references = getReferences(filter);
-  //
-  // //
-  // Set<String> result = new HashSet<String>();
-  // for (IReference reference : references) {
-  //
-  // if (reference.getFullyQualifiedName().indexOf('.') != -1) {
-  // result.add(reference.getFullyQualifiedName().substring(0, reference.getFullyQualifiedName().lastIndexOf('.')));
-  // } else {
-  // // TODO: brauchen wir das ?
-  // // result.add("");
-  // }
-  // }
-  //
-  // //
-  // return result;
-  // }
-
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // public IModule getResourceModule() {
-  // return (IModule) getModule();
-  // }
 
   /**
    * {@inheritDoc}
@@ -569,6 +457,10 @@ public class Module implements IModifiableModule {
     //
     if (getModifiableResourcesSet(contentType).contains(resource)) {
 
+      for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
+        _typeContainer.remove(type);
+      }
+
       // add the resource to the resource set...
       getModifiableResourcesSet(contentType).remove(resource);
 
@@ -588,77 +480,21 @@ public class Module implements IModifiableModule {
     Assert.isNotNull(resources);
     Assert.isNotNull(contentType);
 
+    // ... and add all contained types to the cache
+    for (IModuleResource resource : resources) {
+      for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
+        _typeContainer.remove(type);
+      }
+    }
+
     // add the resource to the resource set...
     getModifiableResourcesSet(contentType).removeAll(resources);
-
-    // // ... and add all contained types to the cache
-    // try {
-    // for (IResource resource : resources) {
-    // for (IType type : resource.getContainedTypes()) {
-    // remove(type);
-    // }
-    // }
-    // } catch (Exception e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
 
     // notify
     if (hasModularizedSystem()) {
       ((AbstractCachingModularizedSystem) getModularizedSystem()).resourcesChanged(resources,
           this, ChangeAction.REMOVED);
     }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void addMovableUnit(IMovableUnit movableUnit) {
-    Assert.isNotNull(movableUnit);
-
-    // add all types
-    for (IType type : ((ITempTypeProvider) movableUnit).getAssociatedTypes()) {
-      _typeContainer.add(type);
-    }
-
-    // add binary resources
-    @SuppressWarnings("unchecked")
-    Set<IResourceStandin> resourceStandins = new HashSet<IResourceStandin>(
-        (List<IResourceStandin>) movableUnit.getAssociatedBinaryResources());
-    addAll(resourceStandins, ResourceType.BINARY);
-
-    // add source resources
-    if (movableUnit.hasAssociatedSourceResource()) {
-      add((IResourceStandin) movableUnit.getAssociatedSourceResource(), ResourceType.SOURCE);
-    }
-
-    //
-    ((ModularizedSystem) getModularizedSystem()).fireMovableUnitEvent(movableUnit, this, ChangeAction.ADDED);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void removeMovableUnit(IMovableUnit movableUnit) {
-    Assert.isNotNull(movableUnit);
-
-    // add all types
-    for (IType type : ((ITempTypeProvider) movableUnit).getAssociatedTypes()) {
-      _typeContainer.remove(type);
-    }
-
-    // add binary resources
-    removeAll(movableUnit.getAssociatedBinaryResources(), ResourceType.BINARY);
-
-    // add source resources
-    if (movableUnit.hasAssociatedSourceResource()) {
-      remove(movableUnit.getAssociatedSourceResource(), ResourceType.SOURCE);
-    }
-
-    //
-    ((ModularizedSystem) getModularizedSystem()).fireMovableUnitEvent(movableUnit, this, ChangeAction.REMOVED);
   }
 
   /**

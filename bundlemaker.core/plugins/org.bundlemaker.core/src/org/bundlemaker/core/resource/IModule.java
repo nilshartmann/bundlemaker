@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.resource;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -127,12 +126,4 @@ public interface IModule extends IGenericAdaptable {
    * @return
    */
   Set<? extends IModuleResource> getResources(ResourceType conentType);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  List<IMovableUnit> getMovableUnits();
 }
