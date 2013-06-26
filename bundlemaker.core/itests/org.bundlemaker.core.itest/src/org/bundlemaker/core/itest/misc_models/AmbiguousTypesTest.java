@@ -13,6 +13,7 @@ import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -28,6 +29,7 @@ public class AmbiguousTypesTest extends AbstractBundleMakerModelTest {
    * </p>
    */
   @Test
+  @Ignore
   public void testAmbiguousTypes() {
 
     // set the 'new' type selector
