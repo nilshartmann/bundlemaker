@@ -9,6 +9,7 @@ import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact.IResourceArtifactContent;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.spi.analysis.IReferencedArtifact;
 import org.bundlemaker.core.spi.analysis.IReferencingArtifact;
@@ -93,7 +94,7 @@ public class ArtifactVisitorUtils {
       }
 
       @Override
-      public boolean visit(ITypeArtifact typeArtifact) {
+      public boolean visit(IResourceArtifactContent typeArtifact) {
         resultCount[5]++;
         return true;
       }

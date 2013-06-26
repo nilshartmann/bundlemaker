@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.analysis.virtual;
+package org.bundlemaker.core._type.internal;
 
 import java.util.Collection;
 import java.util.Collections;

@@ -5,6 +5,7 @@ import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact.IResourceArtifactContent;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.itestframework.jedit_model.AbstractJeditAnalysisModelTest;
 import org.junit.Assert;
@@ -55,20 +56,25 @@ public class MissingTypesTest extends AbstractJeditAnalysisModelTest {
 
     // assert 'virtual' & type count
     moduleArtifact.accept(new IAnalysisModelVisitor.Adapter() {
-      
+
       @Override
-      public boolean visit(ITypeArtifact typeArtifact) {
+      public boolean visit(IResourceArtifactContent resourceArtifactContent) {
+
+        if (!(resourceArtifactContent instanceof ITypeArtifact)) {
+          return false;
+        }
+
         missingTypesCount[0]++;
         return false;
       }
-      
+
       @Override
       public boolean onVisit(IBundleMakerArtifact artifact) {
         Assert.assertTrue(artifact.isVirtual());
         return true;
       }
     });
-    
+
     //
     Assert.assertEquals(52, missingTypesCount[0]);
   }

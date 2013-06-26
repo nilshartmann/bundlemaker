@@ -1,15 +1,13 @@
-package org.bundlemaker.core.internal.analysis.cache.impl;
+package org.bundlemaker.core._type.internal;
 
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeArtifact;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.common.ResourceType;
-import org.bundlemaker.core.internal.analysis.AdapterType2IArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.cache.ModulePackageKey;
-import org.bundlemaker.core.internal.analysis.cache.TypeKey;
-import org.bundlemaker.core.internal.analysis.virtual.VirtualType2IArtifact;
+import org.bundlemaker.core.internal.analysis.cache.impl.AbstractSubCache;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;

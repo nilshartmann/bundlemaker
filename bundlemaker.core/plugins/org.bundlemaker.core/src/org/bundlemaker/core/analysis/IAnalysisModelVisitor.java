@@ -1,6 +1,6 @@
 package org.bundlemaker.core.analysis;
 
-import org.bundlemaker.core._type.ITypeArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact.IResourceArtifactContent;
 
 /**
  * <p>
@@ -50,11 +50,10 @@ public interface IAnalysisModelVisitor {
    * <p>
    * </p>
    * 
-   * @param typeArtifact
+   * @param resourceArtifactContent
    * @return
    */
-  @Deprecated
-  boolean visit(ITypeArtifact typeArtifact);
+  boolean visit(IResourceArtifactContent resourceArtifactContent);
 
   /**
    * <p>
@@ -93,9 +92,12 @@ public interface IAnalysisModelVisitor {
       return onVisit(resourceArtifact);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean visit(ITypeArtifact typeArtifact) {
-      return onVisit(typeArtifact);
+    public boolean visit(IResourceArtifactContent resourceArtifactContent) {
+      return onVisit(resourceArtifactContent);
     }
 
     @Override

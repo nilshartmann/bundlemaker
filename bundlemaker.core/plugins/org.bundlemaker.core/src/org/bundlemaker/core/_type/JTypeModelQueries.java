@@ -1,4 +1,4 @@
-package org.bundlemaker.core.analysis;
+package org.bundlemaker.core._type;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,10 +10,16 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.tools.ant.types.selectors.SelectorUtils;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
+import org.bundlemaker.core.analysis.IGroupArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IPackageArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact.IResourceArtifactContent;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.common.utils.FileUtils;
-import org.bundlemaker.core.resource.IModule;
-import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 
@@ -24,139 +30,7 @@ import org.eclipse.core.runtime.IPath;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AnalysisModelQueries {
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public static List<IDependency> getCoreDependencies(Collection<IDependency> dependencies) {
-
-    if (dependencies == null) {
-      return Collections.emptyList();
-    }
-
-    //
-    final List<IDependency> result = new LinkedList<IDependency>();
-
-    for (IDependency dependency : dependencies) {
-      for (IDependency coreDependency : dependency.getCoreDependencies()) {
-        result.add(coreDependency);
-      }
-    }
-
-    return result;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param artifact
-   * @param fullyQualifiedName
-   * @return
-   */
-  public static IBundleMakerArtifact getReferencedArtifact(IBundleMakerArtifact artifact, String fullyQualifiedName) {
-
-    //
-    Assert.isNotNull(artifact);
-    Assert.isNotNull(fullyQualifiedName);
-
-    //
-    for (IDependency dependency : artifact.getDependenciesTo()) {
-      if (fullyQualifiedName.equals(dependency.getTo().getQualifiedName())) {
-        return dependency.getTo();
-      }
-    }
-
-    //
-    return null;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param rootArtifact
-   * @return
-   */
-  public static IModuleArtifact getModuleArtifact(IRootArtifact rootArtifact, String moduleName) {
-
-    //
-    Assert.isNotNull(rootArtifact);
-    Assert.isNotNull(moduleName);
-
-    //
-    Collection<IModule> modules = rootArtifact.getModularizedSystem().getModules(moduleName);
-    if (modules.size() > 1) {
-      throwException(String.format("Found multiple modules with module name '%s'.", moduleName));
-    }
-
-    //
-    return modules.size() == 1 ? rootArtifact.getModuleArtifact(modules.toArray(new IModule[0])[0]) : null;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param rootArtifact
-   * @param moduleName
-   * @param version
-   * @return
-   */
-  public static IModuleArtifact getModuleArtifact(IBundleMakerArtifact rootArtifact, String moduleName, String version) {
-
-    //
-    Assert.isNotNull(rootArtifact);
-    Assert.isNotNull(moduleName);
-    Assert.isNotNull(version);
-
-    //
-    IModule module = rootArtifact.getModularizedSystem().getModule(moduleName, version);
-
-    //
-    return module != null ? rootArtifact.getRoot().getModuleArtifact(module) : null;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param rootArtifact
-   * @param identifier
-   * @return
-   */
-  public static IModuleArtifact getModuleArtifact(IRootArtifact rootArtifact, IModuleIdentifier identifier) {
-
-    //
-    Assert.isNotNull(rootArtifact);
-    Assert.isNotNull(identifier);
-
-    //
-    IModule module = rootArtifact.getModularizedSystem().getModule(identifier);
-
-    //
-    return module != null ? rootArtifact.getModuleArtifact(module) : null;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param root
-   * @return
-   */
-  public static IModuleArtifact getJreModuleArtifact(IBundleMakerArtifact root) {
-
-    //
-    IModule jreModule = root.getModularizedSystem().getExecutionEnvironment();
-
-    //
-    return root.getRoot().getModuleArtifact(jreModule);
-  }
+public class JTypeModelQueries {
 
   /**
    * <p>
@@ -195,101 +69,24 @@ public class AnalysisModelQueries {
    * <p>
    * </p>
    * 
-   * @return
+   * @param packageArtifact
+   * @param string
    */
-  public static Set<IBundleMakerArtifact> getDirectlyReferencedArtifacts(IBundleMakerArtifact artifact) {
-
-    //
-    Set<IBundleMakerArtifact> result = new HashSet<IBundleMakerArtifact>();
-
-    //
-    for (IDependency dependency : artifact.getDependenciesTo()) {
-
-      result.add(dependency.getTo());
-    }
-
-    //
-    return result;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public static List<IBundleMakerArtifact> getReferencingArtifacts(IBundleMakerArtifact artifact) {
-
-    //
-    List<IBundleMakerArtifact> result = new LinkedList<IBundleMakerArtifact>();
-
-    //
-    for (IDependency dependency : artifact.getDependenciesFrom()) {
-
-      result.add(dependency.getTo());
-    }
-
-    //
-    return result;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public static List<IBundleMakerArtifact> getReferencingArtifactsFrom(IBundleMakerArtifact artifact,
-      IBundleMakerArtifact from) {
-
-    //
-    List<IBundleMakerArtifact> result = new LinkedList<IBundleMakerArtifact>();
-
-    //
-    for (IDependency dependency : artifact.getDependenciesFrom(from)) {
-
-      result.add(dependency.getTo());
-    }
-
-    //
-    return result;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param artifact
-   * @return
-   */
-  public static Set<IBundleMakerArtifact> getIndirectlyReferencedArtifacts(IBundleMakerArtifact artifact) {
-
-    //
-    return resolveReferencedArtifacts(artifact, new HashSet<IBundleMakerArtifact>(), true);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param root
-   * @param fullyQualifiedName
-   * @return
-   */
-  public static IGroupArtifact findGroupArtifactByQualifiedName(IBundleMakerArtifact root,
-      final String fullyQualifiedName) {
+  public static ITypeArtifact findTypeArtifactByQualifiedName(IBundleMakerArtifact root, final String qualifiedName) {
 
     // create the result array
-    final List<IGroupArtifact> result = new LinkedList<IGroupArtifact>();
+    final List<ITypeArtifact> result = new LinkedList<ITypeArtifact>();
 
     // visit
     root.accept(new IAnalysisModelVisitor.Adapter() {
       @Override
-      public boolean visit(IGroupArtifact groupArtifact) {
+      public boolean visit(IResourceArtifactContent resourceArtifact) {
 
         //
-        if (groupArtifact.getQualifiedName().equals(fullyQualifiedName)) {
-          result.add(groupArtifact);
+        if (resourceArtifact instanceof ITypeArtifact) {
+          if (((ITypeArtifact) resourceArtifact).getAssociatedType().getFullyQualifiedName().equals(qualifiedName)) {
+            result.add((ITypeArtifact) resourceArtifact);
+          }
         }
 
         //
@@ -299,45 +96,20 @@ public class AnalysisModelQueries {
 
     //
     if (result.size() > 1) {
-      throwException(String.format("Multiple groups with qualified name '%s' exist.", fullyQualifiedName));
+      throwException(String.format("Multiple types with name '%s' exist.", qualifiedName));
+    } else if (result.size() == 0) {
+      return null;
     }
 
     // return result
-    return result.size() > 0 ? result.get(0) : null;
+    return result.get(0);
   }
 
-  /**
-   * <p>
-   * </p>
-   */
-  public static IResourceArtifact findResourceArtifactByQualifiedName(IBundleMakerArtifact root,
-      final String fullyQualifiedName) {
+  public static List<ITypeArtifact> findTypeArtifactsByQualifiedName(IBundleMakerArtifact root,
+      final String qualifiedName) {
 
     // create the result array
-    final List<IResourceArtifact> result = findResourceArtifactsByQualifiedName(root,
-        fullyQualifiedName);
-    //
-    if (result.size() > 1) {
-      throwException(String.format("Multiple resources with path name '%s' exist.", fullyQualifiedName));
-    }
-
-    // return result
-    return result.size() > 0 ? result.get(0) : null;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param root
-   * @param fullyQualifiedName
-   * @return
-   */
-  public static List<IResourceArtifact> findResourceArtifactsByQualifiedName(IBundleMakerArtifact root,
-      final String fullyQualifiedName) {
-
-    // create the result array
-    final List<IResourceArtifact> result = new LinkedList<IResourceArtifact>();
+    final List<ITypeArtifact> result = new LinkedList<ITypeArtifact>();
 
     // visit
     root.accept(new IAnalysisModelVisitor.Adapter() {
@@ -345,10 +117,11 @@ public class AnalysisModelQueries {
       public boolean visit(IResourceArtifact resourceArtifact) {
 
         //
-        if (resourceArtifact.getQualifiedName().equals(fullyQualifiedName)) {
-          result.add(resourceArtifact);
+        if (resourceArtifact instanceof ITypeArtifact) {
+          if (((ITypeArtifact) resourceArtifact).getAssociatedType().getFullyQualifiedName().equals(qualifiedName)) {
+            result.add((ITypeArtifact) resourceArtifact);
+          }
         }
-
         //
         return true;
       }
@@ -439,70 +212,6 @@ public class AnalysisModelQueries {
     // return result
     return result;
 
-  }
-
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param root
-  // * @param fullyQualifiedName
-  // * @return
-  // */
-  // public static List<IPackageArtifact> findPackageArtifactsByQualifiedName(IBundleMakerArtifact root,
-  // final String fullyQualifiedName, boolean include subpackages) {
-  //
-  // // create the result array
-  // final List<IPackageArtifact> result = new LinkedList<IPackageArtifact>();
-  //
-  // // visit
-  // root.accept(new IAnalysisModelVisitor.Adapter() {
-  // @Override
-  // public boolean visit(IPackageArtifact packageArtifact) {
-  //
-  // //
-  // if (packageArtifact.getQualifiedName().equals(fullyQualifiedName)) {
-  // result.add(packageArtifact);
-  // }
-  //
-  // //
-  // return true;
-  // }
-  // });
-  //
-  // // return result
-  // return result;
-  // }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param clazz
-   * @param root
-   * @param fullyQualifiedName
-   * 
-   * @return
-   */
-  public static <T extends IBundleMakerArtifact> List<T> findArtifactsByQualifiedName(Class<T> clazz,
-      IBundleMakerArtifact root, final String fullyQualifiedName) {
-
-    // create the result array
-    final List<T> result = new LinkedList<T>();
-
-    // visit
-    root.accept(new GenericAnalysisModelVisitor<T>(clazz) {
-
-      @Override
-      protected void onHandle(T t) {
-        if (t.getQualifiedName().equals(fullyQualifiedName)) {
-          result.add(t);
-        }
-      }
-    });
-
-    // return result
-    return result;
   }
 
   /**
@@ -664,7 +373,7 @@ public class AnalysisModelQueries {
         } else {
           String artifactName = artifact.getName();
           String artifactQualifiedName = artifact.getQualifiedName();
-          if (clazz.isAssignableFrom(IPackageArtifact.class) || clazz.isAssignableFrom(IResourceArtifactContent.class)) {
+          if (clazz.isAssignableFrom(IPackageArtifact.class) || clazz.isAssignableFrom(ITypeArtifact.class)) {
             artifactName = artifactName.replace('.', '/');
             artifactQualifiedName = artifactQualifiedName.replace('.', '/');
             value = value.replace('.', '/');
