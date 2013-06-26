@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.exporter;
+package org.bundlemaker.core._type;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -18,10 +18,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core._type.IReference;
-import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.common.ResourceType;
+import org.bundlemaker.core.exporter.AbstractExporter;
+import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;

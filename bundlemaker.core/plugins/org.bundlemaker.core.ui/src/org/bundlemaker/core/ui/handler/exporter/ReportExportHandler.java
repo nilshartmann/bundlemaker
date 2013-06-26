@@ -12,8 +12,8 @@ package org.bundlemaker.core.ui.handler.exporter;
 
 import java.io.File;
 
+import org.bundlemaker.core._type.SimpleReportExporter;
 import org.bundlemaker.core.exporter.IModuleExporter;
-import org.bundlemaker.core.exporter.SimpleReportExporter;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;

@@ -119,7 +119,6 @@ public class ModularizedSystemExporterAdapter implements IModularizedSystemExpor
           } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            new SimpleReportExporter().export(modularizedSystem, _currentModule, context, subMonitor.newChild(1));
           }
           postExportModule();
 
