@@ -21,6 +21,7 @@ public interface IModelExtension {
 
   /**
    * <p>
+   * Is called once directly after the {@link IModelExtension} has been created.
    * </p>
    */
   public void initialize();
