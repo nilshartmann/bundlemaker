@@ -4,10 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeResource;
-import org.bundlemaker.core._type.internal.TypeKey;
-import org.bundlemaker.core._type.internal.TypeSubCache;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
@@ -345,22 +342,6 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
       }
     }
 
-    // TODO
-    if (((ITempTypeProvider) movableUnit).hasAssociatedTypes()) {
-
-      for (IType type : ((ITempTypeProvider) movableUnit).getAssociatedTypes()) {
-
-        // filter local or anonymous type names
-        if (!type.isLocalOrAnonymousType()) {
-          TypeKey typeKey = new TypeKey(type);
-          IBundleMakerArtifact artifact = _artifactCache.getTypeCache().getOrCreate(typeKey);
-          AbstractArtifactContainer parentArtifact = _artifactCache.getTypeCache().getTypeParent(
-              typeKey.getType());
-          parentArtifact.internalAddArtifact(artifact);
-        }
-      }
-    }
-
     //
     handleModelModification();
   }
@@ -420,18 +401,6 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
 
       if (artifact != null && artifact.getParent() != null) {
         ((AdapterPackage2IArtifact) artifact.getParent()).internalRemoveArtifact(artifact);
-      }
-    } else if (((ITempTypeProvider) movableUnit).hasAssociatedTypes()) {
-      for (IType type : ((ITempTypeProvider) movableUnit).getAssociatedTypes()) {
-
-        //
-        TypeSubCache typeCache = _artifactCache.getTypeCache();
-
-        //
-        IBundleMakerArtifact artifact = typeCache.get(new TypeKey(type));
-        if (artifact != null && artifact.getParent() != null) {
-          ((AbstractArtifactContainer) artifact.getParent()).internalRemoveArtifact(artifact);
-        }
       }
     }
   }
