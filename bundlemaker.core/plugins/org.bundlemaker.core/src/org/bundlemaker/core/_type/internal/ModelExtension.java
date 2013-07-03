@@ -8,6 +8,7 @@ import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.ITypeResource;
+import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
@@ -89,6 +90,12 @@ public class ModelExtension implements IModelExtension {
     for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
       module.adaptAs(ITypeModule.class).remove(type);
     }
+  }
+
+  @Override
+  public void setupResourceArtifact(IResourceArtifact resourceArtifact, IModuleResource resource) {
+
+    ITypeResource typeResource = resource.adaptAs(ITypeResource.class);
   }
 
   /**

@@ -10,16 +10,15 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.analysis.cache;
 
-import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeArtifact;
 import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeModule;
-import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core._type.internal.TypeKey;
 import org.bundlemaker.core._type.internal.TypeSubCache;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
@@ -29,6 +28,7 @@ import org.bundlemaker.core.internal.analysis.cache.impl.PackageSubCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.ResourceSubCache;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
+import org.bundlemaker.core.internal.modelext.ModelExtFactory;
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractModularizedSystem;
 import org.bundlemaker.core.resource.IModularizedSystem;
@@ -324,19 +324,19 @@ public class ArtifactCache {
       progressMonitor.beginTask("Creating analysis model...", count);
     }
 
-    // MISSING TYPES: create virtual module for missing types
-    if (getConfiguration().isIncludeVirtualModuleForMissingTypes()) {
-
-      // add the
-      for (IModule module : modules) {
-        if (module instanceof IModifiableModule) {
-          for (IReference iReference : ((IModifiableModularizedSystem) getModularizedSystem())
-              .adaptAs(ITypeModularizedSystem.class).getUnsatisfiedReferences((IModifiableModule) module)) {
-            getTypeCache().getOrCreate(new TypeKey(iReference.getFullyQualifiedName()));
-          }
-        }
-      }
-    }
+    // // MISSING TYPES: create virtual module for missing types
+    // if (getConfiguration().isIncludeVirtualModuleForMissingTypes()) {
+    //
+    // // add the
+    // for (IModule module : modules) {
+    // if (module instanceof IModifiableModule) {
+    // for (IReference iReference : ((IModifiableModularizedSystem) getModularizedSystem())
+    // .adaptAs(ITypeModularizedSystem.class).getUnsatisfiedReferences((IModifiableModule) module)) {
+    // getTypeCache().getOrCreate(new TypeKey(iReference.getFullyQualifiedName()));
+    // }
+    // }
+    // }
+    // }
 
     // iterate over all the type modules
     for (IModule module : modules) {
@@ -344,20 +344,20 @@ public class ArtifactCache {
       //
       this.getModuleArtifact(module);
 
-      // add all types
-      for (IType type : ((ITypeModule) module.getAdapter(ITypeModule.class)).getContainedTypes()) {
-
-        if (progressMonitor != null) {
-          progressMonitor.worked(1);
-        }
-
-        // filter local or anonymous type names
-        if (!type.isLocalOrAnonymousType()) {
-
-          // create the artifact
-          this.getTypeArtifact(type, true);
-        }
-      }
+      // // add all types
+      // for (IType type : ((ITypeModule) module.getAdapter(ITypeModule.class)).getContainedTypes()) {
+      //
+      // if (progressMonitor != null) {
+      // progressMonitor.worked(1);
+      // }
+      //
+      // // filter local or anonymous type names
+      // if (!type.isLocalOrAnonymousType()) {
+      //
+      // // create the artifact
+      // this.getTypeArtifact(type, true);
+      // }
+      // }
 
       // cast to 'IResourceModule'
       if (module instanceof IModifiableModule) {
@@ -372,10 +372,12 @@ public class ArtifactCache {
             progressMonitor.worked(1);
           }
 
-          if (!resource.adaptAs(ITypeResource.class).containsTypes()) {
-            // create the artifact
-            this.getResourceArtifact(resource);
-          }
+          // if (!resource.adaptAs(ITypeResource.class).containsTypes()) {
+          // create the artifact
+          IResourceArtifact resourceArtifact = this.getResourceArtifact(resource);
+
+          ModelExtFactory.getModelExtension().setupResourceArtifact(resourceArtifact, resource);
+          // }
         }
       }
     }
