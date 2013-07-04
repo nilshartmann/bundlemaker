@@ -4,11 +4,14 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core._type.IParsableTypeResource;
+import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
+import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
@@ -89,6 +92,26 @@ public class ModelExtension implements IModelExtension {
   public void resourceRemoved(IModule module, IModuleResource resource) {
     for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
       module.adaptAs(ITypeModule.class).remove(type);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void prepareAnalysisModel(IModule[] modules, ArtifactCache artifactCache) {
+
+    // MISSING TYPES: create virtual module for missing types
+    if (artifactCache.getConfiguration().isIncludeVirtualModuleForMissingTypes()) {
+
+      // add the
+      for (IModule module : modules) {
+        if (module instanceof IModifiableModule) {
+          for (IReference iReference : artifactCache.getModularizedSystem()
+              .adaptAs(ITypeModularizedSystem.class).getUnsatisfiedReferences((IModifiableModule) module)) {
+            artifactCache.getTypeCache().getOrCreate(new TypeKey(iReference.getFullyQualifiedName()));
+          }
+        }
+      }
     }
   }
 

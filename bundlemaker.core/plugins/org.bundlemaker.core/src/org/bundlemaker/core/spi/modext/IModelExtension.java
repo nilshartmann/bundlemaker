@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
@@ -78,6 +79,9 @@ public interface IModelExtension {
    * @param resource
    */
   public void resourceRemoved(IModule module, IModuleResource resource);
+
+  //
+  void prepareAnalysisModel(IModule[] modules, ArtifactCache artifactCache);
 
   /**
    * <p>

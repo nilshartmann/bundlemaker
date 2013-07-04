@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.analysis.cache;
 
-import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeArtifact;
 import org.bundlemaker.core._type.ITypeModularizedSystem;
@@ -314,7 +313,6 @@ public class ArtifactCache {
     //
     int count = 0;
     for (IModule module : modules) {
-      count = count + module.adaptAs(ITypeModule.class).getContainedTypes().size();
       if (module instanceof IModifiableModule) {
         IModifiableModule resourceModule = (IModifiableModule) module;
         count = count + resourceModule.getResources(getConfiguration().getContentType()).size();
@@ -326,29 +324,19 @@ public class ArtifactCache {
       progressMonitor.beginTask("Creating analysis model...", count);
     }
 
-    // MISSING TYPES: create virtual module for missing types
-    if (getConfiguration().isIncludeVirtualModuleForMissingTypes()) {
-
-      // add the
-      for (IModule module : modules) {
-        if (module instanceof IModifiableModule) {
-          for (IReference iReference : ((IModifiableModularizedSystem) getModularizedSystem())
-              .adaptAs(ITypeModularizedSystem.class).getUnsatisfiedReferences((IModifiableModule) module)) {
-            getTypeCache().getOrCreate(new TypeKey(iReference.getFullyQualifiedName()));
-          }
-        }
-      }
-    }
+    // prepare analysis model
+    ModelExtFactory.getModelExtension().prepareAnalysisModel(modules, this);
 
     // iterate over all the type modules
     for (IModule module : modules) {
 
-      //
+      // create the module artifact
       this.getModuleArtifact(module);
 
       // add all types
       for (IType type : ((ITypeModule) module.getAdapter(ITypeModule.class)).getContainedTypes()) {
 
+        //
         if (progressMonitor != null) {
           progressMonitor.worked(1);
         }
@@ -361,25 +349,17 @@ public class ArtifactCache {
         }
       }
 
-      // cast to 'IResourceModule'
-      if (module instanceof IModifiableModule) {
+      // iterate over all contained resources
+      for (IModuleResource resource : module.getResources(getConfiguration().getContentType())) {
 
-        // get the resource module
-        IModifiableModule resourceModule = (IModifiableModule) module;
+        if (progressMonitor != null) {
+          progressMonitor.worked(1);
+        }
 
-        // iterate over all contained resources
-        for (IModuleResource resource : resourceModule.getResources(getConfiguration().getContentType())) {
-
-          if (progressMonitor != null) {
-            progressMonitor.worked(1);
-          }
-
-          if (!resource.adaptAs(ITypeResource.class).containsTypes()) {
-            // create the artifact
-            IResourceArtifact resourceArtifact = this.getResourceArtifact(resource);
-
-            ModelExtFactory.getModelExtension().setupResourceArtifact(resourceArtifact, resource);
-          }
+        if (!resource.adaptAs(ITypeResource.class).containsTypes()) {
+          // create the artifact
+          IResourceArtifact resourceArtifact = this.getResourceArtifact(resource);
+          ModelExtFactory.getModelExtension().setupResourceArtifact(resourceArtifact, resource);
         }
       }
     }
