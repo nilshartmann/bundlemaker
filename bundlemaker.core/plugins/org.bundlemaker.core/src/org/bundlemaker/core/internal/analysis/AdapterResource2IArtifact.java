@@ -65,11 +65,6 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
 
     //
     _movableUnit = resource.getMovableUnit();
-
-    //
-    if (_movableUnit == null) {
-      System.out.println(_movableUnit);
-    }
   }
 
   public List<? extends IModuleResource> getAssociatedBinaryResources() {
