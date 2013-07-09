@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
-import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModule;
@@ -48,7 +47,8 @@ public interface IModelExtension {
    * @param newAndModifiedSourceResources
    */
   public void beforeParse(IProjectContentEntry projectContent, IParserContext resourceCache,
-      Set<IResourceStandin> newAndModifiedBinaryResources, Set<IResourceStandin> newAndModifiedSourceResources);
+      Set<? extends IModuleResource> newAndModifiedBinaryResources,
+      Set<? extends IModuleResource> newAndModifiedSourceResources);
 
   /**
    * <p>
@@ -60,25 +60,8 @@ public interface IModelExtension {
    * @param newAndModifiedSourceResources
    */
   public void afterParse(IProjectContentEntry projectContent, IParserContext resourceCache,
-      Set<IResourceStandin> newAndModifiedBinaryResources, Set<IResourceStandin> newAndModifiedSourceResources);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param module
-   * @param resource
-   */
-  public void resourceAdded(IModule module, IModuleResource resource);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param module
-   * @param resource
-   */
-  public void resourceRemoved(IModule module, IModuleResource resource);
+      Set<? extends IModuleResource> newAndModifiedBinaryResources,
+      Set<? extends IModuleResource> newAndModifiedSourceResources);
 
   //
   void prepareAnalysisModel(IModule[] modules, ArtifactCache artifactCache);

@@ -53,6 +53,10 @@ public class ArtefactAnalyserClassVisitor extends EmptyVisitor implements ClassV
     _analyzeReferences = analyzeReferences;
   }
 
+  public void visitSource(final String source, final String debug) {
+    // System.out.println(source + " : " + debug);
+  }
+  
   /**
    * @inheritDoc
    */

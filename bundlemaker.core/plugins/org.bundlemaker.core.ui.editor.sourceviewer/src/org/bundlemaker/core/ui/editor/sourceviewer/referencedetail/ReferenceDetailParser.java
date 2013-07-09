@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.core._type.JavaTypeUtils;
 import org.bundlemaker.core.common.IResource;
 import org.bundlemaker.core.common.utils.VMInstallUtils;
 import org.bundlemaker.core.project.IProjectContentEntry;
@@ -31,7 +30,7 @@ public class ReferenceDetailParser implements IReferenceDetailParser {
 
     //
     try {
-      IMovableUnit movableUnit = resource.getMovableUnit(modularizedSystem);
+      IMovableUnit movableUnit = resource.getMovableUnit();
       CompilationUnit compilationUnit = parse(movableUnit.getAssociatedSourceResource(),
           modularizedSystem.getBundleMakerProject());
       JdtAstVisitor jdtAstVisitor = new JdtAstVisitor();

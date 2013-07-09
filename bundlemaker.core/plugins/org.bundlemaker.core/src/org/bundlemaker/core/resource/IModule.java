@@ -126,4 +126,12 @@ public interface IModule extends IGenericAdaptable {
    * @return
    */
   Set<? extends IModuleResource> getResources(ResourceType conentType);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Set<? extends IMovableUnit> getMovableUnits();
 }

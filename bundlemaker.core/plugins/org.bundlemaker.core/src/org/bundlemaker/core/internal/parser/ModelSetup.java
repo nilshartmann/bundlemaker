@@ -171,6 +171,11 @@ public class ModelSetup {
 
       progressMonitor.worked(1);
 
+      //
+      for (IProjectContentEntry contentEntry : projectContents) {
+        ((ProjectContentEntry) contentEntry).setupMovableUnits();
+      }
+
     } finally {
       progressMonitor.done();
     }

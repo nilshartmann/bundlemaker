@@ -9,7 +9,9 @@ import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.framework.ResourceFactory;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
+import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
+import org.bundlemaker.core.internal.resource.MovableUnit;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Ignore;
@@ -27,12 +29,15 @@ public class ModuleTest {
   @Ignore
   public void test() throws CoreException {
 
-    //
     IModifiableModularizedSystem modularizedSystem = mock(IModifiableModularizedSystem.class);
 
     //
     Module module = new Module(new ModuleIdentifier("Test", "1.2.3"), modularizedSystem);
-    module.addAll(ResourceFactory.getResources(), ResourceType.BINARY);
+
+    //
+    for (IResourceStandin resourceStandin : ResourceFactory.getResources()) {
+      module.addMovableUnit(new MovableUnit(null, resourceStandin));
+    }
 
     //
     assertThat(module.adaptAs(ITypeModule.class).getContainedTypes().size(), is(7));

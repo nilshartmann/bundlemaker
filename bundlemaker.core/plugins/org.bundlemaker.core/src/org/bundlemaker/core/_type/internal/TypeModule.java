@@ -19,11 +19,9 @@ import java.util.Set;
 
 import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.common.ResourceType;
-import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
@@ -135,11 +133,11 @@ public class TypeModule implements ITypeModule {
       //
       _containedTypes.put(type.getFullyQualifiedName(), type);
 
-      // notify
-      if (getModule().hasModularizedSystem()) {
-        getModule().getModularizedSystem().adaptAs(ITypeModularizedSystem.class).typeChanged(type, getModule(),
-            ChangeAction.ADDED);
-      }
+      // // notify
+      // if (getModule().hasModularizedSystem()) {
+      // getModule().getModularizedSystem().adaptAs(ITypeModularizedSystem.class).typeChanged(type, getModule(),
+      // ChangeAction.ADDED);
+      // }
     }
   }
 
@@ -152,11 +150,11 @@ public class TypeModule implements ITypeModule {
       //
       _containedTypes.remove(type.getFullyQualifiedName());
 
-      // notify
-      if (getModule().hasModularizedSystem()) {
-        getModule().getModularizedSystem().adaptAs(ITypeModularizedSystem.class).typeChanged(type, getModule(),
-            ChangeAction.REMOVED);
-      }
+      // // notify
+      // if (getModule().hasModularizedSystem()) {
+      // getModule().getModularizedSystem().adaptAs(ITypeModularizedSystem.class).typeChanged(type, getModule(),
+      // ChangeAction.REMOVED);
+      // }
     }
   }
 

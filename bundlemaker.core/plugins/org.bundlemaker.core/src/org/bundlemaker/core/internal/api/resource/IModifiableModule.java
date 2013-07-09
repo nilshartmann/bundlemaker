@@ -1,8 +1,5 @@
 package org.bundlemaker.core.internal.api.resource;
 
-import java.util.Set;
-
-import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.resource.IMovableUnit;
@@ -27,8 +24,6 @@ public interface IModifiableModule extends IModule {
   void setModuleIdentifier(String name, String version);
 
   void setModuleIdentifier(IModuleIdentifier moduleIdentifier);
-
-  void addAll(Set<IResourceStandin> resources, ResourceType binary);
 
   /**
    * <p>

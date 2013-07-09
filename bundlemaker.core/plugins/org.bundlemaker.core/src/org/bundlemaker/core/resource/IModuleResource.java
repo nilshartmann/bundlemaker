@@ -43,7 +43,7 @@ public interface IModuleResource extends IProjectContentResource, Comparable<IMo
    * @param modularizedSystem
    * @return
    */
-  IMovableUnit getMovableUnit(IModularizedSystem modularizedSystem);
+  IMovableUnit getMovableUnit();
 
   /**
    * <p>
@@ -56,5 +56,6 @@ public interface IModuleResource extends IProjectContentResource, Comparable<IMo
    */
   Set<? extends IModuleResource> getStickyResources();
 
+  // TODO
   Object getModelExtension();
 }

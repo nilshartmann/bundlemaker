@@ -17,16 +17,17 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core._type.IParsableTypeResource;
+import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core._type.internal.DefaultTypeSelector;
 import org.bundlemaker.core._type.internal.Type;
-import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.common.utils.FileUtils;
 import org.bundlemaker.core.common.utils.VMInstallUtils;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.modules.Module;
 import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
+import org.bundlemaker.core.internal.resource.MovableUnit;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.resource.IModularizedSystem;
@@ -78,6 +79,8 @@ public class JdkModuleCreator {
 
     Module jdkModule = new Module(new ModuleIdentifier(vmInstall.getName(), vmInstall.getName()),
         modularizedSystem);
+
+    jdkModule.adaptAs(ITypeModule.class);
 
     // TODO
     jdkModule.setResourceModule(true);
@@ -142,7 +145,9 @@ public class JdkModuleCreator {
     }
 
     //
-    jdkModule.addAll(resources, ResourceType.BINARY);
+    for (IResourceStandin resource : resources) {
+      jdkModule.addMovableUnit(new MovableUnit(null, resource));
+    }
 
     //
     return jdkModule;

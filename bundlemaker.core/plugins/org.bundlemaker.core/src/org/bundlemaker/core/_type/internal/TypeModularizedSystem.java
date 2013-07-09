@@ -277,9 +277,17 @@ public class TypeModularizedSystem implements ITypeModularizedSystem {
       }
 
       //
+      ITypeModule typeModule = module.adaptAs(ITypeModule.class);
+      typeModule.add(type);
+
+      //
       break;
     }
     case REMOVED: {
+
+      //
+      ITypeModule typeModule = module.adaptAs(ITypeModule.class);
+      typeModule.remove(type);
 
       // step 2a: type -> module
       Set<IModule> typeModules = _typeToModuleCache.get(type);

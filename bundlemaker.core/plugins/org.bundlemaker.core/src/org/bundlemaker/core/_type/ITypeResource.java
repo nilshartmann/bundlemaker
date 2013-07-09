@@ -82,4 +82,12 @@ public interface ITypeResource {
    * @return <code>true</code> if this {@link IModuleResource} has a primary type, <code>false</code> otherwise.
    */
   boolean hasPrimaryType();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  String getSourceName();
 }

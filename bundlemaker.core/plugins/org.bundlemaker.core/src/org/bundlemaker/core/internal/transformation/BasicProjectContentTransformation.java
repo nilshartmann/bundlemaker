@@ -10,12 +10,11 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.transformation;
 
-import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
-import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public class BasicProjectContentTransformation implements IInternalTransformation {
@@ -23,23 +22,20 @@ public class BasicProjectContentTransformation implements IInternalTransformatio
   public void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor progressMonitor) {
 
     // iterate over the file based content
-    for (IProjectContentEntry fileBasedContent : modularizedSystem.getBundleMakerProject().getProjectDescription()
+    for (IProjectContentEntry projectContentEntry : modularizedSystem.getBundleMakerProject().getProjectDescription()
         .getContent()) {
 
       // create new module
-      IModifiableModule module = modularizedSystem.createResourceModule(new ModuleIdentifier(fileBasedContent
-          .getName(), fileBasedContent.getVersion()));
+      IModifiableModule module = modularizedSystem.createResourceModule(new ModuleIdentifier(projectContentEntry
+          .getName(), projectContentEntry.getVersion()));
 
       // put the user attributes
-      module.getUserAttributes().putAll(fileBasedContent.getUserAttributes());
+      module.getUserAttributes().putAll(projectContentEntry.getUserAttributes());
 
-      // add all the binary content
-      module.addAll(((ProjectContentEntry) fileBasedContent).getBinaryResourceStandins(),
-          ResourceType.BINARY);
-
-      // add all the source content
-      module.addAll(((ProjectContentEntry) fileBasedContent).getSourceResourceStandins(),
-          ResourceType.SOURCE);
+      //
+      for (IMovableUnit movableUnit : projectContentEntry.getMovableUnits()) {
+        module.addMovableUnit(movableUnit);
+      }
     }
   }
 }

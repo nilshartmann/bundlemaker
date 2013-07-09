@@ -1,6 +1,7 @@
 package org.bundlemaker.core.internal.parser;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.stub;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 

@@ -2,7 +2,6 @@ package org.bundlemaker.core.resource;
 
 import java.util.List;
 
-
 /**
  * <p>
  * A movable unit defines a list of types together with a list of (binary and source) resources that must be moved as
@@ -19,7 +18,7 @@ public interface IMovableUnit {
    * 
    * @return
    */
-  IModule getAssoicatedModule();
+  IModule getAssoicatedModule(IModularizedSystem modularizedSystem);
 
   /**
    * <p>
@@ -27,7 +26,7 @@ public interface IMovableUnit {
    * 
    * @return
    */
-  public boolean hasModule();
+  public boolean hasModule(IModularizedSystem modularizedSystem);
 
   /**
    * <p>

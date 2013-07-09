@@ -226,7 +226,7 @@ public class SourceViewerEditor extends AbstractDependencySelectionAwareEditorPa
     //
     IReferenceDetailParser detailParser = new ReferenceDetailParser();
     IModuleResource resource = _resourceArtifact.getAssociatedResource();
-    IMovableUnit movableUnit = resource.getMovableUnit(_resourceArtifact.getModularizedSystem());
+    IMovableUnit movableUnit = resource.getMovableUnit();
     IModuleResource sourceResource = movableUnit.getAssociatedBinaryResources().get(0);
     _positions = detailParser.parseReferencePositions(sourceResource, _resourceArtifact.getModularizedSystem());
 

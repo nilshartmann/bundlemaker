@@ -12,13 +12,12 @@ package org.bundlemaker.core.internal.analysis;
 
 import java.util.List;
 
-import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
-import org.bundlemaker.core.internal.resource.MovableUnit;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
@@ -31,7 +30,7 @@ import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class AdapterResource2IArtifact extends AbstractArtifactContainer implements IResourceArtifact,
-    IMovableUnit, ITempTypeProvider {
+    IMovableUnit {
 
   /** the bundle maker resource */
   private IModuleResource _resource;
@@ -65,21 +64,16 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     _isSourceResource = isSourceResource;
 
     //
-    _movableUnit = MovableUnit.createFromResource(resource, artifactCache.getModularizedSystem());
-  }
+    _movableUnit = resource.getMovableUnit();
 
-  @Override
-  public List<IType> getAssociatedTypes() {
-    return ((ITempTypeProvider) _movableUnit).getAssociatedTypes();
+    //
+    if (_movableUnit == null) {
+      System.out.println(_movableUnit);
+    }
   }
 
   public List<? extends IModuleResource> getAssociatedBinaryResources() {
     return _movableUnit.getAssociatedBinaryResources();
-  }
-
-  @Override
-  public boolean hasAssociatedTypes() {
-    return ((ITempTypeProvider) _movableUnit).hasAssociatedTypes();
   }
 
   public boolean hasAssociatedBinaryResources() {
@@ -98,12 +92,20 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     return _movableUnit.getAssociatedSourceResource();
   }
 
-  public IModule getAssoicatedModule() {
-    return _movableUnit.getAssoicatedModule();
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IModule getAssoicatedModule(IModularizedSystem modularizedSystem) {
+    return _movableUnit.getAssoicatedModule(modularizedSystem);
   }
 
-  public boolean hasModule() {
-    return _movableUnit.hasModule();
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasModule(IModularizedSystem modularizedSystem) {
+    return _movableUnit.hasModule(modularizedSystem);
   }
 
   @Override
@@ -185,11 +187,6 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
   public void accept(IAnalysisModelVisitor... visitors) {
     DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
     accept(artifactTreeVisitor);
-  }
-
-  @Override
-  public boolean containsTypes() {
-    return hasAssociatedTypes();
   }
 
   @Override

@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.common.ResourceType;
+import org.bundlemaker.core.resource.IMovableUnit;
 
 /**
  * <p>
@@ -151,4 +152,6 @@ public interface IProjectContentEntry {
    * @return
    */
   Map<String, Object> getUserAttributes();
+
+  Set<? extends IMovableUnit> getMovableUnits();
 }

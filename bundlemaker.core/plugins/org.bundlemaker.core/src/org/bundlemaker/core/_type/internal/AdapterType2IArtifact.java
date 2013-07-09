@@ -28,11 +28,10 @@ import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.internal.analysis.DispatchingArtifactTreeVisitor;
-import org.bundlemaker.core.internal.analysis.ITempTypeProvider;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
-import org.bundlemaker.core.internal.resource.MovableUnit;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
@@ -51,7 +50,7 @@ import org.eclipse.core.runtime.Path;
  * 
  */
 public class AdapterType2IArtifact extends AbstractArtifact implements IMovableUnit,
-    ITypeArtifact, IReferencingArtifact, IReferencedArtifact, ITempTypeProvider {
+    ITypeArtifact, IReferencingArtifact, IReferencedArtifact {
 
   /** the bundle maker type */
   private IType                    _type;
@@ -94,7 +93,9 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     _artifactCache = defaultArtifactCache;
 
     //
-    _movableUnit = MovableUnit.createFromType(type, defaultArtifactCache.getModularizedSystem());
+    _movableUnit = type.hasBinaryResource() ? type.getBinaryResource().getMovableUnit() : type.getSourceResource()
+        .getMovableUnit();
+
     _referencingArtifact = new ReferencingArtifactTrait() {
       @Override
       protected void initialize() {
@@ -252,12 +253,20 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     return false;
   }
 
-  public IModule getAssoicatedModule() {
-    return _movableUnit.getAssoicatedModule();
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IModule getAssoicatedModule(IModularizedSystem modularizedSystem) {
+    return _movableUnit.getAssoicatedModule(modularizedSystem);
   }
 
-  public boolean hasModule() {
-    return _movableUnit.hasModule();
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasModule(IModularizedSystem modularizedSystem) {
+    return _movableUnit.hasModule(modularizedSystem);
   }
 
   /**
@@ -277,11 +286,6 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
     //
     return true;
-  }
-
-  @Override
-  public boolean hasAssociatedTypes() {
-    return ((ITempTypeProvider) _movableUnit).hasAssociatedTypes();
   }
 
   @Override
@@ -311,14 +315,6 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   @Override
   public IModuleResource getAssociatedSourceResource() {
     return _movableUnit.getAssociatedSourceResource();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public List<IType> getAssociatedTypes() {
-    return ((ITempTypeProvider) _movableUnit).getAssociatedTypes();
   }
 
   /**

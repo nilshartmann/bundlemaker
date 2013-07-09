@@ -32,6 +32,9 @@ public class TypeResource implements IParsableTypeResource, IReferenceRecorder {
   /** - */
   private transient ReferenceContainer _referenceContainer;
 
+  /** - */
+  private String                       _sourceName;
+
   /**
    * <p>
    * Creates a new instance of type {@link TypeResource}.
@@ -49,6 +52,14 @@ public class TypeResource implements IParsableTypeResource, IReferenceRecorder {
         return references();
       }
     };
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getSourceName() {
+    return _sourceName;
   }
 
   /**
@@ -86,7 +97,7 @@ public class TypeResource implements IParsableTypeResource, IReferenceRecorder {
 
     // throw new exception
     throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID,
-        String.format("Resource '%s' contains more than one type.")));
+        String.format("Resource '%s' contains more than one type.", this)));
   }
 
   /**
@@ -197,6 +208,16 @@ public class TypeResource implements IParsableTypeResource, IReferenceRecorder {
    */
   public Set<Reference> getModifiableReferences() {
     return references();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param sourceName
+   */
+  public void setSourceName(String sourceName) {
+    _sourceName = sourceName;
   }
 
   /**

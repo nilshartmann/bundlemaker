@@ -22,7 +22,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.internal.analysis.DispatchingArtifactTreeVisitor;
-import org.bundlemaker.core.internal.analysis.ITempTypeProvider;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
@@ -35,7 +35,7 @@ import org.eclipse.core.runtime.Path;
 /**
  * 
  */
-public class VirtualType2IArtifact extends AbstractArtifact implements IMovableUnit, ITypeArtifact, ITempTypeProvider {
+public class VirtualType2IArtifact extends AbstractArtifact implements IMovableUnit, ITypeArtifact {
 
   /** - */
   private String        _fullyQualifiedName;
@@ -150,9 +150,20 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
     return false;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public IModule getAssoicatedModule() {
+  public IModule getAssoicatedModule(IModularizedSystem modularizedSystem) {
     return null;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasModule(IModularizedSystem modularizedSystem) {
+    return false;
   }
 
   /**
@@ -177,19 +188,6 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   @Override
   public IModuleResource getAssociatedSourceResource() {
     return null;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public List<IType> getAssociatedTypes() {
-    return Collections.emptyList();
-  }
-
-  @Override
-  public boolean hasAssociatedTypes() {
-    return false;
   }
 
   @Override

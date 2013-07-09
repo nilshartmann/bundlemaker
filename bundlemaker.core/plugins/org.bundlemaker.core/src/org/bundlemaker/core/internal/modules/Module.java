@@ -10,21 +10,14 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.modules;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
-import org.bundlemaker.core.internal.api.resource.IResourceStandin;
-import org.bundlemaker.core.internal.modelext.ModelExtFactory;
 import org.bundlemaker.core.internal.modules.event.ModuleClassificationChangedEvent;
-import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractTransformationAwareModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
@@ -46,28 +39,25 @@ import org.eclipse.core.runtime.Platform;
 public class Module implements IModifiableModule {
 
   /** the module identifier */
-  private IModuleIdentifier    _moduleIdentifier;
+  private IModuleIdentifier   _moduleIdentifier;
 
   /** the classification */
-  private Group                _classification;
+  private Group               _classification;
 
   /** the user attributes */
-  private Map<String, Object>  _userAttributes;
+  private Map<String, Object> _userAttributes;
 
   /** the modularized system the module belongs to */
-  private IModularizedSystem   _modularizedSystem;
+  private IModularizedSystem  _modularizedSystem;
 
   /** specified whether or not the module is attached to a modularized system */
-  private boolean              _isDetached;
-
-  /** the binary resources */
-  private Set<IModuleResource> _binaryResources;
-
-  /** the source resources */
-  private Set<IModuleResource> _sourceResources;
+  private boolean             _isDetached;
 
   /** - */
-  private boolean              _isResourceModule;
+  private MovableUnitSet      _movableUnitSet;
+
+  /** - */
+  private boolean             _isResourceModule;
 
   /**
    * <p>
@@ -91,9 +81,9 @@ public class Module implements IModifiableModule {
     _userAttributes = new HashMap<String, Object>();
 
     // create the resource sets
-    _binaryResources = new HashSet<IModuleResource>();
-    _sourceResources = new HashSet<IModuleResource>();
+    _movableUnitSet = new MovableUnitSet();
 
+    //
     _isResourceModule = true;
   }
 
@@ -260,16 +250,11 @@ public class Module implements IModifiableModule {
   public void addMovableUnit(IMovableUnit movableUnit) {
     Assert.isNotNull(movableUnit);
 
-    // add binary resources
-    @SuppressWarnings("unchecked")
-    Set<IResourceStandin> resourceStandins = new HashSet<IResourceStandin>(
-        (List<IResourceStandin>) movableUnit.getAssociatedBinaryResources());
-    addAll(resourceStandins, ResourceType.BINARY);
+    //
+    _movableUnitSet.addMovableUnit(movableUnit);
 
-    // add source resources
-    if (movableUnit.hasAssociatedSourceResource()) {
-      add((IResourceStandin) movableUnit.getAssociatedSourceResource(), ResourceType.SOURCE);
-    }
+    ((IModifiableModularizedSystem) getModularizedSystem()).resourceChanged(movableUnit,
+        this, ChangeAction.ADDED);
 
     //
     ((ModularizedSystem) getModularizedSystem()).fireMovableUnitEvent(movableUnit, this, ChangeAction.ADDED);
@@ -280,15 +265,13 @@ public class Module implements IModifiableModule {
    */
   @Override
   public void removeMovableUnit(IMovableUnit movableUnit) {
-    Assert.isNotNull(movableUnit);
 
-    // add binary resources
-    removeAll(movableUnit.getAssociatedBinaryResources(), ResourceType.BINARY);
+    //
+    _movableUnitSet.removeMovableUnit(movableUnit);
 
-    // add source resources
-    if (movableUnit.hasAssociatedSourceResource()) {
-      remove(movableUnit.getAssociatedSourceResource(), ResourceType.SOURCE);
-    }
+    //
+    ((IModifiableModularizedSystem) getModularizedSystem()).resourceChanged(movableUnit,
+        this, ChangeAction.REMOVED);
 
     //
     ((ModularizedSystem) getModularizedSystem()).fireMovableUnitEvent(movableUnit, this, ChangeAction.REMOVED);
@@ -362,16 +345,7 @@ public class Module implements IModifiableModule {
   public IModuleResource getResource(String path, ResourceType contentType) {
 
     //
-    for (IModuleResource resourceStandin : getModifiableResourcesSet(contentType)) {
-
-      //
-      if (resourceStandin.getPath().equalsIgnoreCase(path)) {
-        return resourceStandin;
-      }
-    }
-
-    // return null
-    return null;
+    return getResource(path, contentType);
   }
 
   /**
@@ -381,8 +355,7 @@ public class Module implements IModifiableModule {
   public Set<IModuleResource> getResources(ResourceType contentType) {
 
     //
-    Set<IModuleResource> result = getModifiableResourcesSet(contentType);
-    return Collections.unmodifiableSet(result);
+    return _movableUnitSet.getResources(contentType);
   }
 
   @Override
@@ -393,121 +366,101 @@ public class Module implements IModifiableModule {
   /**
    * {@inheritDoc}
    */
-  private void add(IResourceStandin resource, ResourceType contentType) {
-
-    Assert.isNotNull(resource);
-    Assert.isNotNull(contentType);
-
-    // add the resource to the resource set...
-    getModifiableResourcesSet(contentType).add(resource);
-
-    // ... and add all contained types to the cache
-    resourceAdded(resource);
-
-    // notify
-    if (hasModularizedSystem()) {
-      ((AbstractCachingModularizedSystem) getModularizedSystem()).resourceChanged(resource,
-          this, ChangeAction.ADDED);
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Deprecated
   @Override
-  public void addAll(Set<IResourceStandin> resources, ResourceType contentType) {
-
-    Assert.isNotNull(resources);
-    Assert.isNotNull(contentType);
-
-    // add the resource to the resource set...
-    getModifiableResourcesSet(contentType).addAll(resources);
-
-    // ... and add all contained types to the cache
-    for (IModuleResource resource : resources) {
-      resourceAdded(resource);
-    }
-
-    // notify
-    if (hasModularizedSystem()) {
-      ((IModifiableModularizedSystem) getModularizedSystem()).resourcesChanged(resources,
-          this, ChangeAction.ADDED);
-    }
+  public Set<? extends IMovableUnit> getMovableUnits() {
+    return _movableUnitSet.getMovableUnits();
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  private void remove(IModuleResource resource, ResourceType contentType) {
+  // /**
+  // * {@inheritDoc}
+  // */
+  // private void add(IResourceStandin resource, ResourceType contentType) {
+  //
+  // Assert.isNotNull(resource);
+  // Assert.isNotNull(contentType);
+  //
+  // // add the resource to the resource set...
+  // getModifiableResourcesSet(contentType).add(resource);
+  //
+  // // ... and add all contained types to the cache
+  // resourceAdded(resource);
+  //
+  // // notify
+  // if (hasModularizedSystem()) {
+  // ((AbstractCachingModularizedSystem) getModularizedSystem()).resourceChanged(resource,
+  // this, ChangeAction.ADDED);
+  // }
+  // }
 
-    Assert.isNotNull(resource);
-    Assert.isNotNull(contentType);
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Deprecated
+  // @Override
+  // public void addAll(Set<IResourceStandin> resources, ResourceType contentType) {
+  //
+  // Assert.isNotNull(resources);
+  // Assert.isNotNull(contentType);
+  //
+  // // add the resource to the resource set...
+  // getModifiableResourcesSet(contentType).addAll(resources);
+  //
+  // // ... and add all contained types to the cache
+  // for (IModuleResource resource : resources) {
+  // resourceAdded(resource);
+  // }
+  //
+  // // notify
+  // if (hasModularizedSystem()) {
+  // ((IModifiableModularizedSystem) getModularizedSystem()).resourcesChanged(resources,
+  // this, ChangeAction.ADDED);
+  // }
+  // }
 
-    //
-    if (getModifiableResourcesSet(contentType).contains(resource)) {
+  // /**
+  // * {@inheritDoc}
+  // */
+  // private void remove(IModuleResource resource, ResourceType contentType) {
+  //
+  // Assert.isNotNull(resource);
+  // Assert.isNotNull(contentType);
+  //
+  // //
+  // if (getModifiableResourcesSet(contentType).contains(resource)) {
+  //
+  // resourceRemoved(resource);
+  //
+  // // add the resource to the resource set...
+  // getModifiableResourcesSet(contentType).remove(resource);
+  //
+  // // notify
+  // if (hasModularizedSystem()) {
+  // ((AbstractCachingModularizedSystem) getModularizedSystem()).resourceChanged(resource,
+  // this, ChangeAction.REMOVED);
+  // }
+  // }
+  // }
 
-      resourceRemoved(resource);
-
-      // add the resource to the resource set...
-      getModifiableResourcesSet(contentType).remove(resource);
-
-      // notify
-      if (hasModularizedSystem()) {
-        ((AbstractCachingModularizedSystem) getModularizedSystem()).resourceChanged(resource,
-            this, ChangeAction.REMOVED);
-      }
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  private void removeAll(Collection<? extends IModuleResource> resources, ResourceType contentType) {
-
-    Assert.isNotNull(resources);
-    Assert.isNotNull(contentType);
-
-    // ... and add all contained types to the cache
-    for (IModuleResource resource : resources) {
-      resourceRemoved(resource);
-    }
-
-    // add the resource to the resource set...
-    getModifiableResourcesSet(contentType).removeAll(resources);
-
-    // notify
-    if (hasModularizedSystem()) {
-      ((AbstractCachingModularizedSystem) getModularizedSystem()).resourcesChanged(resources,
-          this, ChangeAction.REMOVED);
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param contentType
-   * @return
-   */
-  private Set<IModuleResource> getModifiableResourcesSet(ResourceType contentType) {
-    Assert.isNotNull(contentType);
-
-    // return the resource set
-    return ResourceType.BINARY.equals(contentType) ? _binaryResources : _sourceResources;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resource
-   */
-  private void resourceRemoved(IModuleResource resource) {
-    ModelExtFactory.getModelExtension().resourceRemoved(this, resource);
-  }
-
-  private void resourceAdded(IModuleResource resource) {
-    ModelExtFactory.getModelExtension().resourceAdded(this, resource);
-  }
+  // /**
+  // * {@inheritDoc}
+  // */
+  // private void removeAll(Collection<? extends IModuleResource> resources, ResourceType contentType) {
+  //
+  // Assert.isNotNull(resources);
+  // Assert.isNotNull(contentType);
+  //
+  // // ... and add all contained types to the cache
+  // for (IModuleResource resource : resources) {
+  // resourceRemoved(resource);
+  // }
+  //
+  // // add the resource to the resource set...
+  // getModifiableResourcesSet(contentType).removeAll(resources);
+  //
+  // // notify
+  // if (hasModularizedSystem()) {
+  // ((AbstractCachingModularizedSystem) getModularizedSystem()).resourcesChanged(resources,
+  // this, ChangeAction.REMOVED);
+  // }
+  // }
 }

@@ -24,6 +24,7 @@ import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core.common.FlyWeightString;
 import org.bundlemaker.core.common.IResource;
 import org.bundlemaker.core.internal.resource.Resource;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -53,7 +54,7 @@ public class Type implements IType, IModifiableType {
   private transient String             _projectContentEntryId;
 
   /** transient: the source resource */
-  private transient Resource           _sourceResource;
+  private transient IResource          _sourceResource;
 
   /** transient: the binary resource */
   private transient IResource          _binaryResource;
@@ -129,8 +130,9 @@ public class Type implements IType, IModifiableType {
       return _projectContentEntryId;
     }
 
-    return (_binaryResource != null && _binaryResource instanceof Resource) ? ((Resource) _binaryResource)
-        .getProjectContentEntryId() : _sourceResource.getProjectContentEntryId();
+    return (_binaryResource != null && _binaryResource instanceof IProjectContentResource) ? ((IProjectContentResource) _binaryResource)
+        .getProjectContentEntryId()
+        : ((IProjectContentResource) _sourceResource).getProjectContentEntryId();
   }
 
   @Override
@@ -211,7 +213,19 @@ public class Type implements IType, IModifiableType {
    */
   @Override
   public IModuleResource getSourceResource() {
-    return _sourceResource != null ? _sourceResource.getResourceStandin() : null;
+
+    //
+    if (_sourceResource == null) {
+      return null;
+    }
+
+    //
+    if (_sourceResource instanceof Resource && ((Resource) _sourceResource).getResourceStandin() != null) {
+      return ((Resource) _sourceResource).getResourceStandin();
+    }
+
+    //
+    return (IModuleResource) _sourceResource;
   }
 
   /**
@@ -292,12 +306,12 @@ public class Type implements IType, IModifiableType {
 
     IModule result = null;
 
-    if (_binaryResource != null && _binaryResource instanceof Resource) {
+    if (_binaryResource != null && _binaryResource instanceof IModuleResource) {
       result = ((Resource) _binaryResource).getModule(modularizedSystem);
     }
 
-    if (result == null && _sourceResource != null) {
-      result = _sourceResource.getModule(modularizedSystem);
+    if (result == null && _sourceResource != null && _sourceResource instanceof IModuleResource) {
+      result = ((Resource) _sourceResource).getModule(modularizedSystem);
     }
 
     if (result == null) {
@@ -328,7 +342,7 @@ public class Type implements IType, IModifiableType {
    * 
    * @param sourceResource
    */
-  public void setSourceResource(Resource sourceResource) {
+  public void setSourceResource(IResource sourceResource) {
     _sourceResource = sourceResource;
   }
 

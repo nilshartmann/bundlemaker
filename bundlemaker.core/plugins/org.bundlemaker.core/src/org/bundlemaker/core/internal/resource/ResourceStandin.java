@@ -145,7 +145,7 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
    * {@inheritDoc}
    */
   @Override
-  public IMovableUnit getMovableUnit(IModularizedSystem modularizedSystem) {
+  public IMovableUnit getMovableUnit() {
 
     //
     if (_resource == null) {
@@ -153,7 +153,7 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
       throw new RuntimeException();
     }
 
-    return _resource.getMovableUnit(modularizedSystem);
+    return _resource.getMovableUnit();
   }
 
   @Override

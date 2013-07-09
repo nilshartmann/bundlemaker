@@ -21,7 +21,6 @@ import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.spi.parser.IParsableResource;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.Platform;
 
 /**
@@ -146,18 +145,19 @@ public class Resource extends DefaultProjectContentResource implements IParsable
    * {@inheritDoc}
    */
   @Override
-  public IMovableUnit getMovableUnit(IModularizedSystem modularizedSystem) {
-
-    //
-    Assert.isNotNull(modularizedSystem);
-
-    //
-    if (_movableUnit == null) {
-      _movableUnit = MovableUnit.createFromResource(this, modularizedSystem);
-    }
-
-    //
+  public IMovableUnit getMovableUnit() {
     return _movableUnit;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param movableUnit
+   *          the movableUnit to set
+   */
+  public void setMovableUnit(MovableUnit movableUnit) {
+    _movableUnit = movableUnit;
   }
 
   /**

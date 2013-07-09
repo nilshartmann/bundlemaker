@@ -5,14 +5,12 @@ import java.util.Set;
 
 import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.IReference;
-import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
-import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
@@ -58,10 +56,11 @@ public class ModelExtension implements IModelExtension {
    */
   @Override
   public void beforeParse(IProjectContentEntry projectContent, IParserContext parserContext,
-      Set<IResourceStandin> newAndModifiedBinaryResources, Set<IResourceStandin> newAndModifiedSourceResources) {
+      Set<? extends IModuleResource> newAndModifiedBinaryResources,
+      Set<? extends IModuleResource> newAndModifiedSourceResources) {
 
     //
-    parserContext.getProjectContentSpecificUserAttributes().put(TYPE_CACHE_KEY, _typeCache);
+    parserContext.getProjectContentSpecificUserAttributes().put(TYPE_CACHE_KEY, getTypeCache());
   }
 
   /**
@@ -69,30 +68,11 @@ public class ModelExtension implements IModelExtension {
    */
   @Override
   public void afterParse(IProjectContentEntry projectContent, IParserContext parserContext,
-      Set<IResourceStandin> newAndModifiedBinaryResources, Set<IResourceStandin> newAndModifiedSourceResources) {
+      Set<? extends IModuleResource> newAndModifiedBinaryResources,
+      Set<? extends IModuleResource> newAndModifiedSourceResources) {
 
     //
     parserContext.getProjectContentSpecificUserAttributes().remove(TYPE_CACHE_KEY);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void resourceAdded(IModule module, IModuleResource resource) {
-    for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
-      module.adaptAs(ITypeModule.class).add(type);
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void resourceRemoved(IModule module, IModuleResource resource) {
-    for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
-      module.adaptAs(ITypeModule.class).remove(type);
-    }
   }
 
   /**
@@ -125,6 +105,21 @@ public class ModelExtension implements IModelExtension {
    * <p>
    * </p>
    * 
+   * @return
+   */
+  private TypeCache getTypeCache() {
+
+    if (_typeCache == null) {
+      _typeCache = new TypeCache();
+    }
+
+    return _typeCache;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
    */
   private class TypeResourceAdapterFactory implements IAdapterFactory {
@@ -143,7 +138,7 @@ public class ModelExtension implements IModelExtension {
 
           if (adaptableObject instanceof IParsableResource) {
             IParsableResource parsableResource = (IParsableResource) adaptableObject;
-            parsableResource.setModelExtension(new TypeResource(_typeCache));
+            parsableResource.setModelExtension(new TypeResource(getTypeCache()));
           }
         }
 

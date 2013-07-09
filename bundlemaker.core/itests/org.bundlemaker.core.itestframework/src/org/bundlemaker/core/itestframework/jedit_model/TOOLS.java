@@ -55,15 +55,17 @@ public class TOOLS {
    */
   public static void assertTypeCount(IModularizedSystem modularizedSystem, int typeCountWithoutJdkTypes) {
 
+    //
+    ITypeModularizedSystem tms = modularizedSystem.adaptAs(ITypeModularizedSystem.class);
+    ITypeModule exeTyMo = modularizedSystem.getExecutionEnvironment().adaptAs(ITypeModule.class);
+
+    System.out.println("All types: " + tms.getTypes().size());
+    System.out.println("All execution types: " + exeTyMo.getContainedTypes().size());
+
     // assert the specified number of types
-    Assert.assertEquals(
-        "Expected: "
-            + typeCountWithoutJdkTypes
-            + ", actual: "
-            + (modularizedSystem.adaptAs(ITypeModularizedSystem.class).getTypes().size() - modularizedSystem
-                .getExecutionEnvironment().adaptAs(ITypeModule.class).getContainedTypes().size()), modularizedSystem
-            .getExecutionEnvironment().adaptAs(ITypeModule.class).getContainedTypes().size()
-            + typeCountWithoutJdkTypes, modularizedSystem.adaptAs(ITypeModularizedSystem.class).getTypes().size());
+    Assert.assertEquals("Expected: " + typeCountWithoutJdkTypes + ", actual: "
+        + (tms.getTypes().size() - exeTyMo.getContainedTypes().size()), exeTyMo.getContainedTypes().size()
+        + typeCountWithoutJdkTypes, tms.getTypes().size());
   }
 
   /**

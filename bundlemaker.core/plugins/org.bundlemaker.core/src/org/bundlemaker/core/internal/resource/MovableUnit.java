@@ -3,127 +3,100 @@ package org.bundlemaker.core.internal.resource;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.ITypeResource;
-import org.bundlemaker.core._type.JavaTypeUtils;
-import org.bundlemaker.core.common.ResourceType;
-import org.bundlemaker.core.internal.analysis.ITempTypeProvider;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 
-/**
- * <p>
- * Implementation of the {@link IMovableUnit}.
- * </p>
- * 
- * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
- */
-public class MovableUnit implements IMovableUnit, ITempTypeProvider {
+public class MovableUnit implements IMovableUnit {
 
   /** EMPTY_RESOURCE_LIST */
   private static final List<IResourceStandin> EMPTY_RESOURCE_LIST = Collections.emptyList();
-
-  /** EMPTY_TYPE_LIST */
-  private static final List<IType>            EMPTY_TYPE_LIST     = Collections.emptyList();
-
-  /** the main type */
-  private IType                               _mainType;
-
-  /** the main resource */
-  private IModuleResource                     _mainResource;
-
-  /** the modularized system */
-  private IModularizedSystem                  _modularizedSystem;
-
-  /** the associated types */
-  private List<IType>                         _associatedTypes;
 
   /** the source resource */
   private IModuleResource                     _sourceResource;
 
   /** the binary resource */
-  private List<IResourceStandin>              _binaryResources;
-
-  /** - */
-  private boolean                             _isInitialized      = false;
-
-  // private IResourceModule _resourceModule;
+  private List<IModuleResource>               _binaryResources;
 
   /**
    * <p>
+   * Creates a new instance of type {@link MovableUnit}.
    * </p>
    * 
-   * @param type
-   * @return
+   * @param sourceResource
+   * @param binaryResources
    */
-  public static IMovableUnit createFromType(IType type, IModularizedSystem modularizedSystem) {
-    Assert.isNotNull(type);
+  public MovableUnit(IModuleResource sourceResource,
+      List<IModuleResource> binaryResources) {
 
-    MovableUnit movableUnit = new MovableUnit();
-    movableUnit._mainType = type;
-    movableUnit._modularizedSystem = modularizedSystem;
+    Assert.isTrue(sourceResource != null || (binaryResources != null && !binaryResources.isEmpty()));
 
-    return movableUnit;
+    _sourceResource = sourceResource;
+    _binaryResources = binaryResources;
+
+    associate();
+  }
+
+  public MovableUnit(IModuleResource sourceResource,
+      IModuleResource binaryResources) {
+
+    Assert.isTrue(sourceResource != null || binaryResources != null);
+
+    _sourceResource = sourceResource;
+
+    if (binaryResources != null) {
+      _binaryResources = new LinkedList<IModuleResource>();
+      _binaryResources.add(binaryResources);
+    }
+
+    associate();
   }
 
   /**
-   * <p>
-   * </p>
-   * 
-   * @param resource
-   * @return
+   * {@inheritDoc}
    */
-  // TODO an der Resource anbieten
-  public static MovableUnit createFromResource(IModuleResource resource, IModularizedSystem modularizedSystem) {
-    Assert.isNotNull(resource);
+  public IModule getAssoicatedModule(IModularizedSystem modularizedSystem) {
+
+    Assert.isNotNull(modularizedSystem);
 
     //
-    if (resource.getName().endsWith(".class") && resource.adaptAs(ITypeResource.class).containsTypes()) {
+    if (_binaryResources != null && !_binaryResources.isEmpty()) {
 
-      try {
-        IType type = resource.adaptAs(ITypeResource.class).getContainedType();
-        if (type.isLocalOrAnonymousType()) {
-          String typeName = JavaTypeUtils.getEnclosingNonLocalAndNonAnonymousTypeName(type.getFullyQualifiedName());
+      //
+      return _binaryResources.toArray(new IResourceStandin[0])[0]
+          .getModule(modularizedSystem);
 
-          // TODO!!
-          IModule resourceModule = resource.getModule(modularizedSystem);
-          IModuleResource nonAnonymousResource = resourceModule.getResource(typeName.replace('.', '/') + ".class",
-              ResourceType.BINARY);
-
-          if (nonAnonymousResource != null) {
-            resource = nonAnonymousResource;
-          }
-        }
-      } catch (CoreException e) {
-        //
-      }
     }
 
     //
-    MovableUnit movableUnit = new MovableUnit();
-    movableUnit._mainResource = resource;
-    movableUnit._modularizedSystem = modularizedSystem;
+    else {
+      return _sourceResource.getModule(modularizedSystem);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public boolean hasModule(IModularizedSystem modularizedSystem) {
 
     //
-    return movableUnit;
+    Assert.isNotNull(modularizedSystem);
+
+    //
+    return getAssoicatedModule(modularizedSystem) != null;
   }
 
-  @Override
-  public boolean hasAssociatedTypes() {
-    init();
-    return _associatedTypes != null && !_associatedTypes.isEmpty();
-  }
-
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean hasAssociatedBinaryResources() {
-    init();
+
+    //
     return _binaryResources != null && !_binaryResources.isEmpty();
   }
 
@@ -131,9 +104,7 @@ public class MovableUnit implements IMovableUnit, ITempTypeProvider {
    * {@inheritDoc}
    */
   @Override
-  public List<IResourceStandin> getAssociatedBinaryResources() {
-
-    init();
+  public List<? extends IModuleResource> getAssociatedBinaryResources() {
 
     //
     return _binaryResources != null ? _binaryResources : EMPTY_RESOURCE_LIST;
@@ -145,8 +116,7 @@ public class MovableUnit implements IMovableUnit, ITempTypeProvider {
   @Override
   public boolean hasAssociatedSourceResource() {
 
-    init();
-
+    //
     return _sourceResource != null;
   }
 
@@ -156,175 +126,18 @@ public class MovableUnit implements IMovableUnit, ITempTypeProvider {
   @Override
   public IModuleResource getAssociatedSourceResource() {
 
-    init();
-
     //
     return _sourceResource;
   }
 
-  @Override
-  public List<IType> getAssociatedTypes() {
-
-    init();
-
-    //
-    return _associatedTypes != null ? _associatedTypes : EMPTY_TYPE_LIST;
-  }
-
   /**
-   * <p>
-   * </p>
-   * 
-   * @return
+   * {@inheritDoc}
    */
-  public IModule getAssoicatedModule() {
-
-    init();
-
-    IModule resourceModule = null;
-
-    //
-    if (!_associatedTypes.isEmpty()) {
-      IModule module = _associatedTypes.get(0).getModule(_modularizedSystem);
-      if (module instanceof IModule) {
-        resourceModule = (IModule) module;
-      }
-    } else if (!_binaryResources.isEmpty()) {
-      IModule module = _binaryResources.toArray(new IResourceStandin[0])[0]
-          .getModule(_modularizedSystem);
-      if (module instanceof IModule) {
-        resourceModule = (IModule) module;
-      }
-    } else {
-      resourceModule = _sourceResource.getModule(_modularizedSystem);
-    }
-
-    //
-    return resourceModule;
-  }
-
-  public boolean hasModule() {
-    //
-    return getAssoicatedModule() != null;
-  }
-
-  /**
-   * <p>
-   * </p>
-   */
-  private void init() {
-
-    // return if already is initiaized
-    if (_isInitialized) {
-      return;
-    }
-
-    // assert only one 'main element' is set
-    Assert.isTrue((_mainType == null && _mainResource != null) || (_mainType != null && _mainResource == null));
-
-    // create the binary result list
-    _binaryResources = new LinkedList<IResourceStandin>();
-    _associatedTypes = new LinkedList<IType>();
-
-    // process type...
-    if (_mainType != null) {
-      handleType(_mainType);
-      if (_sourceResource != null) {
-        for (IType type : _sourceResource.adaptAs(ITypeResource.class).getContainedTypes()) {
-          handleType(type);
-        }
-      }
-    }
-
-    // ...or process main resource...
-    else if (_mainResource != null) {
-      if (_mainResource.adaptAs(ITypeResource.class).containsTypes()) {
-        for (IType type : _mainResource.adaptAs(ITypeResource.class).getContainedTypes()) {
-          handleType(type);
-        }
-        if (_sourceResource != null) {
-          for (IType type : _sourceResource.adaptAs(ITypeResource.class).getContainedTypes()) {
-            handleType(type);
-          }
-        }
-      } else {
-
-        //
-        IModule resourceModule = _mainResource.getModule(_modularizedSystem);
-
-        //
-        _sourceResource = resourceModule.getResource(_mainResource.getPath(), ResourceType.SOURCE);
-
-        //
-        IModuleResource binaryResource = resourceModule.getResource(_mainResource.getPath(), ResourceType.BINARY);
-        if (binaryResource != null) {
-          _binaryResources.add((IResourceStandin) binaryResource);
-        }
-      }
-    }
-
-    //
-    Collections.sort(_binaryResources);
-    Collections.sort(_associatedTypes);
-
-    // set initialized
-    _isInitialized = true;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param type
-   */
-  private void handleType(IType type) {
-
-    //
-    if (_associatedTypes.contains(type)) {
-      return;
-    }
-
-    //
-    _associatedTypes.add(type);
-
-    //
-    if (type.hasSourceResource()) {
-      _sourceResource = type.getSourceResource();
-      for (IType sourceType : _sourceResource.adaptAs(ITypeResource.class).getContainedTypes()) {
-        handleType(sourceType);
-      }
-    }
-
-    //
-    if (type.hasBinaryResource()) {
-      IModuleResource binaryResource = type.getBinaryResource();
-      _binaryResources.add((IResourceStandin) binaryResource);
-      _binaryResources.addAll((Set<IResourceStandin>) binaryResource.getStickyResources());
-    }
-  }
-
-  @Override
-  public String toString() {
-
-    //
-    init();
-
-    //
-    return "MovableUnit [_sourceResource=" + _sourceResource + ", _binaryResources=" + _binaryResources
-        + ", _associatedTypes=" + _associatedTypes + "]";
-  }
-
   @Override
   public int hashCode() {
-
-    //
-    init();
-
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((_associatedTypes == null) ? 0 : _associatedTypes.hashCode());
     result = prime * result + ((_binaryResources == null) ? 0 : _binaryResources.hashCode());
-    result = prime * result + ((_modularizedSystem == null) ? 0 : _modularizedSystem.hashCode());
     result = prime * result + ((_sourceResource == null) ? 0 : _sourceResource.hashCode());
     return result;
   }
@@ -334,39 +147,51 @@ public class MovableUnit implements IMovableUnit, ITempTypeProvider {
    */
   @Override
   public boolean equals(Object obj) {
-
-    //
-    init();
-
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (obj == null)
+    }
+    if (obj == null) {
       return false;
-    if (getClass() != obj.getClass())
+    }
+    if (getClass() != obj.getClass()) {
       return false;
+    }
     MovableUnit other = (MovableUnit) obj;
-    other.init();
-    if (_associatedTypes == null) {
-      if (other._associatedTypes != null)
-        return false;
-    } else if (!_associatedTypes.equals(other._associatedTypes))
-      return false;
     if (_binaryResources == null) {
-      if (other._binaryResources != null)
+      if (other._binaryResources != null) {
         return false;
-    } else if (!_binaryResources.equals(other._binaryResources))
+      }
+    } else if (!_binaryResources.equals(other._binaryResources)) {
       return false;
-    if (_modularizedSystem == null) {
-      if (other._modularizedSystem != null)
-        return false;
-    } else if (!_modularizedSystem.equals(other._modularizedSystem))
-      return false;
+    }
     if (_sourceResource == null) {
-      if (other._sourceResource != null)
+      if (other._sourceResource != null) {
         return false;
-    } else if (!_sourceResource.equals(other._sourceResource))
+      }
+    } else if (!_sourceResource.equals(other._sourceResource)) {
       return false;
+    }
     return true;
   }
 
+  private void associate() {
+    associate(_sourceResource);
+    if (_binaryResources != null) {
+      for (IModuleResource resource : _binaryResources) {
+        associate(resource);
+      }
+    }
+  }
+
+  private void associate(IModuleResource resource) {
+
+    if (resource != null) {
+      if (resource instanceof Resource) {
+        ((Resource) resource).setMovableUnit(this);
+      }
+      else if (resource instanceof ResourceStandin) {
+        ((Resource) ((ResourceStandin) resource).getResource()).setMovableUnit(this);
+      }
+    }
+  }
 }

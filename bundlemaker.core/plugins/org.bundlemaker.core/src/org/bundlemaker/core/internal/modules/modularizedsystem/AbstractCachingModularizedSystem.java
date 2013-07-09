@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.modules.modularizedsystem;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -136,27 +135,27 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     this.adaptAs(ITypeModularizedSystem.class).clearCaches();
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resources
-   * @param resourceModule
-   * @param action
-   */
-  public void resourcesChanged(Collection<? extends IModuleResource> resources, IModule resourceModule,
-      ChangeAction action) {
-
-    // iterate over all the resources...
-    for (IModuleResource resource : resources) {
-
-      // ... and handle them
-      internalResourceChanged(resource, resourceModule, action);
-    }
-
-    //
-    // fireEvent(resources, resourceModule, action);
-  }
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param resources
+  // * @param resourceModule
+  // * @param action
+  // */
+  // public void resourcesChanged(Collection<? extends IModuleResource> resources, IModule resourceModule,
+  // ChangeAction action) {
+  //
+  // // iterate over all the resources...
+  // for (IModuleResource resource : resources) {
+  //
+  // // ... and handle them
+  // internalResourceChanged(resource, resourceModule, action);
+  // }
+  //
+  // //
+  // // fireEvent(resources, resourceModule, action);
+  // }
 
   /**
    * <p>
@@ -166,8 +165,15 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * @param resourceModule
    * @param action
    */
-  public void resourceChanged(IModuleResource resource, IModule resourceModule, ChangeAction action) {
-    internalResourceChanged(resource, resourceModule, action);
+  public void resourceChanged(IMovableUnit movableUnit, IModule resourceModule, ChangeAction action) {
+
+    for (IModuleResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
+      internalResourceChanged(moduleResource, resourceModule, action);
+    }
+
+    if (movableUnit.hasAssociatedSourceResource()) {
+      internalResourceChanged(movableUnit.getAssociatedSourceResource(), resourceModule, action);
+    }
   }
 
   /**
