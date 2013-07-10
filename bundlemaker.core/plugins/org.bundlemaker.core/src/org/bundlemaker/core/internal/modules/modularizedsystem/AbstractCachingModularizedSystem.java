@@ -267,17 +267,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
     //
     for (IModularizedSystemChangedListener listener : _changedListeners) {
-
-      switch (changeAction) {
-      case ADDED:
-        listener.movableUnitAdded(event);
-        break;
-      case REMOVED:
-        listener.movableUnitRemoved(event);
-        break;
-      default:
-        break;
-      }
+      listener.movableUnitChanged(event, changeAction);
     }
   }
 
@@ -292,12 +282,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
     //
     for (IModularizedSystemChangedListener listener : _changedListeners) {
-
-      if (ChangeAction.ADDED.equals(changeAction)) {
-        listener.moduleAdded(event);
-      } else if (ChangeAction.REMOVED.equals(changeAction)) {
-        listener.moduleRemoved(event);
-      }
+      listener.moduleChanged(event, changeAction);
     }
   }
 
@@ -323,25 +308,19 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * </p>
    * 
    * @param group
-   * @param added
+   * @param changeAction
    */
-  private void fireGroupChanged(Group group, ChangeAction added) {
+  private void fireGroupChanged(Group group, ChangeAction changeAction) {
     Assert.isNotNull(group);
-    Assert.isNotNull(added);
+    Assert.isNotNull(changeAction);
 
     //
-    GroupChangedEvent event = new GroupChangedEvent(group, added);
+    GroupChangedEvent event = new GroupChangedEvent(group, changeAction);
 
     //
     for (IModularizedSystemChangedListener listener : _changedListeners) {
-
-      if (ChangeAction.ADDED.equals(added)) {
-        listener.groupAdded(event);
-      } else if (ChangeAction.REMOVED.equals(added)) {
-        listener.groupRemoved(event);
-      }
+      listener.groupChanged(event, changeAction);
     }
-
   }
 
   /**

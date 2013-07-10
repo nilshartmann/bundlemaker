@@ -1,5 +1,7 @@
 package org.bundlemaker.core.internal.modules.event;
 
+import org.bundlemaker.core.internal.modules.ChangeAction;
+
 /**
  * <p>
  * </p>
@@ -13,56 +15,43 @@ public interface IModularizedSystemChangedListener {
    * </p>
    * 
    * @param event
+   * @param changeAction
    */
-  void movableUnitAdded(MovableUnitMovedEvent event);
+  void movableUnitChanged(MovableUnitMovedEvent event, ChangeAction changeAction);
 
   /**
    * <p>
    * </p>
    * 
    * @param event
+   * @param changeAction
    */
-  void movableUnitRemoved(MovableUnitMovedEvent event);
+  void groupChanged(GroupChangedEvent event, ChangeAction changeAction);
 
   /**
    * <p>
    * </p>
    * 
    * @param event
+   * @param changeAction
    */
-  void moduleAdded(ModuleMovedEvent event);
+  void moduleChanged(ModuleMovedEvent event, ChangeAction changeAction);
 
   /**
    * <p>
    * </p>
    * 
    * @param event
-   */
-  void moduleRemoved(ModuleMovedEvent event);
-
-  /**
-   * <p>
-   * </p>
    */
   void moduleClassificationChanged(ModuleClassificationChangedEvent event);
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param event
+   */
   void moduleIdentifierChanged(ModuleIdentifierChangedEvent event);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param event
-   */
-  void groupAdded(GroupChangedEvent event);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param event
-   */
-  void groupRemoved(GroupChangedEvent event);
 
   /**
    * <p>
