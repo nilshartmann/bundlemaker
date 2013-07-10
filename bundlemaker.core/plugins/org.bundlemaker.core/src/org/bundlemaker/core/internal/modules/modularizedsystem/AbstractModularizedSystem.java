@@ -23,6 +23,7 @@ import java.util.Set;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.internal.modules.Group;
+import org.bundlemaker.core.internal.modules.event.ModularizedSystemChangedListenerList;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
@@ -42,25 +43,28 @@ import org.eclipse.core.runtime.IPath;
 public abstract class AbstractModularizedSystem implements IModifiableModularizedSystem {
 
   /** the name of working copy */
-  private String                         _name;
+  private String                               _name;
 
   /** the user attributes */
-  private Map<String, Object>            _userAttributes;
+  private Map<String, Object>                  _userAttributes;
 
   /** the project description */
-  private IModuleAwareBundleMakerProject _project;
+  private IModuleAwareBundleMakerProject       _project;
 
   /** the list of defined transformations */
-  private List<ITransformation>          _transformations;
+  private List<ITransformation>                _transformations;
 
   /** the defined resource modules */
-  private List<IModifiableModule>        _modules;
+  private List<IModifiableModule>              _modules;
 
   /** the execution environment type module */
-  private IModule                        _executionEnvironment;
+  private IModule                              _executionEnvironment;
 
   /** - */
-  private Set<Group>                     _groups;
+  private Set<Group>                           _groups;
+
+  /** - */
+  private ModularizedSystemChangedListenerList _listenerList;
 
   /**
    * <p>
@@ -86,6 +90,19 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
     _transformations = new ArrayList<ITransformation>();
     _modules = new LinkedList<IModifiableModule>();
     _groups = new HashSet<Group>();
+
+    //
+    _listenerList = new ModularizedSystemChangedListenerList();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return the listenerList
+   */
+  public ModularizedSystemChangedListenerList getListenerList() {
+    return _listenerList;
   }
 
   /**

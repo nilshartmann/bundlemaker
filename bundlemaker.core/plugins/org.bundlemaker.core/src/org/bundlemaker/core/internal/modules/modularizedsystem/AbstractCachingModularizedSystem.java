@@ -11,9 +11,7 @@
 package org.bundlemaker.core.internal.modules.modularizedsystem;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeResource;
@@ -21,13 +19,6 @@ import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.internal.modules.Group;
-import org.bundlemaker.core.internal.modules.event.ClassificationChangedEvent;
-import org.bundlemaker.core.internal.modules.event.GroupChangedEvent;
-import org.bundlemaker.core.internal.modules.event.IModularizedSystemChangedListener;
-import org.bundlemaker.core.internal.modules.event.ModuleClassificationChangedEvent;
-import org.bundlemaker.core.internal.modules.event.ModuleIdentifierChangedEvent;
-import org.bundlemaker.core.internal.modules.event.ModuleMovedEvent;
-import org.bundlemaker.core.internal.modules.event.MovableUnitMovedEvent;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
@@ -47,15 +38,6 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
   /** resource -> resource module */
   private GenericCache<IModuleResource, Set<IModule>> _resourceToResourceModuleCache;
 
-  /** - */
-  private List<IModularizedSystemChangedListener>     _changedListeners;
-
-  /** - */
-  private boolean                                     _isModelModifiedNotificationDisabled = false;
-
-  /** - */
-  private boolean                                     _handleModelModification             = true;
-
   /**
    * <p>
    * Creates a new instance of type {@link AbstractCachingModularizedSystem}.
@@ -68,33 +50,6 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
     // call the super constructor
     super(name, project);
-
-    //
-    _changedListeners = new CopyOnWriteArrayList<IModularizedSystemChangedListener>();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void addModularizedSystemChangedListener(IModularizedSystemChangedListener listener) {
-
-    //
-    if (listener != null && !_changedListeners.contains(listener)) {
-      _changedListeners.add(listener);
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void removeModularizedSystemChangedListener(IModularizedSystemChangedListener listener) {
-
-    //
-    if (_changedListeners.contains(listener)) {
-      _changedListeners.remove(listener);
-    }
   }
 
   /**
@@ -133,28 +88,6 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     this.adaptAs(ITypeModularizedSystem.class).clearCaches();
   }
 
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param resources
-  // * @param resourceModule
-  // * @param action
-  // */
-  // public void resourcesChanged(Collection<? extends IModuleResource> resources, IModule resourceModule,
-  // ChangeAction action) {
-  //
-  // // iterate over all the resources...
-  // for (IModuleResource resource : resources) {
-  //
-  // // ... and handle them
-  // internalResourceChanged(resource, resourceModule, action);
-  // }
-  //
-  // //
-  // // fireEvent(resources, resourceModule, action);
-  // }
-
   /**
    * <p>
    * </p>
@@ -183,7 +116,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     Assert.isNotNull(resourceModule);
 
     //
-    fireModuleChanged(resourceModule, ChangeAction.ADDED);
+    getListenerList().fireModuleChanged(resourceModule, ChangeAction.ADDED);
 
     //
     for (IMovableUnit movableUnit : resourceModule.getMovableUnits()) {
@@ -205,7 +138,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     }
 
     //
-    fireModuleChanged(resourceModule, ChangeAction.REMOVED);
+    getListenerList().fireModuleChanged(resourceModule, ChangeAction.REMOVED);
   }
 
   @Override
@@ -213,7 +146,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     Assert.isNotNull(group);
 
     //
-    fireGroupChanged(group, ChangeAction.ADDED);
+    getListenerList().fireGroupChanged(group, ChangeAction.ADDED);
   }
 
   @Override
@@ -221,7 +154,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     Assert.isNotNull(group);
 
     //
-    fireGroupChanged(group, ChangeAction.REMOVED);
+    getListenerList().fireGroupChanged(group, ChangeAction.REMOVED);
   }
 
   /**
@@ -253,101 +186,6 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     }
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param itemChanged
-   * @param module
-   * @param changeAction
-   */
-  public void fireMovableUnitEvent(IMovableUnit movableUnit, IModule module, ChangeAction changeAction) {
-
-    MovableUnitMovedEvent event = new MovableUnitMovedEvent(movableUnit, module, changeAction);
-
-    //
-    for (IModularizedSystemChangedListener listener : _changedListeners) {
-      listener.movableUnitChanged(event, changeAction);
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   */
-  public void fireModuleChanged(IModule module, ChangeAction changeAction) {
-
-    //
-    ModuleMovedEvent event = new ModuleMovedEvent(module, changeAction);
-
-    //
-    for (IModularizedSystemChangedListener listener : _changedListeners) {
-      listener.moduleChanged(event, changeAction);
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param module
-   */
-  public void fireModuleIdentifierChanged(IModule module) {
-
-    //
-    ModuleIdentifierChangedEvent event = new ModuleIdentifierChangedEvent(module);
-
-    //
-    for (IModularizedSystemChangedListener listener : _changedListeners) {
-      listener.moduleIdentifierChanged(event);
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param group
-   * @param changeAction
-   */
-  private void fireGroupChanged(Group group, ChangeAction changeAction) {
-    Assert.isNotNull(group);
-    Assert.isNotNull(changeAction);
-
-    //
-    GroupChangedEvent event = new GroupChangedEvent(group, changeAction);
-
-    //
-    for (IModularizedSystemChangedListener listener : _changedListeners) {
-      listener.groupChanged(event, changeAction);
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   */
-  public void fireModuleClassificationChanged(ModuleClassificationChangedEvent event) {
-    //
-    for (IModularizedSystemChangedListener listener : _changedListeners) {
-      listener.moduleClassificationChanged(event);
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param event
-   */
-  public void fireClassificationChanged(ClassificationChangedEvent event) {
-    //
-    for (IModularizedSystemChangedListener listener : _changedListeners) {
-      listener.classificationChanged(event);
-    }
-  }
-
   private void internalResourceChanged(IModuleResource resource, IModule resourceModule, ChangeAction action) {
 
     // step 1: add/remove to resource map
@@ -375,52 +213,5 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     this.adaptAs(ITypeModularizedSystem.class).typesChanged(resource.adaptAs(ITypeResource.class).getContainedTypes(),
         resourceModule,
         action);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void disableModelModifiedNotification(boolean isDisabled) {
-
-    //
-    boolean fireImmediately = !isDisabled && _isModelModifiedNotificationDisabled;
-
-    //
-    _isModelModifiedNotificationDisabled = isDisabled;
-
-    //
-    for (IModularizedSystemChangedListener modularizedSystemChangedListener : _changedListeners) {
-      modularizedSystemChangedListener.modelModifiedNotificationDisabled(isDisabled);
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public boolean isModelModifiedNotificationDisabled() {
-    return _isModelModifiedNotificationDisabled;
-  }
-
-  @Override
-  public boolean isHandleModelModification() {
-    return _handleModelModification;
-  }
-
-  @Override
-  public void setHandleModelModification(boolean handleModelModification) {
-
-    if (!_handleModelModification && handleModelModification) {
-      _handleModelModification = handleModelModification;
-
-      //
-      for (IModularizedSystemChangedListener modularizedSystemChangedListener : _changedListeners) {
-        modularizedSystemChangedListener.handleModelModification();
-      }
-
-    } else {
-      _handleModelModification = handleModelModification;
-    }
   }
 }

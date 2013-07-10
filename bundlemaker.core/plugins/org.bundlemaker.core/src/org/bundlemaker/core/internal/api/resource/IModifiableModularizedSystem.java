@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.internal.modules.Group;
-import org.bundlemaker.core.internal.modules.event.IModularizedSystemChangedListener;
+import org.bundlemaker.core.internal.modules.event.ModularizedSystemChangedListenerList;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
@@ -32,22 +32,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public interface IModifiableModularizedSystem extends IModularizedSystem {
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param listener
-   */
-  void addModularizedSystemChangedListener(IModularizedSystemChangedListener listener);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param listener
-   */
-  void removeModularizedSystemChangedListener(IModularizedSystemChangedListener listener);
 
   /**
    * <p>
@@ -122,22 +106,6 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
    * <p>
    * </p>
    * 
-   * @param isDisabled
-   */
-  void disableModelModifiedNotification(boolean isDisabled);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  boolean isModelModifiedNotificationDisabled();
-
-  /**
-   * <p>
-   * </p>
-   * 
    * @param append
    * @return
    */
@@ -168,12 +136,6 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
    */
   void removeGroup(IPath path);
 
-  // TODO: UNIFY with 'disableModelModifiedNotification'
-  boolean isHandleModelModification();
-
-  // TODO: UNIFY with 'disableModelModifiedNotification'
-  void setHandleModelModification(boolean handleModelModification);
-
   /**
    * <p>
    * </p>
@@ -193,4 +155,6 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
   void applyTransformations(IProgressMonitor monitor, ITransformation... transformation);
 
   void movableUnitChanged(IMovableUnit movableUnit, IModule resourceModule, ChangeAction action);
+
+  ModularizedSystemChangedListenerList getListenerList();
 }

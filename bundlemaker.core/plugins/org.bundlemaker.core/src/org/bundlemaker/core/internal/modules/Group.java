@@ -88,7 +88,7 @@ public class Group {
 
     //
     ((AbstractCachingModularizedSystem) _modularizedSystem)
-        .fireClassificationChanged(event);
+        .getListenerList().fireClassificationChanged(event);
   }
 
   /**
@@ -109,7 +109,7 @@ public class Group {
 
     //
     ((AbstractCachingModularizedSystem) _modularizedSystem)
-        .fireClassificationChanged(event);
+        .getListenerList().fireClassificationChanged(event);
   }
 
   /**
@@ -127,7 +127,7 @@ public class Group {
 
     //
     ((AbstractCachingModularizedSystem) _modularizedSystem)
-        .fireClassificationChanged(event);
+        .getListenerList().fireClassificationChanged(event);
   }
 
   public boolean hasRootParent() {

@@ -89,12 +89,12 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
   @Override
   public void undoUntilTransformation(IProgressMonitor progressMonitor, ITransformation toTransformation) {
     //
-    boolean disableModelModifiedNotification = isModelModifiedNotificationDisabled();
+    boolean disableModelModifiedNotification = getListenerList().isModelModifiedNotificationDisabled();
 
     try {
 
       //
-      disableModelModifiedNotification(true);
+      getListenerList().disableModelModifiedNotification(true);
 
       //
       for (ITransformation transformation : getTransformations()) {
@@ -126,7 +126,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     } finally {
 
       //
-      disableModelModifiedNotification(disableModelModifiedNotification);
+      getListenerList().disableModelModifiedNotification(disableModelModifiedNotification);
     }
 
   }

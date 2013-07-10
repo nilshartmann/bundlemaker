@@ -92,7 +92,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
 
     // set the resource module
     _modularizedSystem = modularizedSystem;
-    _modularizedSystem.addModularizedSystemChangedListener(this);
+    _modularizedSystem.getListenerList().addModularizedSystemChangedListener(this);
 
     //
     _artifactCache = artifactCache;
@@ -114,7 +114,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
 
   @Override
   public final void disableModelModifiedNotification(boolean isDisabled) {
-    getModularizedSystem().disableModelModifiedNotification(isDisabled);
+    getModularizedSystem().getListenerList().disableModelModifiedNotification(isDisabled);
   }
 
   /**
@@ -135,7 +135,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
    */
   @Override
   public final boolean isModelModifiedNotificationDisabled() {
-    return getModularizedSystem().isModelModifiedNotificationDisabled();
+    return getModularizedSystem().getListenerList().isModelModifiedNotificationDisabled();
   }
 
   @Override
@@ -590,7 +590,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
   public void handleModelModification() {
 
     //
-    if (!getModularizedSystem().isHandleModelModification()) {
+    if (!getModularizedSystem().getListenerList().isHandleModelModification()) {
       return;
     }
 
@@ -609,7 +609,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
     _isInInvalidationCaches = false;
 
     //
-    if (!getModularizedSystem().isModelModifiedNotificationDisabled()) {
+    if (!getModularizedSystem().getListenerList().isModelModifiedNotificationDisabled()) {
       for (IAnalysisModelModifiedListener artifactModelChangedListener : _artifactModelChangedListeners) {
         artifactModelChangedListener.analysisModelModified();
       }

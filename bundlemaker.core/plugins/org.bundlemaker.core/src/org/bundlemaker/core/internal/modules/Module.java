@@ -188,7 +188,7 @@ public class Module implements IModifiableModule {
 
     //
     if (hasModularizedSystem()) {
-      ((ModularizedSystem) getModularizedSystem()).fireModuleIdentifierChanged(this);
+      ((ModularizedSystem) getModularizedSystem()).getListenerList().fireModuleIdentifierChanged(this);
     }
   }
 
@@ -215,7 +215,7 @@ public class Module implements IModifiableModule {
     //
     if (hasModularizedSystem()) {
       ((ModularizedSystem) getModularizedSystem())
-          .fireModuleClassificationChanged(new ModuleClassificationChangedEvent(this));
+          .getListenerList().fireModuleClassificationChanged(new ModuleClassificationChangedEvent(this));
     }
   }
 
@@ -257,7 +257,8 @@ public class Module implements IModifiableModule {
         this, ChangeAction.ADDED);
 
     //
-    ((ModularizedSystem) getModularizedSystem()).fireMovableUnitEvent(movableUnit, this, ChangeAction.ADDED);
+    ((ModularizedSystem) getModularizedSystem()).getListenerList().fireMovableUnitEvent(movableUnit, this,
+        ChangeAction.ADDED);
   }
 
   /**
@@ -274,7 +275,8 @@ public class Module implements IModifiableModule {
         this, ChangeAction.REMOVED);
 
     //
-    ((ModularizedSystem) getModularizedSystem()).fireMovableUnitEvent(movableUnit, this, ChangeAction.REMOVED);
+    ((ModularizedSystem) getModularizedSystem()).getListenerList().fireMovableUnitEvent(movableUnit, this,
+        ChangeAction.REMOVED);
   }
 
   @Override
