@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
-import org.bundlemaker.core.internal.modelext.ModelExtFactory;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.parser.IProblem;
@@ -161,8 +160,6 @@ public class FunctionalHelper {
     ((ResourceStandin) resourceStandin).setResource(resource);
     // ... and set the opposite
     resource.setResourceStandin((ResourceStandin) resourceStandin);
-
-    ModelExtFactory.getModelExtension().setupResource(resourceStandin, isSource);
   }
 
   static boolean hasToBeReparsed(IModuleResource resourceStandin, Resource resource) {

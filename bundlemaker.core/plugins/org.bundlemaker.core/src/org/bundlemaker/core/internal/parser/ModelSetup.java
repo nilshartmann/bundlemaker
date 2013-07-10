@@ -169,6 +169,18 @@ public class ModelSetup {
       FunctionalHelper.associateResourceStandinsWithResources(_bundleMakerProject.getSourceResourceStandins(), newMap,
           true, progressMonitor);
 
+      //
+      for (IProjectContentEntry contentEntry : projectContents) {
+        ((ProjectContentEntry) contentEntry).setupMovableUnits();
+      }
+
+      //
+      for (IProjectContentEntry contentEntry : projectContents) {
+        ModelExtFactory.getModelExtension().resourceModelSetupCompleted(contentEntry,
+            (Set<IModuleResource>) contentEntry.getBinaryResources(),
+            (Set<IModuleResource>) contentEntry.getSourceResources());
+      }
+
       progressMonitor.worked(1);
 
       //
@@ -281,19 +293,21 @@ public class ModelSetup {
         }
 
         // TODO: setup model
-        ModelExtFactory.getModelExtension().prepareStoredModel(projectContent, storedResourcesMap);
+        ModelExtFactory.getModelExtension().prepareStoredResourceModel(projectContent, storedResourcesMap);
 
         // adjust work remaining
         int remaining = newAndModifiedSourceResources.size() + newAndModifiedBinaryResources.size();
         resourceContentMonitor.setWorkRemaining(remaining);
 
-        ModelExtFactory.getModelExtension().beforeParse(projectContent, resourceCache, newAndModifiedBinaryResources,
+        ModelExtFactory.getModelExtension().beforeParseResourceModel(projectContent, resourceCache,
+            newAndModifiedBinaryResources,
             newAndModifiedSourceResources);
 
         result = multiThreadedReparse(storedResourcesMap, newAndModifiedSourceResources,
             newAndModifiedBinaryResources, resourceCache, projectContent, resourceContentMonitor.newChild(remaining));
 
-        ModelExtFactory.getModelExtension().afterParse(projectContent, resourceCache, newAndModifiedBinaryResources,
+        ModelExtFactory.getModelExtension().afterParseResourceModel(projectContent, resourceCache,
+            newAndModifiedBinaryResources,
             newAndModifiedSourceResources);
 
       }

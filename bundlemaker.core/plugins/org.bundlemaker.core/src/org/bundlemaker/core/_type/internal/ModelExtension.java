@@ -41,7 +41,7 @@ public class ModelExtension implements IModelExtension {
    * {@inheritDoc}
    */
   @Override
-  public void initialize() {
+  public void initializeModelExtension() {
 
     //
     Platform.getAdapterManager().registerAdapters(new TypeModularizedSystemAdapterFactory(), IModularizedSystem.class);
@@ -50,7 +50,7 @@ public class ModelExtension implements IModelExtension {
   }
 
   @Override
-  public void prepareStoredModel(IProjectContentEntry projectContentEntry,
+  public void prepareStoredResourceModel(IProjectContentEntry projectContentEntry,
       Map<IProjectContentResource, ? extends IParsableResource> storedResourcesMap) {
 
     //
@@ -62,7 +62,7 @@ public class ModelExtension implements IModelExtension {
    * {@inheritDoc}
    */
   @Override
-  public void beforeParse(IProjectContentEntry projectContent, IParserContext parserContext,
+  public void beforeParseResourceModel(IProjectContentEntry projectContent, IParserContext parserContext,
       Set<? extends IModuleResource> newAndModifiedBinaryResources,
       Set<? extends IModuleResource> newAndModifiedSourceResources) {
 
@@ -74,7 +74,7 @@ public class ModelExtension implements IModelExtension {
    * {@inheritDoc}
    */
   @Override
-  public void afterParse(IProjectContentEntry projectContent, IParserContext parserContext,
+  public void afterParseResourceModel(IProjectContentEntry projectContent, IParserContext parserContext,
       Set<? extends IModuleResource> newAndModifiedBinaryResources,
       Set<? extends IModuleResource> newAndModifiedSourceResources) {
 
@@ -86,45 +86,15 @@ public class ModelExtension implements IModelExtension {
    * {@inheritDoc}
    */
   @Override
-  public void setupResource(IModuleResource resource, boolean isSource) {
+  public void resourceModelSetupCompleted(IProjectContentEntry contentEntry, Set<IModuleResource> binaryResources,
+      Set<IModuleResource> sourceResources) {
 
-    // set the references
-    Set<Reference> resourceReferences = new HashSet<Reference>();
-    for (Reference reference : resource.adaptAs(IParsableTypeResource.class).getModifiableReferences()) {
-      Reference newReference = new Reference(reference);
-      newReference.setResource(resource);
-      resourceReferences.add(newReference);
+    for (IModuleResource resourceStandin : binaryResources) {
+      connectParsedResourceToModel(resourceStandin, false);
     }
-    resource.adaptAs(IParsableTypeResource.class).getModifiableReferences().clear();
-    resource.adaptAs(IParsableTypeResource.class).getModifiableReferences().addAll(resourceReferences);
 
-    // set the type-back-references
-    for (Type type : resource.adaptAs(IParsableTypeResource.class).getModifiableContainedTypes()) {
-
-      //
-      if (isSource) {
-        type.setSourceResource(resource);
-      } else {
-        type.setBinaryResource(resource);
-      }
-
-      // set the references
-      Map<String, Reference> typeReferences = new HashMap<String, Reference>();
-      for (Reference reference : type.getModifiableReferences()) {
-        // TODO
-        if (reference == null) {
-          continue;
-        }
-        Reference newReference = new Reference(reference);
-        newReference.setType(type);
-        if (typeReferences.containsKey(newReference)) {
-          throw new RuntimeException();
-        } else {
-          typeReferences.put(newReference.getFullyQualifiedName(), newReference);
-        }
-      }
-      type.getModifiableReferences().clear();
-      type.getModifiableReferences().addAll(typeReferences.values());
+    for (IModuleResource resourceStandin : sourceResources) {
+      connectParsedResourceToModel(resourceStandin, true);
     }
   }
 
@@ -202,6 +172,51 @@ public class ModelExtension implements IModelExtension {
     }
 
     return _typeCache;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  private void connectParsedResourceToModel(IModuleResource resource, boolean isSource) {
+
+    // set the references
+    Set<Reference> resourceReferences = new HashSet<Reference>();
+    for (Reference reference : resource.adaptAs(IParsableTypeResource.class).getModifiableReferences()) {
+      Reference newReference = new Reference(reference);
+      newReference.setResource(resource);
+      resourceReferences.add(newReference);
+    }
+    resource.adaptAs(IParsableTypeResource.class).getModifiableReferences().clear();
+    resource.adaptAs(IParsableTypeResource.class).getModifiableReferences().addAll(resourceReferences);
+
+    // set the type-back-references
+    for (Type type : resource.adaptAs(IParsableTypeResource.class).getModifiableContainedTypes()) {
+
+      //
+      if (isSource) {
+        type.setSourceResource(resource);
+      } else {
+        type.setBinaryResource(resource);
+      }
+
+      // set the references
+      Map<String, Reference> typeReferences = new HashMap<String, Reference>();
+      for (Reference reference : type.getModifiableReferences()) {
+        // TODO
+        if (reference == null) {
+          continue;
+        }
+        Reference newReference = new Reference(reference);
+        newReference.setType(type);
+        if (typeReferences.containsKey(newReference)) {
+          throw new RuntimeException();
+        } else {
+          typeReferences.put(newReference.getFullyQualifiedName(), newReference);
+        }
+      }
+      type.getModifiableReferences().clear();
+      type.getModifiableReferences().addAll(typeReferences.values());
+    }
   }
 
   /**

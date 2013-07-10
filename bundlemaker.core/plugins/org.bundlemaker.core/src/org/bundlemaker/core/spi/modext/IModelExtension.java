@@ -27,7 +27,7 @@ public interface IModelExtension {
    * register {@link IAdapterFactory IAdapterFactories} for IModularizedSystem, IModule or IModuleResource.
    * </p>
    */
-  public void initialize();
+  void initializeModelExtension();
 
   /**
    * <p>
@@ -36,7 +36,7 @@ public interface IModelExtension {
    * @param projectContent
    * @param storedResourcesMap
    */
-  public void prepareStoredModel(IProjectContentEntry projectContent,
+  void prepareStoredResourceModel(IProjectContentEntry projectContent,
       Map<IProjectContentResource, ? extends IParsableResource> storedResourcesMap);
 
   /**
@@ -48,7 +48,7 @@ public interface IModelExtension {
    * @param newAndModifiedBinaryResources
    * @param newAndModifiedSourceResources
    */
-  public void beforeParse(IProjectContentEntry projectContent, IParserContext resourceCache,
+  void beforeParseResourceModel(IProjectContentEntry projectContent, IParserContext resourceCache,
       Set<? extends IModuleResource> newAndModifiedBinaryResources,
       Set<? extends IModuleResource> newAndModifiedSourceResources);
 
@@ -61,7 +61,7 @@ public interface IModelExtension {
    * @param newAndModifiedBinaryResources
    * @param newAndModifiedSourceResources
    */
-  public void afterParse(IProjectContentEntry projectContent, IParserContext resourceCache,
+  void afterParseResourceModel(IProjectContentEntry projectContent, IParserContext resourceCache,
       Set<? extends IModuleResource> newAndModifiedBinaryResources,
       Set<? extends IModuleResource> newAndModifiedSourceResources);
 
@@ -69,10 +69,14 @@ public interface IModelExtension {
    * <p>
    * </p>
    * 
-   * @param resource
-   * @param isSource
+   * @param set2
+   * @param set
+   * 
+   * @param binaryResourceStandins
+   * @param sourceResourceStandins
    */
-  public void setupResource(IModuleResource resource, boolean isSource);
+  void resourceModelSetupCompleted(IProjectContentEntry contentEntry, Set<IModuleResource> binaryResources,
+      Set<IModuleResource> sourceResources);
 
   /**
    * <p>
@@ -89,7 +93,7 @@ public interface IModelExtension {
    * 
    * @param resource
    */
-  public boolean shouldAddResourceArtifact(IModuleResource resource);
+  boolean shouldAddResourceArtifact(IModuleResource resource);
 
   /**
    * <p>
@@ -99,5 +103,5 @@ public interface IModelExtension {
    * @param resource
    * @return
    */
-  public void setupResourceArtifact(IResourceArtifact resourceArtifact, IModuleResource resource);
+  void setupResourceArtifact(IResourceArtifact resourceArtifact, IModuleResource resource);
 }

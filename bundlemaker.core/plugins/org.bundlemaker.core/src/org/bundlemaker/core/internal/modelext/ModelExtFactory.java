@@ -11,7 +11,7 @@ public class ModelExtFactory {
 
     if (_modelExtension == null) {
       _modelExtension = new ModelExtension();
-      _modelExtension.initialize();
+      _modelExtension.initializeModelExtension();
     }
     //
     return _modelExtension;

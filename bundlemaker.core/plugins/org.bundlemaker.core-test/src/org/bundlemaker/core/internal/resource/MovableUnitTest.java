@@ -53,7 +53,7 @@ public class MovableUnitTest {
   @Before
   public void setup() throws CoreException {
 
-    new ModelExtension().initialize();
+    new ModelExtension().initializeModelExtension();
 
     //
     Set<IProjectContentResource> binaryResources = new HashSet<IProjectContentResource>();
