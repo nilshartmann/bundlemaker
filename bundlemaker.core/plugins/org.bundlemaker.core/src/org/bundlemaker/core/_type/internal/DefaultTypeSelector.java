@@ -2,6 +2,7 @@ package org.bundlemaker.core._type.internal;
 
 import java.util.Set;
 
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeSelector;
 import org.bundlemaker.core.project.IProjectContentEntry;
@@ -16,9 +17,6 @@ import org.eclipse.core.runtime.Assert;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class DefaultTypeSelector implements ITypeSelector {
-
-  /** - */
-  public static final String  BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER = "#####BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER#####";
 
   /** - */
   private IProjectDescription _bundleMakerProjectDescription;
@@ -78,7 +76,7 @@ public class DefaultTypeSelector implements ITypeSelector {
       String identifier = iType.getProjectContentEntryId().toString();
 
       // get the content identifier
-      if (!identifier.equals(DefaultTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER)) {
+      if (!identifier.equals(BundleMakerCore.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER)) {
 
         // get the file based content
         IProjectContentEntry fileBasedContent = _bundleMakerProjectDescription.getProjectContentEntry(identifier);

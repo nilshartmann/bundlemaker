@@ -16,10 +16,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.TypeEnum;
-import org.bundlemaker.core._type.internal.DefaultTypeSelector;
 import org.bundlemaker.core._type.internal.Type;
 import org.bundlemaker.core.common.utils.FileUtils;
 import org.bundlemaker.core.common.utils.VMInstallUtils;
@@ -109,7 +109,7 @@ public class JdkModuleCreator {
         }
 
         //
-        Resource resource = new Resource(DefaultTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER,
+        Resource resource = new Resource(BundleMakerCore.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER,
             root.getAbsolutePath(), child, resourceCache);
 
         ResourceStandin resourceStandin = new ResourceStandin(resource);
