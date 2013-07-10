@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
@@ -19,6 +18,7 @@ import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.cache.impl.ModuleSubCache;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
+import org.bundlemaker.core.internal.modelext.ModelExtFactory;
 import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.Module;
@@ -380,9 +380,8 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
 
   private void _addResource(IModuleResource resource) {
 
-    // skip local or anonymous types (no 'Bla$1.class' resources)
-    if (resource.adaptAs(ITypeResource.class).hasPrimaryType()
-        && resource.adaptAs(ITypeResource.class).getPrimaryType().isLocalOrAnonymousType()) {
+    //
+    if (!ModelExtFactory.getModelExtension().shouldAddResourceArtifact(resource)) {
       return;
     }
 

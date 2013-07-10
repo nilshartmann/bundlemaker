@@ -315,7 +315,7 @@ public class ArtifactCache {
   private void setupIt(IModuleResource resource) {
 
     //
-    if (ModelExtFactory.getModelExtension().shouldCreateResourceArtifact(resource)) {
+    if (ModelExtFactory.getModelExtension().shouldAddResourceArtifact(resource)) {
       IResourceArtifact resourceArtifact = this.getResourceArtifact(resource);
       ModelExtFactory.getModelExtension().setupResourceArtifact(resourceArtifact, resource);
     }

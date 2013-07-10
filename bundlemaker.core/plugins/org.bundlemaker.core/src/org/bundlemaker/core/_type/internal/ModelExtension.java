@@ -155,7 +155,7 @@ public class ModelExtension implements IModelExtension {
    * {@inheritDoc}
    */
   @Override
-  public boolean shouldCreateResourceArtifact(IModuleResource resource) {
+  public boolean shouldAddResourceArtifact(IModuleResource resource) {
 
     //
     ITypeResource typeResource = resource.adaptAs(ITypeResource.class);
