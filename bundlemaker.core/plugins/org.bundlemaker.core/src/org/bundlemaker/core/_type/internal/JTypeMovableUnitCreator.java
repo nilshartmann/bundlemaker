@@ -1,4 +1,4 @@
-package org.bundlemaker.core.internal.resource;
+package org.bundlemaker.core._type.internal;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -7,9 +7,10 @@ import java.util.Set;
 
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.common.collections.GenericCache;
+import org.bundlemaker.core.internal.resource.MovableUnit;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.IMovableUnitCreator;
+import org.bundlemaker.core.spi.modext.IMovableUnitCreator;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;

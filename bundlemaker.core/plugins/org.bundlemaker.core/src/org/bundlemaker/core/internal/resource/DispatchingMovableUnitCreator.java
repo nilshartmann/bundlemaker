@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core._type.internal.JTypeMovableUnitCreator;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.IMovableUnitCreator;
+import org.bundlemaker.core.spi.modext.IMovableUnitCreator;
 
 public class DispatchingMovableUnitCreator implements IMovableUnitCreator {
 
@@ -25,7 +26,7 @@ public class DispatchingMovableUnitCreator implements IMovableUnitCreator {
     //
     _creators = new LinkedList<IMovableUnitCreator>();
 
-    //
+    // TODO: EXTENSION POINT!
     _creators.add(new JTypeMovableUnitCreator());
     _creators.add(new DefaultMovableUnitCreator());
   }

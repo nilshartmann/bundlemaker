@@ -20,6 +20,7 @@ import java.util.Set;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core._type.TypeEnum;
+import org.bundlemaker.core._type.internal.JTypeMovableUnitCreator;
 import org.bundlemaker.core._type.internal.ModelExtension;
 import org.bundlemaker.core._type.internal.Type;
 import org.bundlemaker.core._type.internal.TypeResource;

@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.resource.IMovableUnitCreator;
+import org.bundlemaker.core.spi.modext.IMovableUnitCreator;
 
 public class DefaultMovableUnitCreator implements IMovableUnitCreator {
 
