@@ -54,10 +54,10 @@ public class Type implements IType, IModifiableType {
   private transient String             _projectContentEntryId;
 
   /** transient: the source resource */
-  private transient IResource          _sourceResource;
+  private transient IModuleResource    _sourceResource;
 
   /** transient: the binary resource */
-  private transient IResource          _binaryResource;
+  private transient IModuleResource    _binaryResource;
 
   /** transient: the reference container */
   private transient ReferenceContainer _referenceContainer;
@@ -243,7 +243,7 @@ public class Type implements IType, IModifiableType {
     if (_binaryResource instanceof Resource) {
       return ((Resource) _binaryResource).getResourceStandin();
     } else {
-      return null;
+      return _binaryResource;
     }
   }
 
@@ -307,7 +307,7 @@ public class Type implements IType, IModifiableType {
     IModule result = null;
 
     if (_binaryResource != null && _binaryResource instanceof IModuleResource) {
-      result = ((Resource) _binaryResource).getModule(modularizedSystem);
+      result = ((IModuleResource) _binaryResource).getModule(modularizedSystem);
     }
 
     if (result == null && _sourceResource != null && _sourceResource instanceof IModuleResource) {
@@ -342,7 +342,7 @@ public class Type implements IType, IModifiableType {
    * 
    * @param sourceResource
    */
-  public void setSourceResource(IResource sourceResource) {
+  public void setSourceResource(IModuleResource sourceResource) {
     _sourceResource = sourceResource;
   }
 
@@ -352,7 +352,7 @@ public class Type implements IType, IModifiableType {
    * 
    * @param binaryResource
    */
-  public void setBinaryResource(IResource binaryResource) {
+  public void setBinaryResource(IModuleResource binaryResource) {
     _binaryResource = binaryResource;
   }
 

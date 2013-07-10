@@ -1,5 +1,7 @@
 package org.bundlemaker.core._type.internal;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -74,6 +76,52 @@ public class ModelExtension implements IModelExtension {
 
     //
     parserContext.getProjectContentSpecificUserAttributes().remove(TYPE_CACHE_KEY);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setupResource(IModuleResource resource, boolean isSource) {
+
+    // set the references
+    Set<Reference> resourceReferences = new HashSet<Reference>();
+    for (Reference reference : resource.adaptAs(IParsableTypeResource.class).getModifiableReferences()) {
+      Reference newReference = new Reference(reference);
+      newReference.setResource(resource);
+      resourceReferences.add(newReference);
+    }
+    resource.adaptAs(IParsableTypeResource.class).getModifiableReferences().clear();
+    resource.adaptAs(IParsableTypeResource.class).getModifiableReferences().addAll(resourceReferences);
+
+    // set the type-back-references
+    for (Type type : resource.adaptAs(IParsableTypeResource.class).getModifiableContainedTypes()) {
+
+      //
+      if (isSource) {
+        type.setSourceResource(resource);
+      } else {
+        type.setBinaryResource(resource);
+      }
+
+      // set the references
+      Map<String, Reference> typeReferences = new HashMap<String, Reference>();
+      for (Reference reference : type.getModifiableReferences()) {
+        // TODO
+        if (reference == null) {
+          continue;
+        }
+        Reference newReference = new Reference(reference);
+        newReference.setType(type);
+        if (typeReferences.containsKey(newReference)) {
+          throw new RuntimeException();
+        } else {
+          typeReferences.put(newReference.getFullyQualifiedName(), newReference);
+        }
+      }
+      type.getModifiableReferences().clear();
+      type.getModifiableReferences().addAll(typeReferences.values());
+    }
   }
 
   /**

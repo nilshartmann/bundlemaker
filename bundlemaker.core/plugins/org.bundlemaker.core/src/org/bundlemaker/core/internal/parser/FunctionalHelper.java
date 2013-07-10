@@ -1,18 +1,14 @@
 package org.bundlemaker.core.internal.parser;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core._type.IParsableTypeResource;
-import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.internal.Reference;
-import org.bundlemaker.core._type.internal.Type;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
+import org.bundlemaker.core.internal.modelext.ModelExtFactory;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.parser.IProblem;
@@ -146,36 +142,6 @@ public class FunctionalHelper {
 
       // set up the resource stand-in
       setupResourceStandin(resourceStandin, resource, isSource);
-
-      final boolean failOnMissingBinaries = failOnMissingBinaries();
-
-      // perform some checks
-      // TODO: MAYBE REMOVE?
-      Assert.isNotNull(((ResourceStandin) resourceStandin).getResource());
-      for (IType type : resource.adaptAs(IParsableTypeResource.class).getContainedTypes()) {
-        if (!type.hasBinaryResource()) {
-          String message = "For source file "
-              + resourceStandin.getDirectory()
-              + "/"
-              + resourceStandin.getName()
-              + " there is no binary (class) file";
-          if (failOnMissingBinaries) {
-            throw new IllegalStateException(
-                message
-                    + "\nPlease make sure, that your binary paths contains classes for all sources in your project's source folders.");
-          } else {
-            System.err.println("WARNING! " + message);
-          }
-        }
-        // Assert.isNotNull(type.getBinaryResource(), resourceStandin.toString());
-        if (isSource) {
-          Assert.isTrue(resourceStandin.equals(type.getSourceResource()),
-              resourceStandin + " : " + type.getSourceResource());
-        } else {
-          Assert.isTrue(resourceStandin.equals(type.getBinaryResource()),
-              resourceStandin + " : " + type.getBinaryResource());
-        }
-      }
     }
   }
 
@@ -196,44 +162,7 @@ public class FunctionalHelper {
     // ... and set the opposite
     resource.setResourceStandin((ResourceStandin) resourceStandin);
 
-    // set the references
-    Set<Reference> resourceReferences = new HashSet<Reference>();
-    for (Reference reference : resource.adaptAs(IParsableTypeResource.class).getModifiableReferences()) {
-      Reference newReference = new Reference(reference);
-      newReference.setResource(resource);
-      resourceReferences.add(newReference);
-    }
-    resource.adaptAs(IParsableTypeResource.class).getModifiableReferences().clear();
-    resource.adaptAs(IParsableTypeResource.class).getModifiableReferences().addAll(resourceReferences);
-
-    // set the type-back-references
-    for (Type type : resource.adaptAs(IParsableTypeResource.class).getModifiableContainedTypes()) {
-
-      //
-      if (isSource) {
-        type.setSourceResource(resource);
-      } else {
-        type.setBinaryResource(resource);
-      }
-
-      // set the references
-      Map<String, Reference> typeReferences = new HashMap<String, Reference>();
-      for (Reference reference : type.getModifiableReferences()) {
-        // TODO
-        if (reference == null) {
-          continue;
-        }
-        Reference newReference = new Reference(reference);
-        newReference.setType(type);
-        if (typeReferences.containsKey(newReference)) {
-          throw new RuntimeException();
-        } else {
-          typeReferences.put(newReference.getFullyQualifiedName(), newReference);
-        }
-      }
-      type.getModifiableReferences().clear();
-      type.getModifiableReferences().addAll(typeReferences.values());
-    }
+    ModelExtFactory.getModelExtension().setupResource(resourceStandin, isSource);
   }
 
   static boolean hasToBeReparsed(IModuleResource resourceStandin, Resource resource) {

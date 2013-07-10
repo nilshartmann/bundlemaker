@@ -93,6 +93,11 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     _artifactCache = defaultArtifactCache;
 
     //
+    if (!type.hasBinaryResource() && type.getSourceResource() == null) {
+      System.out.println(type);
+    }
+
+    //
     _movableUnit = type.hasBinaryResource() ? type.getBinaryResource().getMovableUnit() : type.getSourceResource()
         .getMovableUnit();
 

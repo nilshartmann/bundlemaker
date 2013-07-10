@@ -15,7 +15,6 @@ import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ReferenceAttributes;
 import org.bundlemaker.core._type.ReferenceType;
 import org.bundlemaker.core.common.FlyWeightString;
-import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 
@@ -28,16 +27,16 @@ import org.eclipse.core.runtime.Assert;
 public class Reference implements IReference {
 
   /** - */
-  private FlyWeightString     _fullyQualifiedName;
+  private FlyWeightString           _fullyQualifiedName;
 
   /** - */
-  private ReferenceAttributes _referenceAttributes;
+  private ReferenceAttributes       _referenceAttributes;
 
   /** non-persistent back-reference: the containing resource */
-  private transient Resource  _resource;
+  private transient IModuleResource _resource;
 
   /** non-persistent back-reference: the containing type */
-  private transient Type      _type;
+  private transient Type            _type;
 
   /**
    * <p>
@@ -156,7 +155,7 @@ public class Reference implements IReference {
    * {@inheritDoc}
    */
   public IModuleResource getResource() {
-    return _resource.getResourceStandin();
+    return _resource;
   }
 
   /**
@@ -192,7 +191,7 @@ public class Reference implements IReference {
    * 
    * @param resource
    */
-  public void setResource(Resource resource) {
+  public void setResource(IModuleResource resource) {
     _resource = resource;
   }
 

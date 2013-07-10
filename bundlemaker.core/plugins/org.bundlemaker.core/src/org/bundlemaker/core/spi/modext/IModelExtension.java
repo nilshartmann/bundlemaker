@@ -69,6 +69,15 @@ public interface IModelExtension {
    * <p>
    * </p>
    * 
+   * @param resource
+   * @param isSource
+   */
+  public void setupResource(IModuleResource resource, boolean isSource);
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @param modules
    * @param artifactCache
    */
