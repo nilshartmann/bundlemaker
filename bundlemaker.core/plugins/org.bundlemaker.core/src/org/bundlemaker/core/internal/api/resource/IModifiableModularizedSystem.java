@@ -22,6 +22,7 @@ import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.ITransformation;
+import org.bundlemaker.core.spi.modext.ICacheAwareModularizedSystem;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -31,7 +32,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IModifiableModularizedSystem extends IModularizedSystem {
+public interface IModifiableModularizedSystem extends ICacheAwareModularizedSystem {
 
   /**
    * <p>

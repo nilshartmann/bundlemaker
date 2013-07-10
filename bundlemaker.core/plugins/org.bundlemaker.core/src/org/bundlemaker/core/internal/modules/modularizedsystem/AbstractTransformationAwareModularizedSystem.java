@@ -13,9 +13,8 @@ package org.bundlemaker.core.internal.modules.modularizedsystem;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.bundlemaker.core._type.ITypeModularizedSystem;
-import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.internal.JdkModuleCreator;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
@@ -34,6 +33,7 @@ import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.ITransformation;
+import org.bundlemaker.core.spi.modext.ICacheCallback;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -52,6 +52,9 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
   /** resource -> resource module */
   private GenericCache<IModuleResource, Set<IModule>> _resourceToResourceModuleCache;
 
+  /** - */
+  private List<ICacheCallback>                        _cacheCallbacks;
+
   /**
    * <p>
    * Creates a new instance of type {@link AbstractTransformationAwareModularizedSystem}.
@@ -62,6 +65,27 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    */
   public AbstractTransformationAwareModularizedSystem(String name, IModuleAwareBundleMakerProject project) {
     super(name, project);
+
+    //
+    _cacheCallbacks = new CopyOnWriteArrayList<ICacheCallback>();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void registerCacheCallback(ICacheCallback cacheCallback) {
+    if (!_cacheCallbacks.contains(cacheCallback)) {
+      _cacheCallbacks.add(cacheCallback);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void unregisterCacheCallback(ICacheCallback cacheCallback) {
+    _cacheCallbacks.remove(cacheCallback);
   }
 
   /**
@@ -455,7 +479,10 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     // clear all the caches
     getResourceToResourceModuleCache().clear();
 
-    this.adaptAs(ITypeModularizedSystem.class).clearCaches();
+    //
+    for (ICacheCallback cacheCallback : _cacheCallbacks) {
+      cacheCallback.clearCaches();
+    }
   }
 
   /**
@@ -474,6 +501,21 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
     if (movableUnit.hasAssociatedSourceResource()) {
       internalResourceChanged(movableUnit.getAssociatedSourceResource(), resourceModule, action);
+    }
+
+    switch (action) {
+    case ADDED: {
+      for (ICacheCallback cacheCallback : _cacheCallbacks) {
+        cacheCallback.movableUnitAdded(movableUnit, resourceModule);
+      }
+      break;
+    }
+    case REMOVED: {
+      for (ICacheCallback cacheCallback : _cacheCallbacks) {
+        cacheCallback.movableUnitRemoved(movableUnit, resourceModule);
+      }
+      break;
+    }
     }
   }
 
@@ -557,10 +599,5 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
       break;
     }
     }
-
-    // step 2: cache the contained types
-    this.adaptAs(ITypeModularizedSystem.class).typesChanged(resource.adaptAs(ITypeResource.class).getContainedTypes(),
-        resourceModule,
-        action);
   }
 }

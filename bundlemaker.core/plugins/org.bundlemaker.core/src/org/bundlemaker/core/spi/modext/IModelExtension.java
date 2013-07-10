@@ -11,6 +11,7 @@ import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.spi.parser.IParsableResource;
 import org.bundlemaker.core.spi.parser.IParserContext;
+import org.eclipse.core.runtime.IAdapterFactory;
 
 /**
  * <p>
@@ -22,7 +23,8 @@ public interface IModelExtension {
 
   /**
    * <p>
-   * Is called once directly after the {@link IModelExtension} has been created.
+   * Is called once directly after the {@link IModelExtension} has been created. This method can be used e.g. to
+   * register {@link IAdapterFactory IAdapterFactories} for IModularizedSystem, IModule or IModuleResource.
    * </p>
    */
   public void initialize();
@@ -63,7 +65,13 @@ public interface IModelExtension {
       Set<? extends IModuleResource> newAndModifiedBinaryResources,
       Set<? extends IModuleResource> newAndModifiedSourceResources);
 
-  //
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modules
+   * @param artifactCache
+   */
   void prepareAnalysisModel(IModule[] modules, ArtifactCache artifactCache);
 
   /**

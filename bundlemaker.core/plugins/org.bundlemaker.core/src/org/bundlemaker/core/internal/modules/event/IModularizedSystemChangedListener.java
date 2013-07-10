@@ -15,6 +15,14 @@ public interface IModularizedSystemChangedListener {
    * </p>
    * 
    * @param event
+   */
+  void classificationChanged(ClassificationChangedEvent event);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param event
    * @param changeAction
    */
   void movableUnitChanged(MovableUnitMovedEvent event, ChangeAction changeAction);
@@ -52,14 +60,6 @@ public interface IModularizedSystemChangedListener {
    * @param event
    */
   void moduleIdentifierChanged(ModuleIdentifierChangedEvent event);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param event
-   */
-  void classificationChanged(ClassificationChangedEvent event);
 
   /**
    * <p>

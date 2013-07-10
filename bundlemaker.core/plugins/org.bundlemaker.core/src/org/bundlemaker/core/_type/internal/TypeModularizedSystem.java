@@ -12,14 +12,18 @@ import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeModule;
+import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core._type.ITypeSelector;
 import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.resource.IModule;
-import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
+import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.spi.modext.ICacheAwareModularizedSystem;
+import org.bundlemaker.core.spi.modext.ICacheCallback;
 import org.eclipse.core.runtime.Assert;
 
-public class TypeModularizedSystem implements ITypeModularizedSystem {
+public class TypeModularizedSystem implements ITypeModularizedSystem, ICacheCallback {
 
   /** type name -> type */
   private GenericCache<String, Set<IType>>  _typeNameToTypeCache;
@@ -42,16 +46,26 @@ public class TypeModularizedSystem implements ITypeModularizedSystem {
    * </p>
    * 
    * @param name
-   * @param project
+   * @param system
    */
-  public TypeModularizedSystem(IModuleAwareBundleMakerProject project) {
+  public TypeModularizedSystem(ICacheAwareModularizedSystem system) {
 
     //
     _moduleSelectors = new LinkedList<ITypeSelector>();
 
     //
-    _defaultTypeSelector = new DefaultTypeSelector(project.getProjectDescription());
+    _defaultTypeSelector = new DefaultTypeSelector(system.getBundleMakerProject().getProjectDescription());
     // _defaultTypeSelector.setPreferJdkTypes(true);
+
+    //
+    for (IModule module : system.getModules()) {
+      for (IMovableUnit movableUnit : module.getMovableUnits()) {
+        movableUnitAdded(movableUnit, module);
+      }
+    }
+
+    //
+    system.registerCacheCallback(this);
   }
 
   /**
@@ -266,14 +280,14 @@ public class TypeModularizedSystem implements ITypeModularizedSystem {
     case ADDED: {
 
       // step 1: type -> module
-      _typeToModuleCache.getOrCreate(type).add(module);
+      getTypeToModuleCache().getOrCreate(type).add(module);
 
       // step 2: type name -> type
-      _typeNameToTypeCache.getOrCreate(type.getFullyQualifiedName()).add(type);
+      getTypeNameToTypeCache().getOrCreate(type.getFullyQualifiedName()).add(type);
 
       // step 3: referenced type name -> type
       for (IReference reference : type.getReferences()) {
-        _typeNameToReferringCache.getOrCreate(reference.getFullyQualifiedName()).add(type);
+        getTypeNameToReferringCache().getOrCreate(reference.getFullyQualifiedName()).add(type);
       }
 
       //
@@ -373,4 +387,46 @@ public class TypeModularizedSystem implements ITypeModularizedSystem {
     getTypeToModuleCache().clear();
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void movableUnitAdded(IMovableUnit movableUnit, IModule module) {
+
+    for (IModuleResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
+      typesChanged(
+          moduleResource.adaptAs(ITypeResource.class).getContainedTypes(),
+          module,
+          ChangeAction.ADDED);
+    }
+
+    if (movableUnit.hasAssociatedSourceResource()) {
+      typesChanged(
+          movableUnit.getAssociatedSourceResource().adaptAs(ITypeResource.class).getContainedTypes(),
+          module,
+          ChangeAction.ADDED);
+    }
+
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void movableUnitRemoved(IMovableUnit movableUnit, IModule module) {
+
+    for (IModuleResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
+      typesChanged(
+          moduleResource.adaptAs(ITypeResource.class).getContainedTypes(),
+          module,
+          ChangeAction.REMOVED);
+    }
+
+    if (movableUnit.hasAssociatedSourceResource()) {
+      typesChanged(
+          movableUnit.getAssociatedSourceResource().adaptAs(ITypeResource.class).getContainedTypes(),
+          module,
+          ChangeAction.REMOVED);
+    }
+  }
 }

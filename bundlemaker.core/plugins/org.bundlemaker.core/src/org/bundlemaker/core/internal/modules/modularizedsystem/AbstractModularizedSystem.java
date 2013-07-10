@@ -51,19 +51,19 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
   /** the project description */
   private IModuleAwareBundleMakerProject       _project;
 
-  /** the list of defined transformations */
-  private List<ITransformation>                _transformations;
-
   /** the defined resource modules */
   private List<IModifiableModule>              _modules;
 
   /** the execution environment type module */
   private IModule                              _executionEnvironment;
 
+  /** the list of defined transformations */
+  private List<ITransformation>                _transformations;
+
   /** - */
   private Set<Group>                           _groups;
 
-  /** - */
+  /** the listener list used for transformations */
   private ModularizedSystemChangedListenerList _listenerList;
 
   /**
@@ -93,34 +93,6 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
 
     //
     _listenerList = new ModularizedSystemChangedListenerList();
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return the listenerList
-   */
-  public ModularizedSystemChangedListenerList getListenerList() {
-    return _listenerList;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public List<IPath> getGroups() {
-
-    //
-    List<IPath> result = new LinkedList<IPath>();
-
-    //
-    for (Group group : _groups) {
-      result.add(group.getPath());
-    }
-
-    //
-    return result;
   }
 
   /**
@@ -155,6 +127,12 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
     return Collections.unmodifiableList(_transformations);
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   public final List<ITransformation> getModifiableTransformationList() {
     return _transformations;
   }
@@ -248,6 +226,34 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
 
     //
     return null;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return the listenerList
+   */
+  public ModularizedSystemChangedListenerList getListenerList() {
+    return _listenerList;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<IPath> getGroups() {
+
+    //
+    List<IPath> result = new LinkedList<IPath>();
+
+    //
+    for (Group group : _groups) {
+      result.add(group.getPath());
+    }
+
+    //
+    return result;
   }
 
   /**

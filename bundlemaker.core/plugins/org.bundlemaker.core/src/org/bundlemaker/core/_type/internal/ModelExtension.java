@@ -16,6 +16,7 @@ import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.spi.modext.ICacheAwareModularizedSystem;
 import org.bundlemaker.core.spi.modext.IModelExtension;
 import org.bundlemaker.core.spi.parser.IParsableResource;
 import org.bundlemaker.core.spi.parser.IParserContext;
@@ -173,11 +174,15 @@ public class ModelExtension implements IModelExtension {
       //
       if (adapterType == ITypeModularizedSystem.class) {
 
-        IModularizedSystem modularizedSystem = (IModularizedSystem) adaptableObject;
+        ICacheAwareModularizedSystem modularizedSystem = (ICacheAwareModularizedSystem) adaptableObject;
 
         if (!modularizedSystem.getUserAttributes().containsKey(ITypeModularizedSystem.class.getName())) {
-          modularizedSystem.getUserAttributes().put(ITypeModularizedSystem.class.getName(),
-              new TypeModularizedSystem(modularizedSystem.getBundleMakerProject()));
+
+          //
+          final TypeModularizedSystem typeModularizedSystem = new TypeModularizedSystem(
+              modularizedSystem);
+
+          modularizedSystem.getUserAttributes().put(ITypeModularizedSystem.class.getName(), typeModularizedSystem);
         }
 
         return modularizedSystem.getUserAttributes().get(ITypeModularizedSystem.class.getName());
