@@ -10,13 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.analysis.cache;
 
-import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.ITypeArtifact;
-import org.bundlemaker.core._type.ITypeModularizedSystem;
-import org.bundlemaker.core._type.ITypeModule;
-import org.bundlemaker.core._type.ITypeResource;
-import org.bundlemaker.core._type.internal.TypeKey;
-import org.bundlemaker.core._type.internal.TypeSubCache;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
@@ -35,6 +28,7 @@ import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractModulariz
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -71,9 +65,6 @@ public class ArtifactCache {
   /** - */
   protected ResourceSubCache            _resourceCache;
 
-  /** - */
-  protected TypeSubCache                _typeCache;
-
   /**
    * <p>
    * Creates a new instance of type {@link ArtifactCache}.
@@ -101,7 +92,6 @@ public class ArtifactCache {
     _moduleCache = new ModuleSubCache(this);
     _packageCache = new PackageSubCache(this);
     _resourceCache = new ResourceSubCache(this);
-    _typeCache = new TypeSubCache(this);
   }
 
   /**
@@ -178,30 +168,6 @@ public class ArtifactCache {
    * <p>
    * </p>
    * 
-   * @param type
-   * @return
-   */
-  public final ITypeArtifact getTypeArtifact(IType type, boolean createIfMissing) {
-    Assert.isNotNull(type);
-
-    //
-    try {
-      if (createIfMissing) {
-        return _typeCache.getOrCreate(new TypeKey(type));
-      } else {
-        return _typeCache.get(new TypeKey(type));
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-      System.out.println(type);
-      throw new RuntimeException(e.getMessage(), e);
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
    * @param resource
    * @return
    */
@@ -213,31 +179,6 @@ public class ArtifactCache {
       return (AdapterResource2IArtifact) _resourceCache.getOrCreate(resource);
     } catch (Exception e) {
       throw new RuntimeException(e.getMessage(), e);
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param fullyQualifiedName
-   * @throws Exception
-   */
-  public final ITypeArtifact getTypeArtifact(String fullyQualifiedName, boolean createIfMissing) {
-
-    //
-    IType targetType = ((IModifiableModularizedSystem) getModularizedSystem()).adaptAs(ITypeModularizedSystem.class)
-        .getType(fullyQualifiedName);
-
-    //
-    if (targetType == null) {
-      if (createIfMissing) {
-        return _typeCache.getOrCreate(new TypeKey(fullyQualifiedName));
-      } else {
-        return _typeCache.get(new TypeKey(fullyQualifiedName));
-      }
-    } else {
-      return getTypeArtifact(targetType, createIfMissing);
     }
   }
 
@@ -287,16 +228,6 @@ public class ArtifactCache {
    * 
    * @return
    */
-  public final TypeSubCache getTypeCache() {
-    return _typeCache;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
   public final IAnalysisModelConfiguration getConfiguration() {
     return _modelConfiguration;
   }
@@ -333,33 +264,34 @@ public class ArtifactCache {
       // create the module artifact
       this.getModuleArtifact(module);
 
-      // add all types
-      for (IType type : ((ITypeModule) module.getAdapter(ITypeModule.class)).getContainedTypes()) {
+      // iterate over all contained resources
+      for (IMovableUnit movableUnit : module.getMovableUnits()) {
 
         //
         if (progressMonitor != null) {
           progressMonitor.worked(1);
         }
 
-        // filter local or anonymous type names
-        if (!type.isLocalOrAnonymousType()) {
+        // TODO!!
+        if (getConfiguration().isSourceContent()) {
 
-          // create the artifact
-          this.getTypeArtifact(type, true);
+          if (movableUnit.hasAssociatedSourceResource()) {
+            setupIt(movableUnit.getAssociatedSourceResource());
+          } else {
+            for (IModuleResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
+              setupIt(moduleResource);
+            }
+          }
         }
-      }
+        else if (getConfiguration().isBinaryContent()) {
 
-      // iterate over all contained resources
-      for (IModuleResource resource : module.getResources(getConfiguration().getContentType())) {
-
-        if (progressMonitor != null) {
-          progressMonitor.worked(1);
-        }
-
-        if (!resource.adaptAs(ITypeResource.class).containsTypes()) {
-          // create the artifact
-          IResourceArtifact resourceArtifact = this.getResourceArtifact(resource);
-          ModelExtFactory.getModelExtension().setupResourceArtifact(resourceArtifact, resource);
+          if (movableUnit.hasAssociatedBinaryResources()) {
+            for (IModuleResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
+              setupIt(moduleResource);
+            }
+          } else {
+            setupIt(movableUnit.getAssociatedSourceResource());
+          }
         }
       }
     }
@@ -371,5 +303,21 @@ public class ArtifactCache {
 
     // return the root artifact
     return this.getRootArtifact();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceArtifact
+   * @param resource
+   */
+  private void setupIt(IModuleResource resource) {
+
+    //
+    if (ModelExtFactory.getModelExtension().shouldCreateResourceArtifact(resource)) {
+      IResourceArtifact resourceArtifact = this.getResourceArtifact(resource);
+      ModelExtFactory.getModelExtension().setupResourceArtifact(resourceArtifact, resource);
+    }
   }
 }

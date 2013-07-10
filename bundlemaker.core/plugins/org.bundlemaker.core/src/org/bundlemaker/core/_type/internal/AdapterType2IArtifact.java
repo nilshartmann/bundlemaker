@@ -28,7 +28,6 @@ import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.internal.analysis.DispatchingArtifactTreeVisitor;
-import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.resource.IModularizedSystem;
@@ -56,7 +55,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   private IType                    _type;
 
   /** - */
-  private ArtifactCache            _artifactCache;
+  private TypeSubCache             _artifactCache;
 
   /** - */
   private IMovableUnit             _movableUnit;
@@ -74,7 +73,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    * @param type
    * @param classification
    */
-  public AdapterType2IArtifact(IType type, ArtifactCache defaultArtifactCache, IBundleMakerArtifact parent) {
+  public AdapterType2IArtifact(IType type, TypeSubCache defaultArtifactCache, IBundleMakerArtifact parent) {
 
     //
     super(type.getName());

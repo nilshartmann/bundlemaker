@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.bundlemaker.core._type.IParsableTypeResource;
 import org.bundlemaker.core._type.IReference;
+import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.ITypeResource;
@@ -32,6 +33,9 @@ public class ModelExtension implements IModelExtension {
 
   /** - */
   private TypeCache           _typeCache;
+
+  /** - */
+  private TypeSubCache        _typeSubCache;
 
   /**
    * {@inheritDoc}
@@ -129,6 +133,9 @@ public class ModelExtension implements IModelExtension {
    */
   public void prepareAnalysisModel(IModule[] modules, ArtifactCache artifactCache) {
 
+    //
+    _typeSubCache = new TypeSubCache(artifactCache);
+
     // MISSING TYPES: create virtual module for missing types
     if (artifactCache.getConfiguration().isIncludeVirtualModuleForMissingTypes()) {
 
@@ -137,17 +144,49 @@ public class ModelExtension implements IModelExtension {
         if (module instanceof IModifiableModule) {
           for (IReference iReference : artifactCache.getModularizedSystem()
               .adaptAs(ITypeModularizedSystem.class).getUnsatisfiedReferences((IModifiableModule) module)) {
-            artifactCache.getTypeCache().getOrCreate(new TypeKey(iReference.getFullyQualifiedName()));
+            _typeSubCache.getOrCreate(new TypeKey(iReference.getFullyQualifiedName()));
           }
         }
       }
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean shouldCreateResourceArtifact(IModuleResource resource) {
+
+    //
+    ITypeResource typeResource = resource.adaptAs(ITypeResource.class);
+
+    if (!typeResource.containsTypes()) {
+      return true;
+    }
+
+    //
+    for (IType type : typeResource.getContainedTypes()) {
+
+      // filter local or anonymous type names
+      if (!type.isLocalOrAnonymousType()) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   @Override
   public void setupResourceArtifact(IResourceArtifact resourceArtifact, IModuleResource resource) {
 
+    //
     ITypeResource typeResource = resource.adaptAs(ITypeResource.class);
+
+    //
+    for (IType type : typeResource.getContainedTypes()) {
+      // create the artifact
+      _typeSubCache.getTypeArtifact(type, true);
+    }
   }
 
   /**

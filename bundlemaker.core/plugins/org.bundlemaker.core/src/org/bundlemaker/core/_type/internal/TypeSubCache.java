@@ -2,12 +2,14 @@ package org.bundlemaker.core._type.internal;
 
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeArtifact;
+import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.cache.ModulePackageKey;
 import org.bundlemaker.core.internal.analysis.cache.impl.AbstractSubCache;
+import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
@@ -100,7 +102,7 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, ITypeArtifact> {
     AbstractArtifactContainer parent = getTypeParent(type);
 
     //
-    return new AdapterType2IArtifact(type, getArtifactCache(), parent);
+    return new AdapterType2IArtifact(type, this, parent);
   }
 
   /**
@@ -142,6 +144,56 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, ITypeArtifact> {
 
       // get the parent
       return getArtifactCache().getPackageCache().getOrCreate(modulePackageKey);
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param type
+   * @return
+   */
+  public final ITypeArtifact getTypeArtifact(IType type, boolean createIfMissing) {
+    Assert.isNotNull(type);
+
+    //
+    try {
+      if (createIfMissing) {
+        return getOrCreate(new TypeKey(type));
+      } else {
+        return get(new TypeKey(type));
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      System.out.println(type);
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fullyQualifiedName
+   * @throws Exception
+   */
+  public final ITypeArtifact getTypeArtifact(String fullyQualifiedName, boolean createIfMissing) {
+
+    //
+    IType targetType = ((IModifiableModularizedSystem) getArtifactCache().getModularizedSystem()).adaptAs(
+        ITypeModularizedSystem.class)
+        .getType(fullyQualifiedName);
+
+    //
+    if (targetType == null) {
+      if (createIfMissing) {
+        return getOrCreate(new TypeKey(fullyQualifiedName));
+      } else {
+        return get(new TypeKey(fullyQualifiedName));
+      }
+    } else {
+      return getTypeArtifact(targetType, createIfMissing);
     }
   }
 }

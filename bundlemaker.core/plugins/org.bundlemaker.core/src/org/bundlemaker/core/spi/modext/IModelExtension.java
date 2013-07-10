@@ -87,8 +87,17 @@ public interface IModelExtension {
    * <p>
    * </p>
    * 
+   * @param resource
+   */
+  public boolean shouldCreateResourceArtifact(IModuleResource resource);
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @param resourceArtifact
    * @param resource
+   * @return
    */
   public void setupResourceArtifact(IResourceArtifact resourceArtifact, IModuleResource resource);
 }
