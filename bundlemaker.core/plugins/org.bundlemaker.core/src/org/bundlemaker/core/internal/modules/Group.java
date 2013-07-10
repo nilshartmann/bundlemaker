@@ -1,7 +1,7 @@
 package org.bundlemaker.core.internal.modules;
 
 import org.bundlemaker.core.internal.modules.event.ClassificationChangedEvent;
-import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
+import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
@@ -87,7 +87,7 @@ public class Group {
     ClassificationChangedEvent event = new ClassificationChangedEvent(this);
 
     //
-    ((AbstractCachingModularizedSystem) _modularizedSystem)
+    ((ModularizedSystem) _modularizedSystem)
         .getListenerList().fireClassificationChanged(event);
   }
 
@@ -108,7 +108,7 @@ public class Group {
         this);
 
     //
-    ((AbstractCachingModularizedSystem) _modularizedSystem)
+    ((ModularizedSystem) _modularizedSystem)
         .getListenerList().fireClassificationChanged(event);
   }
 
@@ -126,7 +126,7 @@ public class Group {
         this);
 
     //
-    ((AbstractCachingModularizedSystem) _modularizedSystem)
+    ((ModularizedSystem) _modularizedSystem)
         .getListenerList().fireClassificationChanged(event);
   }
 

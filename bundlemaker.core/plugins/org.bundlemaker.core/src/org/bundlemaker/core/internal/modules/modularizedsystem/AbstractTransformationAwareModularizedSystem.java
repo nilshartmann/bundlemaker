@@ -10,20 +10,29 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.modules.modularizedsystem;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.bundlemaker.core._type.ITypeModularizedSystem;
+import org.bundlemaker.core._type.ITypeResource;
+import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.internal.JdkModuleCreator;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
+import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.Module;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
+import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.internal.transformation.IInternalTransformation;
 import org.bundlemaker.core.internal.transformation.IUndoableTransformation;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.bundlemaker.core.resource.IModuleIdentifier;
+import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.ITransformation;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -39,6 +48,9 @@ import org.eclipse.core.runtime.SubMonitor;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public abstract class AbstractTransformationAwareModularizedSystem extends AbstractModularizedSystem {
+
+  /** resource -> resource module */
+  private GenericCache<IModuleResource, Set<IModule>> _resourceToResourceModuleCache;
 
   /**
    * <p>
@@ -196,7 +208,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     subMonitor.worked(20);
 
     //
-    postApplyTransformations();
+
   }
 
   /**
@@ -259,13 +271,19 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     if (path.segmentCount() == 1) {
       Group result = new Group(path.lastSegment(), null, this);
       internalGroups().add(result);
-      groupAdded(result);
+      Assert.isNotNull(result);
+
+      //
+      getListenerList().fireGroupChanged(result, ChangeAction.ADDED);
       return result;
     } else {
       Group parent = getOrCreateGroup(path.removeLastSegments(1));
       Group result = new Group(path.lastSegment(), parent, this);
       internalGroups().add(result);
-      groupAdded(result);
+      Assert.isNotNull(result);
+
+      //
+      getListenerList().fireGroupChanged(result, ChangeAction.ADDED);
       return result;
     }
   }
@@ -283,7 +301,10 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     Assert.isNotNull(group);
 
     internalGroups().remove(group);
-    groupRemoved(group);
+    Assert.isNotNull(group);
+
+    //
+    getListenerList().fireGroupChanged(group, ChangeAction.REMOVED);
   }
 
   @Override
@@ -367,7 +388,6 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
       // notify
       resourceModuleAdded(resourceModule);
-
     }
   }
 
@@ -407,57 +427,140 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * <p>
    * </p>
    * 
+   * @return
+   */
+  protected final GenericCache<IModuleResource, Set<IModule>> getResourceToResourceModuleCache() {
+
+    //
+    if (_resourceToResourceModuleCache == null) {
+
+      // create _resourceToResourceModuleCache
+      _resourceToResourceModuleCache = new GenericCache<IModuleResource, Set<IModule>>() {
+        @Override
+        protected Set<IModule> create(IModuleResource resource) {
+          return new HashSet<IModule>();
+        }
+      };
+    }
+
+    //
+    return _resourceToResourceModuleCache;
+  }
+
+  /**
+   * {@inheritDoc}
    */
   protected void preApplyTransformations() {
-    // do nothing...
+
+    // clear all the caches
+    getResourceToResourceModuleCache().clear();
+
+    this.adaptAs(ITypeModularizedSystem.class).clearCaches();
   }
 
   /**
    * <p>
    * </p>
    * 
-   */
-  protected void postApplyTransformations() {
-    // do nothing...
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param group
-   */
-  protected void groupAdded(Group group) {
-    // do nothing...
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param group
-   */
-  protected void groupRemoved(Group group) {
-    // do nothing...
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
+   * @param resource
    * @param resourceModule
+   * @param action
+   */
+  public void movableUnitChanged(IMovableUnit movableUnit, IModule resourceModule, ChangeAction action) {
+
+    for (IModuleResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
+      internalResourceChanged(moduleResource, resourceModule, action);
+    }
+
+    if (movableUnit.hasAssociatedSourceResource()) {
+      internalResourceChanged(movableUnit.getAssociatedSourceResource(), resourceModule, action);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
    */
   protected void resourceModuleAdded(IModifiableModule resourceModule) {
-    // do nothing...
+
+    Assert.isNotNull(resourceModule);
+
+    //
+    getListenerList().fireModuleChanged(resourceModule, ChangeAction.ADDED);
+
+    //
+    for (IMovableUnit movableUnit : resourceModule.getMovableUnits()) {
+      movableUnitChanged(movableUnit, resourceModule, ChangeAction.ADDED);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected void resourceModuleRemoved(IModifiableModule resourceModule) {
+
+    Assert.isNotNull(resourceModule);
+
+    //
+    for (IMovableUnit movableUnit : resourceModule.getMovableUnits()) {
+      movableUnitChanged(movableUnit, resourceModule, ChangeAction.REMOVED);
+    }
+
+    //
+    getListenerList().fireModuleChanged(resourceModule, ChangeAction.REMOVED);
   }
 
   /**
    * <p>
    * </p>
    * 
-   * @param resourceModule
+   * @param resource
+   * @return
    */
-  protected void resourceModuleRemoved(IModifiableModule resourceModule) {
-    // do nothing...
+  public IModule getAssociatedResourceModule(IModuleResource resource) {
+
+    Assert.isNotNull(resource);
+
+    if (resource instanceof Resource) {
+      resource = ((Resource) resource).getResourceStandin();
+    }
+
+    //
+    Set<IModule> resourceModules = _resourceToResourceModuleCache.get(resource);
+
+    //
+    if (resourceModules == null || resourceModules.isEmpty()) {
+      return null;
+    } else if (resourceModules.size() > 1) {
+      throw new RuntimeException(String.format("Resource '%s' is contained in multiple ResourceModules: %s.", resource,
+          resourceModules));
+    } else {
+      return resourceModules.toArray(new IModule[0])[0];
+    }
+  }
+
+  private void internalResourceChanged(IModuleResource resource, IModule resourceModule, ChangeAction action) {
+
+    // step 1: add/remove to resource map
+    switch (action) {
+    case ADDED: {
+      _resourceToResourceModuleCache.getOrCreate(resource).add(resourceModule);
+      break;
+    }
+    case REMOVED: {
+      Set<IModule> resourceModules = _resourceToResourceModuleCache.get(resource);
+      if (resourceModules != null) {
+        resourceModules.remove(resourceModule);
+        if (resourceModules.isEmpty()) {
+          _resourceToResourceModuleCache.remove(resource);
+        }
+      }
+      break;
+    }
+    }
+
+    // step 2: cache the contained types
+    this.adaptAs(ITypeModularizedSystem.class).typesChanged(resource.adaptAs(ITypeResource.class).getContainedTypes(),
+        resourceModule,
+        action);
   }
 }

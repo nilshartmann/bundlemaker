@@ -30,7 +30,7 @@ import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.internal.analysis.DispatchingArtifactTreeVisitor;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
-import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
+import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -394,7 +394,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
         .getType(_type.getFullyQualifiedName()))) {
 
       //
-      Set<IType> referringTypes = ((AbstractCachingModularizedSystem) getModularizedSystem())
+      Set<IType> referringTypes = ((ModularizedSystem) getModularizedSystem())
           .adaptAs(ITypeModularizedSystem.class)
           .getTypeNameToReferringCache().get(
               _type.getFullyQualifiedName());

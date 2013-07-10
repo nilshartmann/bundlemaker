@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ModularizedSystem extends AbstractCachingModularizedSystem {
+public class ModularizedSystem extends AbstractTransformationAwareModularizedSystem {
 
   /** - */
   private ModelTransformerCache _transformerCache = null;
