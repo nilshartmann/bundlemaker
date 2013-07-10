@@ -1,11 +1,11 @@
 package org.bundlemaker.core.internal.analysis;
 
-import org.bundlemaker.core._type.ITypeArtifact;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact.IResourceArtifactContent;
 import org.bundlemaker.core.resource.IModule;
 
 /**
@@ -44,10 +44,10 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
   public String handleCanAdd(IBundleMakerArtifact artifact) {
 
     // a resource module artifact can contain packages, types and resources
-    if (!(artifact.isInstanceOf(IPackageArtifact.class) || artifact.isInstanceOf(ITypeArtifact.class) || artifact
+    if (!(artifact.isInstanceOf(IPackageArtifact.class) || artifact.isInstanceOf(IResourceArtifactContent.class) || artifact
         .isInstanceOf(IResourceArtifact.class))) {
 
-      return "Only packages, types or resources can be added to a resource module.";
+      return "Only packages, resources or resource content can be added to a resource module.";
     }
 
     //
@@ -55,7 +55,7 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
 
     // TODO
     if (moduleArtifact != null && !(moduleArtifact.getAssociatedModule().isResourceModule())) {
-      return "Can not add packages, types or resources from a non-resource module.";
+      return "Can not add artifacts from a non-resource module.";
     }
     return null;
   }

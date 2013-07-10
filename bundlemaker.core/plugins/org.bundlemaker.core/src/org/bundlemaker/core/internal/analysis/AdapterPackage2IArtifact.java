@@ -1,7 +1,5 @@
 package org.bundlemaker.core.internal.analysis;
 
-import org.bundlemaker.core._type.ITypeArtifact;
-import org.bundlemaker.core._type.JavaUtils;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -111,9 +109,14 @@ public class AdapterPackage2IArtifact extends AbstractPackageFilteringArtifact i
   public String handleCanAdd(IBundleMakerArtifact artifact) {
 
     //
-    if (artifact.isInstanceOf(IResourceArtifact.class)) {
-      String packageName = JavaUtils.getPackageNameFromDirectory(((IResourceArtifact) artifact).getAssociatedResource()
-          .getDirectory());
+    IResourceArtifact resourceArtifact = artifact instanceof IResourceArtifact ? (IResourceArtifact) artifact
+        : artifact
+            .getParent(IResourceArtifact.class);
+
+    //
+    if (resourceArtifact != null) {
+      String packageName = resourceArtifact.getAssociatedResource()
+          .getDirectory().replace('/', '.');
       if (!packageName.equals(this.getQualifiedName())) {
         return String.format("Can not add resource '%s' to package '%s'.", artifact.getQualifiedName(), packageName);
       } else {
@@ -121,14 +124,14 @@ public class AdapterPackage2IArtifact extends AbstractPackageFilteringArtifact i
       }
     }
 
-    if (artifact.isInstanceOf(ITypeArtifact.class)) {
-      String packageName = ((ITypeArtifact) artifact).getAssociatedType().getPackageName();
-      if (!packageName.equals(this.getQualifiedName())) {
-        return String.format("Can not add type '%s' to package '%s'.", artifact.getQualifiedName(), packageName);
-      } else {
-        return null;
-      }
-    }
+    // if (artifact.isInstanceOf(ITypeArtifact.class)) {
+    // String packageName = ((ITypeArtifact) artifact).getAssociatedType().getPackageName();
+    // if (!packageName.equals(this.getQualifiedName())) {
+    // return String.format("Can not add type '%s' to package '%s'.", artifact.getQualifiedName(), packageName);
+    // } else {
+    // return null;
+    // }
+    // }
 
     // handle packages
     if (artifact.isInstanceOf(IPackageArtifact.class)) {
