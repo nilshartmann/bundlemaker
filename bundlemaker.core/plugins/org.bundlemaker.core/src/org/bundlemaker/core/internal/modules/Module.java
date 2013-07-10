@@ -253,7 +253,7 @@ public class Module implements IModifiableModule {
     //
     _movableUnitSet.addMovableUnit(movableUnit);
 
-    ((IModifiableModularizedSystem) getModularizedSystem()).resourceChanged(movableUnit,
+    ((IModifiableModularizedSystem) getModularizedSystem()).movableUnitChanged(movableUnit,
         this, ChangeAction.ADDED);
 
     //
@@ -270,7 +270,7 @@ public class Module implements IModifiableModule {
     _movableUnitSet.removeMovableUnit(movableUnit);
 
     //
-    ((IModifiableModularizedSystem) getModularizedSystem()).resourceChanged(movableUnit,
+    ((IModifiableModularizedSystem) getModularizedSystem()).movableUnitChanged(movableUnit,
         this, ChangeAction.REMOVED);
 
     //

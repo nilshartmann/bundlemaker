@@ -15,10 +15,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeResource;
-import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.internal.modules.ChangeAction;
@@ -165,7 +163,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * @param resourceModule
    * @param action
    */
-  public void resourceChanged(IMovableUnit movableUnit, IModule resourceModule, ChangeAction action) {
+  public void movableUnitChanged(IMovableUnit movableUnit, IModule resourceModule, ChangeAction action) {
 
     for (IModuleResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
       internalResourceChanged(moduleResource, resourceModule, action);
@@ -188,23 +186,8 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     fireModuleChanged(resourceModule, ChangeAction.ADDED);
 
     //
-    for (IModuleResource resource : resourceModule.getResources(ResourceType.SOURCE)) {
-      internalResourceChanged(resource, resourceModule, ChangeAction.ADDED);
-
-      //
-      for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
-        this.adaptAs(ITypeModularizedSystem.class).internalTypeChanged(type, resourceModule, ChangeAction.ADDED);
-      }
-    }
-
-    //
-    for (IModuleResource resource : resourceModule.getResources(ResourceType.BINARY)) {
-      internalResourceChanged(resource, resourceModule, ChangeAction.ADDED);
-
-      //
-      for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
-        this.adaptAs(ITypeModularizedSystem.class).internalTypeChanged(type, resourceModule, ChangeAction.ADDED);
-      }
+    for (IMovableUnit movableUnit : resourceModule.getMovableUnits()) {
+      movableUnitChanged(movableUnit, resourceModule, ChangeAction.ADDED);
     }
   }
 
@@ -217,46 +200,13 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     Assert.isNotNull(resourceModule);
 
     //
-    for (IModuleResource resource : resourceModule.getResources(ResourceType.SOURCE)) {
-      internalResourceChanged(resource, resourceModule, ChangeAction.REMOVED);
-
-      //
-      for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
-        this.adaptAs(ITypeModularizedSystem.class).internalTypeChanged(type, resourceModule, ChangeAction.REMOVED);
-      }
-    }
-
-    //
-    for (IModuleResource resource : resourceModule.getResources(ResourceType.BINARY)) {
-      internalResourceChanged(resource, resourceModule, ChangeAction.REMOVED);
-
-      //
-      for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
-        this.adaptAs(ITypeModularizedSystem.class).internalTypeChanged(type, resourceModule, ChangeAction.REMOVED);
-      }
+    for (IMovableUnit movableUnit : resourceModule.getMovableUnits()) {
+      movableUnitChanged(movableUnit, resourceModule, ChangeAction.REMOVED);
     }
 
     //
     fireModuleChanged(resourceModule, ChangeAction.REMOVED);
   }
-
-  // @Override
-  // protected void typeModuleAdded(IModule module) {
-  // Assert.isNotNull(module);
-  //
-  // for (IType type : module.getContainedTypes()) {
-  // internalTypeChanged(type, module, ChangeAction.ADDED);
-  // }
-  // }
-  //
-  // @Override
-  // protected void typeModuleRemoved(TypeModule module) {
-  // Assert.isNotNull(module);
-  //
-  // for (IType type : module.getContainedTypes()) {
-  // internalTypeChanged(type, module, ChangeAction.REMOVED);
-  // }
-  // }
 
   @Override
   protected void groupAdded(Group group) {

@@ -192,5 +192,5 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
    */
   void applyTransformations(IProgressMonitor monitor, ITransformation... transformation);
 
-  void resourceChanged(IMovableUnit movableUnit, IModule resourceModule, ChangeAction action);
+  void movableUnitChanged(IMovableUnit movableUnit, IModule resourceModule, ChangeAction action);
 }
