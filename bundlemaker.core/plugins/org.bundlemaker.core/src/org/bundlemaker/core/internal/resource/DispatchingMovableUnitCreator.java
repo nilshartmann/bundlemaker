@@ -6,30 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core._type.internal.JTypeMovableUnitCreator;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.spi.modext.IMovableUnitCreator;
 
 public class DispatchingMovableUnitCreator implements IMovableUnitCreator {
-
-  /** - */
-  private List<IMovableUnitCreator> _creators;
-
-  /**
-   * <p>
-   * Creates a new instance of type {@link DispatchingMovableUnitCreator}.
-   * </p>
-   */
-  public DispatchingMovableUnitCreator() {
-
-    //
-    _creators = new LinkedList<IMovableUnitCreator>();
-
-    // TODO: EXTENSION POINT!
-    _creators.add(new JTypeMovableUnitCreator());
-    _creators.add(new DefaultMovableUnitCreator());
-  }
 
   /**
    * {@inheritDoc}
@@ -42,7 +23,12 @@ public class DispatchingMovableUnitCreator implements IMovableUnitCreator {
     Set<IMovableUnit> result = new HashSet<IMovableUnit>();
 
     //
-    for (IMovableUnitCreator creator : _creators) {
+    List<IMovableUnitCreator> creators = new LinkedList<IMovableUnitCreator>(MovableUnitRegistry.instance()
+        .getCreators());
+    creators.add(new DefaultMovableUnitCreator());
+
+    //
+    for (IMovableUnitCreator creator : creators) {
 
       //
       Set<IMovableUnit> movableUnits = creator.assignMovableUnits(binaries, sources);

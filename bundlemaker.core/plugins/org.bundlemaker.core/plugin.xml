@@ -6,6 +6,7 @@
    <extension-point id="parserfactory" name="parserfactory" schema="schema/parserfactory.exsd"/>
    <extension-point id="org.bundlemaker.core.projectcontentprovider" name="org.bundlemaker.core.projectcontentprovider" schema="schema/org.bundlemaker.core.projectcontentprovider.exsd"/>
    <extension-point id="org.bundlemaker.core.modelextension" name="org.bundlemaker.core.modelextension" schema="schema/org.bundlemaker.core.modelextension.exsd"/>
+   <extension-point id="org.bundlemaker.core.movableunitcreator" name="org.bundlemaker.core.movableunitcreator" schema="schema/org.bundlemaker.core.movableunitcreator.exsd"/>
 
    <extension
          id="bundlemakernature"
@@ -39,6 +40,13 @@
            class="org.bundlemaker.core._type.internal.ModelExtension"
            id="org.bundlemaker.core.jtype.ModelExtension">
      </modelextension>
+  </extension>
+  <extension
+        point="org.bundlemaker.core.movableunitcreator">
+     <movableunitcreator
+           class="org.bundlemaker.core._type.internal.JTypeMovableUnitCreator"
+           id="org.bundlemaker.core.jtype.jTypeMovableUnitCreator">
+     </movableunitcreator>
   </extension>
 
 </plugin>
