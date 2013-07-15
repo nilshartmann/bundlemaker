@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.common.utils.AbstractBundleMakerExtensionRegistry;
+import org.bundlemaker.core.common.utils.IBundleMakerExtensionRegistry;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;

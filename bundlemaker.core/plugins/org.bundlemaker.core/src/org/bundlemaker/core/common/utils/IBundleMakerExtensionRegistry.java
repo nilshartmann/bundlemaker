@@ -1,4 +1,4 @@
-package org.bundlemaker.core.internal.modelext;
+package org.bundlemaker.core.common.utils;
 
 import java.util.List;
 

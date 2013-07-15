@@ -1,10 +1,9 @@
-package org.bundlemaker.core.internal.modelext;
+package org.bundlemaker.core.common.utils;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.spi.parser.IParserFactory;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IExtension;
@@ -132,13 +131,13 @@ public abstract class AbstractBundleMakerExtensionRegistry<T> implements IExtens
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void removeExtension(IExtension extension, Object[] objects) {
 
     for (Object object : objects) {
-      IParserFactory parserFactory = (IParserFactory) object;
-      parserFactory.dispose();
-      _extensionInstances.remove(parserFactory);
-      _tracker.unregisterObject(extension, parserFactory);
+      disposeInstance(extension, (T) object);
+      _extensionInstances.remove(object);
+      _tracker.unregisterObject(extension, object);
     }
   }
 
@@ -151,4 +150,16 @@ public abstract class AbstractBundleMakerExtensionRegistry<T> implements IExtens
    * @throws CoreException
    */
   protected abstract T createInstanceFromExtension(IExtension extension) throws CoreException;
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param extension
+   * @param instance
+   * @throws CoreException
+   */
+  protected void disposeInstance(IExtension extension, T instance) {
+    //
+  }
 }
