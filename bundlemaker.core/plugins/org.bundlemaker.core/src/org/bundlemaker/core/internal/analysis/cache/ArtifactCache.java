@@ -256,7 +256,7 @@ public class ArtifactCache {
     }
 
     // prepare analysis model
-    ModelExtFactory.getModelExtension().prepareAnalysisModel(modules, this);
+    ModelExtFactory.getModelExtensionFactory().prepareAnalysisModel(modules, this);
 
     // iterate over all the type modules
     for (IModule module : modules) {
@@ -315,9 +315,9 @@ public class ArtifactCache {
   private void setupIt(IModuleResource resource) {
 
     //
-    if (ModelExtFactory.getModelExtension().shouldAddResourceArtifact(resource)) {
+    if (ModelExtFactory.getModelExtensionFactory().shouldAddResourceArtifact(resource)) {
       IResourceArtifact resourceArtifact = this.getResourceArtifact(resource);
-      ModelExtFactory.getModelExtension().setupResourceArtifact(resourceArtifact, resource);
+      ModelExtFactory.getModelExtensionFactory().setupResourceArtifact(resourceArtifact, resource);
     }
   }
 }

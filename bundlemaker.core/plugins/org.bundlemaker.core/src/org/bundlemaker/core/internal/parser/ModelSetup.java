@@ -176,7 +176,7 @@ public class ModelSetup {
 
       //
       for (IProjectContentEntry contentEntry : projectContents) {
-        ModelExtFactory.getModelExtension().resourceModelSetupCompleted(contentEntry,
+        ModelExtFactory.getModelExtensionFactory().resourceModelSetupCompleted(contentEntry,
             (Set<IModuleResource>) contentEntry.getBinaryResources(),
             (Set<IModuleResource>) contentEntry.getSourceResources());
       }
@@ -293,20 +293,20 @@ public class ModelSetup {
         }
 
         // TODO: setup model
-        ModelExtFactory.getModelExtension().prepareStoredResourceModel(projectContent, storedResourcesMap);
+        ModelExtFactory.getModelExtensionFactory().prepareStoredResourceModel(projectContent, storedResourcesMap);
 
         // adjust work remaining
         int remaining = newAndModifiedSourceResources.size() + newAndModifiedBinaryResources.size();
         resourceContentMonitor.setWorkRemaining(remaining);
 
-        ModelExtFactory.getModelExtension().beforeParseResourceModel(projectContent, resourceCache,
+        ModelExtFactory.getModelExtensionFactory().beforeParseResourceModel(projectContent, resourceCache,
             newAndModifiedBinaryResources,
             newAndModifiedSourceResources);
 
         result = multiThreadedReparse(storedResourcesMap, newAndModifiedSourceResources,
             newAndModifiedBinaryResources, resourceCache, projectContent, resourceContentMonitor.newChild(remaining));
 
-        ModelExtFactory.getModelExtension().afterParseResourceModel(projectContent, resourceCache,
+        ModelExtFactory.getModelExtensionFactory().afterParseResourceModel(projectContent, resourceCache,
             newAndModifiedBinaryResources,
             newAndModifiedSourceResources);
 

@@ -381,7 +381,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
   private void _addResource(IModuleResource resource) {
 
     //
-    if (!ModelExtFactory.getModelExtension().shouldAddResourceArtifact(resource)) {
+    if (!ModelExtFactory.getModelExtensionFactory().shouldAddResourceArtifact(resource)) {
       return;
     }
 

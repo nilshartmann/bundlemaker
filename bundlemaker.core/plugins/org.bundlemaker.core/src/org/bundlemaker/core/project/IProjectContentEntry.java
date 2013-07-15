@@ -47,6 +47,14 @@ public interface IProjectContentEntry {
 
   /**
    * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Map<String, Object> getUserAttributes();
+
+  /**
+   * <p>
    * Returns the name of this content entry.
    * </p>
    * 
@@ -151,7 +159,6 @@ public interface IProjectContentEntry {
    * 
    * @return
    */
-  Map<String, Object> getUserAttributes();
-
   Set<? extends IMovableUnit> getMovableUnits();
+
 }

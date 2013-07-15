@@ -5,6 +5,7 @@
    <extension-point id="exporter" name="exporter" schema="schema/exporter.exsd"/>
    <extension-point id="parserfactory" name="parserfactory" schema="schema/parserfactory.exsd"/>
    <extension-point id="org.bundlemaker.core.projectcontentprovider" name="org.bundlemaker.core.projectcontentprovider" schema="schema/org.bundlemaker.core.projectcontentprovider.exsd"/>
+   <extension-point id="org.bundlemaker.core.modelextension" name="org.bundlemaker.core.modelextension" schema="schema/org.bundlemaker.core.modelextension.exsd"/>
 
    <extension
          id="bundlemakernature"
@@ -32,5 +33,12 @@
 	      class="org.bundlemaker.core.internal.common.classpath.BundleMakerClasspathContainerInitializer"
 	      id="org.bundlemaker.core.classpath"/>
 	 </extension>
+  <extension
+        point="org.bundlemaker.core.modelextension">
+     <modelextension
+           class="org.bundlemaker.core._type.internal.ModelExtension"
+           id="org.bundlemaker.core.jtype.ModelExtension">
+     </modelextension>
+  </extension>
 
 </plugin>
