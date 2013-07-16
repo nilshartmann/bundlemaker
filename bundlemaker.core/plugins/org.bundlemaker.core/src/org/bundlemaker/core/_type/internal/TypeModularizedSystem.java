@@ -15,7 +15,6 @@ import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core._type.ITypeSelector;
 import org.bundlemaker.core.common.collections.GenericCache;
-import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
@@ -428,5 +427,9 @@ public class TypeModularizedSystem implements ITypeModularizedSystem, ICacheCall
           module,
           ChangeAction.REMOVED);
     }
+  }
+
+  private enum ChangeAction {
+    ADDED, REMOVED;
   }
 }

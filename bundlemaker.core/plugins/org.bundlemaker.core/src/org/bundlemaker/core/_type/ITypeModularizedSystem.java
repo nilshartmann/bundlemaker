@@ -1,11 +1,9 @@
 package org.bundlemaker.core._type;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.common.collections.GenericCache;
-import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.resource.IModule;
 
 public interface ITypeModularizedSystem {
@@ -24,15 +22,9 @@ public interface ITypeModularizedSystem {
 
   Set<IReference> getUnsatisfiedReferences(IModule resourceModule);
 
-  void typeChanged(IType type, IModule module, ChangeAction action);
-
   IModule getAssociatedModule(IType type);
 
   GenericCache<String, Set<IType>> getTypeNameToReferringCache();
 
   void clearCaches();
-
-  void typesChanged(Collection<IType> types, IModule module, ChangeAction action);
-
-  void internalTypeChanged(IType type, IModule module, ChangeAction action);
 }
