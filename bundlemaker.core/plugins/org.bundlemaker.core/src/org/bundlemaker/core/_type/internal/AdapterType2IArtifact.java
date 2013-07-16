@@ -52,7 +52,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   private IType                    _type;
 
   /** - */
-  private TypeSubCache             _artifactCache;
+  private TypeArtifactCache             _artifactCache;
 
   /** - */
   private IMovableUnit             _movableUnit;
@@ -70,7 +70,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    * @param type
    * @param classification
    */
-  public AdapterType2IArtifact(IType type, TypeSubCache defaultArtifactCache, IBundleMakerArtifact parent) {
+  public AdapterType2IArtifact(IType type, TypeArtifactCache defaultArtifactCache, IBundleMakerArtifact parent) {
 
     //
     super(type.getName());

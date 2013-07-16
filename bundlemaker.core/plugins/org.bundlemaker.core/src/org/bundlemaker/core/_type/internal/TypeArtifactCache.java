@@ -5,14 +5,12 @@ import org.bundlemaker.core._type.ITypeArtifact;
 import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.common.ResourceType;
-import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
-import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
-import org.bundlemaker.core.internal.analysis.cache.ModulePackageKey;
+import org.bundlemaker.core.common.collections.SymetricGenericCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.AbstractSubCache;
-import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
+import org.bundlemaker.core.spi.modext.IAnalysisModelContext;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -22,20 +20,26 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class TypeSubCache extends AbstractSubCache<TypeKey, ITypeArtifact> {
+public class TypeArtifactCache extends SymetricGenericCache<TypeKey, ITypeArtifact> {
 
   /** serialVersionUID */
-  private static final long serialVersionUID = 1L;
+  private static final long     serialVersionUID = 1L;
+
+  /** - */
+  private IAnalysisModelContext _context;
 
   /**
    * <p>
-   * Creates a new instance of type {@link TypeSubCache}.
+   * Creates a new instance of type {@link TypeArtifactCache}.
    * </p>
    * 
-   * @param artifactCache
+   * @param context
    */
-  public TypeSubCache(ArtifactCache artifactCache) {
-    super(artifactCache);
+  public TypeArtifactCache(IAnalysisModelContext context) {
+    Assert.isNotNull(context);
+
+    //
+    _context = context;
   }
 
   /**
@@ -76,14 +80,12 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, ITypeArtifact> {
     if (index != -1) {
 
       // get the module package
-      ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey("<< Missing Types >>"),
+      // get the parent
+      parent = _context.getOrCreatePackage("<< Missing Types >>",
           typeName.substring(0, index));
 
-      // get the parent
-      parent = getArtifactCache().getPackageCache().getOrCreate(modulePackageKey);
-
     } else {
-      parent = getArtifactCache().getModuleCache().getOrCreate(new ModuleKey("<< Missing Types >>"));
+      parent = _context.getOrCreateModuleArtifact("<< Missing Types >>");
     }
 
     //
@@ -99,7 +101,8 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, ITypeArtifact> {
    */
   private ITypeArtifact createTypeArtifactFromType(IType type) {
 
-    AbstractArtifactContainer parent = getTypeParent(type);
+    //
+    IBundleMakerArtifact parent = getTypeParent(type);
 
     //
     return new AdapterType2IArtifact(type, this, parent);
@@ -113,20 +116,20 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, ITypeArtifact> {
    * @param type
    * @return
    */
-  public AbstractArtifactContainer getTypeParent(IType type) {
+  private IBundleMakerArtifact getTypeParent(IType type) {
 
     Assert.isNotNull(type);
 
     // get the associated resources
     IModuleResource resource = null;
 
-    resource = getArtifactCache().getConfiguration().getContentType().equals(ResourceType.SOURCE)
+    resource = _context.getConfiguration().getContentType().equals(ResourceType.SOURCE)
         && type.hasSourceResource() ? type.getSourceResource() : type.getBinaryResource();
 
     // get the associated module
     IModule module = resource != null ?
-        resource.getModule(getArtifactCache().getModularizedSystem())
-        : type.getModule(getArtifactCache().getModularizedSystem());
+        resource.getModule(_context.getModularizedSystem())
+        : type.getModule(_context.getModularizedSystem());
 
     if (resource != null && module.isResourceModule()) {
 
@@ -135,15 +138,12 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, ITypeArtifact> {
       }
 
       // force cast
-      return (AbstractArtifactContainer) getArtifactCache().getResourceCache().getOrCreate(resource);
+      return (AbstractArtifactContainer) _context.getOrCreateResource(resource);
 
     } else {
 
-      // get the module package
-      ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(module), type.getPackageName());
-
       // get the parent
-      return getArtifactCache().getPackageCache().getOrCreate(modulePackageKey);
+      return _context.getOrCreatePackage(module, type.getPackageName());
     }
   }
 
@@ -181,8 +181,7 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, ITypeArtifact> {
   public final ITypeArtifact getTypeArtifact(String fullyQualifiedName, boolean createIfMissing) {
 
     //
-    IType targetType = ((IModifiableModularizedSystem) getArtifactCache().getModularizedSystem()).adaptAs(
-        ITypeModularizedSystem.class)
+    IType targetType = _context.getModularizedSystem().adaptAs(ITypeModularizedSystem.class)
         .getType(fullyQualifiedName);
 
     //

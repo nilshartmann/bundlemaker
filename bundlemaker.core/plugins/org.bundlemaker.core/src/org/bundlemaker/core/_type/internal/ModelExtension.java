@@ -12,13 +12,12 @@ import org.bundlemaker.core._type.ITypeModularizedSystem;
 import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
-import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.spi.modext.IAnalysisModelContext;
 import org.bundlemaker.core.spi.modext.ICacheAwareModularizedSystem;
 import org.bundlemaker.core.spi.modext.IModelExtension;
 import org.bundlemaker.core.spi.parser.IParsableResource;
@@ -35,7 +34,7 @@ public class ModelExtension implements IModelExtension {
   private TypeCache           _typeCache;
 
   /** - */
-  private TypeSubCache        _typeSubCache;
+  private TypeArtifactCache   _typeSubCache;
 
   /**
    * {@inheritDoc}
@@ -101,21 +100,19 @@ public class ModelExtension implements IModelExtension {
   /**
    * {@inheritDoc}
    */
-  public void prepareAnalysisModel(IModule[] modules, ArtifactCache artifactCache) {
+  public void prepareAnalysisModel(IModule[] modules, IAnalysisModelContext context) {
 
     //
-    _typeSubCache = new TypeSubCache(artifactCache);
+    _typeSubCache = new TypeArtifactCache(context);
 
     // MISSING TYPES: create virtual module for missing types
-    if (artifactCache.getConfiguration().isIncludeVirtualModuleForMissingTypes()) {
+    if (context.getConfiguration().isIncludeVirtualModuleForMissingTypes()) {
 
       // add the
       for (IModule module : modules) {
-        if (module instanceof IModifiableModule) {
-          for (IReference iReference : artifactCache.getModularizedSystem()
-              .adaptAs(ITypeModularizedSystem.class).getUnsatisfiedReferences((IModifiableModule) module)) {
-            _typeSubCache.getOrCreate(new TypeKey(iReference.getFullyQualifiedName()));
-          }
+        for (IReference iReference : context.getModularizedSystem()
+            .adaptAs(ITypeModularizedSystem.class).getUnsatisfiedReferences(module)) {
+          _typeSubCache.getOrCreate(new TypeKey(iReference.getFullyQualifiedName()));
         }
       }
     }

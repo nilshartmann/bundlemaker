@@ -12,6 +12,7 @@ package org.bundlemaker.core.internal.analysis.cache;
 
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
@@ -29,7 +30,7 @@ import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
+import org.bundlemaker.core.spi.modext.IAnalysisModelContext;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -39,7 +40,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * Implements an cache for artifacts.
  * </p>
  */
-public class ArtifactCache {
+public class ArtifactCache implements IAnalysisModelContext {
 
   /** - */
   // private static final String MISSING_TYPES = "<< Missing Types >>";
@@ -95,17 +96,50 @@ public class ArtifactCache {
   }
 
   /**
-   * <p>
-   * Creates a new instance of type {@link ArtifactCache}.
-   * </p>
-   * 
-   * @param modularizedSystem
-   *          the modularized system
-   * @param rootArtifact
-   *          the root artifact
+   * {@inheritDoc}
    */
-  protected ArtifactCache(IModularizedSystem modularizedSystem, AbstractArtifactContainer rootArtifact) {
+  @Override
+  public IResourceArtifact getOrCreateResource(IModuleResource resource) {
+    Assert.isNotNull(resource);
+    return _resourceCache.getOrCreate(resource);
+  }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IPackageArtifact getOrCreatePackage(String moduleName, String packageName) {
+    Assert.isNotNull(moduleName);
+    Assert.isNotNull(packageName);
+    return (IPackageArtifact) _packageCache.getOrCreate(new ModulePackageKey(new ModuleKey(moduleName), packageName));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IPackageArtifact getOrCreatePackage(IModule module, String packageName) {
+    Assert.isNotNull(module);
+    Assert.isNotNull(packageName);
+    return (IPackageArtifact) _packageCache.getOrCreate(new ModulePackageKey(new ModuleKey(module), packageName));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IModuleArtifact getOrCreateModuleArtifact(IModule module) {
+    Assert.isNotNull(module);
+    return (IModuleArtifact) _moduleCache.getOrCreate(new ModuleKey(module));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IModuleArtifact getOrCreateModuleArtifact(String moduleName) {
+    Assert.isNotNull(moduleName);
+    return (IModuleArtifact) _moduleCache.getOrCreate(new ModuleKey(moduleName));
   }
 
   /**

@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModule;
@@ -83,9 +82,9 @@ public interface IModelExtension {
    * </p>
    * 
    * @param modules
-   * @param artifactCache
+   * @param context
    */
-  void prepareAnalysisModel(IModule[] modules, ArtifactCache artifactCache);
+  void prepareAnalysisModel(IModule[] modules, IAnalysisModelContext context);
 
   /**
    * <p>

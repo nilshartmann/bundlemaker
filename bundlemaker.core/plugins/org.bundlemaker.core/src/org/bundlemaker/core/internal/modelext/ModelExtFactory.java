@@ -6,11 +6,11 @@ import java.util.Set;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.common.utils.AbstractBundleMakerExtensionRegistry;
 import org.bundlemaker.core.common.utils.IBundleMakerExtensionRegistry;
-import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.spi.modext.IAnalysisModelContext;
 import org.bundlemaker.core.spi.modext.IModelExtension;
 import org.bundlemaker.core.spi.parser.IParsableResource;
 import org.bundlemaker.core.spi.parser.IParserContext;
@@ -127,11 +127,11 @@ public class ModelExtFactory {
     }
   }
 
-  public void prepareAnalysisModel(IModule[] modules, ArtifactCache artifactCache) {
+  public void prepareAnalysisModel(IModule[] modules, IAnalysisModelContext context) {
 
     //
     for (IModelExtension modelExtension : _modelExtensionRegistry.getExtensionInstances()) {
-      modelExtension.prepareAnalysisModel(modules, artifactCache);
+      modelExtension.prepareAnalysisModel(modules, context);
     }
   }
 
