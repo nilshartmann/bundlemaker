@@ -10,13 +10,13 @@
  ******************************************************************************/
 package org.bundlemaker.core.jdt.internal.parser;
 
-import org.bundlemaker.core._type.IParsableTypeResource;
-import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.JavaTypeUtils;
 import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
 import org.bundlemaker.core.jdt.internal.ExtensionRegistryTracker;
 import org.bundlemaker.core.jdt.parser.CoreParserJdt;
 import org.bundlemaker.core.jdt.parser.IJdtSourceParserHook;
+import org.bundlemaker.core.jtype.IParsableTypeResource;
+import org.bundlemaker.core.jtype.IType;
+import org.bundlemaker.core.jtype.JavaTypeUtils;
 import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;

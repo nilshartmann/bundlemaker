@@ -5,10 +5,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core._type.IReference;
-import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.common.ResourceType;
+import org.bundlemaker.core.jtype.IReference;
+import org.bundlemaker.core.jtype.IType;
+import org.bundlemaker.core.jtype.ITypeResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;

@@ -4,10 +4,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
+import org.bundlemaker.core.jtype.IType;
+import org.bundlemaker.core.jtype.ITypeModule;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;

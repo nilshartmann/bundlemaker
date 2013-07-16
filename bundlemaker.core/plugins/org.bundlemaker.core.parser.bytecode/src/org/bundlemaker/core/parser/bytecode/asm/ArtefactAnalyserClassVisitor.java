@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser.bytecode.asm;
 
-import org.bundlemaker.core._type.TypeEnum;
+import org.bundlemaker.core.jtype.TypeEnum;
 import org.eclipse.core.runtime.Assert;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;

@@ -6,12 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core._type.ITypeArtifact;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.common.history.History;
 import org.bundlemaker.core.common.history.IHistoryChangedListener;
+import org.bundlemaker.core.jtype.ITypeArtifact;
 import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;

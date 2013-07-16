@@ -5,11 +5,11 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.ITypeModularizedSystem;
-import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
+import org.bundlemaker.core.jtype.IType;
+import org.bundlemaker.core.jtype.ITypeModularizedSystem;
+import org.bundlemaker.core.jtype.ITypeModule;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.junit.Assert;
 

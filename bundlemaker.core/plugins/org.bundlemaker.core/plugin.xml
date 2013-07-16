@@ -37,14 +37,14 @@
   <extension
         point="org.bundlemaker.core.modelextension">
      <modelextension
-           class="org.bundlemaker.core._type.internal.ModelExtension"
+           class="org.bundlemaker.core.jtype.internal.ModelExtension"
            id="org.bundlemaker.core.jtype.ModelExtension">
      </modelextension>
   </extension>
   <extension
         point="org.bundlemaker.core.movableunitcreator">
      <movableunitcreator
-           class="org.bundlemaker.core._type.internal.JTypeMovableUnitCreator"
+           class="org.bundlemaker.core.jtype.internal.JTypeMovableUnitCreator"
            id="org.bundlemaker.core.jtype.jTypeMovableUnitCreator">
      </movableunitcreator>
   </extension>

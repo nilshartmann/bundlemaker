@@ -2,7 +2,6 @@ package org.bundlemaker.core.itestframework.utils;
 
 import static org.hamcrest.CoreMatchers.is;
 
-import org.bundlemaker.core._type.ITypeArtifact;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
@@ -11,6 +10,7 @@ import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact.IResourceArtifactContent;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.jtype.ITypeArtifact;
 import org.bundlemaker.core.spi.analysis.IReferencedArtifact;
 import org.bundlemaker.core.spi.analysis.IReferencingArtifact;
 import org.junit.Assert;

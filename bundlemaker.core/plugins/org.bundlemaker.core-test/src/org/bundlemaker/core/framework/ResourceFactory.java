@@ -6,13 +6,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core._type.IParsableTypeResource;
-import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core.common.utils.FileUtils;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
+import org.bundlemaker.core.jtype.IParsableTypeResource;
+import org.bundlemaker.core.jtype.TypeEnum;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.CoreException;
 

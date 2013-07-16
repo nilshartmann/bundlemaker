@@ -14,8 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-import org.bundlemaker.core._type.IReference;
 import org.bundlemaker.core.common.collections.GenericCache;
+import org.bundlemaker.core.jtype.IReference;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.spi.parser.IReferenceDetailParser;

@@ -9,7 +9,6 @@ Bundle-Vendor: bundlemaker.org
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bundlemaker.core,
- org.bundlemaker.core._type,
  org.bundlemaker.core.analysis,
  org.bundlemaker.core.analysis.algorithms,
  org.bundlemaker.core.analysis.algorithms.sorter,
@@ -23,6 +22,7 @@ Export-Package: org.bundlemaker.core,
  org.bundlemaker.core.exporter.util,
  org.bundlemaker.core.internal.api.project,
  org.bundlemaker.core.internal.api.resource,
+ org.bundlemaker.core.jtype,
  org.bundlemaker.core.parser,
  org.bundlemaker.core.project,
  org.bundlemaker.core.project.filecontent,

@@ -15,11 +15,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core._type.ITypeArtifact;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.jtype.ITypeArtifact;
 import org.bundlemaker.core.selection.IDependencySelection;
 import org.bundlemaker.core.selection.IDependencySelectionListener;
 import org.bundlemaker.core.selection.Selection;

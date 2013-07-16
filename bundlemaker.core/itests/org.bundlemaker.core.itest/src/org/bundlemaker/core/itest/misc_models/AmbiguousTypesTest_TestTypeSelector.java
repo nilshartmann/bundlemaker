@@ -2,8 +2,8 @@ package org.bundlemaker.core.itest.misc_models;
 
 import java.util.Set;
 
-import org.bundlemaker.core._type.IType;
-import org.bundlemaker.core._type.ITypeSelector;
+import org.bundlemaker.core.jtype.IType;
+import org.bundlemaker.core.jtype.ITypeSelector;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.resource.IModule;

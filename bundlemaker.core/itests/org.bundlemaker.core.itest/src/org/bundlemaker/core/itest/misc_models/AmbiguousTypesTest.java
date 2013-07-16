@@ -2,8 +2,6 @@ package org.bundlemaker.core.itest.misc_models;
 
 import java.util.LinkedList;
 
-import org.bundlemaker.core._type.ITypeModularizedSystem;
-import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
@@ -12,6 +10,8 @@ import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
+import org.bundlemaker.core.jtype.ITypeModularizedSystem;
+import org.bundlemaker.core.jtype.ITypeModule;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
