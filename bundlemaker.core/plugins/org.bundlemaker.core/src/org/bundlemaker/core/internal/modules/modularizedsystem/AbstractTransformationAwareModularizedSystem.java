@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bundlemaker.core.common.collections.GenericCache;
-import org.bundlemaker.core.internal.JdkModuleCreator;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.internal.modules.ChangeAction;
@@ -35,7 +34,6 @@ import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.ITransformation;
 import org.bundlemaker.core.spi.modext.ICacheCallback;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -219,20 +217,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     getModifiableResourceModules().clear();
     preApplyTransformations();
 
-    // // step 2: set up the JRE
-    // TODO
-    try {
-      IModule jdkModule = JdkModuleCreator.getJdkModules(this);
-      setExecutionEnvironment(jdkModule);
-      addModule(jdkModule);
-    } catch (CoreException e1) {
-      e1.printStackTrace();
-    }
-
     subMonitor.worked(20);
-
-    //
-
   }
 
   /**

@@ -24,12 +24,13 @@ import java.util.Map;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.internal.api.project.IInternalProjectDescription;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
+import org.bundlemaker.core.internal.modules.jdk.JdkContentProvider;
 import org.bundlemaker.core.project.BundleMakerProjectChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
-import org.bundlemaker.core.project.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
 import org.eclipse.core.runtime.Assert;
@@ -85,6 +86,8 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
 
   /** - */
   private BundleMakerProject                _bundleMakerProject;
+
+  private JdkContentProvider                _jdkContentProvider;
 
   /**
    * <p>
@@ -319,7 +322,8 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
    * @param bundlemakerProject
    * @throws CoreException
    */
-  public void initialize(IProgressMonitor progressMonitor, IProjectDescriptionAwareBundleMakerProject bundlemakerProject) throws CoreException {
+  public void initialize(IProgressMonitor progressMonitor, IProjectDescriptionAwareBundleMakerProject bundlemakerProject)
+      throws CoreException {
 
     //
     if (_initialized) {
@@ -333,6 +337,11 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     // if (isValid()) {
     // throw new RuntimeException("Invalid description");
     // }
+
+    //
+    _jdkContentProvider = new JdkContentProvider();
+    _jdkContentProvider.setProjectDescription(this);
+    _projectContentEntries.addAll(_jdkContentProvider.getBundleMakerProjectContent(null, _bundleMakerProject));
 
     //
     for (IProjectContentProvider contentProvider : _projectContentProviders) {

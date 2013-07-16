@@ -272,7 +272,7 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
    * 
    * @param executionEnvironment
    */
-  protected void setExecutionEnvironment(IModule executionEnvironment) {
+  public void setExecutionEnvironment(IModule executionEnvironment) {
 
     Assert.isNotNull(executionEnvironment);
 

@@ -43,7 +43,7 @@ public abstract class AbstractJeditAnalysisModelTest extends AbstractBundleMaker
     super.before();
 
     // prepare the model
-    assertTypeCount(getModularizedSystem(), 1466);
+    assertTypeCount(getModularizedSystem(), 3496);
 
     // apply the basic group transformation
     IRootArtifact rootArtifact = AnalysisCore.getAnalysisModel(getModularizedSystem(),

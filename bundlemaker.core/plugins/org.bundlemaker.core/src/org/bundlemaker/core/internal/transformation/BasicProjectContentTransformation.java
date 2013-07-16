@@ -12,6 +12,7 @@ package org.bundlemaker.core.internal.transformation;
 
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
+import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractModularizedSystem;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.resource.IMovableUnit;
@@ -35,6 +36,11 @@ public class BasicProjectContentTransformation implements IInternalTransformatio
       //
       for (IMovableUnit movableUnit : projectContentEntry.getMovableUnits()) {
         module.addMovableUnit(movableUnit);
+      }
+
+      //
+      if (projectContentEntry.getUserAttributes().containsKey("EXECUTION_ENVIRONMENT")) {
+        ((AbstractModularizedSystem) modularizedSystem).setExecutionEnvironment(module);
       }
     }
   }

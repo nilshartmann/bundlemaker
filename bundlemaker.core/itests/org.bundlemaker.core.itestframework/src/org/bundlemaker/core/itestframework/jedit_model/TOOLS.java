@@ -1,7 +1,9 @@
 package org.bundlemaker.core.itestframework.jedit_model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.bundlemaker.core._type.IType;
 import org.bundlemaker.core._type.ITypeModularizedSystem;
@@ -9,7 +11,6 @@ import org.bundlemaker.core._type.ITypeModule;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.resource.IModularizedSystem;
-import org.bundlemaker.core.resource.IModule;
 import org.junit.Assert;
 
 public class TOOLS {
@@ -59,6 +60,21 @@ public class TOOLS {
     ITypeModularizedSystem tms = modularizedSystem.adaptAs(ITypeModularizedSystem.class);
     ITypeModule exeTyMo = modularizedSystem.getExecutionEnvironment().adaptAs(ITypeModule.class);
 
+    // //
+    // List<IType> types = new LinkedList<IType>(tms.getTypes());
+    // Collections.sort(types, new Comparator<IType>() {
+    // @Override
+    // public int compare(IType o1, IType o2) {
+    // return o1.getFullyQualifiedName().compareTo(o2.getFullyQualifiedName());
+    // }
+    // });
+    // System.out.println("*************************************************");
+    // for (IType iType : types) {
+    // System.out.println(" - " + iType.getFullyQualifiedName());
+    // }
+    // System.out.println("*************************************************");
+    
+    
     System.out.println("All types: " + tms.getTypes().size());
     System.out.println("All execution types: " + exeTyMo.getContainedTypes().size());
 
