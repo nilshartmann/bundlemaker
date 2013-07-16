@@ -7,20 +7,20 @@ import java.util.Set;
 
 import org.bundlemaker.core._type.ITypeResource;
 import org.bundlemaker.core.common.collections.GenericCache;
-import org.bundlemaker.core.internal.resource.MovableUnit;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.spi.modext.IMovableUnitCreator;
+import org.bundlemaker.core.spi.modext.AbstractMovableUnitCreator;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
-public class JTypeMovableUnitCreator implements IMovableUnitCreator {
+public class JTypeMovableUnitCreator extends AbstractMovableUnitCreator {
 
   /**
    * <p>
    * </p>
+   * 
    * @param binaries
    * @param sources
    * 
@@ -64,7 +64,7 @@ public class JTypeMovableUnitCreator implements IMovableUnitCreator {
     // create the result
     Set<IMovableUnit> result = new HashSet<IMovableUnit>();
     for (IModuleResource sourceResource : cache.keySet()) {
-      result.add(new MovableUnit(sourceResource, new LinkedList<IModuleResource>(cache
+      result.add(createMovableUnit(sourceResource, new LinkedList<IModuleResource>(cache
           .get(sourceResource))));
     }
 
