@@ -27,8 +27,6 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
-import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
-import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -393,11 +391,11 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
     // STEP 2: initialize all dependencies to this artifact
     // this is necessary to filter unwanted references to types that occur multiple times!
-    if (_type.equals(((IModifiableModularizedSystem) getModularizedSystem()).adaptAs(ITypeModularizedSystem.class)
+    if (_type.equals(getModularizedSystem().adaptAs(ITypeModularizedSystem.class)
         .getType(_type.getFullyQualifiedName()))) {
 
       //
-      Set<IType> referringTypes = ((ModularizedSystem) getModularizedSystem())
+      Set<IType> referringTypes = getModularizedSystem()
           .adaptAs(ITypeModularizedSystem.class)
           .getTypeNameToReferringCache().get(
               _type.getFullyQualifiedName());

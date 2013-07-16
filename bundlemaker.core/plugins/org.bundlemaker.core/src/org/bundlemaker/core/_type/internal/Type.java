@@ -23,7 +23,6 @@ import org.bundlemaker.core._type.ReferenceAttributes;
 import org.bundlemaker.core._type.TypeEnum;
 import org.bundlemaker.core.common.FlyWeightString;
 import org.bundlemaker.core.common.IResource;
-import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
@@ -213,19 +212,7 @@ public class Type implements IType, IModifiableType {
    */
   @Override
   public IModuleResource getSourceResource() {
-
-    //
-    if (_sourceResource == null) {
-      return null;
-    }
-
-    //
-    if (_sourceResource instanceof Resource && ((Resource) _sourceResource).getResourceStandin() != null) {
-      return ((Resource) _sourceResource).getResourceStandin();
-    }
-
-    //
-    return (IModuleResource) _sourceResource;
+    return _sourceResource;
   }
 
   /**
@@ -233,18 +220,7 @@ public class Type implements IType, IModifiableType {
    */
   @Override
   public IModuleResource getBinaryResource() {
-
-    //
-    if (_binaryResource == null) {
-      return null;
-    }
-
-    //
-    if (_binaryResource instanceof Resource) {
-      return ((Resource) _binaryResource).getResourceStandin();
-    } else {
-      return _binaryResource;
-    }
+    return _binaryResource;
   }
 
   @Override
@@ -311,7 +287,7 @@ public class Type implements IType, IModifiableType {
     }
 
     if (result == null && _sourceResource != null && _sourceResource instanceof IModuleResource) {
-      result = ((Resource) _sourceResource).getModule(modularizedSystem);
+      result = ((IModuleResource) _sourceResource).getModule(modularizedSystem);
     }
 
     if (result == null) {
