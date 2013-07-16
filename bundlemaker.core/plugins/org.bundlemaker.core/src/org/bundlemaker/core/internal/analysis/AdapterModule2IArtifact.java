@@ -129,11 +129,6 @@ public class AdapterModule2IArtifact extends AbstractPackageFilteringArtifact im
     }
   }
 
-  public void accept(IAnalysisModelVisitor... visitors) {
-    DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
-    accept(artifactTreeVisitor);
-  }
-
   @Override
   public void setName(String name) {
     super.setName(name);

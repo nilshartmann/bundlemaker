@@ -3,7 +3,6 @@ package org.bundlemaker.core.internal.analysis.virtual;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.internal.analysis.DispatchingArtifactTreeVisitor;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
 
@@ -112,10 +111,5 @@ public class VirtualModule2IArtifact extends AbstractArtifactContainer implement
         ((IBundleMakerArtifact) artifact).accept(visitor);
       }
     }
-  }
-
-  public void accept(IAnalysisModelVisitor... visitors) {
-    DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
-    accept(artifactTreeVisitor);
   }
 }

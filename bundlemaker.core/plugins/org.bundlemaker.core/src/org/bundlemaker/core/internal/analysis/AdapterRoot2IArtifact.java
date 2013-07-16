@@ -304,11 +304,6 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
     }
   }
 
-  public void accept(IAnalysisModelVisitor... visitors) {
-    DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
-    accept(artifactTreeVisitor);
-  }
-
   /**
    * {@inheritDoc}
    */

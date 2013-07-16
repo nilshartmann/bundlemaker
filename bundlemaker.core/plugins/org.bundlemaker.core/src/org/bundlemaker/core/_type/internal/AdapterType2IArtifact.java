@@ -27,7 +27,6 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
-import org.bundlemaker.core.internal.analysis.DispatchingArtifactTreeVisitor;
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.resource.IModularizedSystem;
@@ -488,11 +487,6 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   public void accept(IAnalysisModelVisitor visitor) {
     //
     visitor.visit(this);
-  }
-
-  public void accept(IAnalysisModelVisitor... visitors) {
-    DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
-    accept(artifactTreeVisitor);
   }
 
   /**

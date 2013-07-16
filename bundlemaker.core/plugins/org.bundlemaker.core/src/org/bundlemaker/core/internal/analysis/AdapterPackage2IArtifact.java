@@ -200,11 +200,6 @@ public class AdapterPackage2IArtifact extends AbstractPackageFilteringArtifact i
     }
   }
 
-  public void accept(IAnalysisModelVisitor... visitors) {
-    DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
-    accept(artifactTreeVisitor);
-  }
-
   /**
    * <p>
    * </p>

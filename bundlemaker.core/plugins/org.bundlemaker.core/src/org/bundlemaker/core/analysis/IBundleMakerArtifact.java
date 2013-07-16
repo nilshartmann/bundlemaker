@@ -425,14 +425,6 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact>, 
    */
   void accept(IAnalysisModelVisitor visitor);
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param visitors
-   */
-  void accept(IAnalysisModelVisitor... visitors);
-
   /***********************/
   /** REMOVE **/
   /***********************/

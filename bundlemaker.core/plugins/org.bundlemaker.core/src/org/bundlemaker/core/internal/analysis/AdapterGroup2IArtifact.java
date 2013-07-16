@@ -212,12 +212,4 @@ public final class AdapterGroup2IArtifact extends AbstractArtifactContainer impl
       }
     }
   }
-
-  /**
-   * {@inheritDoc}
-   */
-  public void accept(IAnalysisModelVisitor... visitors) {
-    DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
-    accept(artifactTreeVisitor);
-  }
 }

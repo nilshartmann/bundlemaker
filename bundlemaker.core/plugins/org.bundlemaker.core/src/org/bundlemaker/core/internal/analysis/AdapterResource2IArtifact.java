@@ -179,11 +179,6 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     }
   }
 
-  public void accept(IAnalysisModelVisitor... visitors) {
-    DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
-    accept(artifactTreeVisitor);
-  }
-
   @Override
   public boolean containsResources() {
     return true;
