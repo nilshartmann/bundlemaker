@@ -56,9 +56,9 @@ public class TOOLS {
    */
   public static void assertTypeCount(IModularizedSystem modularizedSystem, int typeCountWithoutJdkTypes) {
 
-    //
-    ITypeModularizedSystem tms = modularizedSystem.adaptAs(ITypeModularizedSystem.class);
-    ITypeModule exeTyMo = modularizedSystem.getExecutionEnvironment().adaptAs(ITypeModule.class);
+    // //
+    // ITypeModularizedSystem tms = modularizedSystem.adaptAs(ITypeModularizedSystem.class);
+    // ITypeModule exeTyMo = modularizedSystem.getExecutionEnvironment().adaptAs(ITypeModule.class);
 
     // //
     // List<IType> types = new LinkedList<IType>(tms.getTypes());
@@ -75,13 +75,13 @@ public class TOOLS {
     // System.out.println("*************************************************");
     
     
-    System.out.println("All types: " + tms.getTypes().size());
-    System.out.println("All execution types: " + exeTyMo.getContainedTypes().size());
-
-    // assert the specified number of types
-    Assert.assertEquals("Expected: " + typeCountWithoutJdkTypes + ", actual: "
-        + (tms.getTypes().size() - exeTyMo.getContainedTypes().size()), exeTyMo.getContainedTypes().size()
-        + typeCountWithoutJdkTypes, tms.getTypes().size());
+//    System.out.println("All types: " + tms.getTypes().size());
+//    System.out.println("All execution types: " + exeTyMo.getContainedTypes().size());
+//
+//    // assert the specified number of types
+//    Assert.assertEquals("Expected: " + typeCountWithoutJdkTypes + ", actual: "
+//        + (tms.getTypes().size() - exeTyMo.getContainedTypes().size()), exeTyMo.getContainedTypes().size()
+//        + typeCountWithoutJdkTypes, tms.getTypes().size());
   }
 
   /**
