@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.common.ResourceType;
-import org.bundlemaker.core.resource.IMovableUnit;
 
 /**
  * <p>
@@ -152,13 +151,4 @@ public interface IProjectContentEntry {
    * @return a Set of resources, never null.
    */
   Set<? extends IProjectContentResource> getSourceResources();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  Set<? extends IMovableUnit> getMovableUnits();
-
 }

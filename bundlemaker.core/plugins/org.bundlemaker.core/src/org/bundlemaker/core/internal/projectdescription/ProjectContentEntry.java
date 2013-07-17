@@ -10,17 +10,13 @@ import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.common.utils.FileUtils;
 import org.bundlemaker.core.internal.api.project.IInternalProjectDescription;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
-import org.bundlemaker.core.internal.modules.MovableUnitSet;
-import org.bundlemaker.core.internal.resource.DispatchingMovableUnitCreator;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
-import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.project.VariablePath;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -68,9 +64,6 @@ public class ProjectContentEntry implements IProjectContentEntry {
 
   /** the set of source resource standins */
   private Set<IResourceStandin>              _sourceResourceStandins;
-
-  /** the movable unit set */
-  private MovableUnitSet                     _movableUnitSet;
 
   /** the project description */
   private IInternalProjectDescription        _projectDescription;
@@ -472,45 +465,6 @@ public class ProjectContentEntry implements IProjectContentEntry {
         }
       }
     }
-  }
-
-  /**
-   * <p>
-   * </p>
-   */
-  public void setupMovableUnits() {
-
-    //
-    _movableUnitSet = new MovableUnitSet();
-
-    //
-    DispatchingMovableUnitCreator unitCreator = new DispatchingMovableUnitCreator();
-
-    //
-    Map<String, IModuleResource> binaries = new HashMap<String, IModuleResource>();
-    for (IProjectContentResource resource : getBinaryResources()) {
-      if (resource instanceof IModuleResource) {
-        binaries.put(resource.getPath(), (IModuleResource) resource);
-      }
-    }
-
-    //
-    Map<String, IModuleResource> sources = new HashMap<String, IModuleResource>();
-    for (IProjectContentResource resource : getSourceResources()) {
-      if (resource instanceof IModuleResource) {
-        sources.put(resource.getPath(), (IModuleResource) resource);
-      }
-    }
-
-    //
-    for (IMovableUnit movableUnit : unitCreator.assignMovableUnits(binaries, sources)) {
-      _movableUnitSet.addMovableUnit(movableUnit);
-    }
-  }
-
-  @Override
-  public Set<? extends IMovableUnit> getMovableUnits() {
-    return _movableUnitSet.getMovableUnits();
   }
 
   /**

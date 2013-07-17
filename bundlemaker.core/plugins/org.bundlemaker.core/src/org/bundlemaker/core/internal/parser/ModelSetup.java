@@ -171,22 +171,12 @@ public class ModelSetup {
 
       //
       for (IProjectContentEntry contentEntry : projectContents) {
-        ((ProjectContentEntry) contentEntry).setupMovableUnits();
-      }
-
-      //
-      for (IProjectContentEntry contentEntry : projectContents) {
         ModelExtFactory.getModelExtensionFactory().resourceModelSetupCompleted(contentEntry,
             (Set<IModuleResource>) contentEntry.getBinaryResources(),
             (Set<IModuleResource>) contentEntry.getSourceResources());
       }
 
       progressMonitor.worked(1);
-
-      //
-      for (IProjectContentEntry contentEntry : projectContents) {
-        ((ProjectContentEntry) contentEntry).setupMovableUnits();
-      }
 
     } finally {
       progressMonitor.done();

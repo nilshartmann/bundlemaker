@@ -10,11 +10,18 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.transformation;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractModularizedSystem;
+import org.bundlemaker.core.internal.resource.DispatchingMovableUnitCreator;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectContentResource;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -34,7 +41,7 @@ public class BasicProjectContentTransformation implements IInternalTransformatio
       module.getUserAttributes().putAll(projectContentEntry.getUserAttributes());
 
       //
-      for (IMovableUnit movableUnit : projectContentEntry.getMovableUnits()) {
+      for (IMovableUnit movableUnit : setupMovableUnits(projectContentEntry)) {
         module.addMovableUnit(movableUnit);
       }
 
@@ -43,5 +50,34 @@ public class BasicProjectContentTransformation implements IInternalTransformatio
         ((AbstractModularizedSystem) modularizedSystem).setExecutionEnvironment(module);
       }
     }
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  public Set<IMovableUnit> setupMovableUnits(IProjectContentEntry projectContentEntry) {
+
+    //
+    DispatchingMovableUnitCreator unitCreator = new DispatchingMovableUnitCreator();
+
+    //
+    Map<String, IModuleResource> binaries = new HashMap<String, IModuleResource>();
+    for (IProjectContentResource resource : projectContentEntry.getBinaryResources()) {
+      if (resource instanceof IModuleResource) {
+        binaries.put(resource.getPath(), (IModuleResource) resource);
+      }
+    }
+
+    //
+    Map<String, IModuleResource> sources = new HashMap<String, IModuleResource>();
+    for (IProjectContentResource resource : projectContentEntry.getSourceResources()) {
+      if (resource instanceof IModuleResource) {
+        sources.put(resource.getPath(), (IModuleResource) resource);
+      }
+    }
+
+    //
+    return unitCreator.assignMovableUnits(binaries, sources);
   }
 }
