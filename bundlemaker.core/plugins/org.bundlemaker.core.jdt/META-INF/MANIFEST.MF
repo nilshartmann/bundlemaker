@@ -16,3 +16,4 @@ Export-Package: org.bundlemaker.core.jdt.content,
  org.bundlemaker.core.jdt.exporter,
  org.bundlemaker.core.jdt.parser
 Bundle-Vendor: bundlemaker.org
+Bundle-Activator: org.bundlemaker.core.jdt.internal.Activator

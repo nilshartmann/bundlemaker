@@ -4,11 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core.project.BundleMakerProjectChangedEvent;
+import org.bundlemaker.core.project.DescriptionChangedEvent;
+import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
-import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
-import org.bundlemaker.core.project.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
 import org.bundlemaker.core.ui.projecteditor.provider.internal.ProjectEditorContributionRegistry;
 import org.eclipse.core.runtime.Assert;
@@ -55,10 +54,15 @@ public class ProjectEditorTreeViewerContentProvider implements ITreeContentProvi
     _projectEditorContributionRegistry = projectContentProviderEditorRegistry;
 
     //
-    _listener = new IBundleMakerProjectChangedListener() {
+    _listener = new IBundleMakerProjectChangedListener.Adapter() {
+
+      /**
+       * {@inheritDoc}
+       */
       @Override
-      public void bundleMakerProjectChanged(BundleMakerProjectChangedEvent event) {
-        if (event.getType().equals(Type.PROJECT_DESCRIPTION_RECOMPUTED) && _viewer != null) {
+      public void projectDescriptionChanged(DescriptionChangedEvent event) {
+
+        if (event.getType().equals(DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RECOMPUTED) && _viewer != null) {
 
           // async refresh
           Display.getDefault().asyncExec(new Runnable() {

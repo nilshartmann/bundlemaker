@@ -13,6 +13,7 @@ import org.bundlemaker.core.common.utils.IFileBasedProjectContentInfo;
 import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
 import org.eclipse.core.resources.IProject;
@@ -126,7 +127,11 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
       File[] sourcePaths = sourceFiles.toArray(new File[0]);
 
       //
-      createFileBasedContent(name, version, binaryPaths, sourcePaths, mode);
+      IProjectContentEntry projectContentEntry = createFileBasedContent(name, version, binaryPaths, sourcePaths, mode);
+      for (IProjectContentResource resource : projectContentEntry.getBinaryResources()) {
+        System.out.println("Root: " + resource.getRoot());
+        System.out.println("Path: " + resource.getPath());
+      }
     }
   }
 

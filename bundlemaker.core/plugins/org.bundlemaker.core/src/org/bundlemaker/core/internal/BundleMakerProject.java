@@ -14,9 +14,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bundlemaker.core.internal.api.project.IInternalBundleMakerProject;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
@@ -27,13 +27,14 @@ import org.bundlemaker.core.internal.projectdescription.ProjectDescriptionStore;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.BundleMakerCore;
-import org.bundlemaker.core.project.BundleMakerProjectChangedEvent;
-import org.bundlemaker.core.project.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.project.BundleMakerProjectState;
+import org.bundlemaker.core.project.ContentChangedEvent;
+import org.bundlemaker.core.project.DescriptionChangedEvent;
 import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
 import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.StateChangedEvent;
 import org.bundlemaker.core.resource.IBundleMakerProjectHook;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -104,11 +105,11 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     _modifiableModualizedSystemWorkingCopies = new HashMap<String, ModularizedSystem>();
 
     //
-    _projectChangedListeners = new LinkedList<IBundleMakerProjectChangedListener>();
-    addBundleMakerProjectChangedListener(new IBundleMakerProjectChangedListener() {
+    _projectChangedListeners = new CopyOnWriteArrayList<IBundleMakerProjectChangedListener>();
+    addBundleMakerProjectChangedListener(new IBundleMakerProjectChangedListener.Adapter() {
       @Override
-      public void bundleMakerProjectChanged(BundleMakerProjectChangedEvent event) {
-        if (event.getType().equals(Type.PROJECT_DESCRIPTION_RECOMPUTED)) {
+      public void projectDescriptionChanged(DescriptionChangedEvent event) {
+        if (event.getType().equals(DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RECOMPUTED)) {
           BundleMakerProject.this._projectState = BundleMakerProjectState.DIRTY;
         }
       }
@@ -195,7 +196,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     _projectState = BundleMakerProjectState.INITIALIZED;
 
     // notify listeners
-    notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_STATE_CHANGED));
+    fireProjectStateChangedEvent(new StateChangedEvent());
   }
 
   @Override
@@ -233,7 +234,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     }
 
     // notify listeners
-    notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_STATE_CHANGED));
+    fireProjectStateChangedEvent(new StateChangedEvent());
   }
 
   /**
@@ -246,7 +247,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     _projectState = BundleMakerProjectState.DISPOSED;
 
     // notify listeners
-    notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_STATE_CHANGED));
+    fireProjectStateChangedEvent(new StateChangedEvent());
 
     //
     Activator.getDefault().removeCachedBundleMakerProject(_project);
@@ -462,10 +463,12 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
    */
   @Override
   public void reloadProjectDescription() throws CoreException {
+
+    //
     _projectDescription = loadProjectDescription();
 
-    notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_CHANGED));
-
+    //
+    fireDescriptionChangedEvent(new DescriptionChangedEvent(DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RELOADED));
   }
 
   @Override
@@ -513,16 +516,42 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
    * 
    * @param event
    */
-  public void notifyListeners(BundleMakerProjectChangedEvent event) {
+  public void fireContentChangedEvent(ContentChangedEvent event) {
     Assert.isNotNull(event);
 
-    // clone
-    IBundleMakerProjectChangedListener[] listeners = _projectChangedListeners
-        .toArray(new IBundleMakerProjectChangedListener[0]);
+    //
+    for (IBundleMakerProjectChangedListener listener : _projectChangedListeners) {
+      listener.projectContentChanged(event);
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param event
+   */
+  public void fireDescriptionChangedEvent(DescriptionChangedEvent event) {
+    Assert.isNotNull(event);
 
     //
-    for (IBundleMakerProjectChangedListener listener : listeners) {
-      listener.bundleMakerProjectChanged(event);
+    for (IBundleMakerProjectChangedListener listener : _projectChangedListeners) {
+      listener.projectDescriptionChanged(event);
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param event
+   */
+  public void fireProjectStateChangedEvent(StateChangedEvent event) {
+    Assert.isNotNull(event);
+
+    //
+    for (IBundleMakerProjectChangedListener listener : _projectChangedListeners) {
+      listener.projectStateChanged(event);
     }
   }
 

@@ -25,8 +25,7 @@ import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.internal.api.project.IInternalProjectDescription;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.modules.jdk.JdkContentProvider;
-import org.bundlemaker.core.project.BundleMakerProjectChangedEvent;
-import org.bundlemaker.core.project.BundleMakerProjectChangedEvent.Type;
+import org.bundlemaker.core.project.DescriptionChangedEvent;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
@@ -87,6 +86,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   /** - */
   private BundleMakerProject                _bundleMakerProject;
 
+  /** - */
   private JdkContentProvider                _jdkContentProvider;
 
   /**
@@ -470,7 +470,8 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     ProjectDescriptionStore.saveProjectDescription(_bundleMakerProject.getProject(), this);
 
     // notify listener
-    _bundleMakerProject.notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_SAVED));
+    _bundleMakerProject.fireDescriptionChangedEvent(new DescriptionChangedEvent(
+        DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_SAVED));
   }
 
   /**
@@ -479,11 +480,12 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   public void fireProjectDescriptionChangedEvent() {
 
     // Create the Event
-    BundleMakerProjectChangedEvent event = new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_CHANGED);
+    DescriptionChangedEvent event = new DescriptionChangedEvent(
+        DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_MODIFIED);
 
     // notify listeners
     if (_bundleMakerProject != null) {
-      _bundleMakerProject.notifyListeners(event);
+      _bundleMakerProject.fireDescriptionChangedEvent(event);
     }
   }
 
@@ -494,11 +496,12 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   public void fireProjectDescriptionRecomputedEvent() {
 
     // Create the Event
-    BundleMakerProjectChangedEvent event = new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_RECOMPUTED);
+    DescriptionChangedEvent event = new DescriptionChangedEvent(
+        DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RECOMPUTED);
 
     // notify listeners
     if (_bundleMakerProject != null) {
-      _bundleMakerProject.notifyListeners(event);
+      _bundleMakerProject.fireDescriptionChangedEvent(event);
     }
   }
 }
