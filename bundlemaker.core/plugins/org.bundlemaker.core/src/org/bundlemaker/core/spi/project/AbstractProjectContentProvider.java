@@ -48,7 +48,7 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
   private BundleMakerProjectDescription              _projectDescription;
 
   /** cached list of all file based contents */
-  private List<IProjectContentEntry>                 _fileBasedContents;
+  private List<IProjectContentEntry>                 _projectContentEntries;
 
   /** the internal counter */
   private int                                        _counter = 0;
@@ -61,7 +61,7 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
   public AbstractProjectContentProvider() {
 
     //
-    _fileBasedContents = new LinkedList<IProjectContentEntry>();
+    _projectContentEntries = new LinkedList<IProjectContentEntry>();
   }
 
   /**
@@ -71,7 +71,7 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    * @return
    */
   protected List<IProjectContentEntry> getFileBasedContents() {
-    return Collections.unmodifiableList(_fileBasedContents);
+    return Collections.unmodifiableList(_projectContentEntries);
   }
 
   /**
@@ -79,7 +79,7 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    * </p>
    */
   public void clearFileBasedContents() {
-    _fileBasedContents.clear();
+    _projectContentEntries.clear();
   }
 
   /**
@@ -276,7 +276,7 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
     result.initialize(getBundleMakerProject().getProjectDescription());
 
     //
-    _fileBasedContents.add(result);
+    _projectContentEntries.add(result);
 
     //
     return result;

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.common.utils.IFileBasedProjectContentInfo;
+import org.bundlemaker.core.jdt.internal.Activator;
 import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
@@ -18,6 +19,10 @@ import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -128,11 +133,27 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
 
       //
       IProjectContentEntry projectContentEntry = createFileBasedContent(name, version, binaryPaths, sourcePaths, mode);
-      for (IProjectContentResource resource : projectContentEntry.getBinaryResources()) {
-        System.out.println("Root: " + resource.getRoot());
-        System.out.println("Path: " + resource.getPath());
+      // TODO: CACHEN!!
+      // for (IProjectContentResource resource : projectContentEntry.getBinaryResources()) {
+      //   System.out.println("Root: " + resource.getRoot());
+      //  System.out.println("Path: " + resource.getPath());
+      // }
+      for (IJavaProject javaProject : _javaProjects) {
+        Activator.getInstance().getProject2ProviderMap().getOrCreate(javaProject.getProject()).add(this);
       }
     }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param eclipseResource
+   * @return
+   */
+  public IProjectContentResource getProjectContentResource(IResource eclipseResource) {
+    // TODO
+    throw new UnsupportedOperationException();
   }
 
   /**
