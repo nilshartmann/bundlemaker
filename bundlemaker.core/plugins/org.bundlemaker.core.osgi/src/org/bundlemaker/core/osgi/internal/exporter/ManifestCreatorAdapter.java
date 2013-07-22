@@ -2,16 +2,16 @@ package org.bundlemaker.core.osgi.internal.exporter;
 
 import java.io.IOException;
 
+import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ITemplateProvider;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.virgo.bundlor.util.SimpleManifestContents;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifestFactory;
@@ -25,7 +25,7 @@ public class ManifestCreatorAdapter {
   private IModularizedSystem                  _modularizedSystem;
 
   /** the current module */
-  private IResourceModule                     _module;
+  private IModule                     _module;
 
   /** - */
   private ManifestContents                    _manifestContents;
@@ -62,7 +62,7 @@ public class ManifestCreatorAdapter {
    * @param moduleTemplateDirectory
    * @param hostManifestContents
    */
-  public ManifestCreatorAdapter(IModularizedSystem modularizedSystem, IResourceModule module,
+  public ManifestCreatorAdapter(IModularizedSystem modularizedSystem, IModule module,
       IModuleExporterContext context, ITemplateProvider templateProvider, ManifestContents hostManifestContents,
       IBundleManifestCreator bundleManifestCreator, IManifestPreferences manifestPreferences) {
 
@@ -102,7 +102,7 @@ public class ManifestCreatorAdapter {
    * @param module
    * @param context
    */
-  public ManifestCreatorAdapter(IModularizedSystem modularizedSystem, IResourceModule module,
+  public ManifestCreatorAdapter(IModularizedSystem modularizedSystem, IModule module,
       IModuleExporterContext context, IBundleManifestCreator bundleManifestCreator) {
 
     //
@@ -145,7 +145,7 @@ public class ManifestCreatorAdapter {
     if (_originalManifestContents == null) {
 
       // the existing bundle manifest resource
-      IResource existingManifestResource = getModule().getResource("META-INF/MANIFEST.MF", ProjectContentType.BINARY);
+      IModuleResource existingManifestResource = getModule().getResource("META-INF/MANIFEST.MF", ResourceType.BINARY);
 
       // create default manifest
       if (existingManifestResource == null) {
@@ -184,7 +184,7 @@ public class ManifestCreatorAdapter {
    * 
    * @return the {@link IResourceModule}
    */
-  protected IResourceModule getModule() {
+  protected IModule getModule() {
     return _module;
   }
 

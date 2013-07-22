@@ -10,9 +10,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser.bytecode;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.parser.AbstractParserFactory;
-import org.bundlemaker.core.parser.IParser;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.spi.parser.IParser;
+import org.bundlemaker.core.spi.parser.IParserFactory;
 import org.eclipse.core.runtime.CoreException;
 
 /**
@@ -21,13 +21,13 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ByteCodeParserFactory extends AbstractParserFactory {
+public class ByteCodeParserFactory extends IParserFactory.Adapter {
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public IParser createParser(IBundleMakerProject bundleMakerProject) throws CoreException {
+  public IParser createParser(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException {
 
     // return the new byte code parser
     return new ByteCodeParser();

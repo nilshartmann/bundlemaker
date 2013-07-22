@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.selectors.SubtypesAndImplementorsSelector;
+import org.bundlemaker.core.jtype.SubtypesAndImplementorsSelector;
 import org.bundlemaker.core.ui.handler.AbstractArtifactSelectorHandler;
 
 /**

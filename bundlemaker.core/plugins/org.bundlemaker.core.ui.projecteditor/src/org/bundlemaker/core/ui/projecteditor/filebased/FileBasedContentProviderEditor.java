@@ -12,11 +12,11 @@ package org.bundlemaker.core.ui.projecteditor.filebased;
 
 import java.util.List;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
-import org.bundlemaker.core.projectdescription.VariablePath;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
+import org.bundlemaker.core.project.AnalyzeMode;
+import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.VariablePath;
+import org.bundlemaker.core.project.filecontent.FileBasedProjectContentProvider;
 import org.bundlemaker.core.ui.projecteditor.filebased.edit.EditFileBasedContentProviderDialog;
 import org.bundlemaker.core.ui.projecteditor.filebased.edit.EditProjectPathDialog;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
@@ -39,7 +39,7 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
   }
 
   @Override
-  public Object getRootElement(IBundleMakerProject project, IProjectContentProvider provider) {
+  public Object getRootElement(IProjectDescriptionAwareBundleMakerProject project, IProjectContentProvider provider) {
     return provider;
     // FileBasedContentProvider fileBasedContentProvider = (FileBasedContentProvider) provider;
     //
@@ -47,7 +47,7 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
   }
 
   @Override
-  public List<? extends Object> getChildren(IBundleMakerProject project, IProjectContentProvider provider,
+  public List<? extends Object> getChildren(IProjectDescriptionAwareBundleMakerProject project, IProjectContentProvider provider,
       Object rootElement) {
 
     return _fileBasedContentRenderer.getChildren(project, rootElement);
@@ -112,7 +112,7 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
    * IBundleMakerProject, org.bundlemaker.core.projectdescription.IProjectContentProvider, java.lang.Object)
    */
   @Override
-  public boolean edit(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object selectedObject) {
+  public boolean edit(Shell shell, IProjectDescriptionAwareBundleMakerProject project, IProjectContentProvider provider, Object selectedObject) {
 
     FileBasedProjectContentProvider fileBasedContentProvider = (FileBasedProjectContentProvider) provider;
 
@@ -160,7 +160,7 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
    * java.lang.Object)
    */
   @Override
-  public void remove(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object selectedObject) {
+  public void remove(Shell shell, IProjectDescriptionAwareBundleMakerProject project, IProjectContentProvider provider, Object selectedObject) {
     FileBasedProjectContentProvider fileBasedContentProvider = (FileBasedProjectContentProvider) provider;
 
     ProjectPath pathToRemove = (ProjectPath) selectedObject;
@@ -174,14 +174,14 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
    * @see org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#getContextMenuActions()
    */
   @Override
-  public List<IAction> getContextMenuActions(IBundleMakerProject project,
+  public List<IAction> getContextMenuActions(IProjectDescriptionAwareBundleMakerProject project,
       List<IProjectContentProviderEditorElement> selectedElements) {
 
     // no entries for context menu
     return null;
   }
 
-  protected boolean editFileBasedContentProvider(Shell shell, IBundleMakerProject project,
+  protected boolean editFileBasedContentProvider(Shell shell, IProjectDescriptionAwareBundleMakerProject project,
       FileBasedProjectContentProvider fileBasedContentProvider) {
     EditFileBasedContentProviderDialog page = new EditFileBasedContentProviderDialog(shell, fileBasedContentProvider);
     if (page.open() != Window.OK) {

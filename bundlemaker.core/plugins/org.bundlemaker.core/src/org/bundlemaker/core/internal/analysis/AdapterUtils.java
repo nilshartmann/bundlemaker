@@ -11,12 +11,12 @@ import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.internal.modules.AbstractModule;
+import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
+import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.internal.modules.Group;
-import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.internal.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.internal.modules.Module;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
-import org.bundlemaker.core.modules.IMovableUnit;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -85,25 +85,25 @@ public class AdapterUtils {
     if (newParent instanceof IGroupArtifact) {
 
       // get the parent group
-      Group parent = ((Group) ((IGroupArtifact) newParent)
+      Group parent = ((Group) ((AdapterGroup2IArtifact) newParent)
           .getAssociatedGroup());
 
       //
-      ((Group) artifact.getAssociatedGroup()).setParent(parent);
+      ((Group) ((AdapterGroup2IArtifact) artifact).getAssociatedGroup()).setParent(parent);
     }
 
     //
     else if (newParent instanceof IRootArtifact) {
 
       //
-      ((Group) artifact.getAssociatedGroup()).setRootParent();
+      ((Group) ((AdapterGroup2IArtifact) artifact).getAssociatedGroup()).setRootParent();
     }
 
     //
     else {
 
       //
-      ((Group) artifact.getAssociatedGroup()).setParent(null);
+      ((Group) ((AdapterGroup2IArtifact) artifact).getAssociatedGroup()).setParent(null);
     }
   }
 
@@ -143,7 +143,7 @@ public class AdapterUtils {
 
       if (moduleArtifact instanceof AdapterModule2IArtifact) {
         AdapterModule2IArtifact adapter = (AdapterModule2IArtifact) moduleArtifact;
-        AbstractModule<?, ?> abstractModule = (AbstractModule<?, ?>) adapter.getModule();
+        Module abstractModule = (Module) adapter.getModule();
         Assert.isNotNull(abstractModule);
         //
         if (!abstractModule.hasModularizedSystem()) {
@@ -221,14 +221,14 @@ public class AdapterUtils {
     //
     if (artifact instanceof IGroupArtifact) {
       IGroupArtifact groupArtifact = (IGroupArtifact) artifact;
-      Group group = (Group) groupArtifact.getAssociatedGroup();
+      Group group = (Group) ((AdapterGroup2IArtifact) artifact).getAssociatedGroup();
       group.setParent(null);
 
       //
       groupArtifact.accept(new IAnalysisModelVisitor.Adapter() {
         @Override
         public boolean visit(IGroupArtifact artifact) {
-          modularizedSystem.internalGroups().remove(artifact.getAssociatedGroup());
+          modularizedSystem.internalGroups().remove(((AdapterGroup2IArtifact) artifact).getAssociatedGroup());
           return true;
         }
       });
@@ -258,7 +258,7 @@ public class AdapterUtils {
     Assert.isNotNull(artifact);
 
     //
-    IModifiableResourceModule resourceModule = (IModifiableResourceModule) adapterPackage2IArtifact
+    IModifiableModule resourceModule = (IModifiableModule) adapterPackage2IArtifact
         .getContainingModule();
 
     //
@@ -292,7 +292,7 @@ public class AdapterUtils {
     if (moduleArtifact != null) {
 
       //
-      removeResourcesFromModule((IModifiableResourceModule) moduleArtifact.getModule(),
+      removeResourcesFromModule((IModifiableModule) moduleArtifact.getModule(),
           getAllMovableUnits(artifactToRemove));
     }
 
@@ -366,21 +366,22 @@ public class AdapterUtils {
    * @param resourceModule
    * @param movableUnit
    */
-  public static void addResourceToModule(IModifiableResourceModule resourceModule, IMovableUnit movableUnit) {
+  public static void addResourceToModule(IModifiableModule resourceModule, IMovableUnit movableUnit) {
 
     //
     Assert.isNotNull(resourceModule);
     Assert.isNotNull(movableUnit);
 
     //
-    IModifiableResourceModule module = (IModifiableResourceModule) movableUnit.getContainingResourceModule();
+    IModifiableModule module = (IModifiableModule) movableUnit.getAssoicatedModule(resourceModule
+        .getModularizedSystem());
 
     if (module != null) {
-      module.getModifiableSelfResourceContainer().removeMovableUnit(movableUnit);
+      module.removeMovableUnit(movableUnit);
     }
 
     // add the binary resources
-    resourceModule.getModifiableSelfResourceContainer().addMovableUnit(movableUnit);
+    resourceModule.addMovableUnit(movableUnit);
   }
 
   /**
@@ -390,7 +391,7 @@ public class AdapterUtils {
    * @param resourceModule
    * @param resourceHolder
    */
-  public static void addResourcesToModule(IModifiableResourceModule resourceModule, List<IMovableUnit> movableUnits) {
+  public static void addResourcesToModule(IModifiableModule resourceModule, List<IMovableUnit> movableUnits) {
 
     Assert.isNotNull(resourceModule);
     Assert.isNotNull(movableUnits);
@@ -410,7 +411,7 @@ public class AdapterUtils {
    * @param resourceModule
    * @param movableUnits
    */
-  private static void removeResourcesFromModule(IModifiableResourceModule resourceModule,
+  private static void removeResourcesFromModule(IModifiableModule resourceModule,
       List<IMovableUnit> movableUnits) {
 
     // asserts
@@ -419,7 +420,7 @@ public class AdapterUtils {
 
     // remove all units
     for (IMovableUnit resourceHolder : movableUnits) {
-      resourceModule.getModifiableSelfResourceContainer().removeMovableUnit(resourceHolder);
+      resourceModule.removeMovableUnit(resourceHolder);
     }
   }
 }

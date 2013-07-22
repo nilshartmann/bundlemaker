@@ -1,7 +1,7 @@
 package org.bundlemaker.core.osgi.manifest;
 
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
 import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 
 /**
@@ -23,6 +23,6 @@ public interface IBundleManifestCreator {
    * @param packageWiringPreferences
    * @return
    */
-  public ManifestContents createManifest(IModularizedSystem modularizedSystem, IResourceModule resourceModule,
+  public ManifestContents createManifest(IModularizedSystem modularizedSystem, IModule resourceModule,
       ManifestContents manifestTemplate, ManifestContents originalManifest, IManifestPreferences manifestPreferences);
 }

@@ -1,7 +1,7 @@
 package org.bundlemaker.core.internal.transformation;
 
-import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.util.gson.GsonHelper;
+import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
+import org.bundlemaker.core.internal.gson.GsonHelper;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 

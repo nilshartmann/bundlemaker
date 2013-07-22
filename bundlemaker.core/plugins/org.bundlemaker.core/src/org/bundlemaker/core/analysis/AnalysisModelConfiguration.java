@@ -1,6 +1,6 @@
 package org.bundlemaker.core.analysis;
 
-import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.common.ResourceType;
 import org.eclipse.core.runtime.Assert;
 
 import com.google.gson.annotations.Expose;
@@ -18,7 +18,7 @@ public class AnalysisModelConfiguration implements IAnalysisModelConfiguration {
   /** the content type to show */
   @Expose
   @SerializedName("contentType")
-  private ProjectContentType _contentType                         = ProjectContentType.SOURCE;
+  private ResourceType _contentType                         = ResourceType.SOURCE;
 
   /** whether the packages should be hierarchical or flat */
   @Expose
@@ -50,7 +50,7 @@ public class AnalysisModelConfiguration implements IAnalysisModelConfiguration {
    * @param resourcePresentation
    */
   public AnalysisModelConfiguration(boolean hierarchical,
-      ProjectContentType contentType, boolean includeVirtualModuleForMissingTypes) {
+      ResourceType contentType, boolean includeVirtualModuleForMissingTypes) {
 
     Assert.isNotNull(contentType);
 
@@ -61,12 +61,12 @@ public class AnalysisModelConfiguration implements IAnalysisModelConfiguration {
 
   /**
    * <p>
-   * Returns the {@link ProjectContentType} of this configuration.
+   * Returns the {@link ResourceType} of this configuration.
    * </p>
    * 
    * @return
    */
-  public final ProjectContentType getContentType() {
+  public final ResourceType getContentType() {
     return _contentType;
   }
 
@@ -95,7 +95,7 @@ public class AnalysisModelConfiguration implements IAnalysisModelConfiguration {
    */
   @Override
   public final boolean isSourceContent() {
-    return _contentType.equals(ProjectContentType.SOURCE);
+    return _contentType.equals(ResourceType.SOURCE);
   }
 
   /**
@@ -103,7 +103,7 @@ public class AnalysisModelConfiguration implements IAnalysisModelConfiguration {
    */
   @Override
   public final boolean isBinaryContent() {
-    return _contentType.equals(ProjectContentType.BINARY);
+    return _contentType.equals(ResourceType.BINARY);
   }
 
   // /**

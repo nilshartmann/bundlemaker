@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
-import org.bundlemaker.core.util.FileUtils;
+import org.bundlemaker.core.common.utils.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.osgi.framework.BundleActivator;
 

@@ -1,9 +1,9 @@
 package org.bundlemaker.core.internal.projectdescription.gson;
 
-import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
@@ -36,7 +36,7 @@ public class GsonProjectDescriptionHelper {
    * @param project
    * @return
    */
-  public static Gson gson(IBundleMakerProject project) {
+  public static Gson gson(IProjectDescriptionAwareBundleMakerProject project) {
 
     try {
 

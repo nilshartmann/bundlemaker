@@ -4,11 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core.BundleMakerProjectChangedEvent;
-import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IBundleMakerProjectChangedListener;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.project.DescriptionChangedEvent;
+import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
+import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
 import org.bundlemaker.core.ui.projecteditor.provider.internal.ProjectEditorContributionRegistry;
 import org.eclipse.core.runtime.Assert;
@@ -55,10 +54,15 @@ public class ProjectEditorTreeViewerContentProvider implements ITreeContentProvi
     _projectEditorContributionRegistry = projectContentProviderEditorRegistry;
 
     //
-    _listener = new IBundleMakerProjectChangedListener() {
+    _listener = new IBundleMakerProjectChangedListener.Adapter() {
+
+      /**
+       * {@inheritDoc}
+       */
       @Override
-      public void bundleMakerProjectChanged(BundleMakerProjectChangedEvent event) {
-        if (event.getType().equals(Type.PROJECT_DESCRIPTION_RECOMPUTED) && _viewer != null) {
+      public void projectDescriptionChanged(DescriptionChangedEvent event) {
+
+        if (event.getType().equals(DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RECOMPUTED) && _viewer != null) {
 
           // async refresh
           Display.getDefault().asyncExec(new Runnable() {
@@ -93,12 +97,12 @@ public class ProjectEditorTreeViewerContentProvider implements ITreeContentProvi
 
     //
     if (newInput != null) {
-      ((IBundleMakerProject) newInput).addBundleMakerProjectChangedListener(_listener);
+      ((IProjectDescriptionAwareBundleMakerProject) newInput).addBundleMakerProjectChangedListener(_listener);
     }
 
     //
     if (oldInput != null) {
-      ((IBundleMakerProject) oldInput).removeBundleMakerProjectChangedListener(_listener);
+      ((IProjectDescriptionAwareBundleMakerProject) oldInput).removeBundleMakerProjectChangedListener(_listener);
     }
   }
 
@@ -109,7 +113,7 @@ public class ProjectEditorTreeViewerContentProvider implements ITreeContentProvi
   public Object[] getElements(Object inputElement) {
 
     // cast to IBundleMakerProject
-    IBundleMakerProject bundleMakerProject = (IBundleMakerProject) inputElement;
+    IProjectDescriptionAwareBundleMakerProject bundleMakerProject = (IProjectDescriptionAwareBundleMakerProject) inputElement;
 
     // create the result
     List<Object> result = new LinkedList<Object>();

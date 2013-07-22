@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
@@ -14,7 +15,7 @@ import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.junit.Assert;
 
 /**
@@ -79,14 +80,11 @@ public class JeditAnalysisModel {
     _group1Artifact = assertGroupArtifact(_rootArtifact, "group1");
     _group2Artifact = assertGroupArtifact(_rootArtifact, "group1/group2");
 
-    _jeditModuleArtifact = AnalysisModelQueries.getModuleArtifact(_rootArtifact,
-        _modularizedSystem.getName(),
-        "1.0.0");
+    _jeditModuleArtifact = AnalysisModelQueries.getModuleArtifact(_rootArtifact, _modularizedSystem.getName(), "1.0.0");
     assertNode(_jeditModuleArtifact.getParent(), IGroupArtifact.class, "group2");
     assertNode(_jeditModuleArtifact.getParent().getParent(), IGroupArtifact.class, "group1");
 
-    _velocityModuleArtifact = AnalysisModelQueries.getModuleArtifact(_rootArtifact, "velocity",
-        "1.5");
+    _velocityModuleArtifact = AnalysisModelQueries.getModuleArtifact(_rootArtifact, "velocity", "1.5");
 
     // add an model modified listener
     _rootArtifact.addAnalysisModelModifiedListener(new IAnalysisModelModifiedListener() {
@@ -142,8 +140,7 @@ public class JeditAnalysisModel {
   public List<IDependency> getDependenciesTo(IBundleMakerArtifact from, IBundleMakerArtifact... to) {
 
     // test dependencies
-    List<IDependency> deps = new LinkedList<IDependency>(from.getDependenciesTo(
-        to));
+    List<IDependency> deps = new LinkedList<IDependency>(from.getDependenciesTo(to));
 
     //
     Collections.sort(deps, new Comparator<IDependency>() {
@@ -222,7 +219,7 @@ public class JeditAnalysisModel {
   private IRootArtifact createArtifactModel(IModularizedSystem modularizedSystem,
       IAnalysisModelConfiguration configuration) {
 
-    IRootArtifact rootArtifact = modularizedSystem.getAnalysisModel(configuration).getRoot();
+    IRootArtifact rootArtifact = AnalysisCore.getAnalysisModel(modularizedSystem, configuration).getRoot();
 
     Assert.assertNotNull(rootArtifact);
     // Assert.assertEquals(4, rootArtifact.getChildren().size());

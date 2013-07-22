@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.jdt.parser;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.resource.IResourceKey;
+import org.bundlemaker.core.project.IProjectContentResource;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
 /**
@@ -29,7 +29,7 @@ public interface IJdtSourceParserHook {
    * 
    * @param bundleMakerProject
    */
-  public void parseBundleMakerProjectStart(IBundleMakerProject bundleMakerProject);
+  public void parseBundleMakerProjectStart(IProjectDescriptionAwareBundleMakerProject bundleMakerProject);
 
   /**
    * <p>
@@ -37,7 +37,7 @@ public interface IJdtSourceParserHook {
    * 
    * @return
    */
-  public void analyzeCompilationUnit(IResourceKey resourceKey, CompilationUnit compilationUnit);
+  public void analyzeCompilationUnit(IProjectContentResource resourceKey, CompilationUnit compilationUnit);
 
   /**
    * <p>
@@ -45,5 +45,5 @@ public interface IJdtSourceParserHook {
    * 
    * @param bundleMakerProject
    */
-  public void parseBundleMakerProjectStop(IBundleMakerProject bundleMakerProject);
+  public void parseBundleMakerProjectStop(IProjectDescriptionAwareBundleMakerProject bundleMakerProject);
 }

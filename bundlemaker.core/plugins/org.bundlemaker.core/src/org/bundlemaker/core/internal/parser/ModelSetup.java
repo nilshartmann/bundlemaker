@@ -12,23 +12,26 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.FutureTask;
 
-import org.bundlemaker.core.IProblem;
+import org.bundlemaker.core.common.collections.GenericCache;
+import org.bundlemaker.core.common.utils.StopWatch;
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.internal.IInternalBundleMakerProject;
-import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
+import org.bundlemaker.core.internal.api.project.IInternalBundleMakerProject;
+import org.bundlemaker.core.internal.api.resource.IResourceStandin;
+import org.bundlemaker.core.internal.modelext.ModelExtFactory;
 import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ZipFileCache;
-import org.bundlemaker.core.internal.store.IDependencyStore;
-import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
-import org.bundlemaker.core.parser.IParser;
-import org.bundlemaker.core.parser.IParserFactory;
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.util.StopWatch;
-import org.bundlemaker.core.util.collections.GenericCache;
+import org.bundlemaker.core.parser.IProblem;
+import org.bundlemaker.core.project.AnalyzeMode;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectContentResource;
+import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.spi.parser.IParsableResource;
+import org.bundlemaker.core.spi.parser.IParser;
+import org.bundlemaker.core.spi.parser.IParserFactory;
+import org.bundlemaker.core.spi.store.IDependencyStore;
+import org.bundlemaker.core.spi.store.IPersistentDependencyStore;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -95,6 +98,11 @@ public class ModelSetup {
     final SubMonitor progressMonitor = SubMonitor.convert(mainMonitor, 100);
 
     //
+    for (IParserFactory parserFactory : Activator.getDefault().getParserFactoryRegistry().getParserFactories()) {
+      parserFactory.initialize(_bundleMakerProject);
+    }
+
+    //
     setupParsers();
 
     //
@@ -108,10 +116,10 @@ public class ModelSetup {
       mainMonitor.subTask("Reading from datastore...");
 
       // execute as loggable action...
-      final Map<IResourceKey, Resource> storedResourcesMap = StaticLog.log(LOG, "Reading from datastore",
-          new LoggableAction<Map<IResourceKey, Resource>>() {
+      final Map<IProjectContentResource, Resource> storedResourcesMap = StaticLog.log(LOG, "Reading from datastore",
+          new LoggableAction<Map<IProjectContentResource, Resource>>() {
             @Override
-            public Map<IResourceKey, Resource> execute() {
+            public Map<IProjectContentResource, Resource> execute() {
               return readFromDependencyStore(dependencyStore, progressMonitor.newChild(10));
             }
           });
@@ -151,7 +159,7 @@ public class ModelSetup {
       // STEP 4: Setup the resource content
       // ***********************************************************************************************
       mainMonitor.subTask("Set up model...");
-      Map<IResourceKey, Resource> newMap = resourceCache.getCombinedMap();
+      Map<IProjectContentResource, Resource> newMap = resourceCache.getCombinedMap();
 
       // set up binary resources
       FunctionalHelper.associateResourceStandinsWithResources(_bundleMakerProject.getBinaryResourceStandins(), newMap,
@@ -161,6 +169,13 @@ public class ModelSetup {
       FunctionalHelper.associateResourceStandinsWithResources(_bundleMakerProject.getSourceResourceStandins(), newMap,
           true, progressMonitor);
 
+      //
+      for (IProjectContentEntry contentEntry : projectContents) {
+        ModelExtFactory.getModelExtensionFactory().resourceModelSetupCompleted(contentEntry,
+            (Set<IModuleResource>) contentEntry.getBinaryResources(),
+            (Set<IModuleResource>) contentEntry.getSourceResources());
+      }
+
       progressMonitor.worked(1);
 
     } finally {
@@ -169,6 +184,11 @@ public class ModelSetup {
 
     //
     notifyParseStop();
+
+    //
+    for (IParserFactory parserFactory : Activator.getDefault().getParserFactoryRegistry().getParserFactories()) {
+      parserFactory.dispose(_bundleMakerProject);
+    }
 
     //
     return result[0];
@@ -184,7 +204,10 @@ public class ModelSetup {
    * @param mainMonitor
    */
   private List<IProblem> compareAndUpdate(List<IProjectContentEntry> projectContents,
-      Map<IResourceKey, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor mainMonitor) {
+      Map<IProjectContentResource, Resource> storedResourcesMap, ResourceCache resourceCache,
+      IProgressMonitor mainMonitor) {
+
+    // IResourceModelLifecycleCallback callback = null;
 
     //
     List<IProblem> result = Collections.emptyList();
@@ -198,77 +221,97 @@ public class ModelSetup {
 
     try {
 
+      // activate the zip cache. We need this here to keep the
+      // zip files open while parsing the content
       ZipFileCache.instance().activateCache();
+
+      // TODO: prepare model
+      // callback.prepare(_bundleMakerProject);
 
       //
       for (IProjectContentEntry projectContent : projectContents) {
 
         SubMonitor contentMonitor = subMonitor.newChild(1);
 
+        //
+        resourceCache.getProjectContentSpecificUserAttributes().clear();
+
         // we only have check resource content
-        if (projectContent.isAnalyze()) {
+        // if (projectContent.isAnalyze()) {
 
-          //
-          if (LOG) {
-            stopWatch = new StopWatch();
-            stopWatch.start();
-          }
-
-          SubMonitor resourceContentMonitor = SubMonitor.convert(contentMonitor, (projectContent.getBinaryResources()
-              .size() + projectContent.getSourceResources().size()));
-
-          // step 4.1: compute new and modified resources
-          Set<IResourceStandin> newAndModifiedBinaryResources = FunctionalHelper.computeNewAndModifiedResources(
-              ((ProjectContentEntry) projectContent).getBinaryResourceStandins(), storedResourcesMap, resourceCache,
-              new NullProgressMonitor());
-
-          //
-          Set<IResourceStandin> newAndModifiedSourceResources = Collections.emptySet();
-
-          //
-          if (AnalyzeMode.BINARIES_AND_SOURCES.equals(projectContent.getAnalyzeMode())) {
-            newAndModifiedSourceResources = FunctionalHelper.computeNewAndModifiedResources(
-                ((ProjectContentEntry) projectContent).getSourceResourceStandins(), storedResourcesMap, resourceCache,
-                new NullProgressMonitor());
-          }
-
-          //
-          if (LOG) {
-            StaticLog.log(String.format(" - compare and update '%s_%s' - computeNewAndModifiedResources [%s ms]",
-                projectContent.getName(), projectContent.getVersion(), stopWatch.getElapsedTime()));
-
-            StaticLog
-                .log(String.format("   - new/modified binary resources: %s", newAndModifiedBinaryResources.size()));
-            StaticLog
-                .log(String.format("   - new/modified source resources: %s", newAndModifiedSourceResources.size()));
-          }
-
-          // step 4.2:
-          for (IResourceStandin resourceStandin : newAndModifiedBinaryResources) {
-            resourceCache.getOrCreateResource(resourceStandin);
-          }
-          for (IResourceStandin resourceStandin : newAndModifiedSourceResources) {
-            resourceCache.getOrCreateResource(resourceStandin);
-          }
-
-          resourceCache.setupTypeCache(projectContent);
-
-          // adjust work remaining
-          int remaining = newAndModifiedSourceResources.size() + newAndModifiedBinaryResources.size();
-
-          resourceContentMonitor.setWorkRemaining(remaining);
-
-          result = multiThreadedReparse(storedResourcesMap, newAndModifiedSourceResources,
-              newAndModifiedBinaryResources, resourceCache, projectContent, resourceContentMonitor.newChild(remaining));
-
+        //
+        if (LOG) {
+          stopWatch = new StopWatch();
+          stopWatch.start();
         }
 
-        // adjust monitor in case that fileBasedContent is NOT resource content
-        subMonitor.setWorkRemaining(contentCount--);
+        SubMonitor resourceContentMonitor = SubMonitor.convert(contentMonitor, (projectContent.getBinaryResources()
+            .size() + projectContent.getSourceResources().size()));
+
+        // step 4.1: compute new and modified resources
+        Set<IResourceStandin> newAndModifiedBinaryResources = FunctionalHelper.computeNewAndModifiedResources(
+            ((ProjectContentEntry) projectContent).getBinaryResourceStandins(), storedResourcesMap, resourceCache,
+            new NullProgressMonitor());
+
+        //
+        Set<IResourceStandin> newAndModifiedSourceResources = Collections.emptySet();
+
+        //
+        if (AnalyzeMode.BINARIES_AND_SOURCES.equals(projectContent.getAnalyzeMode())) {
+          newAndModifiedSourceResources = FunctionalHelper.computeNewAndModifiedResources(
+              ((ProjectContentEntry) projectContent).getSourceResourceStandins(), storedResourcesMap, resourceCache,
+              new NullProgressMonitor());
+        }
+
+        //
+        if (LOG) {
+          StaticLog.log(String.format(" - compare and update '%s_%s' - computeNewAndModifiedResources [%s ms]",
+              projectContent.getName(), projectContent.getVersion(), stopWatch.getElapsedTime()));
+
+          StaticLog
+              .log(String.format("   - new/modified binary resources: %s", newAndModifiedBinaryResources.size()));
+          StaticLog
+              .log(String.format("   - new/modified source resources: %s", newAndModifiedSourceResources.size()));
+        }
+
+        // step 4.2:
+        for (IModuleResource resourceStandin : newAndModifiedBinaryResources) {
+          resourceCache.getOrCreateResource(resourceStandin);
+        }
+        for (IModuleResource resourceStandin : newAndModifiedSourceResources) {
+          resourceCache.getOrCreateResource(resourceStandin);
+        }
+
+        // TODO: setup model
+        ModelExtFactory.getModelExtensionFactory().prepareStoredResourceModel(projectContent, storedResourcesMap);
+
+        // adjust work remaining
+        int remaining = newAndModifiedSourceResources.size() + newAndModifiedBinaryResources.size();
+        resourceContentMonitor.setWorkRemaining(remaining);
+
+        ModelExtFactory.getModelExtensionFactory().beforeParseResourceModel(projectContent, resourceCache,
+            newAndModifiedBinaryResources,
+            newAndModifiedSourceResources);
+
+        result = multiThreadedReparse(storedResourcesMap, newAndModifiedSourceResources,
+            newAndModifiedBinaryResources, resourceCache, projectContent, resourceContentMonitor.newChild(remaining));
+
+        ModelExtFactory.getModelExtensionFactory().afterParseResourceModel(projectContent, resourceCache,
+            newAndModifiedBinaryResources,
+            newAndModifiedSourceResources);
+
       }
+
+      // adjust monitor in case that fileBasedContent is NOT resource content
+      subMonitor.setWorkRemaining(contentCount--);
+      // }
     } finally {
 
+      // deactivate the zip cache.
       ZipFileCache.instance().deactivateCache();
+
+      //
+      // callback.cleanUp(_bundleMakerProject);
 
       subMonitor.done();
     }
@@ -276,7 +319,7 @@ public class ModelSetup {
     return result;
   }
 
-  private List<IProblem> multiThreadedReparse(Map<IResourceKey, Resource> storedResourcesMap,
+  private List<IProblem> multiThreadedReparse(Map<IProjectContentResource, Resource> storedResourcesMap,
       Collection<IResourceStandin> sourceResources, Collection<IResourceStandin> binaryResources,
       ResourceCache resourceCache, IProjectContentEntry fileBasedContent, IProgressMonitor monitor) {
 
@@ -393,27 +436,27 @@ public class ModelSetup {
    * @param monitor
    * @return
    */
-  private static Map<IResourceKey, Resource> readFromDependencyStore(IDependencyStore dependencyStore,
+  private static Map<IProjectContentResource, Resource> readFromDependencyStore(IDependencyStore dependencyStore,
       IProgressMonitor monitor) {
 
     Assert.isNotNull(dependencyStore);
     Assert.isNotNull(monitor);
 
-    Map<IResourceKey, Resource> map = new HashMap<IResourceKey, Resource>();
+    Map<IProjectContentResource, Resource> map = new HashMap<IProjectContentResource, Resource>();
 
     if (dependencyStore != null) {
 
-      List<Resource> resources = dependencyStore.getResources();
+      List<IParsableResource> resources = dependencyStore.getResources();
 
       monitor.beginTask("Opening database ", resources.size());
 
-      for (Resource resource : resources) {
+      for (IParsableResource resource : resources) {
 
         // check if canceled
         // checkIfCanceled(monitor);
 
         // put in the map
-        map.put(resource, resource);
+        map.put(resource, (Resource) resource);
 
         // set monitor
         monitor.worked(1);

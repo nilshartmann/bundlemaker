@@ -27,8 +27,8 @@ public class AddArtifactsToPackage_Test extends AbstractSimpleArtifactModelTest 
 
     // STEP 1: create a new module
     IModuleArtifact newModuleArtifact = getBinModel().getRootArtifact().getOrCreateModule("NewModule", "1.0.0");
-    SimpleArtifactModelAssert.assertResourceModuleCount(getBinModel(), 2);
-    SimpleArtifactModelAssert.assertResourceModuleCount(getSrcModel(), 2);
+    SimpleArtifactModelAssert.assertResourceModuleCount(getBinModel(), 3);
+    SimpleArtifactModelAssert.assertResourceModuleCount(getSrcModel(), 3);
 
     // we have to add a resource to force the creation of a new package artifact in the new module
     newModuleArtifact.addArtifact(getBinModel().getKlasseResource());
@@ -49,8 +49,8 @@ public class AddArtifactsToPackage_Test extends AbstractSimpleArtifactModelTest 
 
     // STEP 1: create a new module
     IModuleArtifact newModuleArtifact = getBinModel().getRootArtifact().getOrCreateModule("NewModule", "1.0.0");
-    SimpleArtifactModelAssert.assertResourceModuleCount(getBinModel(), 2);
-    SimpleArtifactModelAssert.assertResourceModuleCount(getSrcModel(), 2);
+    SimpleArtifactModelAssert.assertResourceModuleCount(getBinModel(), 3);
+    SimpleArtifactModelAssert.assertResourceModuleCount(getSrcModel(), 3);
 
     // we have to add a resource to force the creation of a new package artifact in the new module
     newModuleArtifact.addArtifact(getBinModel().getKlasseResource());

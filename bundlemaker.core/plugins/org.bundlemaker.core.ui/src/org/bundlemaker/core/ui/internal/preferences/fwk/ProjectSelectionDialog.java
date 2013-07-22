@@ -12,8 +12,8 @@ package org.bundlemaker.core.ui.internal.preferences.fwk;
 
 import java.util.Set;
 
-import org.bundlemaker.core.BundleMakerCore;
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
@@ -56,7 +56,7 @@ public class ProjectSelectionDialog extends SelectionStatusDialog {
   // the visual selection widget group
   private TableViewer              _tableViewer;
 
-  private Set<IBundleMakerProject> _projectsWithSpecifics;
+  private Set<IProjectDescriptionAwareBundleMakerProject> _projectsWithSpecifics;
 
   // sizing constants
   private final static int         SIZING_SELECTION_WIDGET_HEIGHT = 250;
@@ -67,7 +67,7 @@ public class ProjectSelectionDialog extends SelectionStatusDialog {
 
   private ViewerFilter             fFilter;
 
-  public ProjectSelectionDialog(Shell parentShell, Set<IBundleMakerProject> projectsWithSpecifics) {
+  public ProjectSelectionDialog(Shell parentShell, Set<IProjectDescriptionAwareBundleMakerProject> projectsWithSpecifics) {
     super(parentShell);
     setTitle("Project Specific Configuration");
     setMessage("Select the project to configure:");
@@ -121,7 +121,7 @@ public class ProjectSelectionDialog extends SelectionStatusDialog {
 
       @Override
       public String getText(Object element) {
-        return ((IBundleMakerProject) element).getName();
+        return ((IProjectDescriptionAwareBundleMakerProject) element).getName();
       }
     });
     _tableViewer.setContentProvider(ArrayContentProvider.getInstance());

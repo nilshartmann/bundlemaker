@@ -10,12 +10,19 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.transformation;
 
-import org.bundlemaker.core.internal.modules.ResourceContainer;
-import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.internal.modules.modifiable.IModifiableResourceModule;
-import org.bundlemaker.core.modules.ModuleIdentifier;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
+import org.bundlemaker.core.internal.api.resource.IModifiableModule;
+import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractModularizedSystem;
+import org.bundlemaker.core.internal.resource.DispatchingMovableUnitCreator;
+import org.bundlemaker.core.internal.resource.ModuleIdentifier;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectContentResource;
+import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public class BasicProjectContentTransformation implements IInternalTransformation {
@@ -23,25 +30,54 @@ public class BasicProjectContentTransformation implements IInternalTransformatio
   public void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor progressMonitor) {
 
     // iterate over the file based content
-    for (IProjectContentEntry fileBasedContent : modularizedSystem.getProjectDescription().getContent()) {
+    for (IProjectContentEntry projectContentEntry : modularizedSystem.getBundleMakerProject().getProjectDescription()
+        .getContent()) {
 
-      if (fileBasedContent.isAnalyze()) {
+      // create new module
+      IModifiableModule module = modularizedSystem.createResourceModule(new ModuleIdentifier(projectContentEntry
+          .getName(), projectContentEntry.getVersion()));
 
-        // create new module
-        IModifiableResourceModule module = modularizedSystem.createResourceModule(new ModuleIdentifier(fileBasedContent
-            .getName(), fileBasedContent.getVersion()));
+      // put the user attributes
+      module.getUserAttributes().putAll(projectContentEntry.getUserAttributes());
 
-        // put the user attributes
-        module.getUserAttributes().putAll(fileBasedContent.getUserAttributes());
+      //
+      for (IMovableUnit movableUnit : setupMovableUnits(projectContentEntry)) {
+        module.addMovableUnit(movableUnit);
+      }
 
-        // add all the binary content
-        ((ResourceContainer) module.getModifiableSelfResourceContainer()).addAll(fileBasedContent.getBinaryResources(),
-            ProjectContentType.BINARY);
-
-        // add all the source content
-        ((ResourceContainer) module.getModifiableSelfResourceContainer()).addAll(fileBasedContent.getSourceResources(),
-            ProjectContentType.SOURCE);
+      //
+      if (projectContentEntry.getUserAttributes().containsKey("EXECUTION_ENVIRONMENT")) {
+        ((AbstractModularizedSystem) modularizedSystem).setExecutionEnvironment(module);
       }
     }
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  public Set<IMovableUnit> setupMovableUnits(IProjectContentEntry projectContentEntry) {
+
+    //
+    DispatchingMovableUnitCreator unitCreator = new DispatchingMovableUnitCreator();
+
+    //
+    Map<String, IModuleResource> binaries = new HashMap<String, IModuleResource>();
+    for (IProjectContentResource resource : projectContentEntry.getBinaryResources()) {
+      if (resource instanceof IModuleResource) {
+        binaries.put(resource.getPath(), (IModuleResource) resource);
+      }
+    }
+
+    //
+    Map<String, IModuleResource> sources = new HashMap<String, IModuleResource>();
+    for (IProjectContentResource resource : projectContentEntry.getSourceResources()) {
+      if (resource instanceof IModuleResource) {
+        sources.put(resource.getPath(), (IModuleResource) resource);
+      }
+    }
+
+    //
+    return unitCreator.assignMovableUnits(binaries, sources);
   }
 }

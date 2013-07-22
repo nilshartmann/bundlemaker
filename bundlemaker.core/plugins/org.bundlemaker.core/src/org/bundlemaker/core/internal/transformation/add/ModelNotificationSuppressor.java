@@ -1,7 +1,7 @@
 package org.bundlemaker.core.internal.transformation.add;
 
-import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -27,7 +27,7 @@ public class ModelNotificationSuppressor {
     try {
 
       // we have to set the model modification handling to 'false'
-      ((IModifiableModularizedSystem) modularizedSystem).setHandleModelModification(false);
+      ((IModifiableModularizedSystem) modularizedSystem).getListenerList().setHandleModelModification(false);
 
       //
       runnable.run();
@@ -35,7 +35,7 @@ public class ModelNotificationSuppressor {
     } finally {
 
       // we have to set the model modification handling to 'true'
-      ((IModifiableModularizedSystem) modularizedSystem).setHandleModelModification(true);
+      ((IModifiableModularizedSystem) modularizedSystem).getListenerList().setHandleModelModification(true);
 
     }
   }

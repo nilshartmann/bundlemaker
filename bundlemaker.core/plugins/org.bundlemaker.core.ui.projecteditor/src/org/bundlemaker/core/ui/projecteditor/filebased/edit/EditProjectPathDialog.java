@@ -2,7 +2,7 @@ package org.bundlemaker.core.ui.projecteditor.filebased.edit;
 
 import java.util.List;
 
-import org.bundlemaker.core.projectdescription.VariablePath;
+import org.bundlemaker.core.project.VariablePath;
 import org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentEditorUtils;
 import org.bundlemaker.core.ui.projecteditor.filebased.ProjectPath;
 import org.eclipse.core.resources.IResource;

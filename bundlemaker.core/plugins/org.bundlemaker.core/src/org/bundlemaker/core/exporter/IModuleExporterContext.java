@@ -12,8 +12,8 @@ package org.bundlemaker.core.exporter;
 
 import java.io.File;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.resource.IModularizedSystem;
 
 /**
  * <p>
@@ -31,12 +31,12 @@ public interface IModuleExporterContext {
 
   /**
    * <p>
-   * Returns the {@link IBundleMakerProject}.
+   * Returns the {@link IProjectDescriptionAwareBundleMakerProject}.
    * </p>
    * 
    * @return
    */
-  IBundleMakerProject getBundleMakerProject();
+  IProjectDescriptionAwareBundleMakerProject getBundleMakerProject();
 
   /**
    * <p>

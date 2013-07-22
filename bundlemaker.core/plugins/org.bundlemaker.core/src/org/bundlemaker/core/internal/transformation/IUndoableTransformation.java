@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.transformation;
 
-import org.bundlemaker.core.modules.transformation.ITransformation;
+import org.bundlemaker.core.resource.ITransformation;
 
 /**
  * <p>

@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
-import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
+import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
 
 /**
  * <p>

@@ -12,8 +12,8 @@ package org.bundlemaker.core.ui.projecteditor.filebased.wizard;
 
 import java.util.List;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
+import org.bundlemaker.core.project.IModifiableProjectDescription;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentCreator;
 import org.bundlemaker.core.ui.projecteditor.provider.INewProjectContentProviderWizardContribution;
@@ -37,7 +37,7 @@ public class ResourcesProjectContentProviderWizardContribution implements INewPr
    * .core.IBundleMakerProject)
    */
   @Override
-  public String getLabel(IBundleMakerProject bundleMakerProject) {
+  public String getLabel(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     return "Files and directories";
   }
 
@@ -49,7 +49,7 @@ public class ResourcesProjectContentProviderWizardContribution implements INewPr
    * .core.IBundleMakerProject)
    */
   @Override
-  public Image getImage(IBundleMakerProject bundleMakerProject) {
+  public Image getImage(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     return BundleMakerImages.FILEBASED_PROJECT_CONTENT_PROVIDER.getImage();
   }
 
@@ -60,7 +60,7 @@ public class ResourcesProjectContentProviderWizardContribution implements INewPr
    * bundlemaker.core.IBundleMakerProject)
    */
   @Override
-  public String getDescription(IBundleMakerProject bundleMakerProject) {
+  public String getDescription(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     return "Add files and directories from workspace or external location to your project";
   }
 
@@ -72,7 +72,7 @@ public class ResourcesProjectContentProviderWizardContribution implements INewPr
    * .core.IBundleMakerProject)
    */
   @Override
-  public IWizard createWizard(final IBundleMakerProject bundleMakerProject) {
+  public IWizard createWizard(final IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     return new Wizard() {
       private final ResourcesProjectContentProviderWizardPage _page = new ResourcesProjectContentProviderWizardPage();
 

@@ -3,11 +3,13 @@ package org.bundlemaker.core.itestframework;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.itestframework.internal.TestProjectCreator;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.After;
 import org.junit.Assert;
@@ -22,21 +24,21 @@ import org.junit.Before;
 public abstract class AbstractBundleMakerModelTest {
 
   /** TEST_PROJECT_VERSION */
-  public static final String                      DEFAULT_TEST_PROJECT_VERSION    = "1.0.0";
+  public static final String                                             DEFAULT_TEST_PROJECT_VERSION    = "1.0.0";
 
   /** - */
-  private IBundleMakerProject                     _bundleMakerProject;
+  private IParserAwareBundleMakerProject                                 _bundleMakerProject;
 
   /** - */
-  private IModularizedSystem                      _modularizedSystem;
+  private IModularizedSystem                                             _modularizedSystem;
 
   /** has been set up? */
-  private static Map<String, IBundleMakerProject> _initializedBundleMakerProjects = new HashMap<String, IBundleMakerProject>();
+  private static Map<String, IProjectDescriptionAwareBundleMakerProject> _initializedBundleMakerProjects = new HashMap<String, IProjectDescriptionAwareBundleMakerProject>();
 
   /** - */
-  private String                                  _initialState_binaryHierarchical;
+  private String                                                         _initialState_binaryHierarchical;
 
-  private String                                  _initialState_sourceHierarchical;
+  private String                                                         _initialState_sourceHierarchical;
 
   /**
    * {@inheritDoc}
@@ -46,7 +48,8 @@ public abstract class AbstractBundleMakerModelTest {
 
     // setup if necessary
     if (!_initializedBundleMakerProjects.containsKey(getTestProjectName())) {
-      IBundleMakerProject bundleMakerProject = TestProjectCreator.getBundleMakerProject(getTestProjectName());
+      IParserAwareBundleMakerProject bundleMakerProject = TestProjectCreator
+          .getBundleMakerProject(getTestProjectName());
       TestProjectCreator.addProjectDescription(bundleMakerProject, getTestProjectName());
       TestProjectCreator.initializeParseAndOPen(bundleMakerProject);
       _initializedBundleMakerProjects.put(getTestProjectName(), bundleMakerProject);
@@ -65,11 +68,11 @@ public abstract class AbstractBundleMakerModelTest {
     _modularizedSystem.undoTransformations(null);
 
     //
-    _initialState_binaryHierarchical = AnalysisModelQueries.artifactToString(_modularizedSystem
-        .getAnalysisModel(AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION));
+    _initialState_binaryHierarchical = AnalysisModelQueries.artifactToString(AnalysisCore.getAnalysisModel(
+        _modularizedSystem, AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION));
 
-    _initialState_sourceHierarchical = AnalysisModelQueries.artifactToString(_modularizedSystem
-        .getAnalysisModel(AnalysisModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION));
+    _initialState_sourceHierarchical = AnalysisModelQueries.artifactToString(AnalysisCore.getAnalysisModel(
+        _modularizedSystem, AnalysisModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION));
   }
 
   /**
@@ -82,11 +85,11 @@ public abstract class AbstractBundleMakerModelTest {
     _modularizedSystem.undoTransformations(null);
 
     //
-    Assert.assertEquals(_initialState_binaryHierarchical, AnalysisModelQueries.artifactToString(_modularizedSystem
-        .getAnalysisModel(AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION)));
+    Assert.assertEquals(_initialState_binaryHierarchical, AnalysisModelQueries.artifactToString(AnalysisCore.getAnalysisModel(
+        _modularizedSystem, AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION)));
 
-    Assert.assertEquals(_initialState_sourceHierarchical, AnalysisModelQueries.artifactToString(_modularizedSystem
-        .getAnalysisModel(AnalysisModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION)));
+    Assert.assertEquals(_initialState_sourceHierarchical, AnalysisModelQueries.artifactToString(AnalysisCore.getAnalysisModel(
+        _modularizedSystem, AnalysisModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION)));
 
     //
     _bundleMakerProject = null;
@@ -99,7 +102,7 @@ public abstract class AbstractBundleMakerModelTest {
    * 
    * @return
    */
-  public final IBundleMakerProject getBundleMakerProject() {
+  public final IParserAwareBundleMakerProject getBundleMakerProject() {
     return _bundleMakerProject;
   }
 

@@ -12,10 +12,10 @@ package org.bundlemaker.core.ui.mvn;
 
 import java.util.List;
 
-import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.mvn.content.MvnArtifactType;
 import org.bundlemaker.core.mvn.content.MvnContentProviderFactory;
-import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
+import org.bundlemaker.core.project.IModifiableProjectDescription;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.ui.projecteditor.provider.INewProjectContentProviderWizardContribution;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
@@ -33,7 +33,7 @@ public class MvnContentProviderWizardContribution implements INewProjectContentP
    * {@inheritDoc}
    */
   @Override
-  public String getLabel(IBundleMakerProject bundleMakerProject) {
+  public String getLabel(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     return "Maven repository artifacts";
   }
 
@@ -41,7 +41,7 @@ public class MvnContentProviderWizardContribution implements INewProjectContentP
    * {@inheritDoc}
    */
   @Override
-  public Image getImage(IBundleMakerProject bundleMakerProject) {
+  public Image getImage(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     return MvnBundleMakerImages.MVN_PROJECT_CONTENT_PROVIDER.getImage();
   }
 
@@ -49,7 +49,7 @@ public class MvnContentProviderWizardContribution implements INewProjectContentP
    * {@inheritDoc}
    */
   @Override
-  public String getDescription(IBundleMakerProject bundleMakerProject) {
+  public String getDescription(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     return "Add artifacts from a maven repository to your project";
   }
 
@@ -57,7 +57,7 @@ public class MvnContentProviderWizardContribution implements INewProjectContentP
    * {@inheritDoc}
    */
   @Override
-  public IWizard createWizard(final IBundleMakerProject bundleMakerProject) {
+  public IWizard createWizard(final IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
 
     //
     return new Wizard() {

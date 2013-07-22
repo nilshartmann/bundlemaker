@@ -14,8 +14,8 @@ import java.util.List;
 
 import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.transformation.ITransformation;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.ITransformation;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;

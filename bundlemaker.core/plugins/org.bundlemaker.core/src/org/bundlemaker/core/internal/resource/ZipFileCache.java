@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.zip.ZipFile;
 
-import org.bundlemaker.core.util.collections.GenericCache;
+import org.bundlemaker.core.common.collections.GenericCache;
 
 /**
  * A Cache for {@link ZipFile} instances.

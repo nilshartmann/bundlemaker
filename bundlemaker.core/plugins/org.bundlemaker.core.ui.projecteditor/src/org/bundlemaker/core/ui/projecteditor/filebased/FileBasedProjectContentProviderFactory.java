@@ -4,12 +4,12 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.projectdescription.VariablePath;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
-import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
-import org.bundlemaker.core.util.IFileBasedProjectContentInfo;
+import org.bundlemaker.core.common.ResourceType;
+import org.bundlemaker.core.common.utils.IFileBasedProjectContentInfo;
+import org.bundlemaker.core.project.AnalyzeMode;
+import org.bundlemaker.core.project.IModifiableProjectDescription;
+import org.bundlemaker.core.project.VariablePath;
+import org.bundlemaker.core.project.filecontent.FileBasedProjectContentProvider;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
@@ -166,13 +166,13 @@ public class FileBasedProjectContentProviderFactory {
 
     // add the binary roots
     for (VariablePath path : binaryRoots) {
-      fileBasedContentProvider.addRootPath(path, ProjectContentType.BINARY);
+      fileBasedContentProvider.addRootPath(path, ResourceType.BINARY);
     }
 
     if (sourceRoots != null) {
       // add the source roots
       for (VariablePath path : sourceRoots) {
-        fileBasedContentProvider.addRootPath(path, ProjectContentType.SOURCE);
+        fileBasedContentProvider.addRootPath(path, ResourceType.SOURCE);
       }
     }
     // add the analyze flag

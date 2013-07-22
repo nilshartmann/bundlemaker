@@ -3,9 +3,9 @@ package org.bundlemaker.core.ui.view.problemview;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
+import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.event.selection.workbench.view.AbstractArtifactSelectionAwareViewPart;
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -168,7 +168,8 @@ public class ProblemView extends AbstractArtifactSelectionAwareViewPart {
     IRootArtifact rootArtifact = artifactSelection.getRootArtifact();
 
     // Get project
-    IBundleMakerProject bundleMakerProject = rootArtifact.getModularizedSystem().getBundleMakerProject();
+    IParserAwareBundleMakerProject bundleMakerProject = rootArtifact.getModularizedSystem().getBundleMakerProject()
+        .adaptAs(IParserAwareBundleMakerProject.class);
 
     // get associated problems
     List<IProblem> problems = bundleMakerProject.getProblems();

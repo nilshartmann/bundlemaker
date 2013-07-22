@@ -13,10 +13,10 @@ package org.bundlemaker.core.ui.projecteditor.provider.impl;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.project.AnalyzeMode;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.ui.ErrorDialogUtil;
 import org.bundlemaker.core.ui.projecteditor.Activator;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
@@ -48,7 +48,7 @@ public abstract class AbstractProjectContentProviderEditor implements IProjectCo
    * {@inheritDoc}
    */
   @Override
-  public Object getRootElement(IBundleMakerProject project, IProjectContentProvider provider) {
+  public Object getRootElement(IProjectDescriptionAwareBundleMakerProject project, IProjectContentProvider provider) {
     return provider;
   }
 
@@ -84,7 +84,7 @@ public abstract class AbstractProjectContentProviderEditor implements IProjectCo
    * {@inheritDoc}
    */
   @Override
-  public boolean edit(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object
+  public boolean edit(Shell shell, IProjectDescriptionAwareBundleMakerProject project, IProjectContentProvider provider, Object
       selectedObject) {
 
     // can't edit anything
@@ -105,14 +105,14 @@ public abstract class AbstractProjectContentProviderEditor implements IProjectCo
    * {@inheritDoc}
    */
   @Override
-  public void remove(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object
+  public void remove(Shell shell, IProjectDescriptionAwareBundleMakerProject project, IProjectContentProvider provider, Object
       selectedObject) {
 
     // default: do nothing
   }
 
   @Override
-  public List<IAction> getContextMenuActions(IBundleMakerProject project,
+  public List<IAction> getContextMenuActions(IProjectDescriptionAwareBundleMakerProject project,
       List<IProjectContentProviderEditorElement> selectedElements) {
 
     // default: no context menu contribution
@@ -128,7 +128,7 @@ public abstract class AbstractProjectContentProviderEditor implements IProjectCo
    * @return
    */
   protected List<IProjectContentEntry> getContentFromProvider(
-      IBundleMakerProject bundleMakerProject,
+      IProjectDescriptionAwareBundleMakerProject bundleMakerProject,
       IProjectContentProvider projectContentProvider) {
 
     GetBundleMakerProjectContentRunnable runnable = new GetBundleMakerProjectContentRunnable(bundleMakerProject,
@@ -166,7 +166,7 @@ public abstract class AbstractProjectContentProviderEditor implements IProjectCo
   class GetBundleMakerProjectContentRunnable implements IRunnableWithProgress {
 
     /** - */
-    private final IBundleMakerProject     _bundleMakerProject;
+    private final IProjectDescriptionAwareBundleMakerProject     _bundleMakerProject;
 
     /** - */
     private final IProjectContentProvider _projectContentProvider;
@@ -185,7 +185,7 @@ public abstract class AbstractProjectContentProviderEditor implements IProjectCo
      * @param bundleMakerProject
      * @param provider
      */
-    private GetBundleMakerProjectContentRunnable(IBundleMakerProject bundleMakerProject,
+    private GetBundleMakerProjectContentRunnable(IProjectDescriptionAwareBundleMakerProject bundleMakerProject,
         IProjectContentProvider provider) {
       this._bundleMakerProject = bundleMakerProject;
       this._projectContentProvider = provider;

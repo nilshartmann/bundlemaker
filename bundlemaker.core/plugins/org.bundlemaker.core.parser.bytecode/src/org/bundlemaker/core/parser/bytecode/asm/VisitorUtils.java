@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser.bytecode.asm;
 
-import org.bundlemaker.core.resource.ReferenceType;
-import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
+import org.bundlemaker.core.jtype.ReferenceAttributes;
+import org.bundlemaker.core.jtype.ReferenceType;
 import org.objectweb.asm.Type;
 
 final class VisitorUtils {

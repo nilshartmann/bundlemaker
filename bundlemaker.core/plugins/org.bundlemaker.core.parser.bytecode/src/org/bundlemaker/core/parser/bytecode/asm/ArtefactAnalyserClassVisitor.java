@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser.bytecode.asm;
 
-import org.bundlemaker.core.resource.TypeEnum;
+import org.bundlemaker.core.jtype.TypeEnum;
 import org.eclipse.core.runtime.Assert;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
@@ -34,6 +34,9 @@ public class ArtefactAnalyserClassVisitor extends EmptyVisitor implements ClassV
 
   /** - */
   private AsmReferenceRecorder _recorder;
+  
+  /** - */
+  private boolean _analyzeReferences = false;
 
   /**
    * <p>
@@ -42,13 +45,18 @@ public class ArtefactAnalyserClassVisitor extends EmptyVisitor implements ClassV
    * 
    * @param recorder
    */
-  public ArtefactAnalyserClassVisitor(AsmReferenceRecorder recorder) {
+  public ArtefactAnalyserClassVisitor(AsmReferenceRecorder recorder, boolean analyzeReferences) {
 
     Assert.isNotNull(recorder);
 
     _recorder = recorder;
+    _analyzeReferences = analyzeReferences;
   }
 
+  public void visitSource(final String source, final String debug) {
+    // System.out.println(source + " : " + debug);
+  }
+  
   /**
    * @inheritDoc
    */
@@ -82,18 +90,20 @@ public class ArtefactAnalyserClassVisitor extends EmptyVisitor implements ClassV
     // record the contained type
     _recorder.recordContainedType(fullyQualifiedName, typeEnum,abstractType);
 
-    // super type
-    // TODO: USES
-    Type superType = Type.getObjectType(superName);
-    VisitorUtils.recordReferencedTypes(_recorder, true, false, false, superType);
-
-    //
-    for (String interfaceName : interfaces) {
-
-      // implemented interfaces
+    if (_analyzeReferences) {
+      
+      // super type
       // TODO: USES
-      Type implementsType = Type.getObjectType(interfaceName);
-      VisitorUtils.recordReferencedTypes(_recorder, false, true, false, implementsType);
+      Type superType = Type.getObjectType(superName);
+      VisitorUtils.recordReferencedTypes(_recorder, true, false, false, superType);
+      //
+      for (String interfaceName : interfaces) {
+
+        // implemented interfaces
+        // TODO: USES
+        Type implementsType = Type.getObjectType(interfaceName);
+        VisitorUtils.recordReferencedTypes(_recorder, false, true, false, implementsType);
+      }
     }
   }
 
@@ -102,6 +112,12 @@ public class ArtefactAnalyserClassVisitor extends EmptyVisitor implements ClassV
    */
   @Override
   public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+    
+    //
+    if (!_analyzeReferences) {
+      return null;
+    }
+    
 
     // class annotation
     // TODO: USES
@@ -116,6 +132,12 @@ public class ArtefactAnalyserClassVisitor extends EmptyVisitor implements ClassV
    */
   @Override
   public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
+    
+    //
+    if (!_analyzeReferences) {
+      return null;
+    }
+    
     Type t = Type.getType(desc);
     if ((access & Opcodes.ACC_SYNTHETIC) == Opcodes.ACC_SYNTHETIC) {
       if (Class.class.getName().equals(t.getClassName())) {
@@ -155,6 +177,11 @@ public class ArtefactAnalyserClassVisitor extends EmptyVisitor implements ClassV
    */
   @Override
   public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+    
+    //
+    if (!_analyzeReferences) {
+      return null;
+    }
 
     VisitorUtils.recordReferencedTypes(_recorder, false, false, false, Type.getArgumentTypes(desc));
     VisitorUtils.recordReferencedTypes(_recorder, false, false, false, Type.getReturnType(desc));

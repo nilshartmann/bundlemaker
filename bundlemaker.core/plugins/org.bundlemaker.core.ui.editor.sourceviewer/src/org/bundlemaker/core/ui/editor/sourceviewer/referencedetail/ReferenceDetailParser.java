@@ -1,102 +1,85 @@
 package org.bundlemaker.core.ui.editor.sourceviewer.referencedetail;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IMovableUnit;
-import org.bundlemaker.core.modules.MovableUnit;
-import org.bundlemaker.core.resource.IResource;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.IClassFile;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
+import org.bundlemaker.core.common.IResource;
+import org.bundlemaker.core.common.utils.VMInstallUtils;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.VariablePath;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.spi.parser.IReferenceDetailParser;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jface.text.Position;
+import org.eclipse.jdt.launching.IVMInstall;
+import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.jdt.launching.LibraryLocation;
 
 public class ReferenceDetailParser implements IReferenceDetailParser {
 
   @Override
-  public Map<String, List<Position>> parseReferencePositions(IResource resource, IModularizedSystem modularizedSystem) {
+  public Map<String, List<IPosition>> parseReferencePositions(IModuleResource resource,
+      IModularizedSystem modularizedSystem) {
 
     //
-    IProject project = modularizedSystem.getBundleMakerProject().getProject();
-    IJavaProject javaProject = getAssociatedJavaProject(project);
-
-    IMovableUnit movableUnit = MovableUnit.createFromResource(resource, modularizedSystem);
-    for (IResource binaryResource : movableUnit.getAssociatedBinaryResources()) {
-      try {
-        IJavaElement element = javaProject.findElement(new Path(binaryResource.getPath()));
-        if (element != null) {
-          CompilationUnit compilationUnit = parse((IClassFile) element);
-          JdtAstVisitor jdtAstVisitor = new JdtAstVisitor(movableUnit);
-          compilationUnit.accept(jdtAstVisitor);
-          return jdtAstVisitor.getReferences();
-        }
-      } catch (JavaModelException e) {
-        e.printStackTrace();
-      }
+    try {
+      IMovableUnit movableUnit = resource.getMovableUnit();
+      CompilationUnit compilationUnit = parse(movableUnit.getAssociatedSourceResource(),
+          modularizedSystem.getBundleMakerProject());
+      JdtAstVisitor jdtAstVisitor = new JdtAstVisitor();
+      compilationUnit.accept(jdtAstVisitor);
+      return jdtAstVisitor.getReferences();
+    } catch (CoreException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
 
     return Collections.emptyMap();
   }
 
-  protected static CompilationUnit parse(IClassFile classFile) {
+  protected CompilationUnit parse(IResource resource, IProjectDescriptionAwareBundleMakerProject iBundleMakerProject) throws CoreException {
 
-    try {
-      ASTParser parser = ASTParser.newParser(AST.JLS4);
-      parser.setKind(ASTParser.K_COMPILATION_UNIT);
-      parser.setProject(classFile.getJavaProject());
-      parser.setSource(classFile.getSource().toCharArray()); // set source
-      parser.setResolveBindings(true); // we need bindings later on
-      parser.setBindingsRecovery(true);
-      String unitName = classFile.getType().getFullyQualifiedName().replace(".", "/") + ".java";
-      // TODO
-      parser.setUnitName("/" + classFile.getJavaProject().getProject().getName() + "/" + unitName);
+    ASTParser parser = ASTParser.newParser(AST.JLS4);
+    parser.setKind(ASTParser.K_COMPILATION_UNIT);
+    String[][] result = get(iBundleMakerProject);
+    parser.setSource(new String(resource.getContent()).toCharArray()); // set source
+    parser.setResolveBindings(true); // we need bindings later on
+    parser.setUnitName(resource.getPath());
+    parser.setEnvironment(result[0], result[1], null, false);
 
-      org.eclipse.jdt.core.dom.ASTNode node = parser.createAST(null /* IProgressMonitor */);
+    org.eclipse.jdt.core.dom.ASTNode node = parser.createAST(null /* IProgressMonitor */);
 
-      return (CompilationUnit) node; // parse
-    } catch (JavaModelException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      return null;
-    }
+    return (CompilationUnit) node; // parse
   }
 
-  private static IJavaProject getAssociatedJavaProject(IProject bundleMakerProject) {
+  private String[][] get(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException {
 
-    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    IProject associatedProject = root.getProject(getAssociatedJavaProjectName(bundleMakerProject));
+    //
+    List<String> classpathEntries = new LinkedList<String>();
+    List<String> sourcepathEntries = new LinkedList<String>();
 
-    IJavaProject javaProject = JavaCore.create(associatedProject);
-
-    try {
-      javaProject.open(null);
-    } catch (JavaModelException e) {
-      throw new RuntimeException(e.getMessage());
+    for (IProjectContentEntry entry : bundleMakerProject.getProjectDescription().getContent()) {
+      for (VariablePath path : entry.getBinaryRootPaths()) {
+        classpathEntries.add(path.getAsFile().getAbsolutePath());
+      }
+      for (VariablePath path : entry.getSourceRootPaths()) {
+        sourcepathEntries.add(path.getAsFile().getAbsolutePath());
+      }
     }
 
-    return javaProject;
-  }
+    // step 3.1: add the vm path
+    IVMInstall vm = VMInstallUtils.getIVMInstall(bundleMakerProject.getProjectDescription().getJRE());
+    for (LibraryLocation libraryLocation : JavaRuntime.getLibraryLocations(vm)) {
+      classpathEntries.add(libraryLocation.getSystemLibraryPath().toFile().getAbsolutePath());
+    }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param bundleMakerProject
-   * @return
-   */
-  private static String getAssociatedJavaProjectName(IProject project) {
-    return project.getName() + "$bundlemakerJdt";
+    return new String[][] { classpathEntries.toArray(new String[0]), sourcepathEntries.toArray(new String[0]) };
   }
-
 }

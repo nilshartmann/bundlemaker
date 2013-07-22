@@ -8,7 +8,7 @@ import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.eclipse.core.runtime.Path;
 import org.junit.Assert;
 
@@ -170,8 +170,8 @@ public class ArtifactAssert {
    * @param count
    */
   public static void assertResourceModuleCountInModularizedSystem(IModularizedSystem modularizedSystem, int count) {
-    Assert.assertEquals(String.format("%s.", modularizedSystem.getAllModules()), count, modularizedSystem
-        .getResourceModules().size());
+    Assert.assertEquals(String.format("%s.", modularizedSystem.getModules()), count, modularizedSystem
+        .getModules().size());
   }
 
   /**

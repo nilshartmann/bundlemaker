@@ -3,9 +3,9 @@ package org.bundlemaker.core.internal.projectdescription.gson;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bundlemaker.core.internal.common.classloading.BundleDelegatingClassLoader;
+import org.bundlemaker.core.internal.common.classloading.CompoundClassLoader;
 import org.bundlemaker.core.internal.projectdescription.contentprovider.ProjectContentProviderExtension;
-import org.bundlemaker.core.internal.util.BundleDelegatingClassLoader;
-import org.bundlemaker.core.internal.util.CompoundClassLoader;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;

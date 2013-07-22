@@ -18,10 +18,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.ui.artifact.Activator;
 import org.bundlemaker.core.ui.artifact.ArtifactImages;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
@@ -102,15 +103,15 @@ public class ArtifactModelConfigurationSubMenu extends CompoundContributionItem 
         ArtifactImages.ARTIFACT_TREE_CONFIGURATION_FLAT_PACKAGES.getImageDescriptor());
 
     _virtualModuleAction = new VirtualModuleAction();
-    _sourceContentTypeAction = new ContentTypeAction(ProjectContentType.SOURCE, "Sources");
-    _binaryContentTypeAction = new ContentTypeAction(ProjectContentType.BINARY, "Binaries");
+    _sourceContentTypeAction = new ContentTypeAction(ResourceType.SOURCE, "Sources");
+    _binaryContentTypeAction = new ContentTypeAction(ResourceType.BINARY, "Binaries");
 
     _initialized = true;
 
   }
 
   protected void saveConfiguration(boolean hierarchical,
-      ProjectContentType contentType, boolean includeVirtualModuleForMissingTypes) {
+      ResourceType contentType, boolean includeVirtualModuleForMissingTypes) {
 
     //
     if (_artifactModelConfigurationProvider instanceof ArtifactModelConfigurationProvider) {
@@ -167,8 +168,9 @@ public class ArtifactModelConfigurationSubMenu extends CompoundContributionItem 
     } else {
       // find artifact in new AnalysisModel created by the modified configuration
       IBundleMakerArtifact artifact = (IBundleMakerArtifact) objectInTree;
-      IRootArtifact newRootArtifact = artifact.getModularizedSystem().getAnalysisModel(
-          _artifactModelConfigurationProvider.getArtifactModelConfiguration());
+      IRootArtifact newRootArtifact =
+          AnalysisCore.getAnalysisModel(artifact.getModularizedSystem(),
+              _artifactModelConfigurationProvider.getArtifactModelConfiguration());
       List<IBundleMakerArtifact> result = AnalysisModelQueries.findArtifactsByQualifiedName(
           IBundleMakerArtifact.class, newRootArtifact, artifact.getQualifiedName());
       target.addAll(result);
@@ -224,9 +226,9 @@ public class ArtifactModelConfigurationSubMenu extends CompoundContributionItem 
   }
 
   class ContentTypeAction extends Action {
-    private final ProjectContentType _projectContentType;
+    private final ResourceType _projectContentType;
 
-    ContentTypeAction(ProjectContentType type, String typeString) {
+    ContentTypeAction(ResourceType type, String typeString) {
       super("Show " + typeString, Action.AS_CHECK_BOX);
       this._projectContentType = type;
     }

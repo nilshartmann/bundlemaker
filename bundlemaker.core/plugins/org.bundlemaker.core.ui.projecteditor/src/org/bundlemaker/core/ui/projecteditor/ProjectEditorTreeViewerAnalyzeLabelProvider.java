@@ -1,6 +1,6 @@
 package org.bundlemaker.core.ui.projecteditor;
 
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
+import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.CenterImageLabelProvider;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;

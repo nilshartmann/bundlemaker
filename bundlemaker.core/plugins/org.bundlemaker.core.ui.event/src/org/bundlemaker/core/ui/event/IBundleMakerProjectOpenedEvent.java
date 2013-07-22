@@ -10,17 +10,18 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.event;
 
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 
 /**
  * This is event is fired when a BundleMaker project is opened via the 'Parse and open' context menu.
- * <p>It is <b>not</b> fired in case the 'Parse' button on the Project Editor is pressed.
+ * <p>
+ * It is <b>not</b> fired in case the 'Parse' button on the Project Editor is pressed.
+ * 
  * @author Nils Hartmann (nils@nilshartmann.net)
- *
+ * 
  */
 public interface IBundleMakerProjectOpenedEvent {
-  
-  public IBundleMakerProject getBundleMakerProject();
-  
+
+  public IModuleAwareBundleMakerProject getBundleMakerProject();
 
 }

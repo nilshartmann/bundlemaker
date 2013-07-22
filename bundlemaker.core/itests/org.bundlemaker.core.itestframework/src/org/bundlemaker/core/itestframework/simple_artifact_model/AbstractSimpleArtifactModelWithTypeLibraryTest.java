@@ -1,5 +1,6 @@
 package org.bundlemaker.core.itestframework.simple_artifact_model;
 
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
@@ -45,7 +46,7 @@ public abstract class AbstractSimpleArtifactModelWithTypeLibraryTest extends Abs
     super.before();
 
     // apply the basic group transformation
-    IRootArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
+    IRootArtifact rootArtifact = AnalysisCore.getAnalysisModel(getModularizedSystem(),
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
     IGroupArtifact groupArtifact = rootArtifact.getOrCreateGroup("group1/group2");
     groupArtifact.addArtifact(AnalysisModelQueries.getModuleArtifact(rootArtifact, getTestProjectName(),

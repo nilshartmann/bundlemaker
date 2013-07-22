@@ -12,10 +12,11 @@ package org.bundlemaker.core;
 
 import java.util.Collection;
 
+import org.bundlemaker.core.common.utils.EclipseProjectUtils;
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory;
-import org.bundlemaker.core.util.EclipseProjectUtils;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -39,40 +40,34 @@ import org.eclipse.jdt.core.JavaCore;
 public final class BundleMakerCore {
 
   /** the nature id */
-  public static final String BUNDLE_ID                  = "org.bundlemaker.core";
+  public static final String BUNDLE_ID                                  = "org.bundlemaker.core";
 
   /** the nature id */
-  public static final String NATURE_ID                  = "org.bundlemaker.core.bundlemakernature";
+  public static final String NATURE_ID                                  = "org.bundlemaker.core.bundlemakernature";
 
   /** bundlemaker classpath container */
-  public static final IPath  BUNDLEMAKER_CONTAINER_PATH = new Path("org.bundlemaker.core.classpath"); //$NON-NLS-1$
+  public static final IPath  BUNDLEMAKER_CONTAINER_PATH                 = new Path("org.bundlemaker.core.classpath");            //$NON-NLS-1$
 
   /** the bundle make directory name */
-  public static final String BUNDLEMAKER_DIRECTORY_NAME = ".bundlemaker";
+  public static final String BUNDLEMAKER_DIRECTORY_NAME                 = ".bundlemaker";
 
   /** the project description file name */
-  public static final String PROJECT_DESCRIPTION_NAME   = "bundlemaker.json";
+  public static final String PROJECT_DESCRIPTION_NAME                   = "bundlemaker.json";
 
   /** the project description path */
-  public static final IPath  PROJECT_DESCRIPTION_PATH   = new Path(PROJECT_DESCRIPTION_NAME);
+  public static final IPath  PROJECT_DESCRIPTION_PATH                   = new Path(PROJECT_DESCRIPTION_NAME);
+
+  /** - */
+  public static final String BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER = "#####BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER#####";
 
   /**
    * <p>
    * </p>
    * 
-   * @param project
    * @return
-   * @throws CoreException
    */
-  public static void clearDependencyStore(IBundleMakerProject bundleMakerProject)
-      throws CoreException {
-
-    //
-    Assert.isNotNull(bundleMakerProject);
-
-    //
-    IPersistentDependencyStoreFactory factory = Activator.getDefault().getPersistentDependencyStoreFactory();
-    factory.resetPersistentDependencyStore(bundleMakerProject);
+  public static String getVersion() {
+    return Activator.getDefault().getBundleVersion();
   }
 
   /**
@@ -191,6 +186,7 @@ public final class BundleMakerCore {
    * @return
    * @throws CoreException
    */
+  @SuppressWarnings("unchecked")
   public static Collection<IBundleMakerProject> getBundleMakerProjects() {
 
     //
@@ -206,7 +202,7 @@ public final class BundleMakerCore {
     }
 
     //
-    return Activator.getDefault().getBundleMakerProjects();
+    return (Collection<IBundleMakerProject>) Activator.getDefault().getBundleMakerProjects();
   }
 
   /**
@@ -255,5 +251,19 @@ public final class BundleMakerCore {
 
     // returns true
     return true;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleMakerProject
+   * @throws CoreException
+   */
+  public static void clearDependencyStore(IProjectDescriptionAwareBundleMakerProject bundleMakerProject)
+      throws CoreException {
+
+    IPersistentDependencyStoreFactory factory = Activator.getDefault().getPersistentDependencyStoreFactory();
+    factory.resetPersistentDependencyStore(bundleMakerProject);
   }
 }

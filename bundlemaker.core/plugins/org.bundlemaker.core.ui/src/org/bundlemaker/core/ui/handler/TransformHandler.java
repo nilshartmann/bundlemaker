@@ -13,9 +13,10 @@ package org.bundlemaker.core.ui.handler;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.ui.internal.Activator;
 import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -89,7 +90,8 @@ public class TransformHandler extends AbstractArtifactBasedHandler {
    * @param uri
    * @throws Exception
    */
-  static void transform(final IBundleMakerProject bundleMakerProject, final String moduleName, final IFile scriptFile)
+  static void transform(final IProjectDescriptionAwareBundleMakerProject bundleMakerProject, final String moduleName,
+      final IFile scriptFile)
       throws Exception {
 
     PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
@@ -127,7 +129,7 @@ public class TransformHandler extends AbstractArtifactBasedHandler {
    * @param project
    * @return the selected BMT-file or null if no file has been selected
    */
-  private IFile selectTransformationScript(IBundleMakerProject project) {
+  private IFile selectTransformationScript(IProjectDescriptionAwareBundleMakerProject project) {
     ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(new Shell(), new WorkbenchLabelProvider(),
         new WorkbenchContentProvider());
     dialog.setHelpAvailable(false);
@@ -179,7 +181,8 @@ public class TransformHandler extends AbstractArtifactBasedHandler {
    * @return
    * @throws Exception
    */
-  private static IModularizedSystem createModularizedSystem(IBundleMakerProject bundleMakerProject, String name)
+  private static IModularizedSystem createModularizedSystem(IParserAwareBundleMakerProject bundleMakerProject,
+      String name)
       throws Exception {
 
     if (bundleMakerProject.hasModularizedSystemWorkingCopy(name)) {

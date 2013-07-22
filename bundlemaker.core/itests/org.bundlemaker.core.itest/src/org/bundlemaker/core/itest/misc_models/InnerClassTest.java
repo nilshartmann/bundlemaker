@@ -2,16 +2,18 @@ package org.bundlemaker.core.itest.misc_models;
 
 import java.util.Collection;
 
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
 import org.bundlemaker.core.itestframework.utils.ArtifactTestUtil;
-import org.bundlemaker.core.modules.AmbiguousElementException;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.jtype.IType;
+import org.bundlemaker.core.jtype.ITypeModule;
+import org.bundlemaker.core.jtype.ITypeResource;
+import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,39 +31,38 @@ public class InnerClassTest extends AbstractBundleMakerModelTest {
    * </p>
    * 
    * @throws CoreException
-   * @throws AmbiguousElementException
    */
   @Test
-  public void testInnerClass() throws CoreException, AmbiguousElementException {
+  public void testInnerClass() throws CoreException {
 
     //
-    IResourceModule resourceModule = getModularizedSystem().getResourceModule("InnerClassTest", "1.0.0");
-    IType aType = resourceModule.getType("de.test.innertypes.A");
-    IType bType = resourceModule.getType("de.test.innertypes.B");
+    IModule resourceModule = getModularizedSystem().getModule("InnerClassTest", "1.0.0");
+    IType aType = resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.A");
+    IType bType = resourceModule.adaptAs(ITypeModule.class).getType("de.test.innertypes.B");
 
     // test resources
     Assert.assertNotNull(aType);
     Assert.assertTrue(aType.hasBinaryResource());
     Assert.assertTrue(aType.hasSourceResource());
-    IResource aSourceResource = aType.getSourceResource();
-    Assert.assertTrue(aSourceResource.isPrimaryType(aType));
-    Assert.assertFalse(aSourceResource.isPrimaryType(bType));
-    Assert.assertNotNull(aSourceResource.getContainedTypes());
-    Assert.assertEquals(aSourceResource.getContainedTypes().size(), 4);
+    IModuleResource aSourceResource = aType.getSourceResource();
+    Assert.assertTrue(aSourceResource.adaptAs(ITypeResource.class).isPrimaryType(aType));
+    Assert.assertFalse(aSourceResource.adaptAs(ITypeResource.class).isPrimaryType(bType));
+    Assert.assertNotNull(aSourceResource.adaptAs(ITypeResource.class).getContainedTypes());
+    Assert.assertEquals(aSourceResource.adaptAs(ITypeResource.class).getContainedTypes().size(), 4);
 
     Assert.assertNotNull(bType);
     Assert.assertTrue(bType.hasBinaryResource());
     Assert.assertTrue(bType.hasSourceResource());
 
-    IResource binaryResource = bType.getBinaryResource();
+    IModuleResource binaryResource = bType.getBinaryResource();
     Assert.assertNotNull(binaryResource.getStickyResources());
     Assert.assertEquals(1, binaryResource.getStickyResources().size());
 
-    IResource bSourceResource = bType.getSourceResource();
+    IModuleResource bSourceResource = bType.getSourceResource();
     Assert.assertSame(aSourceResource, bSourceResource);
 
     // transform the model
-    IRootArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
+    IRootArtifact rootArtifact = AnalysisCore.getAnalysisModel(getModularizedSystem(),
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     System.out.println(ArtifactTestUtil.toString(rootArtifact));

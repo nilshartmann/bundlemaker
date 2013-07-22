@@ -7,17 +7,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.modules.IModuleIdentifier;
+import org.bundlemaker.core.analysis.IDependency;
+import org.bundlemaker.core.common.prefs.BundleMakerPreferences;
+import org.bundlemaker.core.common.prefs.IBundleMakerPreferences;
 import org.bundlemaker.core.mvn.MvnCoreActivator;
 import org.bundlemaker.core.mvn.internal.MvnArtifactConverter;
 import org.bundlemaker.core.mvn.internal.config.DispatchingRepositoryAdapter;
 import org.bundlemaker.core.mvn.internal.config.IAetherRepositoryAdapter;
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.projectdescription.spi.AbstractProjectContentProvider;
+import org.bundlemaker.core.project.AnalyzeMode;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectDescription;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.resource.IModuleIdentifier;
+import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -79,8 +82,12 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    */
   @Override
   protected void init(IProjectDescription description) {
+
     //
-    _repositoryAdapter = new DispatchingRepositoryAdapter(description.getBundleMakerProject());
+    IBundleMakerPreferences preferences = getBundleMakerPreferences(description);
+
+    //
+    _repositoryAdapter = new DispatchingRepositoryAdapter(preferences);
   }
 
   /**
@@ -142,7 +149,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    * @throws CoreException
    */
   public void reloadContent(final boolean useRemoteRepository, final boolean reloadFromRemote,
-      IBundleMakerProject bundleMakerProject) throws CoreException {
+      IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException {
 
     // create a new session
     _currentSystemSession = _repositoryAdapter.newSession();
@@ -160,7 +167,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
       // create the collect request
       CollectRequest collectRequest = new CollectRequest();
       collectRequest.setRoot(new Dependency(artifact, SCOPE_COMPILE));
-
+      
       // add the remote repository is necessary
       if (useRemoteRepository) {
         for (RemoteRepository remoteRepository : _repositoryAdapter.getRemoteRepositories()) {
@@ -194,6 +201,12 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
           @Override
           public boolean visitEnter(DependencyNode node) {
             try {
+              
+              System.out.println("NODE: " + node);
+              for (DependencyNode dependencyNode : node.getChildren()) {
+                System.out.println("  - " + dependencyNode + " : " + dependencyNode.getDependency());
+              }
+              
               return handleDependencyNode(node, useRemoteRepository, alreadyHandled,
                   artifact.equals(node.getDependency().getArtifact()));
             } catch (CoreException e) {
@@ -224,6 +237,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
         }
 
       } catch (DependencyCollectionException e) {
+        e.printStackTrace();
         throw new CoreException(new Status(Status.ERROR, MvnCoreActivator.PLUGIN_ID, e.getMessage(), e));
       }
 
@@ -251,6 +265,18 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    */
   public List<MvnArtifactType> getMvnArtifacts() {
     return _mvnArtifactTypes;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param description
+   * @return
+   */
+  protected IBundleMakerPreferences getBundleMakerPreferences(IProjectDescription description) {
+    return BundleMakerPreferences.getBundleMakerPreferences(MvnCoreActivator.PLUGIN_ID, description
+        .getBundleMakerProject().getProject());
   }
 
   /**

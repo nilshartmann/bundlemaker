@@ -12,9 +12,11 @@ package org.bundlemaker.core.ui.utils;
 
 import java.util.List;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
+import org.bundlemaker.core.parser.IProblem;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.event.Events;
 import org.bundlemaker.core.ui.internal.Activator;
@@ -40,7 +42,7 @@ import org.eclipse.ui.navigator.CommonNavigator;
  */
 public class BundleMakerProjectOpener {
 
-  public static void openProject(final IBundleMakerProject bundleMakerProject) {
+  public static void openProject(final IModuleAwareBundleMakerProject bundleMakerProject) {
 
     if (bundleMakerProject == null) {
       return;
@@ -62,7 +64,7 @@ public class BundleMakerProjectOpener {
 
   }
 
-  private static void openProjectInternal(final IBundleMakerProject bundleMakerProject) {
+  private static void openProjectInternal(final IModuleAwareBundleMakerProject bundleMakerProject) {
 
     // ask user if the perspective should be opened
     if (!BundleMakerPerspectiveHelper
@@ -76,7 +78,8 @@ public class BundleMakerProjectOpener {
 
     final long start = System.currentTimeMillis();
 
-    IBundleMakerArtifact defaultModularizedSystem = ParseBundleMakerProjectRunnable.parseProject(bundleMakerProject);
+    IBundleMakerArtifact defaultModularizedSystem = ParseBundleMakerProjectRunnable.parseProject(bundleMakerProject
+        .adaptAs(IParserAwareBundleMakerProject.class));
 
     final long duration = System.currentTimeMillis() - start;
 
@@ -88,7 +91,7 @@ public class BundleMakerProjectOpener {
                 + (duration / 1000)
                 + "s)"));
 
-    List<IProblem> problems = bundleMakerProject.getProblems();
+    List<IProblem> problems = bundleMakerProject.adaptAs(IParserAwareBundleMakerProject.class).getProblems();
     for (IProblem iProblem : problems) {
       System.out.println("Problem: " + iProblem);
     }
@@ -128,7 +131,8 @@ public class BundleMakerProjectOpener {
     }
   }
 
-  private static IBundleMakerArtifact selectDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject,
+  private static IBundleMakerArtifact selectDefaultModularizedSystemArtifact(
+      IProjectDescriptionAwareBundleMakerProject bundleMakerProject,
       IBundleMakerArtifact defaultModularizedSystemArtifact)
       throws CoreException {
 
@@ -153,6 +157,5 @@ public class BundleMakerProjectOpener {
 
     return defaultModularizedSystemArtifact;
   }
-
 
 }

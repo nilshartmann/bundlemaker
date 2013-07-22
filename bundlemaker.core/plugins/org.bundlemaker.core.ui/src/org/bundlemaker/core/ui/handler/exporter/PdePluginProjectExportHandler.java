@@ -17,10 +17,10 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.IModuleExporter;
 import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
-import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.osgi.exporter.pde.PdePluginProjectModuleExporter;
 import org.bundlemaker.core.osgi.manifest.DefaultManifestCreator;
 import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 

@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.exporter;
 
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,7 +31,7 @@ public abstract class AbstractExporter implements IModuleExporter {
   private IModularizedSystem     _currentModularizedSystem;
 
   /** the current module */
-  private IResourceModule        _currentModule;
+  private IModule                _currentModule;
 
   /** the current context */
   private IModuleExporterContext _currentContext;
@@ -54,7 +54,7 @@ public abstract class AbstractExporter implements IModuleExporter {
    * 
    * @return the current {@link IResourceModule}
    */
-  protected IResourceModule getCurrentModule() {
+  protected IModule getCurrentModule() {
     return _currentModule;
   }
 
@@ -73,7 +73,7 @@ public abstract class AbstractExporter implements IModuleExporter {
    * {@inheritDoc}
    */
   @Override
-  public boolean canExport(IModularizedSystem modularizedSystem, IResourceModule module, IModuleExporterContext context) {
+  public boolean canExport(IModularizedSystem modularizedSystem, IModule module, IModuleExporterContext context) {
 
     //
     return true;
@@ -83,7 +83,7 @@ public abstract class AbstractExporter implements IModuleExporter {
    * {@inheritDoc}
    */
   @Override
-  public final void export(IModularizedSystem modularizedSystem, IResourceModule module,
+  public final void export(IModularizedSystem modularizedSystem, IModule module,
       IModuleExporterContext context, IProgressMonitor progressMonitor) throws CoreException {
 
     Assert.isNotNull(modularizedSystem);

@@ -10,16 +10,16 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser.bytecode;
 
-import org.bundlemaker.core.DefaultProblemImpl;
-import org.bundlemaker.core.parser.AbstractParser;
-import org.bundlemaker.core.parser.IResourceCache;
+import org.bundlemaker.core.jtype.ITypeResource;
+import org.bundlemaker.core.jtype.JavaTypeUtils;
+import org.bundlemaker.core.jtype.JavaUtils;
+import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.parser.bytecode.asm.ArtefactAnalyserClassVisitor;
 import org.bundlemaker.core.parser.bytecode.asm.AsmReferenceRecorder;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.resource.ResourceKey;
-import org.bundlemaker.core.resource.modifiable.IModifiableResource;
-import org.bundlemaker.core.util.JavaTypeUtils;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.spi.parser.AbstractParser;
+import org.bundlemaker.core.spi.parser.IParsableResource;
+import org.bundlemaker.core.spi.parser.IParserContext;
 import org.objectweb.asm.ClassReader;
 
 /**
@@ -42,55 +42,50 @@ public class ByteCodeParser extends AbstractParser {
    * {@inheritDoc}
    */
   @Override
-  public boolean canParse(IResourceKey resourceKey) {
+  public boolean canParse(IParsableResource resource) {
 
     //
-    if (!resourceKey.getPath().endsWith(".class")) {
+    if (!resource.getPath().endsWith(".class")) {
       return false;
     }
 
     //
-    return resourceKey.isValidJavaPackage();
+    return JavaUtils.isValidJavaPackage(resource.getPath());
   }
 
   @Override
-  protected void doParseResource(IProjectContentEntry content, IResourceKey resourceKey, IResourceCache cache) {
-
-    // get the IModifiableResource
-    IModifiableResource resource = cache.getOrCreateResource(resourceKey);
+  protected void doParseResource(IProjectContentEntry content, IParsableResource resource, IParserContext cache,
+      boolean parseReferences) {
 
     // if the resource already contains a type, it already has been parsed.
     // In this case we can return immediately
-    if (!resource.getContainedTypes().isEmpty()) {
+    if (!resource.adaptAs(ITypeResource.class).getContainedTypes().isEmpty()) {
       return;
     }
 
     // if the resource does not contain a anonymous or local type
     // the enclosing resource is the resource (the default)
-    IModifiableResource enclosingResource = resource;
+    IParsableResource enclosingResource = resource;
 
     // get fully qualified type name
     String fullyQualifiedName = JavaTypeUtils.convertToFullyQualifiedName(resource.getPath());
 
     // if the type is an anonymous or local type,
     // we have to get the enclosing type name
-    if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName)) {
+    if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName) && parseReferences) {
 
       // get the name of the enclosing type
       String enclosingName = JavaTypeUtils.getEnclosingNonLocalAndNonAnonymousTypeName(fullyQualifiedName);
 
-      // the resource key for the enclosing type
-      ResourceKey enclosingKey = new ResourceKey(resourceKey.getProjectContentEntryId(), resourceKey.getRoot(),
+      // get the enclosing resource
+      enclosingResource = cache.getOrCreateResource(resource.getProjectContentEntryId(), resource.getRoot(),
           JavaTypeUtils.convertFromFullyQualifiedName(enclosingName));
 
-      // get the enclosing resource
-      enclosingResource = cache.getOrCreateResource(enclosingKey);
-
       // if we have to parse the enclosing type
-      if (enclosingResource.getContainedTypes().isEmpty()) {
-        parseResource(content, enclosingKey, cache);
+      if (enclosingResource.adaptAs(ITypeResource.class).getContainedTypes().isEmpty()) {
+        parseResource(content, enclosingResource, cache, true);
 
-        if (enclosingResource.getContainedTypes().isEmpty()) {
+        if (enclosingResource.adaptAs(ITypeResource.class).getContainedTypes().isEmpty()) {
           // TODO
           // TODO remove null handling in AsmReferenceRecorder
           // Assert.isTrue(!enclosingResource.getContainedTypes().isEmpty());
@@ -106,13 +101,12 @@ public class ByteCodeParser extends AbstractParser {
       // parse the class file
       byte[] bytes = resource.getContent();
       ClassReader reader = new ClassReader(bytes);
-      reader.accept(new ArtefactAnalyserClassVisitor(referenceRecorder), 0);
+      reader.accept(new ArtefactAnalyserClassVisitor(referenceRecorder, parseReferences), 0);
 
     } catch (Exception e) {
       e.printStackTrace();
-      DefaultProblemImpl byteCodeParserProblem = new DefaultProblemImpl(resourceKey, e.toString());
+      IProblem byteCodeParserProblem = new IProblem.DefaultProblem(resource, e.toString());
       getProblems().add(byteCodeParserProblem);
     }
-
   }
 }

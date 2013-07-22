@@ -56,8 +56,8 @@ public abstract class AbstractSideMarker extends Figure {
    * @param labelProvider
    * @param colorScheme
    */
-  public AbstractSideMarker(IDsmContentProvider contentProvider, 
-      ILabelProvider labelProvider, IDsmColorScheme colorScheme) {
+  public AbstractSideMarker(IDsmContentProvider contentProvider, ILabelProvider labelProvider,
+      IDsmColorScheme colorScheme) {
 
     //
     Assert.isNotNull(contentProvider);

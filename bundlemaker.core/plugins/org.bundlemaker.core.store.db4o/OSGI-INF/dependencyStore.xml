@@ -12,7 +12,7 @@
 <component name="db4oPersistentDependencyStoreFactory">
 	<implementation class="org.bundlemaker.core.store.db4o.internal.PersistentDependencyStoreFactoryComponent"/>
 	<service>
-		<provide interface="org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory"/>
+		<provide interface="org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory"/>
 	</service>
 	<reference name="Db4oService"
 		interface="com.db4o.osgi.Db4oService"

@@ -1,24 +1,22 @@
 package org.bundlemaker.core.internal.parser;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
-import org.bundlemaker.core.internal.resource.Reference;
+import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
-import org.bundlemaker.core.internal.resource.Type;
-import org.bundlemaker.core.parser.IParser;
-import org.bundlemaker.core.parser.IParser.ParserType;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.parser.IProblem;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectContentResource;
+import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.spi.parser.IParsableResource;
+import org.bundlemaker.core.spi.parser.IParser;
+import org.bundlemaker.core.spi.parser.IParser.ParserType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -45,11 +43,16 @@ public class FunctionalHelper {
           // check if the operation has been canceled
           FunctionalHelper.checkIfCanceled(monitor);
 
+          // get the IModifiableResource
+          IParsableResource resource = resourceCache.getOrCreateResource(resourceStandin);
+
           //
-          if (parser.canParse(resourceStandin)) {
-            List<IProblem> problems = parser.parseResource(content, resourceStandin, resourceCache);
+          if (parser.canParse(resource)) {
+            ((Resource) resource).storeCurrentTimestamp();
+            List<IProblem> problems = parser.parseResource(content, resource, resourceCache,
+                resourceStandin.isAnalyzeReferences());
             result.addAll(problems);
-            resourceCache.getOrCreateResource(resourceStandin).setErroneous(!problems.isEmpty());
+            resource.setErroneous(!problems.isEmpty());
           }
 
           monitor.worked(1);
@@ -72,7 +75,7 @@ public class FunctionalHelper {
    * @return
    */
   static Set<IResourceStandin> computeNewAndModifiedResources(Collection<IResourceStandin> resourceStandins,
-      Map<IResourceKey, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor monitor) {
+      Map<IProjectContentResource, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor monitor) {
 
     //
     monitor.beginTask("", resourceStandins.size());
@@ -112,11 +115,12 @@ public class FunctionalHelper {
   }
 
   static boolean failOnMissingBinaries() {
-    return Boolean.getBoolean("org.bundlemaker.ignoreMissingBinaries") == false;
+    return false;
+    // Boolean.getBoolean("org.bundlemaker.ignoreMissingBinaries") == false;
   }
 
   static void associateResourceStandinsWithResources(Collection<IResourceStandin> resourceStandins,
-      Map<IResourceKey, Resource> map, boolean isSource, IProgressMonitor monitor) {
+      Map<IProjectContentResource, Resource> map, boolean isSource, IProgressMonitor monitor) {
 
     Assert.isNotNull(resourceStandins);
     Assert.isNotNull(map);
@@ -137,36 +141,6 @@ public class FunctionalHelper {
 
       // set up the resource stand-in
       setupResourceStandin(resourceStandin, resource, isSource);
-
-      final boolean failOnMissingBinaries = failOnMissingBinaries();
-
-      // perform some checks
-      // TODO: MAYBE REMOVE?
-      Assert.isNotNull(((ResourceStandin) resourceStandin).getResource());
-      for (IType type : resource.getContainedTypes()) {
-        if (!type.hasBinaryResource()) {
-          String message = "For source file "
-              + resourceStandin.getDirectory()
-              + "/"
-              + resourceStandin.getName()
-              + " there is no binary (class) file";
-          if (failOnMissingBinaries) {
-            throw new IllegalStateException(
-                message
-                    + "\nPlease make sure, that your binary paths contains classes for all sources in your project's source folders.");
-          } else {
-            System.err.println("WARNING! " + message);
-          }
-        }
-        // Assert.isNotNull(type.getBinaryResource(), resourceStandin.toString());
-        if (isSource) {
-          Assert.isTrue(resourceStandin.equals(type.getSourceResource()),
-              resourceStandin + " : " + type.getSourceResource());
-        } else {
-          Assert.isTrue(resourceStandin.equals(type.getBinaryResource()),
-              resourceStandin + " : " + type.getBinaryResource());
-        }
-      }
     }
   }
 
@@ -186,48 +160,9 @@ public class FunctionalHelper {
     ((ResourceStandin) resourceStandin).setResource(resource);
     // ... and set the opposite
     resource.setResourceStandin((ResourceStandin) resourceStandin);
-
-    // set the references
-    Set<Reference> resourceReferences = new HashSet<Reference>();
-    for (Reference reference : resource.getModifiableReferences()) {
-      Reference newReference = new Reference(reference);
-      newReference.setResource(resource);
-      resourceReferences.add(newReference);
-    }
-    resource.getModifiableReferences().clear();
-    resource.getModifiableReferences().addAll(resourceReferences);
-
-    // set the type-back-references
-    for (Type type : resource.getModifiableContainedTypes()) {
-
-      //
-      if (isSource) {
-        type.setSourceResource(resource);
-      } else {
-        type.setBinaryResource(resource);
-      }
-
-      // set the references
-      Map<String, Reference> typeReferences = new HashMap<String, Reference>();
-      for (Reference reference : type.getModifiableReferences()) {
-        // TODO
-        if (reference == null) {
-          continue;
-        }
-        Reference newReference = new Reference(reference);
-        newReference.setType(type);
-        if (typeReferences.containsKey(newReference)) {
-          throw new RuntimeException();
-        } else {
-          typeReferences.put(newReference.getFullyQualifiedName(), newReference);
-        }
-      }
-      type.getModifiableReferences().clear();
-      type.getModifiableReferences().addAll(typeReferences.values());
-    }
   }
 
-  static boolean hasToBeReparsed(IResourceStandin resourceStandin, Resource resource) {
+  static boolean hasToBeReparsed(IModuleResource resourceStandin, Resource resource) {
 
     // resource has to be re-parsed if no resource was stored in the database
     if (resource == null) {
@@ -239,24 +174,13 @@ public class FunctionalHelper {
       return true;
     }
 
-    // String root = resourceStandin.getRoot();
-    // String resourceRoot = resource.getRoot();
     //
-    // // System.out.println("root: '" + root + "', resourceroot: '" + resourceRoot + "'");
-    //
-    // if (root != null &&
-    // root.endsWith(".jar")) {
-    //
-    // File rootFile = new File(root);
-    // File resourceRootFile = new File(resourceRoot);
-    //
-    // if (rootFile.getName().equals(resourceRootFile.getName())) {
-    // return false;
-    // }
-    // }
-    //
+    if (resourceStandin.isAnalyzeReferences() != resource.isAnalyzeReferences()) {
+      return true;
+    }
+
     // check the time stamp
-    return resource.getTimestamp() != resourceStandin.getTimestamp();
+    return resource.getLastParsedTimestamp() != resourceStandin.getCurrentTimestamp();
   }
 
   /**

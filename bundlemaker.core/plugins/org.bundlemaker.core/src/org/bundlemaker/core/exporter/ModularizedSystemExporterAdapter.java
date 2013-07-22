@@ -12,8 +12,8 @@ package org.bundlemaker.core.exporter;
 
 import java.io.File;
 
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -34,7 +34,7 @@ public class ModularizedSystemExporterAdapter implements IModularizedSystemExpor
   private IModularizedSystem     _currentModularizedSystem;
 
   /** - */
-  private IResourceModule        _currentModule;
+  private IModule                _currentModule;
 
   /** - */
   private IModuleExporterContext _currentContext;
@@ -94,7 +94,7 @@ public class ModularizedSystemExporterAdapter implements IModularizedSystemExpor
     try {
       // simply call export() for each contained
       int counter = 0;
-      for (IResourceModule resourceModule : _currentModularizedSystem.getResourceModules()) {
+      for (IModule resourceModule : _currentModularizedSystem.getModules()) {
 
         if (_moduleFilter == null || _moduleFilter.matches(resourceModule)) {
 
@@ -119,7 +119,6 @@ public class ModularizedSystemExporterAdapter implements IModularizedSystemExpor
           } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            new SimpleReportExporter().export(modularizedSystem, _currentModule, context, subMonitor.newChild(1));
           }
           postExportModule();
 
@@ -144,7 +143,7 @@ public class ModularizedSystemExporterAdapter implements IModularizedSystemExpor
    */
   private int countModulesToExport() {
     int modulesToExport = 0;
-    for (IResourceModule resourceModule : _currentModularizedSystem.getResourceModules()) {
+    for (IModule resourceModule : _currentModularizedSystem.getModules()) {
 
       if (_moduleFilter == null || _moduleFilter.matches(resourceModule)) {
         modulesToExport++;
@@ -169,7 +168,7 @@ public class ModularizedSystemExporterAdapter implements IModularizedSystemExpor
    * 
    * @return
    */
-  public final IResourceModule getCurrentModule() {
+  public final IModule getCurrentModule() {
     return _currentModule;
   }
 

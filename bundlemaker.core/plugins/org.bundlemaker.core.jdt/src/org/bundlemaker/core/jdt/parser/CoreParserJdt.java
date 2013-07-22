@@ -44,9 +44,9 @@ public class CoreParserJdt {
       result.putAll(compilerOptions);
     }
     
-      result.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
-      result.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
-      result.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
+      result.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
+      result.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_7);
+      result.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_7);
     
     return result;
   }

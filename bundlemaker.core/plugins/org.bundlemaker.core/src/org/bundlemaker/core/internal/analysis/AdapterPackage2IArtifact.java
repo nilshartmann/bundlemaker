@@ -5,11 +5,9 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.analysis.ITypeArtifact;
-import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -86,7 +84,7 @@ public class AdapterPackage2IArtifact extends AbstractPackageFilteringArtifact i
 
     //
     return artifact instanceof IModuleArtifact
-        && ((IModuleArtifact) artifact).getAssociatedModule() instanceof IResourceModule;
+        && ((IModuleArtifact) artifact).getAssociatedModule().isResourceModule();
   }
 
   /**
@@ -111,8 +109,14 @@ public class AdapterPackage2IArtifact extends AbstractPackageFilteringArtifact i
   public String handleCanAdd(IBundleMakerArtifact artifact) {
 
     //
-    if (artifact.isInstanceOf(IResourceArtifact.class)) {
-      String packageName = ((IResourceArtifact) artifact).getAssociatedResource().getPackageName();
+    IResourceArtifact resourceArtifact = artifact instanceof IResourceArtifact ? (IResourceArtifact) artifact
+        : artifact
+            .getParent(IResourceArtifact.class);
+
+    //
+    if (resourceArtifact != null) {
+      String packageName = resourceArtifact.getAssociatedResource()
+          .getDirectory().replace('/', '.');
       if (!packageName.equals(this.getQualifiedName())) {
         return String.format("Can not add resource '%s' to package '%s'.", artifact.getQualifiedName(), packageName);
       } else {
@@ -120,14 +124,14 @@ public class AdapterPackage2IArtifact extends AbstractPackageFilteringArtifact i
       }
     }
 
-    if (artifact.isInstanceOf(ITypeArtifact.class)) {
-      String packageName = ((ITypeArtifact) artifact).getAssociatedType().getPackageName();
-      if (!packageName.equals(this.getQualifiedName())) {
-        return String.format("Can not add type '%s' to package '%s'.", artifact.getQualifiedName(), packageName);
-      } else {
-        return null;
-      }
-    }
+    // if (artifact.isInstanceOf(ITypeArtifact.class)) {
+    // String packageName = ((ITypeArtifact) artifact).getAssociatedType().getPackageName();
+    // if (!packageName.equals(this.getQualifiedName())) {
+    // return String.format("Can not add type '%s' to package '%s'.", artifact.getQualifiedName(), packageName);
+    // } else {
+    // return null;
+    // }
+    // }
 
     // handle packages
     if (artifact.isInstanceOf(IPackageArtifact.class)) {
@@ -194,11 +198,6 @@ public class AdapterPackage2IArtifact extends AbstractPackageFilteringArtifact i
         ((IBundleMakerArtifact) artifact).accept(visitor);
       }
     }
-  }
-
-  public void accept(IAnalysisModelVisitor... visitors) {
-    DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
-    accept(artifactTreeVisitor);
   }
 
   /**

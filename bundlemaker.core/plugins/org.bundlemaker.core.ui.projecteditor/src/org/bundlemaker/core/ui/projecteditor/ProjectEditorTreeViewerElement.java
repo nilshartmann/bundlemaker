@@ -1,13 +1,13 @@
 package org.bundlemaker.core.ui.projecteditor;
 
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditorElement;
 
 public class ProjectEditorTreeViewerElement implements IProjectContentProviderEditorElement {
 
-  private final IBundleMakerProject           _bundleMakerProject;
+  private final IProjectDescriptionAwareBundleMakerProject           _bundleMakerProject;
 
   private final Object                        _element;
 
@@ -15,7 +15,7 @@ public class ProjectEditorTreeViewerElement implements IProjectContentProviderEd
 
   private final IProjectContentProviderEditor _providingEditor;
 
-  ProjectEditorTreeViewerElement(IBundleMakerProject bundleMakerProject,
+  ProjectEditorTreeViewerElement(IProjectDescriptionAwareBundleMakerProject bundleMakerProject,
       IProjectContentProvider projectContentProvider, Object rootElement, IProjectContentProviderEditor providingEditor) {
     super();
     _bundleMakerProject = bundleMakerProject;
@@ -24,7 +24,7 @@ public class ProjectEditorTreeViewerElement implements IProjectContentProviderEd
     _providingEditor = providingEditor;
   }
 
-  public IBundleMakerProject getBundleMakerProject() {
+  public IProjectDescriptionAwareBundleMakerProject getBundleMakerProject() {
     return _bundleMakerProject;
   }
 

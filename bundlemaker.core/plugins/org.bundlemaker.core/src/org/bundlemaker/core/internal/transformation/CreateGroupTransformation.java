@@ -3,12 +3,12 @@ package org.bundlemaker.core.internal.transformation;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.internal.analysis.AdapterGroup2IArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
+import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
+import org.bundlemaker.core.internal.gson.GsonHelper;
 import org.bundlemaker.core.internal.modules.Group;
-import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.modules.IGroup;
-import org.bundlemaker.core.modules.transformation.ICreateGroupTransformation;
-import org.bundlemaker.core.util.gson.GsonHelper;
+import org.bundlemaker.core.resource.ITransformationCreateGroup;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -25,7 +25,7 @@ import com.google.gson.annotations.SerializedName;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class CreateGroupTransformation extends
-    AbstractConfigurableTransformation<CreateGroupTransformation.Configuration> implements ICreateGroupTransformation {
+    AbstractConfigurableTransformation<CreateGroupTransformation.Configuration> implements ITransformationCreateGroup {
 
   /** - */
   private IGroupArtifact _newGroupArtifact;
@@ -37,7 +37,7 @@ public class CreateGroupTransformation extends
   private IPath          _parentGroupPath;
 
   /** - */
-  private IGroup         _lastExistingParentGroup;
+  private Group          _lastExistingParentGroup;
 
   /**
    * <p>
@@ -67,7 +67,7 @@ public class CreateGroupTransformation extends
 
     //
     IPath existingGroupPath = _lastExistingParentGroup != null ? _lastExistingParentGroup.getPath() : new Path("");
-    IPath newGroupPath = _newGroupArtifact.getAssociatedGroup().getPath();
+    IPath newGroupPath = ((AdapterGroup2IArtifact) _newGroupArtifact).getAssociatedGroup().getPath();
 
     //
     Assert.isTrue(existingGroupPath.isPrefixOf(newGroupPath));
@@ -112,7 +112,7 @@ public class CreateGroupTransformation extends
     _lastExistingParentGroup = getModularizedSystem().getGroup(existingGroupPath);
 
     //
-    IGroup newGroup = getModularizedSystem().getOrCreateGroup(absolutePath);
+    Group newGroup = getModularizedSystem().getOrCreateGroup(absolutePath);
 
     //
     _newGroupArtifact = (IGroupArtifact) ((AdapterRoot2IArtifact) config.getGroupContainer().getRoot())

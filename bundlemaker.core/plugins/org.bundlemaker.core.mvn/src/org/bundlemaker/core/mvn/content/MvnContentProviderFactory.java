@@ -1,6 +1,7 @@
 package org.bundlemaker.core.mvn.content;
 
-import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
+import org.bundlemaker.core.project.IModifiableProjectDescription;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
@@ -21,8 +22,14 @@ public class MvnContentProviderFactory {
    * @param sourceRoot
    * @return
    */
-  public static void addNewMvnContentProvider(IModifiableProjectDescription description,
-      String groupId, String artifactId, String version) {
+  public static void addNewMvnContentProvider(IModifiableProjectDescription description, String groupId,
+      String artifactId, String version) {
+
+    //
+    Assert.isNotNull(description);
+    Assert.isNotNull(groupId);
+    Assert.isNotNull(artifactId);
+    Assert.isNotNull(version);
 
     //
     MvnContentProvider mvnContentProvider = new MvnContentProvider();

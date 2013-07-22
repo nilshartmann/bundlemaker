@@ -16,13 +16,12 @@ import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
-import org.bundlemaker.core.modules.IMovableUnit;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.MovableUnit;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
 
 /**
  * <p>
@@ -34,13 +33,13 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     IMovableUnit {
 
   /** the bundle maker resource */
-  private IResource    _resource;
+  private IModuleResource _resource;
 
   /** - */
-  private boolean      _isSourceResource;
+  private boolean         _isSourceResource;
 
   /** - */
-  private IMovableUnit _movableUnit;
+  private IMovableUnit    _movableUnit;
 
   /**
    * <p>
@@ -50,7 +49,7 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
    * @param type
    * @param parent
    */
-  public AdapterResource2IArtifact(IResource resource, boolean isSourceResource, IBundleMakerArtifact parent,
+  public AdapterResource2IArtifact(IModuleResource resource, boolean isSourceResource, IBundleMakerArtifact parent,
       ArtifactCache artifactCache) {
     super(resource.getName());
 
@@ -65,19 +64,11 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     _isSourceResource = isSourceResource;
 
     //
-    _movableUnit = MovableUnit.createFromResource(resource, artifactCache.getModularizedSystem());
+    _movableUnit = resource.getMovableUnit();
   }
 
-  public List<IType> getAssociatedTypes() {
-    return _movableUnit.getAssociatedTypes();
-  }
-
-  public List<IResource> getAssociatedBinaryResources() {
+  public List<? extends IModuleResource> getAssociatedBinaryResources() {
     return _movableUnit.getAssociatedBinaryResources();
-  }
-
-  public boolean hasAssociatedTypes() {
-    return _movableUnit.hasAssociatedTypes();
   }
 
   public boolean hasAssociatedBinaryResources() {
@@ -92,16 +83,24 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     return _movableUnit.hasAssociatedSourceResource();
   }
 
-  public IResource getAssociatedSourceResource() {
+  public IModuleResource getAssociatedSourceResource() {
     return _movableUnit.getAssociatedSourceResource();
   }
 
-  public IResourceModule getContainingResourceModule() {
-    return _movableUnit.getContainingResourceModule();
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IModule getAssoicatedModule(IModularizedSystem modularizedSystem) {
+    return _movableUnit.getAssoicatedModule(modularizedSystem);
   }
 
-  public boolean hasContainingResourceModule() {
-    return _movableUnit.hasContainingResourceModule();
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasModule(IModularizedSystem modularizedSystem) {
+    return _movableUnit.hasModule(modularizedSystem);
   }
 
   @Override
@@ -119,11 +118,11 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
 
     //
     return artifact instanceof IModuleArtifact
-        && ((IModuleArtifact) artifact).getAssociatedModule() instanceof IResourceModule;
+        && ((IModuleArtifact) artifact).getAssociatedModule().isResourceModule();
   }
 
   @Override
-  public IResource getAssociatedResource() {
+  public IModuleResource getAssociatedResource() {
     return _resource;
   }
 
@@ -152,7 +151,7 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     return _resource.getPath();
   }
 
-  public IResource getResource() {
+  public IModuleResource getResource() {
     return _resource;
   }
 
@@ -178,16 +177,6 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
         ((IBundleMakerArtifact) artifact).accept(visitor);
       }
     }
-  }
-
-  public void accept(IAnalysisModelVisitor... visitors) {
-    DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
-    accept(artifactTreeVisitor);
-  }
-
-  @Override
-  public boolean containsTypes() {
-    return hasAssociatedTypes();
   }
 
   @Override

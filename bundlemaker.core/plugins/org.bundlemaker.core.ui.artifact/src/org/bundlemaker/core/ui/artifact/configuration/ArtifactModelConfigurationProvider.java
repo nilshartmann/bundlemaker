@@ -11,7 +11,7 @@
 package org.bundlemaker.core.ui.artifact.configuration;
 
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.common.ResourceType;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
@@ -61,7 +61,7 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
 
     if (_analysisModelConfiguration == null) {
 
-      ProjectContentType contentType = ProjectContentType.SOURCE;
+      ResourceType contentType = ResourceType.SOURCE;
       boolean hierarchical = false;
       boolean includeVirtualModuleForMissingTypes = false;
 
@@ -69,7 +69,7 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
 
         // override default settings with stored preferences
         if (_store.contains(PREF_CONTENT_TYPE)) {
-          contentType = ProjectContentType.valueOf(_store.getString(PREF_CONTENT_TYPE));
+          contentType = ResourceType.valueOf(_store.getString(PREF_CONTENT_TYPE));
         }
         if (_store.contains(PREF_HIERARCHICAL_PACKAGES)) {
           hierarchical = _store.getBoolean(PREF_HIERARCHICAL_PACKAGES);
@@ -103,7 +103,7 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
    * @param contentType
    * @param hierarchical
    */
-  public void store(boolean hierarchical, ProjectContentType contentType, boolean includeVirtualModuleForMissingTypes) {
+  public void store(boolean hierarchical, ResourceType contentType, boolean includeVirtualModuleForMissingTypes) {
 
     //
     _analysisModelConfiguration = null;

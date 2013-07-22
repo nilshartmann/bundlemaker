@@ -14,9 +14,10 @@ import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.algorithms.AdjacencyList;
 import org.bundlemaker.core.internal.analysis.ModelTransformerCache;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
 
 /**
@@ -25,7 +26,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ModularizedSystem extends AbstractQueryableModularizedSystem {
+public class ModularizedSystem extends AbstractTransformationAwareModularizedSystem {
 
   /** - */
   private ModelTransformerCache _transformerCache = null;
@@ -37,8 +38,8 @@ public class ModularizedSystem extends AbstractQueryableModularizedSystem {
    * 
    * @param name
    */
-  public ModularizedSystem(String name, IProjectDescription projectDescription) {
-    super(name, projectDescription);
+  public ModularizedSystem(String name, IModuleAwareBundleMakerProject project) {
+    super(name, project);
 
     _transformerCache = new ModelTransformerCache();
   }
@@ -47,6 +48,35 @@ public class ModularizedSystem extends AbstractQueryableModularizedSystem {
    * {@inheritDoc}
    */
   @Override
+  public <T> T adaptAs(Class<T> clazz) {
+
+    //
+    T result = (T) Platform.getAdapterManager().getAdapter(this, clazz);
+    if (result != null) {
+      return result;
+    }
+
+    //
+    if (clazz.isAssignableFrom(this.getClass())) {
+      return (T) this;
+    }
+
+    //
+    return null;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Object getAdapter(Class adapter) {
+
+    return adaptAs(adapter);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public IRootArtifact getAnalysisModel(IAnalysisModelConfiguration configuration) {
     return (IRootArtifact) _transformerCache.getArtifactModel(this, configuration, null);
   }
@@ -54,7 +84,6 @@ public class ModularizedSystem extends AbstractQueryableModularizedSystem {
   /**
    * {@inheritDoc}
    */
-  @Override
   public IRootArtifact getAnalysisModel(IAnalysisModelConfiguration configuration, IProgressMonitor progressMonitor) {
 
     //

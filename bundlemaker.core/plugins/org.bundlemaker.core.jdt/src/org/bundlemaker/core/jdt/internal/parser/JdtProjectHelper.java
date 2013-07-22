@@ -13,20 +13,25 @@ package org.bundlemaker.core.jdt.internal.parser;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.common.utils.VMInstallUtils;
 import org.bundlemaker.core.jdt.parser.CoreParserJdt;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.VariablePath;
-import org.bundlemaker.core.util.JdkCreator;
+import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.VariablePath;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -49,10 +54,9 @@ public class JdtProjectHelper {
    * @param bundleMakerProject
    * @throws CoreException
    */
-  public static void setupAssociatedJavaProject(IBundleMakerProject project) throws CoreException {
+  public static void setupAssociatedJavaProject(IProjectDescriptionAwareBundleMakerProject project) throws CoreException {
 
     try {
-      System.out.println("setupAssociatedJavaProject(" + project + ")");
 
       // step 1: get the associated JDT project
       IJavaProject javaProject = getAssociatedJavaProject(project);
@@ -64,7 +68,7 @@ public class JdtProjectHelper {
       List<IClasspathEntry> entries = new LinkedList<IClasspathEntry>();
 
       // step 3.1: add the vm path
-      IVMInstall vmInstall = JdkCreator.getIVMInstall(project.getProjectDescription().getJRE());
+      IVMInstall vmInstall = VMInstallUtils.getIVMInstall(project.getProjectDescription().getJRE());
       IPath path = JavaRuntime.newJREContainerPath(vmInstall);
       IClasspathEntry classpathEntry = JavaCore.newContainerEntry(path);
       entries.add(classpathEntry);
@@ -95,7 +99,7 @@ public class JdtProjectHelper {
     }
   }
 
-  public static boolean hasAssociatedJavaProject(IBundleMakerProject bundleMakerProject) {
+  public static boolean hasAssociatedJavaProject(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     return hasAssociatedJavaProject(bundleMakerProject.getProject());
   }
 
@@ -135,7 +139,7 @@ public class JdtProjectHelper {
     }
   }
 
-  public static IJavaProject getAssociatedJavaProject(IBundleMakerProject bundleMakerProject) {
+  public static IJavaProject getAssociatedJavaProject(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
 
     return getAssociatedJavaProject(bundleMakerProject.getProject());
   }
@@ -163,7 +167,7 @@ public class JdtProjectHelper {
     return javaProject;
   }
 
-  public static IProject getAssociatedJavaProjectAsProject(IBundleMakerProject bundleMakerProject) {
+  public static IProject getAssociatedJavaProjectAsProject(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
 
     return getAssociatedJavaProjectAsProject(bundleMakerProject.getProject());
   }
@@ -183,7 +187,7 @@ public class JdtProjectHelper {
     return associatedProject;
   }
 
-  public static IJavaProject newAssociatedJavaProject(IBundleMakerProject bundleMakerProject) throws CoreException {
+  public static IJavaProject newAssociatedJavaProject(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException {
     return newAssociatedJavaProject(bundleMakerProject.getProject());
   }
 
@@ -254,4 +258,55 @@ public class JdtProjectHelper {
     return project.getName() + CoreParserJdt.BUNDLEMAKER_JDT_PROJECT_POSTFIX;
   }
 
+  public static void deleteAssociatedProjectIfNecessary(final IProject resource) {
+
+    try {
+
+      if (resource instanceof IProject && ((IProject) resource).hasNature(BundleMakerCore.NATURE_ID)) {
+
+        // create a new workspace job
+        WorkspaceJob workspaceJob = new WorkspaceJob("delete") {
+
+          @Override
+          public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+
+            try {
+
+              IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getProjectDescriptionAwareBundleMakerProject((IProject) resource);
+
+              if (JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
+
+                // get the associated java project
+                IProject associatedJavaProject = JdtProjectHelper.getAssociatedJavaProjectAsProject(bundleMakerProject);
+
+                if (!associatedJavaProject.isOpen()) {
+
+                  // simply delete the project
+                  associatedJavaProject.open(null);
+                }
+
+                associatedJavaProject.delete(true, null);
+
+              }
+
+              //
+              return new Status(IStatus.OK, CoreParserJdt.BUNDLE_ID, null);
+
+            } catch (Exception e) {
+
+              // TODO
+              return new Status(IStatus.ERROR, CoreParserJdt.BUNDLE_ID, "Could not delete project.");
+            }
+
+          }
+        };
+
+        // schedule the job
+        workspaceJob.schedule();
+      }
+
+    } catch (CoreException e) {
+      e.printStackTrace();
+    }
+  }
 }

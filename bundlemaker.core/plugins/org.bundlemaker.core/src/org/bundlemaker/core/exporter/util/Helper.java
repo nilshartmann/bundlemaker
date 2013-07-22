@@ -12,7 +12,7 @@ package org.bundlemaker.core.exporter.util;
 
 import java.io.ByteArrayInputStream;
 
-import org.bundlemaker.core.util.EclipseProjectUtils;
+import org.bundlemaker.core.common.utils.EclipseProjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;

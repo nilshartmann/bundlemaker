@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -41,8 +42,8 @@ public class CreateModuleFromFlatPackageTest extends AbstractBundleMakerModelTes
   @Test
   public void createNewModuleFromFlatPackage() throws Exception {
     
-    IRootArtifact flatModel = getModularizedSystem().getAnalysisModel(AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
-    IRootArtifact hierModel = getModularizedSystem().getAnalysisModel(AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
+    IRootArtifact flatModel = AnalysisCore.getAnalysisModel(getModularizedSystem(),AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+    IRootArtifact hierModel = AnalysisCore.getAnalysisModel(getModularizedSystem(),AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
     
     Collection<IBundleMakerArtifact> children = flatModel.getChildren();
     IPackageArtifact originalFlatGuiPackage = null;

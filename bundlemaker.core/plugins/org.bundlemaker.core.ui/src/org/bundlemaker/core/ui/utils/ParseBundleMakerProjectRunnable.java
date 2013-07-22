@@ -12,10 +12,11 @@ package org.bundlemaker.core.ui.utils;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.bundlemaker.core.BundleMakerProjectState;
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
+import org.bundlemaker.core.project.BundleMakerProjectState;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.ui.ErrorDialogUtil;
 import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;
 import org.bundlemaker.core.ui.internal.Activator;
@@ -36,14 +37,14 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ParseBundleMakerProjectRunnable implements IRunnableWithProgress {
 
-  private final IBundleMakerProject _bundleMakerProject;
+  private final IParserAwareBundleMakerProject _bundleMakerProject;
 
-  private IBundleMakerArtifact      _defaultModularizedSystem = null;
+  private IBundleMakerArtifact                 _defaultModularizedSystem = null;
 
   /**
    * @param bundleMakerProject
    */
-  public ParseBundleMakerProjectRunnable(IBundleMakerProject bundleMakerProject) {
+  public ParseBundleMakerProjectRunnable(IParserAwareBundleMakerProject bundleMakerProject) {
     _bundleMakerProject = bundleMakerProject;
   }
 
@@ -66,7 +67,6 @@ public class ParseBundleMakerProjectRunnable implements IRunnableWithProgress {
         return;
       }
 
-
       _defaultModularizedSystem = getDefaultModularizedSystemArtifact(_bundleMakerProject, monitor);
 
     } catch (Exception ex) {
@@ -84,7 +84,7 @@ public class ParseBundleMakerProjectRunnable implements IRunnableWithProgress {
    * @param bundleMakerProject
    * @return true if the project has been successfully opened
    */
-  public static IBundleMakerArtifact parseProject(IBundleMakerProject bundleMakerProject) {
+  public static IBundleMakerArtifact parseProject(IParserAwareBundleMakerProject bundleMakerProject) {
     // Create runnable
     ParseBundleMakerProjectRunnable runnable = new ParseBundleMakerProjectRunnable(bundleMakerProject);
 
@@ -124,7 +124,8 @@ public class ParseBundleMakerProjectRunnable implements IRunnableWithProgress {
    * @return
    * @throws CoreException
    */
-  protected static IBundleMakerArtifact getDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject,
+  protected static IBundleMakerArtifact getDefaultModularizedSystemArtifact(
+      IParserAwareBundleMakerProject bundleMakerProject,
       IProgressMonitor monitor)
       throws CoreException {
 
@@ -138,7 +139,7 @@ public class ParseBundleMakerProjectRunnable implements IRunnableWithProgress {
     IModularizedSystem modularizedSystem = bundleMakerProject.getModularizedSystemWorkingCopy();
 
     //
-    return modularizedSystem.getAnalysisModel(artifactModelConfigurationProvider
+    return AnalysisCore.getAnalysisModel(modularizedSystem, artifactModelConfigurationProvider
         .getArtifactModelConfiguration(), monitor);
   }
 

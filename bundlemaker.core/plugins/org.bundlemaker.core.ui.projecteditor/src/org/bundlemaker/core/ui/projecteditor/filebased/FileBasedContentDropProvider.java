@@ -4,11 +4,11 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.projectdescription.VariablePath;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
-import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
+import org.bundlemaker.core.common.ResourceType;
+import org.bundlemaker.core.project.AnalyzeMode;
+import org.bundlemaker.core.project.IModifiableProjectDescription;
+import org.bundlemaker.core.project.VariablePath;
+import org.bundlemaker.core.project.filecontent.FileBasedProjectContentProvider;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropEvent;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
 import org.eclipse.core.resources.IFile;
@@ -148,13 +148,13 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
       VariablePath variablePath = new VariablePath(newFile);
 
       // Determine ("guess") the content type
-      ProjectContentType contentType = _contentTypeDetector.detectContentType(variablePath);
+      ResourceType contentType = _contentTypeDetector.detectContentType(variablePath);
 
       // add to provider
       provider.addRootPath(variablePath, contentType);
 
       // If sources are added set AnalyzeMode per default to BINARIES_AND_SOURCES
-      if (contentType == ProjectContentType.SOURCE) {
+      if (contentType == ResourceType.SOURCE) {
         provider.setAnalyzeMode(AnalyzeMode.BINARIES_AND_SOURCES);
       }
     }

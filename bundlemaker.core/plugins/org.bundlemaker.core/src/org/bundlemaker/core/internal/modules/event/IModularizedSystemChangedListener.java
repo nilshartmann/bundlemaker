@@ -1,5 +1,7 @@
 package org.bundlemaker.core.internal.modules.event;
 
+import org.bundlemaker.core.internal.modules.ChangeAction;
+
 /**
  * <p>
  * </p>
@@ -14,63 +16,50 @@ public interface IModularizedSystemChangedListener {
    * 
    * @param event
    */
-  void movableUnitAdded(MovableUnitMovedEvent event);
+  void classificationChanged(ClassificationChangedEvent event);
 
   /**
    * <p>
    * </p>
    * 
    * @param event
+   * @param changeAction
    */
-  void movableUnitRemoved(MovableUnitMovedEvent event);
+  void movableUnitChanged(MovableUnitMovedEvent event, ChangeAction changeAction);
 
   /**
    * <p>
    * </p>
    * 
    * @param event
+   * @param changeAction
    */
-  void moduleAdded(ModuleMovedEvent event);
+  void groupChanged(GroupChangedEvent event, ChangeAction changeAction);
 
   /**
    * <p>
    * </p>
    * 
    * @param event
+   * @param changeAction
    */
-  void moduleRemoved(ModuleMovedEvent event);
+  void moduleChanged(ModuleMovedEvent event, ChangeAction changeAction);
 
   /**
    * <p>
    * </p>
+   * 
+   * @param event
    */
   void moduleClassificationChanged(ModuleClassificationChangedEvent event);
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param event
+   */
   void moduleIdentifierChanged(ModuleIdentifierChangedEvent event);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param event
-   */
-  void groupAdded(GroupChangedEvent event);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param event
-   */
-  void groupRemoved(GroupChangedEvent event);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param event
-   */
-  void classificationChanged(ClassificationChangedEvent event);
 
   /**
    * <p>

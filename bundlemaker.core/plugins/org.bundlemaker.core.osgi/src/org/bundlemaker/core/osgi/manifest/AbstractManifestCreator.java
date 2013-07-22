@@ -2,13 +2,14 @@ package org.bundlemaker.core.osgi.manifest;
 
 import java.util.Map;
 
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.utils.ArtifactUtils;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.virgo.bundlor.util.BundleManifestUtils;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
@@ -40,7 +41,7 @@ public abstract class AbstractManifestCreator implements IBundleManifestCreator 
   private IModularizedSystem   _modularizedSystem;
 
   /** the resource module */
-  private IResourceModule      _resourceModule;
+  private IModule              _resourceModule;
 
   /** the manifest preferences */
   private IManifestPreferences _manifestPreferences;
@@ -56,8 +57,8 @@ public abstract class AbstractManifestCreator implements IBundleManifestCreator 
    */
   @Override
   public final ManifestContents createManifest(final IModularizedSystem modularizedSystem,
-      final IResourceModule resourceModule, final ManifestContents manifestTemplate,
-      final ManifestContents originalManifest, final IManifestPreferences manifestPreferences) {
+      final IModule resourceModule, final ManifestContents manifestTemplate, final ManifestContents originalManifest,
+      final IManifestPreferences manifestPreferences) {
 
     // assert not null
     Assert.isNotNull(modularizedSystem);
@@ -77,7 +78,8 @@ public abstract class AbstractManifestCreator implements IBundleManifestCreator 
 
     //
     // TODO: make Configurable
-    _rootArtifact = modularizedSystem.getAnalysisModel(IAnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+    _rootArtifact = AnalysisCore.getAnalysisModel(modularizedSystem,
+        IAnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     //
     _moduleArtifact = ArtifactUtils.getAssociatedModuleArtifact(_rootArtifact, resourceModule);
@@ -138,7 +140,7 @@ public abstract class AbstractManifestCreator implements IBundleManifestCreator 
    * 
    * @return the {@link IResourceModule}.
    */
-  protected final IResourceModule getResourceModule() {
+  protected final IModule getResourceModule() {
     return _resourceModule;
   }
 

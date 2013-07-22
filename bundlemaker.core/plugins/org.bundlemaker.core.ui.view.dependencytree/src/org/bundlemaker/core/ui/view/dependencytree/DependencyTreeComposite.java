@@ -121,6 +121,21 @@ public class DependencyTreeComposite extends Composite {
   public final List<IDependency> getSelectedDetailDependencies() {
     return _helper.getFilteredDependencies();
   }
+  
+  /**
+   * Set wether reference count should by displayed on nodes
+   * @param showReferenceCount
+   */
+  public void setShowReferenceCount(boolean showReferenceCount) {
+    if (_showReferenceCount != showReferenceCount) {
+      _showReferenceCount = showReferenceCount;
+      ((DependencyTreeArtifactLabelProvider)_fromTreeViewer.getLabelProvider()).setShowReferenceCount(showReferenceCount, false);
+      ((DependencyTreeArtifactLabelProvider)_toTreeViewer.getLabelProvider()).setShowReferenceCount(showReferenceCount, true);
+      
+      _fromTreeViewer.refresh(true);
+      _toTreeViewer.refresh(true);
+    }
+  }
 
   /**
    * <p>

@@ -10,9 +10,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.tools.ant.types.selectors.SelectorUtils;
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IModuleIdentifier;
-import org.bundlemaker.core.util.FileUtils;
+import org.bundlemaker.core.analysis.IResourceArtifact.IResourceArtifactContent;
+import org.bundlemaker.core.common.utils.FileUtils;
+import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 
@@ -361,69 +362,6 @@ public class AnalysisModelQueries {
    * <p>
    * </p>
    * 
-   * @param packageArtifact
-   * @param string
-   */
-  public static ITypeArtifact findTypeArtifactByQualifiedName(IBundleMakerArtifact root, final String qualifiedName) {
-
-    // create the result array
-    final List<ITypeArtifact> result = new LinkedList<ITypeArtifact>();
-
-    // visit
-    root.accept(new IAnalysisModelVisitor.Adapter() {
-      @Override
-      public boolean visit(ITypeArtifact typeArtifact) {
-
-        //
-        if (typeArtifact.getAssociatedType().getFullyQualifiedName().equals(qualifiedName)) {
-          result.add(typeArtifact);
-        }
-
-        //
-        return true;
-      }
-    });
-
-    //
-    if (result.size() > 1) {
-      throwException(String.format("Multiple types with name '%s' exist.", qualifiedName));
-    } else if (result.size() == 0) {
-      return null;
-    }
-
-    // return result
-    return result.get(0);
-  }
-
-  public static List<ITypeArtifact> findTypeArtifactsByQualifiedName(IBundleMakerArtifact root,
-      final String qualifiedName) {
-
-    // create the result array
-    final List<ITypeArtifact> result = new LinkedList<ITypeArtifact>();
-
-    // visit
-    root.accept(new IAnalysisModelVisitor.Adapter() {
-      @Override
-      public boolean visit(ITypeArtifact typeArtifact) {
-
-        //
-        if (typeArtifact.getAssociatedType().getFullyQualifiedName().equals(qualifiedName)) {
-          result.add(typeArtifact);
-        }
-
-        //
-        return true;
-      }
-    });
-
-    // return result
-    return result;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
    * @param root
    * @param name
    * @return
@@ -680,7 +618,7 @@ public class AnalysisModelQueries {
       }
 
       @Override
-      public boolean visit(ITypeArtifact artifact) {
+      public boolean visit(IResourceArtifactContent artifact) {
         check(regexp, clazz, result, artifact);
         return true;
       }
@@ -726,7 +664,7 @@ public class AnalysisModelQueries {
         } else {
           String artifactName = artifact.getName();
           String artifactQualifiedName = artifact.getQualifiedName();
-          if (clazz.isAssignableFrom(IPackageArtifact.class) || clazz.isAssignableFrom(ITypeArtifact.class)) {
+          if (clazz.isAssignableFrom(IPackageArtifact.class) || clazz.isAssignableFrom(IResourceArtifactContent.class)) {
             artifactName = artifactName.replace('.', '/');
             artifactQualifiedName = artifactQualifiedName.replace('.', '/');
             value = value.replace('.', '/');
@@ -770,7 +708,7 @@ public class AnalysisModelQueries {
       }
 
       @Override
-      public boolean visit(ITypeArtifact artifact) {
+      public boolean visit(IResourceArtifactContent artifact) {
         check(clazz, result, artifact);
         return true;
       }
@@ -847,7 +785,7 @@ public class AnalysisModelQueries {
        * {@inheritDoc}
        */
       @Override
-      public boolean visit(ITypeArtifact typeArtifact) {
+      public boolean visit(IResourceArtifactContent typeArtifact) {
         result.add(typeArtifact);
         return super.visit(typeArtifact);
       }
@@ -985,7 +923,7 @@ public class AnalysisModelQueries {
      * {@inheritDoc}
      */
     @Override
-    public final boolean visit(ITypeArtifact artifact) {
+    public final boolean visit(IResourceArtifactContent artifact) {
       handleNode(artifact);
       return true;
     }

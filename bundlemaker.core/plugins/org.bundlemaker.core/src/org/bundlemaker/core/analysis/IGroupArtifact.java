@@ -1,6 +1,5 @@
 package org.bundlemaker.core.analysis;
 
-import org.bundlemaker.core.modules.IGroup;
 
 /**
  * <p>
@@ -23,15 +22,6 @@ public interface IGroupArtifact extends IBundleMakerArtifact, IGroupAndModuleCon
    * @param name
    */
   void setName(String name);
-
-  /**
-   * <p>
-   * Returns the associated {@link IGroup}.
-   * </p>
-   * 
-   * @return the associated {@link IGroup}.
-   */
-  IGroup getAssociatedGroup();
 
   /**
    * <p>

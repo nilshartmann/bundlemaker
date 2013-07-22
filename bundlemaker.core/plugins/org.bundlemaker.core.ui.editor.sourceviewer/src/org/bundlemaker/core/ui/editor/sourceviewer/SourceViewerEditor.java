@@ -9,13 +9,13 @@ import java.util.Set;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.modules.IMovableUnit;
-import org.bundlemaker.core.modules.MovableUnit;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.selection.IDependencySelection;
 import org.bundlemaker.core.selection.Selection;
+import org.bundlemaker.core.spi.parser.IReferenceDetailParser;
+import org.bundlemaker.core.spi.parser.IReferenceDetailParser.IPosition;
 import org.bundlemaker.core.ui.artifact.cnf.ResourceArtifactEditorInput;
-import org.bundlemaker.core.ui.editor.sourceviewer.referencedetail.IReferenceDetailParser;
 import org.bundlemaker.core.ui.editor.sourceviewer.referencedetail.ReferenceDetailParser;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractDependencySelectionAwareEditorPart;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -52,25 +52,25 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 public class SourceViewerEditor extends AbstractDependencySelectionAwareEditorPart {
 
   /** - */
-  private String                      PROVIDER_ID = "org.bundlemaker.core.ui.editor.sourceviewer";
+  private String                       PROVIDER_ID = "org.bundlemaker.core.ui.editor.sourceviewer";
 
   /** - */
-  private SourceViewer                _sourceViewer;
+  private SourceViewer                 _sourceViewer;
 
   /** - */
-  private IDocument                   _document;
+  private IDocument                    _document;
 
   /** - */
-  private IResourceArtifact           _resourceArtifact;
+  private IResourceArtifact            _resourceArtifact;
 
   /** - */
-  private Map<String, List<Position>> _positions;
+  private Map<String, List<IPosition>> _positions;
 
   /** - */
-  private AnnotationModel             _annotationModel;
+  private AnnotationModel              _annotationModel;
 
   /** - */
-  private Set<String>                 _dependencies;
+  private Set<String>                  _dependencies;
 
   /**
    * <p>
@@ -140,7 +140,7 @@ public class SourceViewerEditor extends AbstractDependencySelectionAwareEditorPa
    * 
    * @return
    */
-  public Map<String, List<Position>> getPositions() {
+  public Map<String, List<IPosition>> getPositions() {
     return _positions;
   }
 
@@ -225,9 +225,9 @@ public class SourceViewerEditor extends AbstractDependencySelectionAwareEditorPa
 
     //
     IReferenceDetailParser detailParser = new ReferenceDetailParser();
-    IResource resource = _resourceArtifact.getAssociatedResource();
-    IMovableUnit movableUnit = MovableUnit.createFromResource(resource, _resourceArtifact.getModularizedSystem());
-    IResource sourceResource = movableUnit.getAssociatedBinaryResources().get(0);
+    IModuleResource resource = _resourceArtifact.getAssociatedResource();
+    IMovableUnit movableUnit = resource.getMovableUnit();
+    IModuleResource sourceResource = movableUnit.getAssociatedBinaryResources().get(0);
     _positions = detailParser.parseReferencePositions(sourceResource, _resourceArtifact.getModularizedSystem());
 
     //
@@ -259,15 +259,17 @@ public class SourceViewerEditor extends AbstractDependencySelectionAwareEditorPa
     _annotationModel.removeAllAnnotations();
 
     //
-    for (Entry<String, List<Position>> entry : _positions.entrySet()) {
+    for (Entry<String, List<IPosition>> entry : _positions.entrySet()) {
 
       if (_dependencies.isEmpty() || _dependencies.contains(entry.getKey())) {
 
         //
-        for (Position position : entry.getValue()) {
+        for (IPosition position : entry.getValue()) {
+
+          Position position2 = new Position(position.getOffset(), position.getLength());
 
           //
-          _annotationModel.addAnnotation(new ReferenceAnnotation(position, entry.getKey()), position);
+          _annotationModel.addAnnotation(new ReferenceAnnotation(position2, entry.getKey()), position2);
         }
       }
     }
@@ -283,7 +285,7 @@ public class SourceViewerEditor extends AbstractDependencySelectionAwareEditorPa
   private String readEditorInput(ResourceArtifactEditorInput editorInput) {
 
     //
-    IResource resource = editorInput.getResourceArtifact().hasAssociatedSourceResource() ? editorInput
+    IModuleResource resource = editorInput.getResourceArtifact().hasAssociatedSourceResource() ? editorInput
         .getResourceArtifact().getAssociatedSourceResource() : editorInput.getResourceArtifact()
         .getAssociatedResource();
 

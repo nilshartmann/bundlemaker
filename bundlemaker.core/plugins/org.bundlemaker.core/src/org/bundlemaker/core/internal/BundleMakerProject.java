@@ -14,33 +14,33 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.bundlemaker.core.BundleMakerCore;
-import org.bundlemaker.core.BundleMakerProjectChangedEvent;
-import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
-import org.bundlemaker.core.BundleMakerProjectState;
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IBundleMakerProject.IProjectDescriptionModifier;
-import org.bundlemaker.core.IBundleMakerProjectChangedListener;
-import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.hook.IBundleMakerProjectHook;
+import org.bundlemaker.core.internal.api.project.IInternalBundleMakerProject;
+import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ModelSetup;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
-import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.internal.projectdescription.ProjectDescriptionStore;
-import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
-import org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.transformation.ITransformation;
-import org.bundlemaker.core.parser.IParserFactory;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.parser.IProblem;
+import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.BundleMakerProjectState;
+import org.bundlemaker.core.project.ContentChangedEvent;
+import org.bundlemaker.core.project.DescriptionChangedEvent;
+import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
+import org.bundlemaker.core.project.IModifiableProjectDescription;
+import org.bundlemaker.core.project.IProjectDescription;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.StateChangedEvent;
+import org.bundlemaker.core.resource.IBundleMakerProjectHook;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.ITransformation;
+import org.bundlemaker.core.spi.store.IPersistentDependencyStore;
+import org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -51,7 +51,7 @@ import org.eclipse.core.runtime.Status;
 
 /**
  * <p>
- * Implementation of the interface {@link IBundleMakerProject}.
+ * Implementation of the interface {@link IProjectDescriptionAwareBundleMakerProject}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -60,6 +60,9 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
 
   /** the associated eclipse project (the bundle make project) */
   private IProject                                 _project;
+
+  /** the user attributes */
+  private Map<String, Object>                      _userAttributes;
 
   /** the bundle maker project description */
   private BundleMakerProjectDescription            _projectDescription;
@@ -95,15 +98,18 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     // read the projectDescription
     _projectDescription = loadProjectDescription();
 
+    // initialize user attributes
+    _userAttributes = new HashMap<String, Object>();
+
     // create the working copies map
     _modifiableModualizedSystemWorkingCopies = new HashMap<String, ModularizedSystem>();
 
     //
-    _projectChangedListeners = new LinkedList<IBundleMakerProjectChangedListener>();
-    addBundleMakerProjectChangedListener(new IBundleMakerProjectChangedListener() {
+    _projectChangedListeners = new CopyOnWriteArrayList<IBundleMakerProjectChangedListener>();
+    addBundleMakerProjectChangedListener(new IBundleMakerProjectChangedListener.Adapter() {
       @Override
-      public void bundleMakerProjectChanged(BundleMakerProjectChangedEvent event) {
-        if (event.getType().equals(Type.PROJECT_DESCRIPTION_RECOMPUTED)) {
+      public void projectDescriptionChanged(DescriptionChangedEvent event) {
+        if (event.getType().equals(DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RECOMPUTED)) {
           BundleMakerProject.this._projectState = BundleMakerProjectState.DIRTY;
         }
       }
@@ -111,6 +117,38 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
 
     //
     _projectState = BundleMakerProjectState.CREATED;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public <T> T adaptAs(Class<T> clazz) {
+
+    //
+    if (clazz.isAssignableFrom(this.getClass())) {
+      return (T) this;
+    }
+
+    //
+    return null;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Object getAdapter(Class adapter) {
+
+    return adaptAs(adapter);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Map<String, Object> getUserAttributes() {
+    return _userAttributes;
   }
 
   /**
@@ -157,13 +195,8 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     // set the initialized flag
     _projectState = BundleMakerProjectState.INITIALIZED;
 
-    // step 4: call initialize on the parser factories
-    for (IParserFactory parserFactory : Activator.getDefault().getParserFactoryRegistry().getParserFactories()) {
-      parserFactory.initialize(this);
-    }
-
     // notify listeners
-    notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_STATE_CHANGED));
+    fireProjectStateChangedEvent(new StateChangedEvent());
   }
 
   @Override
@@ -201,7 +234,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     }
 
     // notify listeners
-    notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_STATE_CHANGED));
+    fireProjectStateChangedEvent(new StateChangedEvent());
   }
 
   /**
@@ -214,7 +247,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     _projectState = BundleMakerProjectState.DISPOSED;
 
     // notify listeners
-    notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_STATE_CHANGED));
+    fireProjectStateChangedEvent(new StateChangedEvent());
 
     //
     Activator.getDefault().removeCachedBundleMakerProject(_project);
@@ -240,7 +273,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
    * @return
    */
   @Override
-  public final List<IResource> getSourceResources() {
+  public final List<IModuleResource> getSourceResources() {
     return _projectDescription.getSourceResources();
   }
 
@@ -251,7 +284,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
    * @return
    */
   @Override
-  public final List<IResource> getBinaryResources() {
+  public final List<IModuleResource> getBinaryResources() {
     return _projectDescription.getBinaryResources();
   }
 
@@ -305,7 +338,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     }
 
     // create the modularized system
-    ModularizedSystem modularizedSystem = new ModularizedSystem(name, _projectDescription);
+    ModularizedSystem modularizedSystem = new ModularizedSystem(name, this);
 
     // add the result to the hash map
     _modifiableModualizedSystemWorkingCopies.put(name, modularizedSystem);
@@ -430,10 +463,12 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
    */
   @Override
   public void reloadProjectDescription() throws CoreException {
+
+    //
     _projectDescription = loadProjectDescription();
 
-    notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_CHANGED));
-
+    //
+    fireDescriptionChangedEvent(new DescriptionChangedEvent(DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RELOADED));
   }
 
   @Override
@@ -481,16 +516,42 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
    * 
    * @param event
    */
-  public void notifyListeners(BundleMakerProjectChangedEvent event) {
+  public void fireContentChangedEvent(ContentChangedEvent event) {
     Assert.isNotNull(event);
 
-    // clone
-    IBundleMakerProjectChangedListener[] listeners = _projectChangedListeners
-        .toArray(new IBundleMakerProjectChangedListener[0]);
+    //
+    for (IBundleMakerProjectChangedListener listener : _projectChangedListeners) {
+      listener.projectContentChanged(event);
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param event
+   */
+  public void fireDescriptionChangedEvent(DescriptionChangedEvent event) {
+    Assert.isNotNull(event);
 
     //
-    for (IBundleMakerProjectChangedListener listener : listeners) {
-      listener.bundleMakerProjectChanged(event);
+    for (IBundleMakerProjectChangedListener listener : _projectChangedListeners) {
+      listener.projectDescriptionChanged(event);
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param event
+   */
+  public void fireProjectStateChangedEvent(StateChangedEvent event) {
+    Assert.isNotNull(event);
+
+    //
+    for (IBundleMakerProjectChangedListener listener : _projectChangedListeners) {
+      listener.projectStateChanged(event);
     }
   }
 

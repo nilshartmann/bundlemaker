@@ -19,20 +19,19 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+import org.bundlemaker.core.common.IResource;
+import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.exporter.AbstractExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ITemplateProvider;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.internal.exporter.ManifestCreatorAdapter;
 import org.bundlemaker.core.osgi.manifest.DefaultManifestCreator;
 import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
-import org.bundlemaker.core.resource.IReadableResource;
-import org.bundlemaker.core.util.collections.GenericCache;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -202,19 +201,19 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
    * 
    * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
    */
-  private final class CycleAwareGenericCache extends GenericCache<IResourceModule, ManifestContents> {
+  private final class CycleAwareGenericCache extends GenericCache<IModule, ManifestContents> {
 
     /** default serialVersionUID */
     private static final long    serialVersionUID = 1L;
 
     /** the host modules */
-    private Set<IResourceModule> _hostModules     = new HashSet<IResourceModule>();
+    private Set<IModule> _hostModules     = new HashSet<IModule>();
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected ManifestContents create(IResourceModule resourceModule) {
+    protected ManifestContents create(IModule resourceModule) {
 
       // define the host manifest contents (as it is needed to create a fragments manifest correctly)
       ManifestContents hostManifestContents = null;
@@ -223,7 +222,7 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
       if (ManifestUtils.isFragment(resourceModule)) {
 
         // find the host module
-        IResourceModule hostModule = (IResourceModule) ManifestUtils.getFragmentHost(resourceModule);
+        IModule hostModule = (IModule) ManifestUtils.getFragmentHost(resourceModule);
 
         // check (should not be false here)
         if (!hostModule.equals(resourceModule)) {
@@ -284,7 +283,7 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
      * {@inheritDoc}
      */
     @Override
-    public ManifestContents getTemplate(IResourceModule module, IModularizedSystem modularizedSystem,
+    public ManifestContents getTemplate(IModule module, IModularizedSystem modularizedSystem,
         IModuleExporterContext context) {
       return null;
     }
@@ -293,7 +292,7 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
      * {@inheritDoc}
      */
     @Override
-    public Set<IReadableResource> getAdditionalResources(IResourceModule currentModule,
+    public Set<IResource> getAdditionalResources(IModule currentModule,
         IModularizedSystem currentModularizedSystem, IModuleExporterContext currentContext) {
 
       //

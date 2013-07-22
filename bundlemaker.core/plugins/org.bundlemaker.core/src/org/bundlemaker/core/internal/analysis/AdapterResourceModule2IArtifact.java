@@ -5,8 +5,8 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.analysis.ITypeArtifact;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.analysis.IResourceArtifact.IResourceArtifactContent;
+import org.bundlemaker.core.resource.IModule;
 
 /**
  * <p>
@@ -21,7 +21,7 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
    * Creates a new instance of type {@link AdapterResourceModule2IArtifact}.
    * </p>
    */
-  public AdapterResourceModule2IArtifact(IResourceModule resourceModule, IBundleMakerArtifact parent) {
+  public AdapterResourceModule2IArtifact(IModule resourceModule, IBundleMakerArtifact parent) {
     super(resourceModule, parent);
   }
 
@@ -44,18 +44,18 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
   public String handleCanAdd(IBundleMakerArtifact artifact) {
 
     // a resource module artifact can contain packages, types and resources
-    if (!(artifact.isInstanceOf(IPackageArtifact.class) || artifact.isInstanceOf(ITypeArtifact.class) || artifact
+    if (!(artifact.isInstanceOf(IPackageArtifact.class) || artifact.isInstanceOf(IResourceArtifactContent.class) || artifact
         .isInstanceOf(IResourceArtifact.class))) {
 
-      return "Only packages, types or resources can be added to a resource module.";
+      return "Only packages, resources or resource content can be added to a resource module.";
     }
 
     //
     IModuleArtifact moduleArtifact = (IModuleArtifact) artifact.getParent(IModuleArtifact.class);
 
     // TODO
-    if (moduleArtifact != null && !(moduleArtifact.getAssociatedModule() instanceof IResourceModule)) {
-      return "Can not add packages, types or resources from a non-resource module.";
+    if (moduleArtifact != null && !(moduleArtifact.getAssociatedModule().isResourceModule())) {
+      return "Can not add artifacts from a non-resource module.";
     }
     return null;
   }

@@ -12,25 +12,25 @@ package org.bundlemaker.core.internal.analysis.cache;
 
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IPackageArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.analysis.ITypeArtifact;
-import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
 import org.bundlemaker.core.internal.analysis.cache.impl.GroupSubCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.ModuleSubCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.PackageSubCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.ResourceSubCache;
-import org.bundlemaker.core.internal.analysis.cache.impl.TypeSubCache;
+import org.bundlemaker.core.internal.api.resource.IModifiableModularizedSystem;
+import org.bundlemaker.core.internal.api.resource.IModifiableModule;
+import org.bundlemaker.core.internal.modelext.ModelExtFactory;
 import org.bundlemaker.core.internal.modules.Group;
-import org.bundlemaker.core.internal.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractModularizedSystem;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.spi.modext.IAnalysisModelContext;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,7 +40,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * Implements an cache for artifacts.
  * </p>
  */
-public class ArtifactCache {
+public class ArtifactCache implements IAnalysisModelContext {
 
   /** - */
   // private static final String MISSING_TYPES = "<< Missing Types >>";
@@ -65,9 +65,6 @@ public class ArtifactCache {
 
   /** - */
   protected ResourceSubCache            _resourceCache;
-
-  /** - */
-  protected TypeSubCache                _typeCache;
 
   /**
    * <p>
@@ -96,21 +93,53 @@ public class ArtifactCache {
     _moduleCache = new ModuleSubCache(this);
     _packageCache = new PackageSubCache(this);
     _resourceCache = new ResourceSubCache(this);
-    _typeCache = new TypeSubCache(this);
   }
 
   /**
-   * <p>
-   * Creates a new instance of type {@link ArtifactCache}.
-   * </p>
-   * 
-   * @param modularizedSystem
-   *          the modularized system
-   * @param rootArtifact
-   *          the root artifact
+   * {@inheritDoc}
    */
-  protected ArtifactCache(IModularizedSystem modularizedSystem, AbstractArtifactContainer rootArtifact) {
+  @Override
+  public IResourceArtifact getOrCreateResource(IModuleResource resource) {
+    Assert.isNotNull(resource);
+    return _resourceCache.getOrCreate(resource);
+  }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IPackageArtifact getOrCreatePackage(String moduleName, String packageName) {
+    Assert.isNotNull(moduleName);
+    Assert.isNotNull(packageName);
+    return (IPackageArtifact) _packageCache.getOrCreate(new ModulePackageKey(new ModuleKey(moduleName), packageName));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IPackageArtifact getOrCreatePackage(IModule module, String packageName) {
+    Assert.isNotNull(module);
+    Assert.isNotNull(packageName);
+    return (IPackageArtifact) _packageCache.getOrCreate(new ModulePackageKey(new ModuleKey(module), packageName));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IModuleArtifact getOrCreateModuleArtifact(IModule module) {
+    Assert.isNotNull(module);
+    return (IModuleArtifact) _moduleCache.getOrCreate(new ModuleKey(module));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IModuleArtifact getOrCreateModuleArtifact(String moduleName) {
+    Assert.isNotNull(moduleName);
+    return (IModuleArtifact) _moduleCache.getOrCreate(new ModuleKey(moduleName));
   }
 
   /**
@@ -149,7 +178,7 @@ public class ArtifactCache {
     }
 
     // transform the modularized system
-    return transform(_modularizedSystem.getAllModules().toArray(new IModule[0]), progressMonitor);
+    return transform(_modularizedSystem.getModules().toArray(new IModule[0]), progressMonitor);
   }
 
   /**
@@ -173,33 +202,10 @@ public class ArtifactCache {
    * <p>
    * </p>
    * 
-   * @param type
-   * @return
-   */
-  public final ITypeArtifact getTypeArtifact(IType type, boolean createIfMissing) {
-    Assert.isNotNull(type);
-
-    //
-    try {
-      if (createIfMissing) {
-        return _typeCache.getOrCreate(new TypeKey(type));
-      } else {
-        return _typeCache.get(new TypeKey(type));
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new RuntimeException(e.getMessage(), e);
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
    * @param resource
    * @return
    */
-  public final AdapterResource2IArtifact getResourceArtifact(IResource resource) {
+  public final AdapterResource2IArtifact getResourceArtifact(IModuleResource resource) {
     Assert.isNotNull(resource);
 
     //
@@ -207,30 +213,6 @@ public class ArtifactCache {
       return (AdapterResource2IArtifact) _resourceCache.getOrCreate(resource);
     } catch (Exception e) {
       throw new RuntimeException(e.getMessage(), e);
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param fullyQualifiedName
-   * @throws Exception
-   */
-  public final ITypeArtifact getTypeArtifact(String fullyQualifiedName, boolean createIfMissing) {
-
-    //
-    IType targetType = getModularizedSystem().getType(fullyQualifiedName);
-
-    //
-    if (targetType == null) {
-      if (createIfMissing) {
-        return _typeCache.getOrCreate(new TypeKey(fullyQualifiedName));
-      } else {
-        return _typeCache.get(new TypeKey(fullyQualifiedName));
-      }
-    } else {
-      return getTypeArtifact(targetType, createIfMissing);
     }
   }
 
@@ -280,16 +262,6 @@ public class ArtifactCache {
    * 
    * @return
    */
-  public final TypeSubCache getTypeCache() {
-    return _typeCache;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
   public final IAnalysisModelConfiguration getConfiguration() {
     return _modelConfiguration;
   }
@@ -306,9 +278,8 @@ public class ArtifactCache {
     //
     int count = 0;
     for (IModule module : modules) {
-      count = count + module.getContainedTypes().size();
-      if (module instanceof IResourceModule) {
-        IResourceModule resourceModule = (IResourceModule) module;
+      if (module instanceof IModifiableModule) {
+        IModifiableModule resourceModule = (IModifiableModule) module;
         count = count + resourceModule.getResources(getConfiguration().getContentType()).size();
       }
     }
@@ -318,56 +289,42 @@ public class ArtifactCache {
       progressMonitor.beginTask("Creating analysis model...", count);
     }
 
-    // MISSING TYPES: create virtual module for missing types
-    if (getConfiguration().isIncludeVirtualModuleForMissingTypes()) {
-
-      // add the
-      for (IModule module : modules) {
-        if (module instanceof IResourceModule) {
-          for (IReference iReference : getModularizedSystem().getUnsatisfiedReferences((IResourceModule) module)) {
-            getTypeCache().getOrCreate(new TypeKey(iReference.getFullyQualifiedName()));
-          }
-        }
-      }
-    }
+    // prepare analysis model
+    ModelExtFactory.getModelExtensionFactory().prepareAnalysisModel(modules, this);
 
     // iterate over all the type modules
     for (IModule module : modules) {
 
-      //
+      // create the module artifact
       this.getModuleArtifact(module);
 
-      // add all types
-      for (IType type : module.getContainedTypes()) {
+      // iterate over all contained resources
+      for (IMovableUnit movableUnit : module.getMovableUnits()) {
 
+        //
         if (progressMonitor != null) {
           progressMonitor.worked(1);
         }
 
-        // filter local or anonymous type names
-        if (!type.isLocalOrAnonymousType()) {
+        // TODO!!
+        if (getConfiguration().isSourceContent()) {
 
-          // create the artifact
-          this.getTypeArtifact(type, true);
-        }
-      }
-
-      // cast to 'IResourceModule'
-      if (module instanceof IResourceModule) {
-
-        // get the resource module
-        IResourceModule resourceModule = (IResourceModule) module;
-
-        // iterate over all contained resources
-        for (IResource resource : resourceModule.getResources(getConfiguration().getContentType())) {
-
-          if (progressMonitor != null) {
-            progressMonitor.worked(1);
+          if (movableUnit.hasAssociatedSourceResource()) {
+            setupIt(movableUnit.getAssociatedSourceResource());
+          } else {
+            for (IModuleResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
+              setupIt(moduleResource);
+            }
           }
+        }
+        else if (getConfiguration().isBinaryContent()) {
 
-          if (!resource.containsTypes()) {
-            // create the artifact
-            this.getResourceArtifact(resource);
+          if (movableUnit.hasAssociatedBinaryResources()) {
+            for (IModuleResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
+              setupIt(moduleResource);
+            }
+          } else {
+            setupIt(movableUnit.getAssociatedSourceResource());
           }
         }
       }
@@ -380,5 +337,21 @@ public class ArtifactCache {
 
     // return the root artifact
     return this.getRootArtifact();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceArtifact
+   * @param resource
+   */
+  private void setupIt(IModuleResource resource) {
+
+    //
+    if (ModelExtFactory.getModelExtensionFactory().shouldAddResourceArtifact(resource)) {
+      IResourceArtifact resourceArtifact = this.getResourceArtifact(resource);
+      ModelExtFactory.getModelExtensionFactory().setupResourceArtifact(resourceArtifact, resource);
+    }
   }
 }

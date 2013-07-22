@@ -8,7 +8,7 @@ import java.util.Map;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
-import org.bundlemaker.core.util.collections.GenericCache;
+import org.bundlemaker.core.common.collections.GenericCache;
 
 /**
  * <p>

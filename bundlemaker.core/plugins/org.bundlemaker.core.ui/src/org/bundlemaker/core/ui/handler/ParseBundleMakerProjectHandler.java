@@ -13,7 +13,7 @@ package org.bundlemaker.core.ui.handler;
 import java.util.List;
 
 import org.bundlemaker.core.BundleMakerCore;
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.bundlemaker.core.ui.utils.BundleMakerProjectOpener;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
@@ -49,7 +49,8 @@ public class ParseBundleMakerProjectHandler extends AbstractBundleMakerHandler i
     IProject project = selectedResource.getProject();
 
     // get the BundleMaker project
-    IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project);
+    IModuleAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project).adaptAs(
+        IModuleAwareBundleMakerProject.class);
 
     // clear dependency store
     if (clearPersistentDependencyStore()) {

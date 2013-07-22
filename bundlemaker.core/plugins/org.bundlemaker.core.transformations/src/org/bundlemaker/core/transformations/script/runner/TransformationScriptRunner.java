@@ -17,10 +17,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.transformations.internal.Activator;
 import org.bundlemaker.core.transformations.script.ITransformationScript;
 import org.bundlemaker.core.transformations.script.ITransformationScriptLogger;
@@ -111,9 +112,9 @@ public class TransformationScriptRunner {
     IAnalysisModelConfiguration artifactModelConfiguration = getAnalysisModelConfiguration(transformationScript);
 
     // Get an artifact model according to the configuration specified in the script
-    IRootArtifact rootArtifact = _modularizedSystem.getAnalysisModel(artifactModelConfiguration);
+    IRootArtifact rootArtifact = AnalysisCore.getAnalysisModel(_modularizedSystem, artifactModelConfiguration);
 
-    // // Create a Logger that logs to the BundleMaker console
+    // Create a Logger that logs to the BundleMaker console
     final ITransformationScriptLogger logger = getLogger();
 
     final TransformationScriptContext context = new TransformationScriptContext(progressMonitor, logger, rootArtifact);
@@ -122,14 +123,14 @@ public class TransformationScriptRunner {
 
     // Run the script
     try {
-    IRootArtifact.Factory.executeWithoutNotification(rootArtifact, new Callable<Void>() {
+      IRootArtifact.Factory.executeWithoutNotification(rootArtifact, new Callable<Void>() {
 
-      @Override
-      public Void call() throws Exception {
-        transformationScript.transform(context);
-        return null;
-      }
-    });
+        @Override
+        public Void call() throws Exception {
+          transformationScript.transform(context);
+          return null;
+        }
+      });
     } catch (Exception ex) {
       handleScriptException(context, ex);
     }

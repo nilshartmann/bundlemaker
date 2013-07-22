@@ -1,7 +1,7 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
+import org.bundlemaker.core.common.collections.SymetricGenericCache;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
-import org.bundlemaker.core.util.collections.SymetricGenericCache;
 import org.eclipse.core.runtime.Assert;
 
 /**

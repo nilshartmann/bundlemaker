@@ -2,11 +2,11 @@ package org.bundlemaker.core.itest.misc_models;
 
 import java.util.Set;
 
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.ITypeSelector;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.jtype.IType;
+import org.bundlemaker.core.jtype.ITypeSelector;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectDescription;
+import org.bundlemaker.core.resource.IModule;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -64,7 +64,7 @@ public class AmbiguousTypesTest_TestTypeSelector implements ITypeSelector {
    * {@inheritDoc}
    */
   @Override
-  public IType selectType(IResourceModule module, String fullyQualifiedName, Set<IType> types) {
+  public IType selectType(IModule module, String fullyQualifiedName, Set<IType> types) {
 
     //
     int currentIndex = Integer.MAX_VALUE;

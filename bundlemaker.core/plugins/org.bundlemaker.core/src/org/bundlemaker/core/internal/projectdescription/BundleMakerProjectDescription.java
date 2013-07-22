@@ -21,15 +21,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.core.BundleMakerProjectChangedEvent;
-import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
-import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.IProjectContentProvider;
-import org.bundlemaker.core.projectdescription.spi.AbstractProjectContentProvider;
-import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.internal.api.project.IInternalProjectDescription;
+import org.bundlemaker.core.internal.api.resource.IResourceStandin;
+import org.bundlemaker.core.internal.modules.jdk.JdkContentProvider;
+import org.bundlemaker.core.project.DescriptionChangedEvent;
+import org.bundlemaker.core.project.IModifiableProjectDescription;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -43,7 +45,7 @@ import com.google.gson.annotations.SerializedName;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class BundleMakerProjectDescription implements IModifiableProjectDescription {
+public class BundleMakerProjectDescription implements IModifiableProjectDescription, IInternalProjectDescription {
 
   /** - */
   private static NumberFormat               FORMATTER  = new DecimalFormat("000000");
@@ -84,6 +86,9 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   /** - */
   private BundleMakerProject                _bundleMakerProject;
 
+  /** - */
+  private JdkContentProvider                _jdkContentProvider;
+
   /**
    * <p>
    * Creates a new instance of type {@link BundleMakerProjectDescription}.
@@ -109,7 +114,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
    * {@inheritDoc}
    */
   @Override
-  public IBundleMakerProject getBundleMakerProject() {
+  public IProjectDescriptionAwareBundleMakerProject getBundleMakerProject() {
     return _bundleMakerProject;
   }
 
@@ -317,7 +322,8 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
    * @param bundlemakerProject
    * @throws CoreException
    */
-  public void initialize(IProgressMonitor progressMonitor, IBundleMakerProject bundlemakerProject) throws CoreException {
+  public void initialize(IProgressMonitor progressMonitor, IProjectDescriptionAwareBundleMakerProject bundlemakerProject)
+      throws CoreException {
 
     //
     if (_initialized) {
@@ -331,6 +337,11 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     // if (isValid()) {
     // throw new RuntimeException("Invalid description");
     // }
+
+    //
+    _jdkContentProvider = new JdkContentProvider();
+    _jdkContentProvider.setProjectDescription(this);
+    _projectContentEntries.addAll(_jdkContentProvider.getBundleMakerProjectContent(null, _bundleMakerProject));
 
     //
     for (IProjectContentProvider contentProvider : _projectContentProviders) {
@@ -377,15 +388,15 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   }
 
   @SuppressWarnings("unchecked")
-  public final List<IResource> getSourceResources() {
-    List<? extends IResource> result = Collections.unmodifiableList(_sourceResources);
-    return (List<IResource>) result;
+  public final List<IModuleResource> getSourceResources() {
+    List<? extends IModuleResource> result = Collections.unmodifiableList(_sourceResources);
+    return (List<IModuleResource>) result;
   }
 
   @SuppressWarnings("unchecked")
-  public final List<IResource> getBinaryResources() {
-    List<? extends IResource> result = Collections.unmodifiableList(_binaryResources);
-    return (List<IResource>) result;
+  public final List<IModuleResource> getBinaryResources() {
+    List<? extends IModuleResource> result = Collections.unmodifiableList(_binaryResources);
+    return (List<IModuleResource>) result;
   }
 
   public final List<IResourceStandin> getSourceResourceStandins() {
@@ -459,7 +470,8 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     ProjectDescriptionStore.saveProjectDescription(_bundleMakerProject.getProject(), this);
 
     // notify listener
-    _bundleMakerProject.notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_SAVED));
+    _bundleMakerProject.fireDescriptionChangedEvent(new DescriptionChangedEvent(
+        DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_SAVED));
   }
 
   /**
@@ -468,11 +480,12 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   public void fireProjectDescriptionChangedEvent() {
 
     // Create the Event
-    BundleMakerProjectChangedEvent event = new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_CHANGED);
+    DescriptionChangedEvent event = new DescriptionChangedEvent(
+        DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_MODIFIED);
 
     // notify listeners
     if (_bundleMakerProject != null) {
-      _bundleMakerProject.notifyListeners(event);
+      _bundleMakerProject.fireDescriptionChangedEvent(event);
     }
   }
 
@@ -483,11 +496,12 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   public void fireProjectDescriptionRecomputedEvent() {
 
     // Create the Event
-    BundleMakerProjectChangedEvent event = new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_RECOMPUTED);
+    DescriptionChangedEvent event = new DescriptionChangedEvent(
+        DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RECOMPUTED);
 
     // notify listeners
     if (_bundleMakerProject != null) {
-      _bundleMakerProject.notifyListeners(event);
+      _bundleMakerProject.fireDescriptionChangedEvent(event);
     }
   }
 }

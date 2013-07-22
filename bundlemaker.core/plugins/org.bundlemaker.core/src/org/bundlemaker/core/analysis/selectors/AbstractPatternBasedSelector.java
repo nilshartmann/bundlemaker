@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 
 import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.util.PatternUtils;
 import org.eclipse.core.runtime.Assert;
 
 import com.google.gson.annotations.Expose;
@@ -197,7 +196,7 @@ public abstract class AbstractPatternBasedSelector implements IArtifactSelector 
     String[] items = s.split(",");
     Pattern[] patterns = new Pattern[items.length];
     for (int i = 0; i < items.length; i++) {
-      String regexp = PatternUtils.convertAntStylePattern(items[i].trim());
+      String regexp = convertAntStylePattern(items[i].trim());
       patterns[i] = Pattern.compile(regexp);
     }
 
@@ -246,5 +245,37 @@ public abstract class AbstractPatternBasedSelector implements IArtifactSelector 
   public String toString() {
     return "AbstractPatternBasedSelector [_artifact=" + _artifact + ", _includePatternsAsString="
         + _includePatternsAsString + ", _excludePatternsAsString=" + _excludePatternsAsString + "]";
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param pattern
+   * @return
+   */
+  public static String convertAntStylePattern(String pattern) {
+
+    //
+    String[] parts = pattern.split("\\.");
+
+    //
+    StringBuilder stringBuilder = new StringBuilder();
+
+    //
+    for (int i = 0; i < parts.length; i++) {
+      String part = parts[i];
+      part = part.replace("**", ".#REPEAT#");
+      part = part.replace("*", "[^\\.]#REPEAT#");
+      part = part.replace("#REPEAT#", "*");
+
+      stringBuilder.append(part);
+      if (i + 1 < parts.length) {
+        stringBuilder.append("\\.");
+      }
+    }
+
+    //
+    return stringBuilder.toString();
   }
 }

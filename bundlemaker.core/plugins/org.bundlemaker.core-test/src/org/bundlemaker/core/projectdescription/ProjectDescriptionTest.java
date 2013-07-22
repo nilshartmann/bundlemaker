@@ -2,10 +2,12 @@ package org.bundlemaker.core.projectdescription;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.internal.projectdescription.gson.GsonProjectDescriptionHelper;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
-import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
+import org.bundlemaker.core.project.IModifiableProjectDescription;
+import org.bundlemaker.core.project.VariablePath;
+import org.bundlemaker.core.project.filecontent.FileBasedProjectContentProvider;
 import org.junit.Test;
 
 public class ProjectDescriptionTest {
@@ -20,9 +22,9 @@ public class ProjectDescriptionTest {
     FileBasedProjectContentProvider provider = new FileBasedProjectContentProvider();
     provider.setId("honk");
     provider.setName("name");
-    provider.addRootPath(new VariablePath("BLa7BLa"), ProjectContentType.SOURCE);
-    provider.addRootPath(new VariablePath("BLa7BLa23"), ProjectContentType.SOURCE);
-    provider.addRootPath(new VariablePath("BinBin"), ProjectContentType.BINARY);
+    provider.addRootPath(new VariablePath("BLa7BLa"), ResourceType.SOURCE);
+    provider.addRootPath(new VariablePath("BLa7BLa23"), ResourceType.SOURCE);
+    provider.addRootPath(new VariablePath("BinBin"), ResourceType.BINARY);
 
     IModifiableProjectDescription description = new BundleMakerProjectDescription(null);
     description.addContentProvider(provider);

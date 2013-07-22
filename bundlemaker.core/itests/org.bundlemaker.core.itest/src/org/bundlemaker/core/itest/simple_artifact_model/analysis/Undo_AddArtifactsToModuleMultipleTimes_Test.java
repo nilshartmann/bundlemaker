@@ -112,9 +112,9 @@ public class Undo_AddArtifactsToModuleMultipleTimes_Test extends AbstractSimpleA
       @Override
       public void prePostCondition() {
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-        assertResourceModuleCount(getBinModel(), 1);
-        assertResourceModuleCount(getSrcModel(), 1);
+        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
+        assertResourceModuleCount(getBinModel(), 2);
+        assertResourceModuleCount(getSrcModel(), 2);
         Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
       }
 
@@ -130,9 +130,9 @@ public class Undo_AddArtifactsToModuleMultipleTimes_Test extends AbstractSimpleA
 
         // assert that we two groups and two modules
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
-        assertResourceModuleCount(getBinModel(), 2);
-        assertResourceModuleCount(getSrcModel(), 2);
+        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 3);
+        assertResourceModuleCount(getBinModel(), 3);
+        assertResourceModuleCount(getSrcModel(), 3);
 
         addToModule.addToFirstModule(newModuleArtifact);
 
@@ -148,9 +148,9 @@ public class Undo_AddArtifactsToModuleMultipleTimes_Test extends AbstractSimpleA
 
         // assert that we two groups and two modules
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 3);
-        assertResourceModuleCount(getBinModel(), 3);
-        assertResourceModuleCount(getSrcModel(), 3);
+        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 4);
+        assertResourceModuleCount(getBinModel(), 4);
+        assertResourceModuleCount(getSrcModel(), 4);
 
         addToModule.addToSecondModule(newModuleArtifact2);
 

@@ -5,6 +5,8 @@
    <extension-point id="exporter" name="exporter" schema="schema/exporter.exsd"/>
    <extension-point id="parserfactory" name="parserfactory" schema="schema/parserfactory.exsd"/>
    <extension-point id="org.bundlemaker.core.projectcontentprovider" name="org.bundlemaker.core.projectcontentprovider" schema="schema/org.bundlemaker.core.projectcontentprovider.exsd"/>
+   <extension-point id="org.bundlemaker.core.modelextension" name="org.bundlemaker.core.modelextension" schema="schema/org.bundlemaker.core.modelextension.exsd"/>
+   <extension-point id="org.bundlemaker.core.movableunitcreator" name="org.bundlemaker.core.movableunitcreator" schema="schema/org.bundlemaker.core.movableunitcreator.exsd"/>
 
    <extension
          id="bundlemakernature"
@@ -22,8 +24,29 @@
          point="org.bundlemaker.core.projectcontentprovider">
       <projectContentProvider
       	    id="org.bundlemaker.core.projectcontentprovider.file"
-            class="org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider" />
+            class="org.bundlemaker.core.project.filecontent.FileBasedProjectContentProvider" />
    </extension>
-   
+
+	<!-- BundleMaker Classpath Container -->
+	 <extension
+	 point="org.eclipse.jdt.core.classpathContainerInitializer">
+		<classpathContainerInitializer
+	      class="org.bundlemaker.core.internal.common.classpath.BundleMakerClasspathContainerInitializer"
+	      id="org.bundlemaker.core.classpath"/>
+	 </extension>
+  <extension
+        point="org.bundlemaker.core.modelextension">
+     <modelextension
+           class="org.bundlemaker.core.jtype.internal.ModelExtension"
+           id="org.bundlemaker.core.jtype.ModelExtension">
+     </modelextension>
+  </extension>
+  <extension
+        point="org.bundlemaker.core.movableunitcreator">
+     <movableunitcreator
+           class="org.bundlemaker.core.jtype.internal.JTypeMovableUnitCreator"
+           id="org.bundlemaker.core.jtype.jTypeMovableUnitCreator">
+     </movableunitcreator>
+  </extension>
 
 </plugin>

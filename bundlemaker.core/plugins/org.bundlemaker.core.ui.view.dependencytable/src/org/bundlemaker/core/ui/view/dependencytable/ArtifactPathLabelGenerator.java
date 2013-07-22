@@ -4,7 +4,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.analysis.ITypeArtifact;
+import org.bundlemaker.core.jtype.ITypeArtifact;
 
 /**
  * Generates a path to an IArtifact that can be used either as a title or as a
@@ -40,7 +40,7 @@ public class ArtifactPathLabelGenerator {
 
 	private IBundleMakerArtifact _titleArtifact;
 
-	private boolean _shortLabel;
+	private LabelPresentationMode _labelPresentationMode = LabelPresentationMode.fullPath;
 
 	/**
 	 * @return the baseArtifact
@@ -57,14 +57,14 @@ public class ArtifactPathLabelGenerator {
 		_baseArtifact = baseArtifact;
 		_titleArtifact = null;
 	}
-
-	public void setUseShortLabel(boolean shortLabel) {
-		this._shortLabel = shortLabel;
-	}
-
-	public boolean isUseShortLabel() {
-		return this._shortLabel;
-	}
+	
+	public void setLabelPresentationMode(LabelPresentationMode labelPresentationMode) {
+    _labelPresentationMode = labelPresentationMode;
+  }
+	
+	public LabelPresentationMode getLabelPresentationMode() {
+    return _labelPresentationMode;
+  }
 
 	/**
 	 * returns the last segment of the path of IArtifacts that is used to build
@@ -128,17 +128,20 @@ public class ArtifactPathLabelGenerator {
 	 * @return
 	 */
 	public String getLabel(IBundleMakerArtifact typeArtifact) {
+	  
+	  if (_labelPresentationMode == LabelPresentationMode.fullPath) {
+	    return getFullLabel(typeArtifact);  
+	  }
 
-		if (isUseShortLabel()) {
-			return getShortLabel(typeArtifact);
-		}
-
-		return getFullLabel(typeArtifact);
-
+		return getTypeLabel(typeArtifact,_labelPresentationMode == LabelPresentationMode.qualifiedTypeName);
 	}
 
-	protected String getShortLabel(IBundleMakerArtifact typeArtifact) {
+	protected String getTypeLabel(IBundleMakerArtifact typeArtifact, boolean useQualifiedTypeName) {
 		String name = typeArtifact.getName();
+		
+		if (!useQualifiedTypeName) {
+		  return name;
+		}
 
 		if (!(typeArtifact instanceof ITypeArtifact)) {
 			// why would this happen?

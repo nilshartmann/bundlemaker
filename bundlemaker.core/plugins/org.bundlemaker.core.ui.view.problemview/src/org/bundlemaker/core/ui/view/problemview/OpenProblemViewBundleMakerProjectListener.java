@@ -1,6 +1,7 @@
 package org.bundlemaker.core.ui.view.problemview;
 
-import org.bundlemaker.core.IProblem;
+import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
+import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.ui.event.IBundleMakerProjectOpenedEvent;
 import org.bundlemaker.core.ui.event.IBundleMakerProjectOpenedEventListener;
 import org.eclipse.ui.IWorkbenchPage;
@@ -20,7 +21,7 @@ public class OpenProblemViewBundleMakerProjectListener implements IBundleMakerPr
   @Override
   public void bundleMakerProjectOpened(IBundleMakerProjectOpenedEvent event) {
 
-    if (event.getBundleMakerProject().getProblems().isEmpty()) {
+    if (event.getBundleMakerProject().adaptAs(IParserAwareBundleMakerProject.class).getProblems().isEmpty()) {
       // no Problems => no need to activate problem view
       return;
     }

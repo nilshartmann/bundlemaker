@@ -2,10 +2,10 @@ package org.bundlemaker.core.analysis;
 
 import java.util.concurrent.Callable;
 
-import org.bundlemaker.core.modules.IGroup;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.internal.modules.Group;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -93,7 +93,7 @@ public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleCont
    *          (must not be null)
    * @return the {@link IGroupArtifact} for the given {@link IGroup} (maybe null)
    */
-  IGroupArtifact getGroupArtifact(IGroup group);
+  IGroupArtifact getGroupArtifact(Group group);
 
   /**
    * <p>
@@ -108,14 +108,14 @@ public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleCont
 
   /**
    * <p>
-   * Returns the {@link IResourceArtifact} for the given {@link IResource}.
+   * Returns the {@link IResourceArtifact} for the given {@link IModuleResource}.
    * </p>
    * 
    * @param resource
    *          (must not be null)
-   * @return the {@link IResourceArtifact} for the given {@link IResource} (maybe null)
+   * @return the {@link IResourceArtifact} for the given {@link IModuleResource} (maybe null)
    */
-  IResourceArtifact getResourceArtifact(IResource resource);
+  IResourceArtifact getResourceArtifact(IModuleResource resource);
 
   Graph getBlueprintGraph();
 

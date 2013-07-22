@@ -13,21 +13,22 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.apache.maven.model.merge.ModelMerger;
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.common.ResourceType;
+import org.bundlemaker.core.common.utils.FileUtils;
 import org.bundlemaker.core.exporter.AbstractExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ITemplateProvider;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.mvn.content.MvnArtifactType;
 import org.bundlemaker.core.mvn.internal.MvnArtifactConverter;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.util.FileUtils;
+import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -69,8 +70,8 @@ public class MvnProjectModuleExporter extends AbstractExporter {
    * {@inheritDoc}
    */
   @Override
-  public boolean canExport(IModularizedSystem modularizedSystem, IResourceModule module, IModuleExporterContext context) {
-    return !module.getResources(ProjectContentType.SOURCE).isEmpty();
+  public boolean canExport(IModularizedSystem modularizedSystem, IModule module, IModuleExporterContext context) {
+    return !module.getResources(ResourceType.SOURCE).isEmpty();
   }
 
   /**
@@ -104,7 +105,7 @@ public class MvnProjectModuleExporter extends AbstractExporter {
     File resourceJavaDirectory = new File(versionDirectory, SRC_RESOUCRCES_DIRECTORY_NAME);
 
     // copy the source
-    for (IResource resource : getCurrentModule().getResources(ProjectContentType.SOURCE)) {
+    for (IModuleResource resource : getCurrentModule().getResources(ResourceType.SOURCE)) {
 
       if (!resource.getPath().startsWith("META-INF")) {
 
@@ -140,7 +141,7 @@ public class MvnProjectModuleExporter extends AbstractExporter {
   protected void createPOM(File projectDirectory) throws FileNotFoundException, IOException {
 
     // get the artifact model to resolve the dependencies
-    IRootArtifact artifactModel = getCurrentModularizedSystem().getAnalysisModel(
+    IRootArtifact artifactModel = AnalysisCore.getAnalysisModel(getCurrentModularizedSystem(),
         IAnalysisModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
 
     // get the current module artifact
@@ -151,8 +152,7 @@ public class MvnProjectModuleExporter extends AbstractExporter {
 
     // get the maven model template (if exists)
     Model template = _templateProvider != null ? _templateProvider.getTemplate(getCurrentModule(),
-        getCurrentModularizedSystem(),
-        getCurrentContext()) : null;
+        getCurrentModularizedSystem(), getCurrentContext()) : null;
 
     // merge the template
     if (template != null) {
@@ -167,16 +167,15 @@ public class MvnProjectModuleExporter extends AbstractExporter {
 
     // get all modules
     final List<IModuleArtifact> allModules = new LinkedList<IModuleArtifact>();
-    artifactModel.accept(
-        new IAnalysisModelVisitor.Adapter() {
-          @Override
-          public boolean visit(IModuleArtifact moduleArtifact) {
-            if (!getCurrentModularizedSystem().getExecutionEnvironment().equals(moduleArtifact.getAssociatedModule())) {
-              allModules.add(moduleArtifact);
-            }
-            return false;
-          }
-        });
+    artifactModel.accept(new IAnalysisModelVisitor.Adapter() {
+      @Override
+      public boolean visit(IModuleArtifact moduleArtifact) {
+        if (!getCurrentModularizedSystem().getExecutionEnvironment().equals(moduleArtifact.getAssociatedModule())) {
+          allModules.add(moduleArtifact);
+        }
+        return false;
+      }
+    });
 
     // resolve the dependencies
     Collection<? extends IDependency> dependencies = currentModuleArtifact.getDependenciesTo(allModules);

@@ -1,7 +1,7 @@
 package org.bundlemaker.core.ui.artifact;
 
-import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IPageLayout;
@@ -60,7 +60,7 @@ public class CommonNavigatorUtils {
 
   }
 
-  public static void refreshProject(String identifier, IBundleMakerProject bundleMakerProject) {
+  public static void refreshProject(String identifier, IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     if (bundleMakerProject == null) {
       return;
     }

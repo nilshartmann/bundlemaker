@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
@@ -17,7 +18,7 @@ import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.resource.IModularizedSystem;
 import org.junit.Assert;
 
 /**
@@ -321,7 +322,7 @@ public class SimpleArtifactModel {
   private IRootArtifact createArtifactModel(IModularizedSystem modularizedSystem,
       IAnalysisModelConfiguration configuration) {
 
-    IRootArtifact rootArtifact = modularizedSystem.getAnalysisModel(configuration).getRoot();
+    IRootArtifact rootArtifact = AnalysisCore.getAnalysisModel(modularizedSystem, configuration).getRoot();
 
     Assert.assertNotNull(rootArtifact);
     // Assert.assertEquals(4, rootArtifact.getChildren().size());
@@ -332,7 +333,7 @@ public class SimpleArtifactModel {
     // return the result
     return rootArtifact;
   }
-  
+
   public void assertGroupCount(int expectedCount) {
 
     // create the result list

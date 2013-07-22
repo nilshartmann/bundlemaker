@@ -2,22 +2,17 @@ package org.bundlemaker.core.itestframework.utils;
 
 import static org.hamcrest.CoreMatchers.is;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact.IResourceArtifactContent;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.analysis.ITypeArtifact;
-import org.bundlemaker.core.analysis.spi.IReferencedArtifact;
-import org.bundlemaker.core.analysis.spi.IReferencingArtifact;
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IModuleIdentifier;
-import org.bundlemaker.core.modules.ModuleIdentifier;
+import org.bundlemaker.core.jtype.ITypeArtifact;
+import org.bundlemaker.core.spi.analysis.IReferencedArtifact;
+import org.bundlemaker.core.spi.analysis.IReferencingArtifact;
 import org.junit.Assert;
 
 public class ArtifactVisitorUtils {
@@ -99,7 +94,7 @@ public class ArtifactVisitorUtils {
       }
 
       @Override
-      public boolean visit(ITypeArtifact typeArtifact) {
+      public boolean visit(IResourceArtifactContent typeArtifact) {
         resultCount[5]++;
         return true;
       }

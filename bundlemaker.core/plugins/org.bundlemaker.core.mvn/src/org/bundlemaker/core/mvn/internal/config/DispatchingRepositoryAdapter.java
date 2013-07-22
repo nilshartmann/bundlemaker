@@ -3,10 +3,9 @@ package org.bundlemaker.core.mvn.internal.config;
 import java.io.File;
 import java.util.List;
 
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.common.prefs.IBundleMakerPreferences;
 import org.bundlemaker.core.mvn.MvnCoreActivator;
 import org.bundlemaker.core.mvn.preferences.MvnConfigurationSettingEnum;
-import org.bundlemaker.core.util.BundleMakerPreferences;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -27,7 +26,7 @@ public class DispatchingRepositoryAdapter implements IAetherRepositoryAdapter {
   private IAetherRepositoryAdapter    _adapter;
 
   /** - */
-  private IBundleMakerProject         _bundleMakerProject;
+  private IBundleMakerPreferences     _bundleMakerPreferences;
 
   /** - */
   private MvnConfigurationSettingEnum _currentSetting;
@@ -37,10 +36,13 @@ public class DispatchingRepositoryAdapter implements IAetherRepositoryAdapter {
    * Creates a new instance of type {@link DispatchingRepositoryAdapter}.
    * </p>
    */
-  public DispatchingRepositoryAdapter(IBundleMakerProject project) {
+  public DispatchingRepositoryAdapter(IBundleMakerPreferences preferences) {
 
     //
-    _bundleMakerProject = project;
+    Assert.isNotNull(preferences);
+
+    //
+    _bundleMakerPreferences = preferences;
   }
 
   /**
@@ -86,30 +88,29 @@ public class DispatchingRepositoryAdapter implements IAetherRepositoryAdapter {
    * @param project
    */
   private void init() throws CoreException {
-    
+
     //
     if (_adapter != null) {
       return;
     }
 
     //
-    BundleMakerPreferences preferences = BundleMakerPreferences.getBundleMakerPreferences(
-        MvnCoreActivator.PLUGIN_ID, _bundleMakerProject.getProject());
+    _bundleMakerPreferences.reload();
 
     //
-    MvnConfigurationSettingEnum newSetting = MvnConfigurationSettingEnum.valueOf(preferences.getString(
+    MvnConfigurationSettingEnum newSetting = MvnConfigurationSettingEnum.valueOf(_bundleMakerPreferences.getString(
         MvnCoreActivator.PREF_MVN_CURRENT_SETTING, null));
 
     //
     switch (newSetting) {
     case USE_CONFIGURED_RESPOSITORIES:
-      useConfiguredRepositories(preferences, newSetting);
+      useConfiguredRepositories(_bundleMakerPreferences, newSetting);
       break;
     case USE_M2E_SETTINGS:
       useM2eSettings(newSetting);
       break;
     case USE_SETTINGS_XML:
-      useSettingXml(preferences, newSetting);
+      useSettingXml(_bundleMakerPreferences, newSetting);
       break;
     }
 
@@ -117,7 +118,7 @@ public class DispatchingRepositoryAdapter implements IAetherRepositoryAdapter {
     Assert.isNotNull(_adapter);
   }
 
-  private void useSettingXml(BundleMakerPreferences preferences, MvnConfigurationSettingEnum newSetting) {
+  private void useSettingXml(IBundleMakerPreferences preferences, MvnConfigurationSettingEnum newSetting) {
 
     //
     String localRepoPath = preferences.getString(MvnCoreActivator.PREF_MVN_SETTINGSXML, null);
@@ -165,8 +166,7 @@ public class DispatchingRepositoryAdapter implements IAetherRepositoryAdapter {
     }
 
     //
-    File userSettings = AetherUtils.readPreferenceAndConvertToFile(
-        MvnCoreActivator.PREF_ECLIPSE_M2_USER_SETTINGS_FILE,
+    File userSettings = AetherUtils.readPreferenceAndConvertToFile(MvnCoreActivator.PREF_ECLIPSE_M2_USER_SETTINGS_FILE,
         InstanceScope.INSTANCE.getNode(MvnCoreActivator.PLUGIN_ID_ORG_ECLIPSE_M2E_CORE));
 
     //
@@ -208,7 +208,7 @@ public class DispatchingRepositoryAdapter implements IAetherRepositoryAdapter {
    * 
    * @param newSetting
    */
-  private void useConfiguredRepositories(BundleMakerPreferences preferences, MvnConfigurationSettingEnum newSetting) {
+  private void useConfiguredRepositories(IBundleMakerPreferences preferences, MvnConfigurationSettingEnum newSetting) {
 
     //
     String localRepo = preferences.getString(MvnCoreActivator.PREF_MVN_LOCAL_REPO, null);

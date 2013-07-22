@@ -10,19 +10,18 @@
  ******************************************************************************/
 package org.bundlemaker.core.jdt.internal.parser;
 
-import org.bundlemaker.core.DefaultProblemImpl;
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
+import org.bundlemaker.core.jdt.internal.ExtensionRegistryTracker;
 import org.bundlemaker.core.jdt.parser.CoreParserJdt;
 import org.bundlemaker.core.jdt.parser.IJdtSourceParserHook;
-import org.bundlemaker.core.parser.IResourceCache;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.resource.modifiable.IModifiableResource;
-import org.bundlemaker.core.util.ExtensionRegistryTracker;
-import org.bundlemaker.core.util.JavaTypeUtils;
+import org.bundlemaker.core.jtype.IParsableTypeResource;
+import org.bundlemaker.core.jtype.IType;
+import org.bundlemaker.core.jtype.JavaTypeUtils;
+import org.bundlemaker.core.parser.IProblem;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.spi.parser.IParsableResource;
+import org.bundlemaker.core.spi.parser.IParserContext;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
@@ -52,7 +51,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
    * @param bundleMakerProject
    * @throws CoreException
    */
-  public JdtParser(IBundleMakerProject bundleMakerProject, ExtensionRegistryTracker<IJdtSourceParserHook> hookRegistry)
+  public JdtParser(IProjectDescriptionAwareBundleMakerProject bundleMakerProject, ExtensionRegistryTracker<IJdtSourceParserHook> hookRegistry)
       throws CoreException {
 
     super(hookRegistry);
@@ -78,72 +77,52 @@ public class JdtParser extends AbstractHookAwareJdtParser {
    * {@inheritDoc}
    */
   @Override
-  protected synchronized void doParseResource(IProjectContentEntry projectContent, IResourceKey resourceKey,
-      IResourceCache cache) {
+  protected synchronized void doParseResource(IProjectContentEntry projectContent, IParsableResource resource, IParserContext cache, boolean parseReferences) {
 
     //
-    if (!canParse(resourceKey)) {
+    if (!canParse(resource)) {
       return;
     }
-
-    // get the modifiable resource
-    IModifiableResource modifiableResource = cache.getOrCreateResource(resourceKey);
 
     try {
 
       // _parser.setSource(iCompilationUnit);
-      char[] content = new String(modifiableResource.getContent()).toCharArray();
+
 
       // TODO
-      if (projectContent.getProvider() instanceof JdtProjectContentProvider) {
-        String root = resourceKey.getRoot();
-        IJavaProject javaProject = ((JdtProjectContentProvider) projectContent.getProvider()).getSourceJavaProject(projectContent, root);
-        _parser.setProject(javaProject);
-      } else {
+//      if (projectContent.getProvider() instanceof JdtProjectContentProvider) {
+//        String root = resource.getRoot();
+//        IJavaProject javaProject = ((JdtProjectContentProvider) projectContent.getProvider()).getSourceJavaProject(
+//            projectContent, root);
+//        _parser.setProject(javaProject);
+//        _parser.setUnitName("/" + _javaProject.getProject().getName() + "/" + resource.getPath());
+//      } else {
+
+//      }
+      
+      _parser.setSource(new String(resource.getContent()).toCharArray());
       _parser.setProject(_javaProject);
-       }
-
-      _parser.setSource(content);
-      // TODO
-      _parser.setUnitName("/" + _javaProject.getProject().getName() + "/" + modifiableResource.getPath());
+      _parser.setUnitName("/" + _javaProject.getProject().getName() + "/" + resource.getPath());
       _parser.setCompilerOptions(CoreParserJdt.getCompilerOptionsWithComplianceLevel(null));
       _parser.setResolveBindings(true);
 
-      CompilationUnit compilationUnit = (CompilationUnit) _parser.createAST(null);
-
-      // for (org.eclipse.jdt.core.compiler.IProblem problem : compilationUnit.getProblems()) {
-      // if (problem.isError()) {
       //
-      //
-      // // _parser.setSource(iCompilationUnit);
-      // content = new String(modifiableResource.getContent()).toCharArray();
-      // _parser.setProject(_javaProject);
-      // _parser.setSource(content);
-      // // TODO
-      // _parser.setUnitName("/" + _javaProject.getProject().getName() + "/" + modifiableResource.getPath());
-      // _parser.setCompilerOptions(CoreParserJdt.getCompilerOptionsWithComplianceLevel(null));
-      // _parser.setResolveBindings(true);
-      // CompilationUnit cu = (CompilationUnit) _parser.createAST(null);
-      // cu.getProblems();
-      // }
-      // }
-
-      analyzeCompilationUnit(modifiableResource, compilationUnit);
+      analyzeCompilationUnit(resource, (CompilationUnit) _parser.createAST(null));
 
       // set the primary type
-      String primaryTypeName = JavaTypeUtils.convertToFullyQualifiedName(modifiableResource.getPath(), ".java");
-      IType primaryType = modifiableResource.getType(primaryTypeName);
-      modifiableResource.setPrimaryType(primaryType);
+      String primaryTypeName = JavaTypeUtils.convertToFullyQualifiedName(resource.getPath(), ".java");
+      IType primaryType = resource.adaptAs(IParsableTypeResource.class).getType(primaryTypeName);
+      resource.adaptAs(IParsableTypeResource.class).setPrimaryType(primaryType);
 
     } catch (Exception e) {
-      getProblems().add(new DefaultProblemImpl(resourceKey, "Error while parsing: " + e));
+      getProblems().add(new IProblem.DefaultProblem(resource, "Error while parsing: " + e));
       e.printStackTrace();
     }
   }
 
   @Override
-  public boolean canParse(IResourceKey resourceKey) {
-    return resourceKey.getPath().endsWith(".java");
+  public boolean canParse(IParsableResource resource) {
+    return resource.getPath().endsWith(".java");
   }
 
   /**
@@ -157,21 +136,12 @@ public class JdtParser extends AbstractHookAwareJdtParser {
    * @param content
    * @throws JavaModelException
    */
-  private void analyzeCompilationUnit(IModifiableResource modifiableResource, CompilationUnit compilationUnit)
+  private void analyzeCompilationUnit(IParsableResource modifiableResource, CompilationUnit compilationUnit)
       throws CoreException {
 
     // step 1: set the directly referenced types
     JdtAstVisitor visitor = new JdtAstVisitor(modifiableResource);
     compilationUnit.accept(visitor);
-
-    // org.eclipse.jdt.core.IType primaryType = compilationUnit.getTypeRoot().findPrimaryType();
-    // if (primaryType != null) {
-    // Type type = (Type) modifiableResource.getType(primaryType.getFullyQualifiedName());
-    // modifiableResource.setMainType(type);
-    // } else {
-    // // TODO
-    // throw new RuntimeException(compilationUnit.toString());
-    // }
 
     // step 2:
     callSourceParserHooks(modifiableResource, compilationUnit);
@@ -181,7 +151,6 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 
       // add errors
       if (problem.isError()) {
-        System.out.println("JDT Parser Error: " + problem.getMessage());
         getProblems().add(problem);
       }
     }
