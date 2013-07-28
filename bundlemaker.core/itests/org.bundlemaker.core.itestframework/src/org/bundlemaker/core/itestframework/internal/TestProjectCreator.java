@@ -88,6 +88,13 @@ public class TestProjectCreator {
   public static void addProjectDescription(IProjectDescriptionAwareBundleMakerProject bundleMakerProject,
       String testProjectName) {
 
+    File testDataDirectory = getTestDataDirectory(testProjectName);
+
+    // create the project description
+    addProjectDescription(bundleMakerProject, testDataDirectory, testProjectName);
+  }
+
+  public static File getTestDataDirectory(String testProjectName) {
     //
     File testDataDirectory = new File(new File(System.getProperty("user.dir"), "test-data"), testProjectName);
 
@@ -144,9 +151,7 @@ public class TestProjectCreator {
 
     Assert.assertTrue(String.format("File '%s' has to be a directory.", testDataDirectory),
         testDataDirectory.isDirectory());
-
-    // create the project description
-    addProjectDescription(bundleMakerProject, testDataDirectory, testProjectName);
+    return testDataDirectory;
   }
 
   public static void addProjectDescription(IProjectDescriptionAwareBundleMakerProject bundleMakerProject, File directory) {
