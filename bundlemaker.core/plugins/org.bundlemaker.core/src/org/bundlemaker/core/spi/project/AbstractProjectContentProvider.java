@@ -131,6 +131,16 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
   }
 
   /**
+   * <p>
+   * </p>
+   */
+  public void fireProjectContentChangedEvent() {
+    if (_projectDescription != null) {
+      _projectDescription.fireProjectContentChangedEvent();
+    }
+  }
+
+  /**
    * This method should be called after this provider has been changed.
    */
   public void fireProjectDescriptionChangedEvent() {

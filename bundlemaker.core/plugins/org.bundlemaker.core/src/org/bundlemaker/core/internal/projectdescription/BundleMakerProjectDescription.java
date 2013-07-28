@@ -25,6 +25,7 @@ import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.internal.api.project.IInternalProjectDescription;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.modules.jdk.JdkContentProvider;
+import org.bundlemaker.core.project.ContentChangedEvent;
 import org.bundlemaker.core.project.DescriptionChangedEvent;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
 import org.bundlemaker.core.project.IProjectContentEntry;
@@ -502,6 +503,17 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     // notify listeners
     if (_bundleMakerProject != null) {
       _bundleMakerProject.fireDescriptionChangedEvent(event);
+    }
+  }
+
+  public void fireProjectContentChangedEvent() {
+
+    // Create the Event
+    ContentChangedEvent event = new ContentChangedEvent();
+
+    // notify listeners
+    if (_bundleMakerProject != null) {
+      _bundleMakerProject.fireContentChangedEvent(event);
     }
   }
 }
