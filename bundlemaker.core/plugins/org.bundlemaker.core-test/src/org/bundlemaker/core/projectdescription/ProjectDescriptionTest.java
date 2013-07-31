@@ -17,7 +17,7 @@ public class ProjectDescriptionTest {
    * </p>
    */
   @Test
-  @Ignore
+  @org.junit.Ignore
   public void testJsonSerialization() {
 
     FileBasedProjectContentProvider provider = new FileBasedProjectContentProvider();
