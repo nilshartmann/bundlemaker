@@ -13,7 +13,6 @@ import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProblem;
 import org.bundlemaker.core.project.IProjectContentProvider;
-import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.project.VariablePath;
 import org.eclipse.core.runtime.Assert;
@@ -41,11 +40,8 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
   @SerializedName("id")
   private String                                     _id;
 
-  /** - */
+  /** the associated bundlemaker project */
   private IProjectDescriptionAwareBundleMakerProject _bundleMakerProject;
-
-  /** - */
-  private BundleMakerProjectDescription              _projectDescription;
 
   /** cached list of all file based contents */
   private List<IProjectContentEntry>                 _projectContentEntries;
@@ -65,31 +61,40 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
   }
 
   /**
-   * <p>
-   * </p>
-   * 
-   * @return
+   * {@inheritDoc}
    */
-  protected List<IProjectContentEntry> getFileBasedContents() {
-    return Collections.unmodifiableList(_projectContentEntries);
+  @Override
+  public void setProject(IProjectDescriptionAwareBundleMakerProject project) {
+
+    //
+    Assert.isNotNull(project);
+
+    //
+    if (_bundleMakerProject != null) {
+      throw new RuntimeException("Project already has been set!");
+    }
+
+    //
+    _bundleMakerProject = project;
+
+    //
+    prepare();
   }
 
   /**
-   * <p>
-   * </p>
+   * {@inheritDoc}
    */
-  public void clearFileBasedContents() {
-    _projectContentEntries.clear();
+  @Override
+  public final void setId(String id) {
+    _id = id;
   }
 
   /**
-   * <p>
-   * </p>
-   * 
-   * @return
+   * {@inheritDoc}
    */
+  @Override
   public IProjectDescriptionAwareBundleMakerProject getBundleMakerProject() {
-    Assert.isNotNull(_bundleMakerProject, "BundleMaker project has not been set.");
+    checkProjectSet();
     return _bundleMakerProject;
   }
 
@@ -98,65 +103,8 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    */
   @Override
   public final String getId() {
+    checkProjectSet();
     return _id;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public final void setId(String id) {
-    _id = id;
-  }
-
-  /**
-   * <b>Internal method</b> This method is not intended to be called from outside bundlemaker.core
-   * 
-   * @param description
-   */
-  public void setProjectDescription(BundleMakerProjectDescription description) {
-    _projectDescription = description;
-    _bundleMakerProject = _projectDescription.getBundleMakerProject();
-
-    init(description);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param description
-   */
-  protected void init(IProjectDescription description) {
-    // empty implementation
-  }
-
-  /**
-   * <p>
-   * </p>
-   */
-  public void fireProjectContentChangedEvent() {
-    if (_projectDescription != null) {
-      _projectDescription.fireProjectContentChangedEvent();
-    }
-  }
-
-  /**
-   * This method should be called after this provider has been changed.
-   */
-  public void fireProjectDescriptionChangedEvent() {
-    if (_projectDescription != null) {
-      _projectDescription.fireProjectDescriptionChangedEvent();
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   */
-  public void fireProjectDescriptionRecomputedEvent() {
-    if (_projectDescription != null) {
-      _projectDescription.fireProjectDescriptionRecomputedEvent();
-    }
   }
 
   /**
@@ -165,6 +113,7 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    * 
    * @return
    */
+  @Override
   public List<IProjectContentProblem> getProblems() {
     return Collections.emptyList();
   }
@@ -181,20 +130,11 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    * {@inheritDoc}
    */
   @Override
-  public final List<IProjectContentEntry> getBundleMakerProjectContent(IProgressMonitor progressMonitor,
-      IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException {
+  public final List<IProjectContentEntry> getBundleMakerProjectContent() {
 
     //
-    Assert.isNotNull(bundleMakerProject);
-
-    //
-    _bundleMakerProject = bundleMakerProject;
-
-    //
-    onGetBundleMakerProjectContent(progressMonitor);
-
-    //
-    return getFileBasedContents();
+    checkProjectSet();
+    return Collections.unmodifiableList(_projectContentEntries);
   }
 
   /**
@@ -204,7 +144,7 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    * @param progressMonitor
    * @return
    */
-  protected abstract void onGetBundleMakerProjectContent(IProgressMonitor progressMonitor)
+  public abstract void initializeProjectContent(IProgressMonitor progressMonitor)
       throws CoreException;
 
   /**
@@ -245,6 +185,58 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
   /**
    * <p>
    * </p>
+   */
+  public void fireProjectContentChangedEvent() {
+    if (_bundleMakerProject.getModifiableProjectDescription() instanceof BundleMakerProjectDescription) {
+      ((BundleMakerProjectDescription) _bundleMakerProject.getModifiableProjectDescription())
+          .fireProjectContentChangedEvent();
+    }
+  }
+
+  /**
+   * This method should be called after this provider has been changed.
+   */
+  public void fireProjectDescriptionChangedEvent() {
+    if (_bundleMakerProject.getModifiableProjectDescription() != null) {
+      ((BundleMakerProjectDescription) _bundleMakerProject.getModifiableProjectDescription())
+          .fireProjectDescriptionChangedEvent();
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  public void fireProjectDescriptionRecomputedEvent() {
+    if (_bundleMakerProject.getModifiableProjectDescription() != null) {
+      ((BundleMakerProjectDescription) _bundleMakerProject.getModifiableProjectDescription())
+          .fireProjectDescriptionRecomputedEvent();
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  protected void prepare() {
+    // empty implementation
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  protected void clearFileBasedContents() {
+
+    //
+    checkProjectSet();
+
+    _projectContentEntries.clear();
+  }
+
+  /**
+   * <p>
+   * </p>
    * 
    * @param contentName
    * @param contentVersion
@@ -257,6 +249,9 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
   protected IProjectContentEntry createFileBasedContent(String contentName, String contentVersion,
       File[] binaryPaths, File[] sourcePaths, AnalyzeMode analyzeMode)
       throws CoreException {
+
+    //
+    checkProjectSet();
 
     // asserts
     Assert.isNotNull(contentName);
@@ -290,5 +285,23 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
 
     //
     return result;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected boolean isProjectSet() {
+    return _bundleMakerProject != null;
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  private void checkProjectSet() {
+    Assert.isNotNull(_bundleMakerProject, "BundleMaker project has not been set.");
   }
 }

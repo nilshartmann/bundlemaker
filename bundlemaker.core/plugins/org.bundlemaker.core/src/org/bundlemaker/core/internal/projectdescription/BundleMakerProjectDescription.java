@@ -152,9 +152,22 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   public void addContentProvider(IProjectContentProvider contentProvider) {
     Assert.isNotNull(contentProvider);
 
-    addContentProvider(contentProvider, true);
+    if (!_projectContentProviders.contains(contentProvider)) {
 
-    fireProjectDescriptionChangedEvent();
+      //
+      _projectContentProviders.add(contentProvider);
+
+      //
+      if (true) {
+        contentProvider.setId(getNextContentProviderId());
+      }
+
+      // contentProvider should always be AbstractContentProvider...
+      contentProvider.setProject(_bundleMakerProject);
+
+      //
+      fireProjectDescriptionChangedEvent();
+    }
   }
 
   /**
@@ -289,27 +302,6 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     fireProjectDescriptionChangedEvent();
   }
 
-  void addContentProvider(IProjectContentProvider contentProvider, boolean resetIdentifier) {
-    Assert.isNotNull(contentProvider);
-
-    //
-    _projectContentProviders.add(contentProvider);
-
-    //
-    if (resetIdentifier) {
-      contentProvider.setId(getNextContentProviderId());
-    }
-
-    // contentProvider should always be AbstractContentProvider...
-    if (contentProvider instanceof AbstractProjectContentProvider) {
-      AbstractProjectContentProvider abstractContentProvider = (AbstractProjectContentProvider) contentProvider;
-      abstractContentProvider.setProjectDescription(this);
-    }
-
-    // this is an internal method only. do NOT fire BundleMakerProjectChangedEvent
-
-  }
-
   public String getNextContentProviderId() {
     synchronized (_identifierLock) {
       return FORMATTER.format(_currentId++);
@@ -341,15 +333,19 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
 
     //
     _jdkContentProvider = new JdkContentProvider();
-    _jdkContentProvider.setProjectDescription(this);
-    _projectContentEntries.addAll(_jdkContentProvider.getBundleMakerProjectContent(null, _bundleMakerProject));
+    _jdkContentProvider.setProject(_bundleMakerProject);
+    _jdkContentProvider.initializeProjectContent(null);
+    _projectContentEntries.addAll(_jdkContentProvider.getBundleMakerProjectContent());
 
     //
     for (IProjectContentProvider contentProvider : _projectContentProviders) {
 
       //
+      ((AbstractProjectContentProvider) contentProvider).initializeProjectContent(null);
+
+      //
       List<IProjectContentEntry> projectContents = contentProvider
-          .getBundleMakerProjectContent(progressMonitor, getBundleMakerProject());
+          .getBundleMakerProjectContent();
 
       //
       _projectContentEntries.addAll(projectContents);

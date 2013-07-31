@@ -33,15 +33,15 @@ public class MvnContentProviderTest {
     //
     MvnContentProvider contentProvider = new MvnContentProvider() {
       @Override
-      protected IBundleMakerPreferences getBundleMakerPreferences(IProjectDescription description) {
+      protected IBundleMakerPreferences getBundleMakerPreferences() {
         return preferences;
       }
     };
     contentProvider.addMvnArtifact("org.apache.cxf", "cxf-api", "2.7.2");
-    contentProvider.init(projectDescription);
+    contentProvider.prepare();
 
     //
-    List<IProjectContentEntry> entries = contentProvider.getBundleMakerProjectContent(null, bundleMakerProject);
+    List<IProjectContentEntry> entries = contentProvider.getBundleMakerProjectContent();
     assertThat(entries.size(), is(119));
     
     for (IProjectContentEntry iProjectContentEntry : entries) {

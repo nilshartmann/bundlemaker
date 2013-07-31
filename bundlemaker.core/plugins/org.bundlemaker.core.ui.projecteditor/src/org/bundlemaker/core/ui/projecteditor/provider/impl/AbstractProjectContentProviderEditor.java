@@ -200,8 +200,7 @@ public abstract class AbstractProjectContentProviderEditor implements IProjectCo
 
       //
       try {
-        _bundleMakerProjectContent = _projectContentProvider.getBundleMakerProjectContent(monitor,
-            _bundleMakerProject);
+        _bundleMakerProjectContent = _projectContentProvider.getBundleMakerProjectContent();
       } catch (Throwable e) {
         _throwable = e;
       }

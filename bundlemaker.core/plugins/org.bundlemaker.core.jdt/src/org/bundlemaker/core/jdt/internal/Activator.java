@@ -1,11 +1,14 @@
 package org.bundlemaker.core.jdt.internal;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectContentResource;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -14,6 +17,8 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -55,7 +60,7 @@ public class Activator implements BundleActivator {
     _project2provider = new GenericCache<IProject, List<JdtProjectContentProvider>>() {
       @Override
       protected List<JdtProjectContentProvider> create(IProject key) {
-        return new LinkedList<JdtProjectContentProvider>();
+        return new CopyOnWriteArrayList<JdtProjectContentProvider>();
       }
     };
 
@@ -77,19 +82,50 @@ public class Activator implements BundleActivator {
 
         IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
           public boolean visit(IResourceDelta delta) {
-            // // only interested in changed resources (not added or removed)
-            // if (delta.getKind() != IResourceDelta.CHANGED)
-            // return true;
-            // // only interested in content changes
-            // if ((delta.getFlags() & IResourceDelta.CONTENT) == 0)
-            // return true;
+
+            //
             IResource resource = delta.getResource();
 
+            //
+            if (!(resource instanceof IFile)) {
+              return true;
+            }
+            
+            //
             for (Entry<IProject, List<JdtProjectContentProvider>> entry : _project2provider.entrySet()) {
+
+              //
+              if (!entry.getKey().isAccessible()) {
+                continue;
+              }
+
               if (entry.getKey().getFullPath().isPrefixOf(resource.getFullPath())) {
-                System.out.println("Project: " + resource.getProject());
-                System.out.println("Path: " + resource.getFullPath() + " : " + delta.getKind());
-                System.out.println(entry.getValue());
+
+                for (JdtProjectContentProvider jdtProjectContentProvider : entry.getValue()) {
+
+                  //
+                  List<IProjectContentEntry> entries = jdtProjectContentProvider.getBundleMakerProjectContent();
+
+                  //
+                  for (IProjectContentEntry contentEntry : entries) {
+                    for (IProjectContentResource projectContentResource : contentEntry.getBinaryResources()) {
+                      
+                      IPath path = new Path(projectContentResource.getRoot()).append(projectContentResource.getPath());
+                      if (path.equals(resource.getRawLocation())) {
+                        System.out.println(projectContentResource);
+                      }
+                    }
+                    for (IProjectContentResource projectContentResource : contentEntry.getSourceResources()) {
+                      
+                      IPath path = new Path(projectContentResource.getRoot()).append(projectContentResource.getPath());
+                      if (path.equals(resource.getRawLocation())) {
+                        System.out.println(projectContentResource);
+                      }
+                    }
+                  }
+
+                  jdtProjectContentProvider.fireProjectContentChangedEvent();
+                }
               }
             }
 
@@ -99,11 +135,9 @@ public class Activator implements BundleActivator {
 
         //
         try {
-          System.out.println("** START ***************************************************");
           if (rootDelta != null) {
             rootDelta.accept(visitor);
           }
-          System.out.println("** STOP ***************************************************");
         } catch (CoreException e) {
           // open error dialog with syncExec or print to plugin log file
         }

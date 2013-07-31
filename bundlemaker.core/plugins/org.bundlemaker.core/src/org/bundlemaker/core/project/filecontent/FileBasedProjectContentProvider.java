@@ -259,21 +259,10 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
    * </p>
    * 
    * @return
+   * @throws CoreException
    */
   public IProjectContentEntry getFileBasedContent() {
-
-    //
-    if (getFileBasedContents().isEmpty()) {
-      try {
-        createFileBasedContent(_name, _version, convert(_binaryPaths), convert(_sourcePaths),
-            _analyzeMode);
-      } catch (CoreException e) {
-        e.printStackTrace();
-        throw new RuntimeException(e.getMessage(), e);
-      }
-    }
-
-    return getFileBasedContents().get(0);
+    return getBundleMakerProjectContent().get(0);
   }
 
   /**
@@ -334,21 +323,32 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
    */
   protected void providerChanged() {
 
-    // clear the file based content
-    clearFileBasedContents();
+    //
+    if (isProjectSet()) {
 
-    // fire project description changed event
-    fireProjectDescriptionChangedEvent();
+      // clear the file based content
+      clearFileBasedContents();
+
+      // fire project description changed event
+      fireProjectDescriptionChangedEvent();
+    }
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  protected void onGetBundleMakerProjectContent(IProgressMonitor progressMonitor)
-      throws CoreException {
+  public void initializeProjectContent(IProgressMonitor progressMonitor)
+  {
 
-    getFileBasedContent();
+    //
+    try {
+      createFileBasedContent(_name, _version, convert(_binaryPaths), convert(_sourcePaths),
+          _analyzeMode);
+    } catch (CoreException e) {
+      e.printStackTrace();
+      throw new RuntimeException(e.getMessage(), e);
+    }
   }
 
   /**

@@ -17,7 +17,7 @@ public class ProjectDescriptionTest {
    * </p>
    */
   @Test
-  public void testProjectDescription() {
+  public void testJsonSerialization() {
 
     FileBasedProjectContentProvider provider = new FileBasedProjectContentProvider();
     provider.setId("honk");

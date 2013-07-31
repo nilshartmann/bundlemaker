@@ -15,9 +15,12 @@ import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
@@ -101,6 +104,24 @@ public class AbstractJdtProjectTest {
    * <p>
    * </p>
    * 
+   * @throws CoreException
+   */
+  @After
+  public void after() throws CoreException {
+
+    //
+    _javaProject.getProject().close(null);
+    _bundleMakerProject.getProject().close(null);
+
+    //
+    EclipseProjectUtils.deleteProjectIfExists(_javaProject.getProject().getName());
+    EclipseProjectUtils.deleteProjectIfExists(_bundleMakerProject.getProject().getName());
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @return the _javaProject
    */
   public IJavaProject getJavaProject() {
@@ -115,20 +136,6 @@ public class AbstractJdtProjectTest {
    */
   public IBundleMakerProject getBundleMakerProject() {
     return _bundleMakerProject;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @throws CoreException
-   */
-  @After
-  public void after() throws CoreException {
-
-    //
-    EclipseProjectUtils.deleteProjectIfExists(_javaProject.getProject().getName());
-    EclipseProjectUtils.deleteProjectIfExists(_bundleMakerProject.getProject().getName());
   }
 
   public void modifyClassKlasse() throws Exception {
@@ -181,34 +188,31 @@ public class AbstractJdtProjectTest {
   }
 
   private void createJavaProject() throws CoreException, JavaModelException {
-    // create the bundle maker project
-    IProject project = EclipseProjectUtils.getOrCreateSimpleProject(SIMPLE_ARTIFACT_MODEL_TEST_JDT);
-    BundleMakerCore.addJavaNature(project);
 
-    //
-    String srcDirectory = TestProjectCreator.getSourcesPath(TestProjectCreator
-        .getTestDataDirectory("SimpleArtifactModelTest"));
+    // create the eclipse project
+    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    IProject project = root.getProject(SIMPLE_ARTIFACT_MODEL_TEST_JDT);
+    project.create(null);
+    project.open(null);
 
-    IFolder srcFolder = project.getFolder("src");
-    srcFolder.create(true, true, null);
+    // add java nature
+    IProjectDescription description = project.getDescription();
+    description.setNatureIds(new String[] { JavaCore.NATURE_ID });
+    project.setDescription(description, null);
 
-    Copy copy = new Copy();
-    copy.setProject(new Project());
-    copy.setTodir(srcFolder.getRawLocation().toFile());
-    FileSet fileSet = new FileSet();
-    fileSet.setDir(new File(srcDirectory));
-    copy.addFileset(fileSet);
-    copy.execute();
-
-    //
+    // create the java project
     _javaProject = JavaCore.create(project);
 
+    // set the bin folder
+    IFolder binFolder = project.getFolder("bin");
+    binFolder.create(false, true, null);
+    _javaProject.setOutputLocation(binFolder.getFullPath(), null);
+
+    // set the class path (src and JDK)
     List<IClasspathEntry> entries = new LinkedList<IClasspathEntry>();
-
-    // let's add src to out classpath
-    entries.add(JavaCore.newSourceEntry(new Path("/" + SIMPLE_ARTIFACT_MODEL_TEST_JDT + "/src")));
-
-    // let's add JavaSE-1.6 to our classpath
+    IFolder srcFolder = project.getFolder("src");
+    srcFolder.create(false, true, null);
+    entries.add(JavaCore.newSourceEntry(srcFolder.getFullPath()));
     IExecutionEnvironmentsManager executionEnvironmentsManager = JavaRuntime.getExecutionEnvironmentsManager();
     IExecutionEnvironment[] executionEnvironments = executionEnvironmentsManager.getExecutionEnvironments();
     for (IExecutionEnvironment iExecutionEnvironment : executionEnvironments) {
@@ -218,10 +222,20 @@ public class AbstractJdtProjectTest {
         break;
       }
     }
-
     _javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[0]), null);
-    _javaProject.open(null);
-    
+
+    // copy the test files
+    Copy copy = new Copy();
+    copy.setProject(new Project());
+    copy.setTodir(srcFolder.getRawLocation().toFile());
+    FileSet fileSet = new FileSet();
+    fileSet.setDir(new File(TestProjectCreator.getSourcesPath(TestProjectCreator
+        .getTestDataDirectory("SimpleArtifactModelTest"))));
+    copy.addFileset(fileSet);
+    copy.execute();
+
+    // refresh and build
+    srcFolder.refreshLocal(IResource.DEPTH_INFINITE, null);
     project.build(IncrementalProjectBuilder.CLEAN_BUILD, null);
     project.build(IncrementalProjectBuilder.FULL_BUILD, null);
   }

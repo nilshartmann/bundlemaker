@@ -15,7 +15,6 @@ import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectContentResource;
-import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -58,7 +57,7 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
    * {@inheritDoc}
    */
   @Override
-  protected void init(IProjectDescription description) {
+  protected void prepare() {
 
     String[] projectNames = _javaProjectNames.split(",");
     _javaProjects = new LinkedList<IJavaProject>();
@@ -79,7 +78,7 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
    * @throws CoreException
    */
   @Override
-  public void onGetBundleMakerProjectContent(IProgressMonitor progressMonitor) throws CoreException {
+  public void initializeProjectContent(IProgressMonitor progressMonitor) throws CoreException {
 
     // create instance of entry helper & clear the 'already resolved' list
     clearFileBasedContents();

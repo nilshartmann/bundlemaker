@@ -21,7 +21,6 @@ import org.bundlemaker.core.internal.projectdescription.gson.GsonProjectDescript
 import org.bundlemaker.core.project.BundleMakerCore;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
-import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
@@ -70,7 +69,8 @@ public class ProjectDescriptionStore {
    * @return
    * @throws CoreException
    */
-  public static BundleMakerProjectDescription loadProjectDescription(IProjectDescriptionAwareBundleMakerProject project) throws CoreException {
+  public static BundleMakerProjectDescription loadProjectDescription(IProjectDescriptionAwareBundleMakerProject project)
+      throws CoreException {
 
     //
     IFile iFile = project.getProject().getFile(BundleMakerCore.PROJECT_DESCRIPTION_PATH);
@@ -88,7 +88,7 @@ public class ProjectDescriptionStore {
 
     // initialize
     for (IProjectContentProvider provider : descriptionNeu.getContentProviders()) {
-      ((AbstractProjectContentProvider) provider).setProjectDescription(descriptionNeu);
+      provider.setProject(project);
     }
 
     //

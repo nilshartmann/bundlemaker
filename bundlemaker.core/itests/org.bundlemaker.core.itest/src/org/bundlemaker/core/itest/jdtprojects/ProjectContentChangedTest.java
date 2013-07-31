@@ -20,7 +20,7 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
 
   @Test
   public void test() throws Exception {
-
+    
     //
     final List<ContentChangedEvent> contentChangedEvents = new LinkedList<ContentChangedEvent>();
     
@@ -29,7 +29,6 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
       @Override
       public void projectContentChanged(ContentChangedEvent event) {
         contentChangedEvents.add(event);
-        System.out.println("projectContentChanged: " + event);
       }
     };
     
@@ -40,7 +39,6 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
     modifyClassKlasse();
     
     //
-    System.out.println(contentChangedEvents);
     Assert.assertEquals(1, contentChangedEvents.size());
     
     //
