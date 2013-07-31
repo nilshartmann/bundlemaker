@@ -8,6 +8,7 @@ import junit.framework.Assert;
 import org.bundlemaker.core.itestframework.AbstractJdtProjectTest;
 import org.bundlemaker.core.project.ContentChangedEvent;
 import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -19,6 +20,7 @@ import org.junit.Test;
 public class ProjectContentChangedTest extends AbstractJdtProjectTest {
 
   @Test
+  @Ignore
   public void test() throws Exception {
     
     //
