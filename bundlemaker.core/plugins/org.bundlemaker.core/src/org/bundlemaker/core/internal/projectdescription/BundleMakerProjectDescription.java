@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.internal.api.project.IInternalProjectDescription;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
@@ -85,7 +86,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   private boolean                           _initialized;
 
   /** - */
-  private BundleMakerProject                _bundleMakerProject;
+  private IBundleMakerProject               _bundleMakerProject;
 
   /** - */
   private JdkContentProvider                _jdkContentProvider;
@@ -97,7 +98,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
    * 
    * @param bundleMakerProject
    */
-  public BundleMakerProjectDescription(BundleMakerProject bundleMakerProject) {
+  public BundleMakerProjectDescription(IBundleMakerProject bundleMakerProject) {
 
     //
     _bundleMakerProject = bundleMakerProject;
@@ -466,9 +467,11 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
 
     ProjectDescriptionStore.saveProjectDescription(_bundleMakerProject.getProject(), this);
 
-    // notify listener
-    _bundleMakerProject.fireDescriptionChangedEvent(new DescriptionChangedEvent(
-        DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_SAVED));
+    // notify listeners
+    if (_bundleMakerProject != null && _bundleMakerProject instanceof BundleMakerProject) {
+      ((BundleMakerProject) _bundleMakerProject).fireDescriptionChangedEvent(new DescriptionChangedEvent(
+          DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_SAVED));
+    }
   }
 
   /**
@@ -481,8 +484,8 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
         DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_MODIFIED);
 
     // notify listeners
-    if (_bundleMakerProject != null) {
-      _bundleMakerProject.fireDescriptionChangedEvent(event);
+    if (_bundleMakerProject != null && _bundleMakerProject instanceof BundleMakerProject) {
+      ((BundleMakerProject) _bundleMakerProject).fireDescriptionChangedEvent(event);
     }
   }
 
@@ -497,8 +500,8 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
         DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RECOMPUTED);
 
     // notify listeners
-    if (_bundleMakerProject != null) {
-      _bundleMakerProject.fireDescriptionChangedEvent(event);
+    if (_bundleMakerProject != null && _bundleMakerProject instanceof BundleMakerProject) {
+      ((BundleMakerProject) _bundleMakerProject).fireDescriptionChangedEvent(event);
     }
   }
 
@@ -508,8 +511,8 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     ContentChangedEvent event = new ContentChangedEvent();
 
     // notify listeners
-    if (_bundleMakerProject != null) {
-      _bundleMakerProject.fireContentChangedEvent(event);
+    if (_bundleMakerProject != null && _bundleMakerProject instanceof BundleMakerProject) {
+      ((BundleMakerProject) _bundleMakerProject).fireContentChangedEvent(event);
     }
   }
 }
