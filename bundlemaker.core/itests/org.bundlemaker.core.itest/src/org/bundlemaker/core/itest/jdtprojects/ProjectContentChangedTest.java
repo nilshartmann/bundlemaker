@@ -8,7 +8,9 @@ import junit.framework.Assert;
 import org.bundlemaker.core.itestframework.AbstractJdtProjectTest;
 import org.bundlemaker.core.project.ContentChangedEvent;
 import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
-import org.junit.Ignore;
+import org.eclipse.core.runtime.CoreException;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -19,31 +21,80 @@ import org.junit.Test;
  */
 public class ProjectContentChangedTest extends AbstractJdtProjectTest {
 
-  @Test
-  @Ignore
-  public void test() throws Exception {
-    
+  //
+  private List<ContentChangedEvent>          _contentChangedEvents;
+
+  //
+  private IBundleMakerProjectChangedListener _changedListener;
+
+  /**
+   * @throws CoreException
+   */
+  @Before
+  public void before() throws CoreException {
+    super.before();
+
     //
-    final List<ContentChangedEvent> contentChangedEvents = new LinkedList<ContentChangedEvent>();
-    
-    //
-    IBundleMakerProjectChangedListener changedListener = new IBundleMakerProjectChangedListener.Adapter() {
+    _contentChangedEvents = new LinkedList<ContentChangedEvent>();
+    _changedListener = new IBundleMakerProjectChangedListener.Adapter() {
       @Override
       public void projectContentChanged(ContentChangedEvent event) {
-        contentChangedEvents.add(event);
+        _contentChangedEvents.add(event);
       }
     };
-    
+    getBundleMakerProject().addBundleMakerProjectChangedListener(_changedListener);
+  }
+
+  /**
+   * @throws CoreException
+   */
+  @After
+  public void after() throws CoreException {
+
     //
-    getBundleMakerProject().addBundleMakerProjectChangedListener(changedListener);
-    
+    getBundleMakerProject().removeBundleMakerProjectChangedListener(_changedListener);
+
+    //
+    super.after();
+  }
+
+  /**
+   * @throws Exception
+   */
+  @Test
+  public void testSourceFileChanged() throws Exception {
+
     //
     modifyClassKlasse();
-    
+
     //
-    Assert.assertEquals(1, contentChangedEvents.size());
-    
+    Assert.assertEquals(1, _contentChangedEvents.size());
+    Assert.assertEquals(ContentChangedEvent.Type.MODIFIED, _contentChangedEvents.get(0).getType());
+
+  }
+
+  /**
+   * @throws Exception
+   */
+  @Test
+  public void testSourceFileAdded() throws Exception {
+
     //
-    getBundleMakerProject().removeBundleMakerProjectChangedListener(changedListener);
+    addSource();
+
+    //
+    Assert.assertEquals(1, _contentChangedEvents.size());
+    Assert.assertEquals(ContentChangedEvent.Type.ADDED, _contentChangedEvents.get(0).getType());
+  }
+
+  @Test
+  public void testSourceFileRemoved() throws Exception {
+
+    //
+    removeClassKlasse();
+
+    //
+    Assert.assertEquals(1, _contentChangedEvents.size());
+    Assert.assertEquals(ContentChangedEvent.Type.REMOVED, _contentChangedEvents.get(0).getType());
   }
 }

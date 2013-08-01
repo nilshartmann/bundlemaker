@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.property.GetProperty;
 import org.apache.tools.ant.taskdefs.Copy;
 import org.apache.tools.ant.types.FileSet;
 import org.bundlemaker.core.BundleMakerCore;
@@ -13,6 +14,7 @@ import org.bundlemaker.core.common.utils.EclipseProjectUtils;
 import org.bundlemaker.core.itestframework.internal.TestProjectCreator;
 import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
 import org.bundlemaker.core.resource.IModularizedSystem;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -24,6 +26,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
@@ -43,6 +46,7 @@ import org.eclipse.jdt.launching.environments.IExecutionEnvironmentsManager;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 
 /**
@@ -82,7 +86,7 @@ public class AbstractJdtProjectTest {
   public void before() throws CoreException {
 
     //
-    createJavaProject();
+    createTestJavaProject();
 
     //
     IProject project = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(this.getClass().getSimpleName());
@@ -138,6 +142,23 @@ public class AbstractJdtProjectTest {
     return _bundleMakerProject;
   }
 
+  public void addSource() {
+    try {
+      IPackageFragment pack = getJavaProject().getPackageFragmentRoot(getJavaProject().getProject().getFolder("src"))
+          .createPackageFragment("newPack", false, null);
+
+      StringBuffer buf = new StringBuffer();
+      buf.append("package " + pack.getElementName() + ";\n");
+      buf.append("\n");
+      buf.append("public class NewClass {}");
+
+      ICompilationUnit cu = pack.createCompilationUnit("NewClass.java", buf.toString(), false, null);
+
+    } catch (JavaModelException e) {
+      Assert.fail(e.getMessage());
+    }
+  }
+
   public void modifyClassKlasse() throws Exception {
 
     //
@@ -172,12 +193,14 @@ public class AbstractJdtProjectTest {
     VariableDeclarationStatement statement = ast.newVariableDeclarationStatement(fragment);
     statement.setType(ast.newSimpleType(ast.newSimpleName("String")));
 
-    // describe that the first node is inserted as first statement in block, the other one as last statement
+    // describe that the first node is inserted as first statement in block,
+    // the other one as last statement
     // note: AST is not modified by this
     ListRewrite listRewrite = rewrite.getListRewrite(block, Block.STATEMENTS_PROPERTY);
     listRewrite.insertFirst(statement, null);
 
-    // evaluate the text edits corresponding to the described changes. AST and CU still unmodified.
+    // evaluate the text edits corresponding to the described changes. AST
+    // and CU still unmodified.
     TextEdit res = rewrite.rewriteAST();
 
     // apply the text edits to the compilation unit
@@ -187,42 +210,35 @@ public class AbstractJdtProjectTest {
     compilationUnit.save(null, true);
   }
 
-  private void createJavaProject() throws CoreException, JavaModelException {
+  protected void removeClassKlasse() {
 
-    // create the eclipse project
-    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    IProject project = root.getProject(SIMPLE_ARTIFACT_MODEL_TEST_JDT);
-    project.create(null);
-    project.open(null);
+    try {
+      //
+      IFile file = getJavaProject().getProject().getFile("src/de/test/Klasse.java");
 
-    // add java nature
-    IProjectDescription description = project.getDescription();
-    description.setNatureIds(new String[] { JavaCore.NATURE_ID });
-    project.setDescription(description, null);
+      file.delete(true, null);
 
-    // create the java project
-    _javaProject = JavaCore.create(project);
-
-    // set the bin folder
-    IFolder binFolder = project.getFolder("bin");
-    binFolder.create(false, true, null);
-    _javaProject.setOutputLocation(binFolder.getFullPath(), null);
-
-    // set the class path (src and JDK)
-    List<IClasspathEntry> entries = new LinkedList<IClasspathEntry>();
-    IFolder srcFolder = project.getFolder("src");
-    srcFolder.create(false, true, null);
-    entries.add(JavaCore.newSourceEntry(srcFolder.getFullPath()));
-    IExecutionEnvironmentsManager executionEnvironmentsManager = JavaRuntime.getExecutionEnvironmentsManager();
-    IExecutionEnvironment[] executionEnvironments = executionEnvironmentsManager.getExecutionEnvironments();
-    for (IExecutionEnvironment iExecutionEnvironment : executionEnvironments) {
-      // We will look for JavaSE-1.6 as the JRE container to add to our classpath
-      if ("JavaSE-1.6".equals(iExecutionEnvironment.getId())) {
-        entries.add(JavaCore.newContainerEntry(JavaRuntime.newJREContainerPath(iExecutionEnvironment)));
-        break;
-      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      Assert.fail(e.getMessage());
     }
-    _javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[0]), null);
+
+    // ICompilationUnit compilationUnit = getJavaProject()
+    // .getPackageFragmentRoot(
+    // getJavaProject().getProject().getFolder("src"))
+    // .getPackageFragment("de.test")
+    // .getCompilationUnit("Klasse.java");)
+
+  }
+
+  private void createTestJavaProject() throws CoreException, JavaModelException {
+
+    //
+    _javaProject = createNewJavaProject(SIMPLE_ARTIFACT_MODEL_TEST_JDT);
+    IProject project = _javaProject.getProject();
+
+    //
+    IFolder srcFolder = project.getFolder("src");
 
     // copy the test files
     Copy copy = new Copy();
@@ -238,5 +254,52 @@ public class AbstractJdtProjectTest {
     srcFolder.refreshLocal(IResource.DEPTH_INFINITE, null);
     project.build(IncrementalProjectBuilder.CLEAN_BUILD, null);
     project.build(IncrementalProjectBuilder.FULL_BUILD, null);
+  }
+
+  /**
+   * @param projectName
+   * @throws CoreException
+   */
+  protected IJavaProject createNewJavaProject(String projectName) throws CoreException {
+
+    // create the eclipse project
+    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    IProject project = root.getProject(projectName);
+    project.create(null);
+    project.open(null);
+
+    // add java nature
+    IProjectDescription description = project.getDescription();
+    description.setNatureIds(new String[] { JavaCore.NATURE_ID });
+    project.setDescription(description, null);
+
+    // create the java project
+    IJavaProject javaProject = JavaCore.create(project);
+
+    // set the bin folder
+    IFolder binFolder = project.getFolder("bin");
+    binFolder.create(false, true, null);
+    javaProject.setOutputLocation(binFolder.getFullPath(), null);
+
+    // set the class path (src and JDK)
+    List<IClasspathEntry> entries = new LinkedList<IClasspathEntry>();
+    IFolder srcFolder = project.getFolder("src");
+    srcFolder.create(false, true, null);
+    entries.add(JavaCore.newSourceEntry(srcFolder.getFullPath()));
+    IExecutionEnvironmentsManager executionEnvironmentsManager = JavaRuntime.getExecutionEnvironmentsManager();
+    IExecutionEnvironment[] executionEnvironments = executionEnvironmentsManager.getExecutionEnvironments();
+    for (IExecutionEnvironment iExecutionEnvironment : executionEnvironments) {
+      // We will look for JavaSE-1.6 as the JRE container to add to our
+      // classpath
+      if ("JavaSE-1.6".equals(iExecutionEnvironment.getId())) {
+        entries.add(JavaCore.newContainerEntry(JavaRuntime.newJREContainerPath(iExecutionEnvironment)));
+        break;
+      }
+    }
+
+    javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[0]), null);
+
+    //
+    return javaProject;
   }
 }

@@ -505,14 +505,14 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     }
   }
 
-  public void fireProjectContentChangedEvent() {
+  public void fireProjectContentChangedEvent(ContentChangedEvent contentChangedEvent) {
 
-    // Create the Event
-    ContentChangedEvent event = new ContentChangedEvent();
+    //
+    Assert.isNotNull(contentChangedEvent);
 
     // notify listeners
     if (_bundleMakerProject != null && _bundleMakerProject instanceof BundleMakerProject) {
-      ((BundleMakerProject) _bundleMakerProject).fireContentChangedEvent(event);
+      ((BundleMakerProject) _bundleMakerProject).fireContentChangedEvent(contentChangedEvent);
     }
   }
 }

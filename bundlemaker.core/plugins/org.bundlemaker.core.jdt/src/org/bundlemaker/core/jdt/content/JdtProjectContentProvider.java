@@ -134,8 +134,8 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
       IProjectContentEntry projectContentEntry = createFileBasedContent(name, version, binaryPaths, sourcePaths, mode);
       // TODO: CACHEN!!
       // for (IProjectContentResource resource : projectContentEntry.getBinaryResources()) {
-      //   System.out.println("Root: " + resource.getRoot());
-      //  System.out.println("Path: " + resource.getPath());
+      // System.out.println("Root: " + resource.getRoot());
+      // System.out.println("Path: " + resource.getPath());
       // }
       for (IJavaProject javaProject : _javaProjects) {
         Activator.getInstance().getProject2ProviderMap().getOrCreate(javaProject.getProject()).add(this);
@@ -151,8 +151,31 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
    * @return
    */
   public IProjectContentResource getProjectContentResource(IResource eclipseResource) {
-    // TODO
-    throw new UnsupportedOperationException();
+
+    //
+    List<IProjectContentEntry> entries = getBundleMakerProjectContent();
+
+    IProjectContentResource contentResource = null;
+
+    //
+    for (IProjectContentEntry contentEntry : entries) {
+      for (IProjectContentResource projectContentResource : contentEntry.getBinaryResources()) {
+
+        IPath path = new Path(projectContentResource.getRoot()).append(projectContentResource.getPath());
+        if (path.equals(eclipseResource.getRawLocation())) {
+          contentResource = projectContentResource;
+        }
+      }
+      for (IProjectContentResource projectContentResource : contentEntry.getSourceResources()) {
+
+        IPath path = new Path(projectContentResource.getRoot()).append(projectContentResource.getPath());
+        if (path.equals(eclipseResource.getRawLocation())) {
+          contentResource = projectContentResource;
+        }
+      }
+    }
+
+    return contentResource;
   }
 
   /**

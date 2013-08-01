@@ -10,6 +10,7 @@ import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescri
 import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.internal.projectdescription.gson.GsonProjectDescriptionHelper;
 import org.bundlemaker.core.project.AnalyzeMode;
+import org.bundlemaker.core.project.ContentChangedEvent;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProblem;
 import org.bundlemaker.core.project.IProjectContentProvider;
@@ -186,10 +187,10 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    * <p>
    * </p>
    */
-  public void fireProjectContentChangedEvent() {
+  public void fireProjectContentChangedEvent(ContentChangedEvent changedEvent) {
     if (_bundleMakerProject.getModifiableProjectDescription() instanceof BundleMakerProjectDescription) {
       ((BundleMakerProjectDescription) _bundleMakerProject.getModifiableProjectDescription())
-          .fireProjectContentChangedEvent();
+          .fireProjectContentChangedEvent(changedEvent);
     }
   }
 

@@ -6,6 +6,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
+import org.bundlemaker.core.project.ContentChangedEvent;
+import org.bundlemaker.core.project.DescriptionChangedEvent.Type;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.eclipse.core.resources.IFile;
@@ -90,7 +92,7 @@ public class Activator implements BundleActivator {
             if (!(resource instanceof IFile)) {
               return true;
             }
-            
+
             //
             for (Entry<IProject, List<JdtProjectContentProvider>> entry : _project2provider.entrySet()) {
 
@@ -104,27 +106,20 @@ public class Activator implements BundleActivator {
                 for (JdtProjectContentProvider jdtProjectContentProvider : entry.getValue()) {
 
                   //
-                  List<IProjectContentEntry> entries = jdtProjectContentProvider.getBundleMakerProjectContent();
+                  IProjectContentResource contentResource = jdtProjectContentProvider
+                      .getProjectContentResource(resource);
 
-                  //
-                  for (IProjectContentEntry contentEntry : entries) {
-                    for (IProjectContentResource projectContentResource : contentEntry.getBinaryResources()) {
-                      
-                      IPath path = new Path(projectContentResource.getRoot()).append(projectContentResource.getPath());
-                      if (path.equals(resource.getRawLocation())) {
-                        System.out.println(projectContentResource);
-                      }
-                    }
-                    for (IProjectContentResource projectContentResource : contentEntry.getSourceResources()) {
-                      
-                      IPath path = new Path(projectContentResource.getRoot()).append(projectContentResource.getPath());
-                      if (path.equals(resource.getRawLocation())) {
-                        System.out.println(projectContentResource);
-                      }
-                    }
+                  if (delta.getKind() == IResourceDelta.ADDED) {
+                    jdtProjectContentProvider.fireProjectContentChangedEvent(new ContentChangedEvent(
+                        ContentChangedEvent.Type.ADDED, contentResource));
+                  } else if (delta.getKind() == IResourceDelta.CHANGED) {
+                    jdtProjectContentProvider.fireProjectContentChangedEvent(new ContentChangedEvent(
+                        ContentChangedEvent.Type.MODIFIED, contentResource));
+                  } else if (delta.getKind() == IResourceDelta.REMOVED) {
+                    jdtProjectContentProvider.fireProjectContentChangedEvent(new ContentChangedEvent(
+                        ContentChangedEvent.Type.REMOVED, contentResource));
                   }
-
-                  jdtProjectContentProvider.fireProjectContentChangedEvent();
+                  //
                 }
               }
             }
