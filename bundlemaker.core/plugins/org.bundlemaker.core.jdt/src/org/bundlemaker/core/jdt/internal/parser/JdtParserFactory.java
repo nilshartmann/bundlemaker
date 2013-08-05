@@ -10,9 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.jdt.internal.parser;
 
-import org.bundlemaker.core.jdt.internal.ExtensionRegistryTracker;
-import org.bundlemaker.core.jdt.parser.CoreParserJdt;
-import org.bundlemaker.core.jdt.parser.IJdtSourceParserHook;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.spi.parser.IParser;
 import org.bundlemaker.core.spi.parser.IParserFactory;
@@ -25,26 +22,6 @@ import org.eclipse.core.runtime.CoreException;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class JdtParserFactory extends IParserFactory.Adapter {
-
-  /** - */
-  private ExtensionRegistryTracker<IJdtSourceParserHook> _hookRegistry;
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void initialize() {
-    _hookRegistry = new ExtensionRegistryTracker<IJdtSourceParserHook>(CoreParserJdt.EXTENSION_POINT_ID);
-    _hookRegistry.initialize();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void dispose() {
-    _hookRegistry.dispose();
-  }
 
   /**
    * {@inheritDoc}
@@ -73,6 +50,6 @@ public class JdtParserFactory extends IParserFactory.Adapter {
    */
   @Override
   public IParser createParser(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException {
-    return new JdtParser(bundleMakerProject, _hookRegistry);
+    return new JdtParser(bundleMakerProject);
   }
 }

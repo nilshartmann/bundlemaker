@@ -10,16 +10,14 @@
  ******************************************************************************/
 package org.bundlemaker.core.jdt.internal.parser;
 
-import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
-import org.bundlemaker.core.jdt.internal.ExtensionRegistryTracker;
 import org.bundlemaker.core.jdt.parser.CoreParserJdt;
-import org.bundlemaker.core.jdt.parser.IJdtSourceParserHook;
 import org.bundlemaker.core.jtype.IParsableTypeResource;
 import org.bundlemaker.core.jtype.IType;
 import org.bundlemaker.core.jtype.JavaTypeUtils;
 import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.spi.parser.AbstractParser;
 import org.bundlemaker.core.spi.parser.IParsableResource;
 import org.bundlemaker.core.spi.parser.IParserContext;
 import org.eclipse.core.runtime.Assert;
@@ -36,7 +34,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class JdtParser extends AbstractHookAwareJdtParser {
+public class JdtParser extends AbstractParser {
 
   /** the AST parser */
   private ASTParser    _parser;
@@ -51,15 +49,15 @@ public class JdtParser extends AbstractHookAwareJdtParser {
    * @param bundleMakerProject
    * @throws CoreException
    */
-  public JdtParser(IProjectDescriptionAwareBundleMakerProject bundleMakerProject, ExtensionRegistryTracker<IJdtSourceParserHook> hookRegistry)
+  public JdtParser(IProjectDescriptionAwareBundleMakerProject bundleMakerProject)
       throws CoreException {
 
-    super(hookRegistry);
+    super();
 
     Assert.isNotNull(bundleMakerProject);
 
     // create the AST parser
-    _parser = ASTParser.newParser(AST.JLS3);
+    _parser = ASTParser.newParser(AST.JLS4);
 
     // the associated java project
     _javaProject = JdtProjectHelper.getAssociatedJavaProject(bundleMakerProject);
@@ -73,6 +71,12 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     return ParserType.SOURCE;
   }
 
+
+  @Override
+  public boolean canParse(IParsableResource resource) {
+    return resource.getPath().endsWith(".java");
+  }
+  
   /**
    * {@inheritDoc}
    */
@@ -87,7 +91,6 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     try {
 
       // _parser.setSource(iCompilationUnit);
-
 
       // TODO
 //      if (projectContent.getProvider() instanceof JdtProjectContentProvider) {
@@ -107,7 +110,18 @@ public class JdtParser extends AbstractHookAwareJdtParser {
       _parser.setResolveBindings(true);
 
       //
-      analyzeCompilationUnit(resource, (CompilationUnit) _parser.createAST(null));
+      // step 1: set the directly referenced types
+      JdtAstVisitor visitor = new JdtAstVisitor(resource);
+      ((CompilationUnit) _parser.createAST(null)).accept(visitor);
+      
+      // step 4: add the errors to the error list
+      for (IProblem problem : visitor.getProblems()) {
+      
+        // add errors
+        if (problem.isError()) {
+          getProblems().add(problem);
+        }
+      }
 
       // set the primary type
       String primaryTypeName = JavaTypeUtils.convertToFullyQualifiedName(resource.getPath(), ".java");
@@ -117,42 +131,6 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     } catch (Exception e) {
       getProblems().add(new IProblem.DefaultProblem(resource, "Error while parsing: " + e));
       e.printStackTrace();
-    }
-  }
-
-  @Override
-  public boolean canParse(IParsableResource resource) {
-    return resource.getPath().endsWith(".java");
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param rootMap
-   * @param progressMonitor
-   * 
-   * @param entry
-   * @param content
-   * @throws JavaModelException
-   */
-  private void analyzeCompilationUnit(IParsableResource modifiableResource, CompilationUnit compilationUnit)
-      throws CoreException {
-
-    // step 1: set the directly referenced types
-    JdtAstVisitor visitor = new JdtAstVisitor(modifiableResource);
-    compilationUnit.accept(visitor);
-
-    // step 2:
-    callSourceParserHooks(modifiableResource, compilationUnit);
-
-    // step 4: add the errors to the error list
-    for (IProblem problem : visitor.getProblems()) {
-
-      // add errors
-      if (problem.isError()) {
-        getProblems().add(problem);
-      }
     }
   }
 }
