@@ -101,25 +101,39 @@ public class Activator implements BundleActivator {
                 continue;
               }
 
+              // we can use 'getFullPath' here (getFullPath always contains the project name)
               if (entry.getKey().getFullPath().isPrefixOf(resource.getFullPath())) {
 
                 for (JdtProjectContentProvider jdtProjectContentProvider : entry.getValue()) {
 
-                  //
-                  IProjectContentResource contentResource = jdtProjectContentProvider
-                      .getProjectContentResource(resource);
-
                   if (delta.getKind() == IResourceDelta.ADDED) {
-                    jdtProjectContentProvider.fireProjectContentChangedEvent(new ContentChangedEvent(
-                        ContentChangedEvent.Type.ADDED, contentResource));
-                  } else if (delta.getKind() == IResourceDelta.CHANGED) {
-                    jdtProjectContentProvider.fireProjectContentChangedEvent(new ContentChangedEvent(
-                        ContentChangedEvent.Type.MODIFIED, contentResource));
-                  } else if (delta.getKind() == IResourceDelta.REMOVED) {
-                    jdtProjectContentProvider.fireProjectContentChangedEvent(new ContentChangedEvent(
-                        ContentChangedEvent.Type.REMOVED, contentResource));
+                    
+                    //
+                    IProjectContentEntry contentEntry = jdtProjectContentProvider.getProjectContentEntry(resource);
+                    System.out.println(contentEntry);
+                    
+                    // jdtProjectContentProvider.fireProjectContentChangedEvent(new ContentChangedEvent(
+                    // ContentChangedEvent.Type.ADDED, contentResource));
+                    
+                  } else {
+
+                    //
+                    IProjectContentResource contentResource = jdtProjectContentProvider
+                        .getProjectContentResource(resource);
+                    
+                    //
+                    if (delta.getKind() == IResourceDelta.CHANGED) {
+                      jdtProjectContentProvider.fireProjectContentChangedEvent(new ContentChangedEvent(
+                          ContentChangedEvent.Type.MODIFIED, contentResource));
+                    } 
+                    
+                    //
+                    else if (delta.getKind() == IResourceDelta.REMOVED) {
+                      jdtProjectContentProvider.fireProjectContentChangedEvent(new ContentChangedEvent(
+                          ContentChangedEvent.Type.REMOVED, contentResource));
+                    }
+                    
                   }
-                  //
                 }
               }
             }

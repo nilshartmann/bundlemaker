@@ -15,13 +15,10 @@ import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectContentResource;
+import org.bundlemaker.core.project.VariablePath;
 import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -141,6 +138,41 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
         Activator.getInstance().getProject2ProviderMap().getOrCreate(javaProject.getProject()).add(this);
       }
     }
+  }
+
+  public IProjectContentEntry getProjectContentEntry(IResource eclipseResource) {
+
+    //
+    List<IProjectContentEntry> entries = getBundleMakerProjectContent();
+
+    //
+    for (IProjectContentEntry contentEntry : entries) {
+
+      //
+      for (VariablePath variablePath : contentEntry.getBinaryRootPaths()) {
+        try {
+          if (variablePath.getResolvedPath().isPrefixOf(eclipseResource.getRawLocation())) {
+            return contentEntry;
+          }
+        } catch (CoreException e) {
+          //
+        }
+      }
+
+      //
+      for (VariablePath variablePath : contentEntry.getSourceRootPaths()) {
+        try {
+          if (variablePath.getResolvedPath().isPrefixOf(eclipseResource.getRawLocation())) {
+            return contentEntry;
+          }
+        } catch (CoreException e) {
+          //
+        }
+      }
+    }
+
+    //
+    return null;
   }
 
   /**
