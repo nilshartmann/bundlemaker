@@ -52,12 +52,10 @@ public interface IParserFactory {
    * Creates a new instance of type {@link IParser} for a given {@link IProjectDescriptionAwareBundleMakerProject}.
    * </p>
    * 
-   * @param bundleMakerProject
-   *          the {@link IProjectDescriptionAwareBundleMakerProject}
    * @return the newly created {@link IParser}
    * @throws CoreException
    */
-  IParser createParser(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException;
+  IParser createParser() throws CoreException;
 
   /**
    * <p>

@@ -49,7 +49,7 @@ public class JdtParserFactory extends IParserFactory.Adapter {
    * {@inheritDoc}
    */
   @Override
-  public IParser createParser(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException {
-    return new JdtParser(bundleMakerProject);
+  public IParser createParser() throws CoreException {
+    return new JdtParser();
   }
 }

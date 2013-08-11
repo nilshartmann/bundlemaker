@@ -16,7 +16,6 @@ import org.bundlemaker.core.jtype.IType;
 import org.bundlemaker.core.jtype.JavaTypeUtils;
 import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.IProjectContentEntry;
-import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.spi.parser.AbstractParser;
 import org.bundlemaker.core.spi.parser.IParsableResource;
 import org.bundlemaker.core.spi.parser.IParserContext;
@@ -39,28 +38,17 @@ public class JdtParser extends AbstractParser {
   /** the AST parser */
   private ASTParser    _parser;
 
-  /** the associated java project */
-  private IJavaProject _javaProject;
-
   /**
    * <p>
    * </p>
    * 
-   * @param bundleMakerProject
    * @throws CoreException
    */
-  public JdtParser(IProjectDescriptionAwareBundleMakerProject bundleMakerProject)
+  public JdtParser()
       throws CoreException {
-
-    super();
-
-    Assert.isNotNull(bundleMakerProject);
 
     // create the AST parser
     _parser = ASTParser.newParser(AST.JLS4);
-
-    // the associated java project
-    _javaProject = JdtProjectHelper.getAssociatedJavaProject(bundleMakerProject);
   }
 
   /**
@@ -103,9 +91,12 @@ public class JdtParser extends AbstractParser {
 
 //      }
       
+      // the associated java project
+      IJavaProject javaProject = JdtProjectHelper.getAssociatedJavaProject(projectContent.getProvider().getBundleMakerProject());
+      
       _parser.setSource(new String(resource.getContent()).toCharArray());
-      _parser.setProject(_javaProject);
-      _parser.setUnitName("/" + _javaProject.getProject().getName() + "/" + resource.getPath());
+      _parser.setProject(javaProject);
+      _parser.setUnitName("/" + javaProject.getProject().getName() + "/" + resource.getPath());
       _parser.setCompilerOptions(CoreParserJdt.getCompilerOptionsWithComplianceLevel(null));
       _parser.setResolveBindings(true);
 

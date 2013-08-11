@@ -233,7 +233,7 @@ public class ModelSetup {
 
         SubMonitor contentMonitor = subMonitor.newChild(1);
 
-        //
+        // THIS IS MAY WRONG HERE
         resourceCache.getProjectContentSpecificUserAttributes().clear();
 
         // we only have check resource content
@@ -495,7 +495,7 @@ public class ModelSetup {
     // ... setup
     for (IParser[] parsers : parsers4threads) {
       for (int i = 0; i < parsers.length; i++) {
-        parsers[i] = parserFactories.get(i).createParser(_bundleMakerProject);
+        parsers[i] = parserFactories.get(i).createParser();
       }
     }
 
