@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.spi.parser;
 
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * <p>
@@ -22,21 +21,13 @@ import java.util.concurrent.ConcurrentMap;
  * @noextend This interface is not intended to be extended by clients.
  */
 public interface IParserContext {
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resourceKey
-   * @return
-   */
-  IParsableResource getOrCreateResource(String contentId, String root, String path);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  ConcurrentMap<Object, Object> getProjectContentSpecificUserAttributes();
+	
+	 /**
+	   * <p>
+	   * </p>
+	   * 
+	   * @param resourceKey
+	   * @return
+	   */
+	  IParsableResource getOrCreateResource(String contentId, String root, String path);
 }

@@ -12,8 +12,6 @@ package org.bundlemaker.core.internal.parser;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import org.bundlemaker.core.common.FlyWeightStringCache;
 import org.bundlemaker.core.internal.resource.DefaultProjectContentResource;
@@ -46,9 +44,6 @@ public class ResourceCache implements IParserContext {
   /** - */
   private FlyWeightStringCache           _flyWeightStringCache;
 
-  /** - */
-  private ConcurrentMap<Object, Object>  _projectContentSpecificUserAttributes;
-
   /**
    * <p>
    * Creates a new instance of type {@link ResourceCache}.
@@ -71,9 +66,6 @@ public class ResourceCache implements IParserContext {
     _newResourceMap = new HashMap<IProjectContentResource, Resource>();
 
     //
-    _projectContentSpecificUserAttributes = new ConcurrentHashMap();
-
-    //
     _flyWeightStringCache = new FlyWeightStringCache();
   }
 
@@ -82,6 +74,7 @@ public class ResourceCache implements IParserContext {
    * Creates a new instance of type {@link ResourceCache}.
    * </p>
    */
+  // just for test
   public ResourceCache() {
 
     //
@@ -91,18 +84,7 @@ public class ResourceCache implements IParserContext {
     _newResourceMap = new HashMap<IProjectContentResource, Resource>();
 
     //
-    _projectContentSpecificUserAttributes = new ConcurrentHashMap();
-
-    //
     _flyWeightStringCache = new FlyWeightStringCache();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public ConcurrentMap<Object, Object> getProjectContentSpecificUserAttributes() {
-    return _projectContentSpecificUserAttributes;
   }
 
   /**
@@ -157,7 +139,6 @@ public class ResourceCache implements IParserContext {
    * {@inheritDoc}
    */
   // TODO synchronized
-  @Override
   public synchronized IParsableResource getOrCreateResource(String contentId, String root, String path) {
 
     // return the result
