@@ -233,9 +233,6 @@ public class ModelSetup {
 
         SubMonitor contentMonitor = subMonitor.newChild(1);
 
-        // THIS IS MAY WRONG HERE
-        resourceCache.getProjectContentSpecificUserAttributes().clear();
-
         // we only have check resource content
         // if (projectContent.isAnalyze()) {
 

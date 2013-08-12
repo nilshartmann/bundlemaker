@@ -28,13 +28,10 @@ import org.eclipse.core.runtime.Platform;
 public class ModelExtension implements IModelExtension {
 
   /** - */
-  private static final String TYPE_CACHE_KEY = ModelExtension.class.getName() + "#TYPE_CACHE_KEY";
+  private TypeCache         _typeCache;
 
   /** - */
-  private TypeCache           _typeCache;
-
-  /** - */
-  private TypeArtifactCache   _typeSubCache;
+  private TypeArtifactCache _typeSubCache;
 
   /**
    * {@inheritDoc}
@@ -65,8 +62,6 @@ public class ModelExtension implements IModelExtension {
       Set<? extends IModuleResource> newAndModifiedBinaryResources,
       Set<? extends IModuleResource> newAndModifiedSourceResources) {
 
-    //
-    parserContext.getProjectContentSpecificUserAttributes().put(TYPE_CACHE_KEY, getTypeCache());
   }
 
   /**
@@ -77,8 +72,6 @@ public class ModelExtension implements IModelExtension {
       Set<? extends IModuleResource> newAndModifiedBinaryResources,
       Set<? extends IModuleResource> newAndModifiedSourceResources) {
 
-    //
-    parserContext.getProjectContentSpecificUserAttributes().remove(TYPE_CACHE_KEY);
   }
 
   /**
