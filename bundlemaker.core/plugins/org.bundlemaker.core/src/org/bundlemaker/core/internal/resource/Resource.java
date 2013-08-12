@@ -14,8 +14,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bundlemaker.core.common.FlyWeightStringCache;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
-import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -58,8 +58,8 @@ public class Resource extends DefaultProjectContentResource implements IParsable
    * @param root
    * @param path
    */
-  public Resource(String contentId, String root, String path, ResourceCache resourceCache) {
-    super(contentId, root, path, resourceCache.getFlyWeightCache());
+  public Resource(String contentId, String root, String path, FlyWeightStringCache flyWeightStringCache) {
+    super(contentId, root, path, flyWeightStringCache);
   }
 
   /**

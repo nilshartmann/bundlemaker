@@ -165,7 +165,7 @@ public class ResourceCache implements IParserContext {
 
     // create a new one if necessary
     resource = new Resource(resourceKey.getProjectContentEntryId().toString(), resourceKey.getRoot(),
-        resourceKey.getPath(), this);
+        resourceKey.getPath(), getFlyWeightCache());
     resource.setAnalyzeReferences(resourceKey.isAnalyzeReferences());
 
     // store the Resource
