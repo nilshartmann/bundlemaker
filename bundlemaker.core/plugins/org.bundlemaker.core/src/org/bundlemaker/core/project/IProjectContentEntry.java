@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.common.ResourceType;
-import org.bundlemaker.core.resource.IModuleResource;
 
 /**
  * <p>
@@ -152,5 +151,12 @@ public interface IProjectContentEntry {
    * 
    * @return a Set of resources, never null.
    */
-  Collection<? extends IModuleResource> getSourceResources();
+  Collection<? extends IProjectContentResource> getSourceResources();
+
+  /**
+   * @param path
+   * @param type
+   * @return
+   */
+  IProjectContentResource getResource(String path, ResourceType type);
 }

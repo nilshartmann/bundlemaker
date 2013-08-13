@@ -211,6 +211,24 @@ public class ProjectContentEntry implements IProjectContentEntry {
   }
 
   /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IModuleResource getResource(String path, ResourceType type) {
+    switch (type) {
+    case BINARY: {
+      return binaryResourceStandins().get(path);
+    }
+    case SOURCE: {
+      return sourceResourceStandins().get(path);
+    }
+    default: {
+      return null;
+    }
+    }
+  }
+
+  /**
    * <p>
    * Returns <code>true</code> if the content has been initialized yet.
    * </p>
