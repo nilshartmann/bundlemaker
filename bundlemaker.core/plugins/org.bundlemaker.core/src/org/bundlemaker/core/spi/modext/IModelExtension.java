@@ -10,7 +10,6 @@ import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.spi.parser.IParsableResource;
-import org.bundlemaker.core.spi.parser.IParserContext;
 import org.eclipse.core.runtime.IAdapterFactory;
 
 /**
@@ -48,7 +47,7 @@ public interface IModelExtension {
    * @param newAndModifiedBinaryResources
    * @param newAndModifiedSourceResources
    */
-  void beforeParseResourceModel(IProjectContentEntry projectContent, IParserContext resourceCache,
+  void beforeParseResourceModel(IProjectContentEntry projectContent,
       Set<? extends IModuleResource> newAndModifiedBinaryResources,
       Set<? extends IModuleResource> newAndModifiedSourceResources);
 
@@ -61,7 +60,7 @@ public interface IModelExtension {
    * @param newAndModifiedBinaryResources
    * @param newAndModifiedSourceResources
    */
-  void afterParseResourceModel(IProjectContentEntry projectContent, IParserContext resourceCache,
+  void afterParseResourceModel(IProjectContentEntry projectContent,
       Set<? extends IModuleResource> newAndModifiedBinaryResources,
       Set<? extends IModuleResource> newAndModifiedSourceResources);
 

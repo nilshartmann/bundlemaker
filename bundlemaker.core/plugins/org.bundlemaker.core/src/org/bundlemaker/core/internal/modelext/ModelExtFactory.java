@@ -14,7 +14,6 @@ import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.spi.modext.IAnalysisModelContext;
 import org.bundlemaker.core.spi.modext.IModelExtension;
 import org.bundlemaker.core.spi.parser.IParsableResource;
-import org.bundlemaker.core.spi.parser.IParserContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -88,13 +87,13 @@ public class ModelExtFactory {
    * @param newAndModifiedBinaryResources
    * @param newAndModifiedSourceResources
    */
-  public void beforeParseResourceModel(IProjectContentEntry projectContent, IParserContext resourceCache,
+  public void beforeParseResourceModel(IProjectContentEntry projectContent,
       Set<? extends IModuleResource> newAndModifiedBinaryResources,
       Set<? extends IModuleResource> newAndModifiedSourceResources) {
 
     //
     for (IModelExtension modelExtension : _modelExtensionRegistry.getExtensionInstances()) {
-      modelExtension.beforeParseResourceModel(projectContent, resourceCache, newAndModifiedBinaryResources,
+      modelExtension.beforeParseResourceModel(projectContent, newAndModifiedBinaryResources,
           newAndModifiedSourceResources);
     }
   }
@@ -108,13 +107,13 @@ public class ModelExtFactory {
    * @param newAndModifiedBinaryResources
    * @param newAndModifiedSourceResources
    */
-  public void afterParseResourceModel(IProjectContentEntry projectContent, IParserContext resourceCache,
+  public void afterParseResourceModel(IProjectContentEntry projectContent,
       Set<? extends IModuleResource> newAndModifiedBinaryResources,
       Set<? extends IModuleResource> newAndModifiedSourceResources) {
 
     //
     for (IModelExtension modelExtension : _modelExtensionRegistry.getExtensionInstances()) {
-      modelExtension.afterParseResourceModel(projectContent, resourceCache, newAndModifiedBinaryResources,
+      modelExtension.afterParseResourceModel(projectContent, newAndModifiedBinaryResources,
           newAndModifiedSourceResources);
     }
   }

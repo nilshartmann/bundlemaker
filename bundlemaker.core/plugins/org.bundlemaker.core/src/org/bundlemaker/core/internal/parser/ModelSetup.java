@@ -155,20 +155,6 @@ public class ModelSetup {
         }
       });
 
-      // ***********************************************************************************************
-      // STEP 4: Setup the resource content
-      // ***********************************************************************************************
-      mainMonitor.subTask("Set up model...");
-      Map<IProjectContentResource, Resource> newMap = resourceCache.getCombinedMap();
-
-      // set up binary resources
-      FunctionalHelper.associateResourceStandinsWithResources(_bundleMakerProject.getBinaryResourceStandins(), newMap,
-          progressMonitor);
-
-      // set up binary resources
-      FunctionalHelper.associateResourceStandinsWithResources(_bundleMakerProject.getSourceResourceStandins(), newMap,
-          progressMonitor);
-
       //
       for (IProjectContentEntry contentEntry : projectContents) {
         ModelExtFactory.getModelExtensionFactory().resourceModelSetupCompleted(contentEntry,
@@ -207,8 +193,6 @@ public class ModelSetup {
       Map<IProjectContentResource, Resource> storedResourcesMap, ResourceCache resourceCache,
       IProgressMonitor mainMonitor) {
 
-    // IResourceModelLifecycleCallback callback = null;
-
     //
     List<IProblem> result = Collections.emptyList();
 
@@ -225,16 +209,10 @@ public class ModelSetup {
       // zip files open while parsing the content
       ZipFileCache.instance().activateCache();
 
-      // TODO: prepare model
-      // callback.prepare(_bundleMakerProject);
-
-      //
+      // ITERATE OVER ALL THE CONTENT ENTRIES
       for (IProjectContentEntry projectContent : projectContents) {
 
         SubMonitor contentMonitor = subMonitor.newChild(1);
-
-        // we only have check resource content
-        // if (projectContent.isAnalyze()) {
 
         //
         if (LOG) {
@@ -271,14 +249,6 @@ public class ModelSetup {
               .log(String.format("   - new/modified source resources: %s", newAndModifiedSourceResources.size()));
         }
 
-        // step 4.2:
-        for (IModuleResource resourceStandin : newAndModifiedBinaryResources) {
-          resourceCache.getOrCreateResource(resourceStandin);
-        }
-        for (IModuleResource resourceStandin : newAndModifiedSourceResources) {
-          resourceCache.getOrCreateResource(resourceStandin);
-        }
-
         // TODO: setup model
         ModelExtFactory.getModelExtensionFactory().prepareStoredResourceModel(projectContent, storedResourcesMap);
 
@@ -286,15 +256,13 @@ public class ModelSetup {
         int remaining = newAndModifiedSourceResources.size() + newAndModifiedBinaryResources.size();
         resourceContentMonitor.setWorkRemaining(remaining);
 
-        ModelExtFactory.getModelExtensionFactory().beforeParseResourceModel(projectContent, resourceCache,
-            newAndModifiedBinaryResources,
+        ModelExtFactory.getModelExtensionFactory().beforeParseResourceModel(projectContent, newAndModifiedBinaryResources,
             newAndModifiedSourceResources);
 
         result = multiThreadedReparse(storedResourcesMap, newAndModifiedSourceResources,
             newAndModifiedBinaryResources, resourceCache, projectContent, resourceContentMonitor.newChild(remaining));
 
-        ModelExtFactory.getModelExtensionFactory().afterParseResourceModel(projectContent, resourceCache,
-            newAndModifiedBinaryResources,
+        ModelExtFactory.getModelExtensionFactory().afterParseResourceModel(projectContent, newAndModifiedBinaryResources,
             newAndModifiedSourceResources);
 
       }
@@ -306,9 +274,6 @@ public class ModelSetup {
 
       // deactivate the zip cache.
       ZipFileCache.instance().deactivateCache();
-
-      //
-      // callback.cleanUp(_bundleMakerProject);
 
       subMonitor.done();
     }
@@ -522,7 +487,7 @@ public class ModelSetup {
       for (IParser parser : parsers) {
 
         // notify 'start'
-        parser.parseBundleMakerProjectStart(_bundleMakerProject);
+        parser.batchParseStart(_bundleMakerProject);
       }
     }
   }
@@ -540,7 +505,7 @@ public class ModelSetup {
       for (IParser parser : parsers) {
 
         // notify 'stop'
-        parser.parseBundleMakerProjectStop(_bundleMakerProject);
+        parser.batchParseStop(_bundleMakerProject);
       }
     }
   }

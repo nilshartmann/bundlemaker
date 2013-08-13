@@ -18,7 +18,6 @@ import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.spi.parser.AbstractParser;
 import org.bundlemaker.core.spi.parser.IParsableResource;
-import org.bundlemaker.core.spi.parser.IParserContext;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
@@ -69,7 +68,7 @@ public class JdtParser extends AbstractParser {
    * {@inheritDoc}
    */
   @Override
-  protected synchronized void doParseResource(IProjectContentEntry projectContent, IParsableResource resource, IParserContext cache, boolean parseReferences) {
+  protected synchronized void doParseResource(IProjectContentEntry projectContent, IParsableResource resource, boolean parseReferences) {
 
     //
     if (!canParse(resource)) {

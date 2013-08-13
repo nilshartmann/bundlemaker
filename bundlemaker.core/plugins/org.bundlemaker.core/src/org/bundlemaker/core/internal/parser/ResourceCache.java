@@ -18,7 +18,6 @@ import org.bundlemaker.core.internal.resource.DefaultProjectContentResource;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.spi.parser.IParsableResource;
-import org.bundlemaker.core.spi.parser.IParserContext;
 import org.bundlemaker.core.spi.store.IPersistentDependencyStore;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -30,7 +29,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ResourceCache implements IParserContext {
+public class ResourceCache {
 
   /** the element map */
   private Map<IProjectContentResource, Resource> _storedResourcesMap;

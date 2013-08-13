@@ -17,7 +17,6 @@ import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.spi.parser.IParsableResource;
 import org.bundlemaker.core.spi.parser.IParser;
 import org.bundlemaker.core.spi.parser.IParser.ParserType;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -49,8 +48,7 @@ public class FunctionalHelper {
           //
           if (parser.canParse(resource)) {
             ((Resource) resource).storeCurrentTimestamp();
-            List<IProblem> problems = parser.parseResource(content, resource, resourceCache,
-                resourceStandin.isAnalyzeReferences());
+            List<IProblem> problems = parser.parseResource(content, resource, resourceStandin.isAnalyzeReferences());
             result.addAll(problems);
             resource.setErroneous(!problems.isEmpty());
           }
@@ -98,10 +96,13 @@ public class FunctionalHelper {
 
         // add if resource has to be re-parsed
         if (hasToBeReparsed(resourceStandin, resource)) {
+          resource = (Resource) resourceCache.getOrCreateResource(resourceStandin);
           result.add(resourceStandin);
-        } else {
-          resourceCache.addToStoredResourcesMap(resource, resource);
         }
+
+        // associate resource and resource stand-in...
+        ((ResourceStandin) resourceStandin).setResource(resource);
+        resource.setResourceStandin((ResourceStandin) resourceStandin);
 
         monitor.worked(1);
       }
@@ -117,32 +118,6 @@ public class FunctionalHelper {
   static boolean failOnMissingBinaries() {
     return false;
     // Boolean.getBoolean("org.bundlemaker.ignoreMissingBinaries") == false;
-  }
-
-  static void associateResourceStandinsWithResources(Collection<IResourceStandin> resourceStandins,
-      Map<IProjectContentResource, Resource> map, IProgressMonitor monitor) {
-
-    Assert.isNotNull(resourceStandins);
-    Assert.isNotNull(map);
-    Assert.isNotNull(monitor);
-
-    //
-    for (IResourceStandin resourceStandin : resourceStandins) {
-
-      // check if the operation has been canceled
-      checkIfCanceled(monitor);
-
-      // get the associated resource
-      Resource resource = map.get(resourceStandin);
-
-      if (resource == null) {
-        throw new RuntimeException("No resource for " + resourceStandin.toString());
-      }
-
-      // associate resource and resource stand-in...
-      ((ResourceStandin) resourceStandin).setResource(resource);
-      resource.setResourceStandin((ResourceStandin) resourceStandin);
-    }
   }
 
   static boolean hasToBeReparsed(IModuleResource resourceStandin, Resource resource) {

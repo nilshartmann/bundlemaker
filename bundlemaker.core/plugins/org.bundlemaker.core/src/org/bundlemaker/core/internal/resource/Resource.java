@@ -21,7 +21,6 @@ import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.spi.parser.IParsableResource;
-import org.eclipse.core.runtime.Platform;
 
 /**
  * <p>
@@ -73,30 +72,6 @@ public class Resource extends DefaultProjectContentResource implements IParsable
    */
   public Resource(String contentId, String root, String path) {
     super(contentId, root, path);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public <T> T adaptAs(Class<T> clazz) {
-
-    //
-    T result = (T) Platform.getAdapterManager().getAdapter(this, clazz);
-    if (result != null) {
-      return result;
-    }
-
-    //
-    return null;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Object getAdapter(Class adapter) {
-    return adaptAs(adapter);
   }
 
   /**

@@ -22,7 +22,6 @@ import org.bundlemaker.core.spi.modext.IAnalysisModelContext;
 import org.bundlemaker.core.spi.modext.ICacheAwareModularizedSystem;
 import org.bundlemaker.core.spi.modext.IModelExtension;
 import org.bundlemaker.core.spi.parser.IParsableResource;
-import org.bundlemaker.core.spi.parser.IParserContext;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.Platform;
 
@@ -59,7 +58,7 @@ public class ModelExtension implements IModelExtension {
    * {@inheritDoc}
    */
   @Override
-  public void beforeParseResourceModel(IProjectContentEntry projectContent, IParserContext parserContext,
+  public void beforeParseResourceModel(IProjectContentEntry projectContent,
       Set<? extends IModuleResource> newAndModifiedBinaryResources,
       Set<? extends IModuleResource> newAndModifiedSourceResources) {
 
@@ -69,7 +68,7 @@ public class ModelExtension implements IModelExtension {
    * {@inheritDoc}
    */
   @Override
-  public void afterParseResourceModel(IProjectContentEntry projectContent, IParserContext parserContext,
+  public void afterParseResourceModel(IProjectContentEntry projectContent,
       Set<? extends IModuleResource> newAndModifiedBinaryResources,
       Set<? extends IModuleResource> newAndModifiedSourceResources) {
 

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser.bytecode;
 
+import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.jtype.ITypeResource;
 import org.bundlemaker.core.jtype.JavaTypeUtils;
 import org.bundlemaker.core.jtype.JavaUtils;
@@ -19,7 +20,6 @@ import org.bundlemaker.core.parser.bytecode.asm.AsmReferenceRecorder;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.spi.parser.AbstractParser;
 import org.bundlemaker.core.spi.parser.IParsableResource;
-import org.bundlemaker.core.spi.parser.IParserContext;
 import org.objectweb.asm.ClassReader;
 
 /**
@@ -30,83 +30,93 @@ import org.objectweb.asm.ClassReader;
  */
 public class ByteCodeParser extends AbstractParser {
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public ParserType getParserType() {
-    return ParserType.BINARY;
-  }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ParserType getParserType() {
+		return ParserType.BINARY;
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public boolean canParse(IParsableResource resource) {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean canParse(IParsableResource resource) {
 
-    //
-    if (!resource.getPath().endsWith(".class")) {
-      return false;
-    }
+		//
+		if (!resource.getPath().endsWith(".class")) {
+			return false;
+		}
 
-    //
-    return JavaUtils.isValidJavaPackage(resource.getPath());
-  }
+		//
+		return JavaUtils.isValidJavaPackage(resource.getPath());
+	}
 
-  @Override
-  protected void doParseResource(IProjectContentEntry content, IParsableResource resource, IParserContext cache,
-      boolean parseReferences) {
+	@Override
+  protected void doParseResource(IProjectContentEntry content,
+			IParsableResource resource, boolean parseReferences) {
 
-    // if the resource already contains a type, it already has been parsed.
-    // In this case we can return immediately
-    if (!resource.adaptAs(ITypeResource.class).getContainedTypes().isEmpty()) {
-      return;
-    }
+		// if the resource already contains a type, it already has been parsed.
+		// In this case we can return immediately
+		if (!resource.adaptAs(ITypeResource.class).getContainedTypes()
+				.isEmpty()) {
+			return;
+		}
 
-    // if the resource does not contain a anonymous or local type
-    // the enclosing resource is the resource (the default)
-    IParsableResource enclosingResource = resource;
+		// if the resource does not contain a anonymous or local type
+		// the enclosing resource is the resource (the default)
+		IParsableResource enclosingResource = resource;
 
-    // get fully qualified type name
-    String fullyQualifiedName = JavaTypeUtils.convertToFullyQualifiedName(resource.getPath());
+		// get fully qualified type name
+		String fullyQualifiedName = JavaTypeUtils
+				.convertToFullyQualifiedName(resource.getPath());
 
-    // if the type is an anonymous or local type,
-    // we have to get the enclosing type name
-    if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName) && parseReferences) {
+		// if the type is an anonymous or local type,
+		// we have to get the enclosing type name
+		if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName)
+				&& parseReferences) {
 
-      // get the name of the enclosing type
-      String enclosingName = JavaTypeUtils.getEnclosingNonLocalAndNonAnonymousTypeName(fullyQualifiedName);
+			// get the name of the enclosing type
+			String enclosingName = JavaTypeUtils
+					.getEnclosingNonLocalAndNonAnonymousTypeName(fullyQualifiedName);
 
-      // get the enclosing resource
-      enclosingResource = cache.getOrCreateResource(resource.getProjectContentEntryId(), resource.getRoot(),
-          JavaTypeUtils.convertFromFullyQualifiedName(enclosingName));
+			// get the enclosing resource
+			enclosingResource = content.getResource(
+					JavaTypeUtils.convertFromFullyQualifiedName(enclosingName),
+					ResourceType.BINARY).adaptAs(IParsableResource.class);
 
-      // if we have to parse the enclosing type
-      if (enclosingResource.adaptAs(ITypeResource.class).getContainedTypes().isEmpty()) {
-        parseResource(content, enclosingResource, cache, true);
+			// if we have to parse the enclosing type
+			if (enclosingResource.adaptAs(ITypeResource.class)
+					.getContainedTypes().isEmpty()) {
+				parseResource(content, enclosingResource, true);
 
-        if (enclosingResource.adaptAs(ITypeResource.class).getContainedTypes().isEmpty()) {
-          // TODO
-          // TODO remove null handling in AsmReferenceRecorder
-          // Assert.isTrue(!enclosingResource.getContainedTypes().isEmpty());
-        }
-      }
-    }
+				if (enclosingResource.adaptAs(ITypeResource.class)
+						.getContainedTypes().isEmpty()) {
+					// TODO
+					// TODO remove null handling in AsmReferenceRecorder
+					// Assert.isTrue(!enclosingResource.getContainedTypes().isEmpty());
+				}
+			}
+		}
 
-    try {
+		try {
 
-      // create a new references recorder
-      AsmReferenceRecorder referenceRecorder = new AsmReferenceRecorder(resource, enclosingResource);
+			// create a new references recorder
+			AsmReferenceRecorder referenceRecorder = new AsmReferenceRecorder(
+					resource, enclosingResource);
 
-      // parse the class file
-      byte[] bytes = resource.getContent();
-      ClassReader reader = new ClassReader(bytes);
-      reader.accept(new ArtefactAnalyserClassVisitor(referenceRecorder, parseReferences), 0);
+			// parse the class file
+			byte[] bytes = resource.getContent();
+			ClassReader reader = new ClassReader(bytes);
+			reader.accept(new ArtefactAnalyserClassVisitor(referenceRecorder,
+					parseReferences), 0);
 
-    } catch (Exception e) {
-      e.printStackTrace();
-      IProblem byteCodeParserProblem = new IProblem.DefaultProblem(resource, e.toString());
-      getProblems().add(byteCodeParserProblem);
-    }
-  }
+		} catch (Exception e) {
+			e.printStackTrace();
+			IProblem byteCodeParserProblem = new IProblem.DefaultProblem(
+					resource, e.toString());
+			getProblems().add(byteCodeParserProblem);
+		}
+	}
 }

@@ -22,6 +22,7 @@ import org.bundlemaker.core.common.FlyWeightString;
 import org.bundlemaker.core.common.FlyWeightStringCache;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.Platform;
 
 /**
  * <p>
@@ -85,6 +86,30 @@ public class DefaultProjectContentResource implements IProjectContentResource {
     _contentId = cache.getFlyWeightString(contentId);
     _root = cache.getFlyWeightString(root);
     _path = path;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public <T> T adaptAs(Class<T> clazz) {
+
+    //
+    T result = (T) Platform.getAdapterManager().getAdapter(this, clazz);
+    if (result != null) {
+      return result;
+    }
+
+    //
+    return null;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Object getAdapter(Class adapter) {
+    return adaptAs(adapter);
   }
 
   /**

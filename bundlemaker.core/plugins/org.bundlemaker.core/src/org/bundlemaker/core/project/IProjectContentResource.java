@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.project;
 
+import org.bundlemaker.core.common.IGenericAdaptable;
 import org.bundlemaker.core.common.IResource;
 
 /**
@@ -23,7 +24,7 @@ import org.bundlemaker.core.common.IResource;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IProjectContentResource extends IResource {
+public interface IProjectContentResource extends IResource, IGenericAdaptable {
 
   /**
    * <p>

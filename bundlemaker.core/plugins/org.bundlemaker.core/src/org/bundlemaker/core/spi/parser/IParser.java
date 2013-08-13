@@ -55,7 +55,7 @@ public interface IParser {
    * @throws CoreException
    */
   List<IProblem> parseResource(IProjectContentEntry content, IParsableResource resource,
-      IParserContext context, boolean parseReferences)
+      boolean parseReferences)
       throws CoreException;
 
   /**
@@ -64,7 +64,7 @@ public interface IParser {
    * 
    * @param bundleMakerProject
    */
-  void parseBundleMakerProjectStart(IProjectDescriptionAwareBundleMakerProject bundleMakerProject);
+  void batchParseStart(IProjectDescriptionAwareBundleMakerProject bundleMakerProject);
 
   /**
    * <p>
@@ -72,7 +72,7 @@ public interface IParser {
    * 
    * @param bundleMakerProject
    */
-  void parseBundleMakerProjectStop(IProjectDescriptionAwareBundleMakerProject bundleMakerProject);
+  void batchParseStop(IProjectDescriptionAwareBundleMakerProject bundleMakerProject);
 
   /**
    * <p>
