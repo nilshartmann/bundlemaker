@@ -13,9 +13,9 @@ package org.bundlemaker.core.spi.parser;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
 import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.IProjectContentEntry;
-import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 
 /**
  * <p>
@@ -42,7 +42,7 @@ public abstract class AbstractParser implements IParser {
    * {@inheritDoc}
    */
   @Override
-  public void batchParseStart(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
+  public void batchParseStart(IParserAwareBundleMakerProject bundleMakerProject) {
     // ignore
   }
 
@@ -50,7 +50,7 @@ public abstract class AbstractParser implements IParser {
    * {@inheritDoc}
    */
   @Override
-  public void batchParseStop(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
+  public void batchParseStop(IParserAwareBundleMakerProject bundleMakerProject) {
     // ignore
   }
 

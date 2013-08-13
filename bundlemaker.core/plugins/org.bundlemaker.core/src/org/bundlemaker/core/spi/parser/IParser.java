@@ -12,15 +12,14 @@ package org.bundlemaker.core.spi.parser;
 
 import java.util.List;
 
-import org.bundlemaker.core.internal.BundleMakerProject;
+import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
 import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.IProjectContentEntry;
-import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
- * Defines the common interface to parse a {@link BundleMakerProject}.
+ * Defines the common interface to parse a {@link IParsableResource}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -39,10 +38,10 @@ public interface IParser {
    * <p>
    * </p>
    * 
-   * @param resourceKey
+   * @param resource
    * @return
    */
-  boolean canParse(IParsableResource resourceKey);
+  boolean canParse(IParsableResource resource);
 
   /**
    * <p>
@@ -51,7 +50,8 @@ public interface IParser {
    * @param content
    * @param resource
    * @param context
-   * @param parseReferences TODO
+   * @param parseReferences
+   *          TODO
    * @throws CoreException
    */
   List<IProblem> parseResource(IProjectContentEntry content, IParsableResource resource,
@@ -64,7 +64,7 @@ public interface IParser {
    * 
    * @param bundleMakerProject
    */
-  void batchParseStart(IProjectDescriptionAwareBundleMakerProject bundleMakerProject);
+  void batchParseStart(IParserAwareBundleMakerProject bundleMakerProject);
 
   /**
    * <p>
@@ -72,7 +72,7 @@ public interface IParser {
    * 
    * @param bundleMakerProject
    */
-  void batchParseStop(IProjectDescriptionAwareBundleMakerProject bundleMakerProject);
+  void batchParseStop(IParserAwareBundleMakerProject bundleMakerProject);
 
   /**
    * <p>
