@@ -152,7 +152,7 @@ public class Activator implements BundleActivator {
         }
       }
     };
-    ResourcesPlugin.getWorkspace().addResourceChangeListener(_listener);
+    // ResourcesPlugin.getWorkspace().addResourceChangeListener(_listener);
   }
 
   /**
@@ -160,6 +160,6 @@ public class Activator implements BundleActivator {
    */
   @Override
   public void stop(BundleContext context) throws Exception {
-    ResourcesPlugin.getWorkspace().removeResourceChangeListener(_listener);
+    // ResourcesPlugin.getWorkspace().removeResourceChangeListener(_listener);
   }
 }
