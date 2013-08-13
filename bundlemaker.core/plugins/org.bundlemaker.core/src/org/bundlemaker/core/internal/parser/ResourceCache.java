@@ -33,16 +33,16 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class ResourceCache implements IParserContext {
 
   /** the element map */
-  Map<IProjectContentResource, Resource> _storedResourcesMap;
+  private Map<IProjectContentResource, Resource> _storedResourcesMap;
 
   /** the element map */
-  Map<IProjectContentResource, Resource> _newResourceMap;
+  private Map<IProjectContentResource, Resource> _newResourceMap;
 
   /** the dependency store */
-  private IPersistentDependencyStore     _dependencyStore;
+  private IPersistentDependencyStore             _dependencyStore;
 
   /** - */
-  private FlyWeightStringCache           _flyWeightStringCache;
+  private FlyWeightStringCache                   _flyWeightStringCache;
 
   /**
    * <p>

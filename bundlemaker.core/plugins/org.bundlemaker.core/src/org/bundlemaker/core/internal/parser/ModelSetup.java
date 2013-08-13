@@ -163,11 +163,11 @@ public class ModelSetup {
 
       // set up binary resources
       FunctionalHelper.associateResourceStandinsWithResources(_bundleMakerProject.getBinaryResourceStandins(), newMap,
-          false, progressMonitor);
+          progressMonitor);
 
       // set up binary resources
       FunctionalHelper.associateResourceStandinsWithResources(_bundleMakerProject.getSourceResourceStandins(), newMap,
-          true, progressMonitor);
+          progressMonitor);
 
       //
       for (IProjectContentEntry contentEntry : projectContents) {

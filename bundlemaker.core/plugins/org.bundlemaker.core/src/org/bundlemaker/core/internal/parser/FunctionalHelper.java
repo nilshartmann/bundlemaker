@@ -120,7 +120,7 @@ public class FunctionalHelper {
   }
 
   static void associateResourceStandinsWithResources(Collection<IResourceStandin> resourceStandins,
-      Map<IProjectContentResource, Resource> map, boolean isSource, IProgressMonitor monitor) {
+      Map<IProjectContentResource, Resource> map, IProgressMonitor monitor) {
 
     Assert.isNotNull(resourceStandins);
     Assert.isNotNull(map);
@@ -136,30 +136,13 @@ public class FunctionalHelper {
       Resource resource = map.get(resourceStandin);
 
       if (resource == null) {
-        throw new RuntimeException(resourceStandin.toString());
+        throw new RuntimeException("No resource for " + resourceStandin.toString());
       }
 
-      // set up the resource stand-in
-      setupResourceStandin(resourceStandin, resource, isSource);
+      // associate resource and resource stand-in...
+      ((ResourceStandin) resourceStandin).setResource(resource);
+      resource.setResourceStandin((ResourceStandin) resourceStandin);
     }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resourceStandin
-   * @param map
-   */
-  static void setupResourceStandin(IResourceStandin resourceStandin, Resource resource, boolean isSource) {
-
-    Assert.isNotNull(resourceStandin);
-    Assert.isNotNull(resource, "No resource for " + resourceStandin.toString());
-
-    // associate resource and resource stand-in...
-    ((ResourceStandin) resourceStandin).setResource(resource);
-    // ... and set the opposite
-    resource.setResourceStandin((ResourceStandin) resourceStandin);
   }
 
   static boolean hasToBeReparsed(IModuleResource resourceStandin, Resource resource) {
