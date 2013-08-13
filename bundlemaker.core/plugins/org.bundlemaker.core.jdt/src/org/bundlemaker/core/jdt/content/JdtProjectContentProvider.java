@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.common.utils.IFileBasedProjectContentInfo;
 import org.bundlemaker.core.jdt.internal.Activator;
 import org.bundlemaker.core.project.AnalyzeMode;
@@ -130,7 +131,8 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
       //
       IProjectContentEntry projectContentEntry = createFileBasedContent(name, version, binaryPaths, sourcePaths, mode);
       // TODO: CACHEN!!
-      // for (IProjectContentResource resource : projectContentEntry.getBinaryResources()) {
+      // for (IProjectContentResource resource :
+      // projectContentEntry.getBinaryResources()) {
       // System.out.println("Root: " + resource.getRoot());
       // System.out.println("Path: " + resource.getPath());
       // }
@@ -184,30 +186,61 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
    */
   public IProjectContentResource getProjectContentResource(IResource eclipseResource) {
 
-    //
-    List<IProjectContentEntry> entries = getBundleMakerProjectContent();
+    try {
 
-    IProjectContentResource contentResource = null;
+      //
+      for (IProjectContentEntry contentEntry : getBundleMakerProjectContent()) {
 
-    //
-    for (IProjectContentEntry contentEntry : entries) {
-      for (IProjectContentResource projectContentResource : contentEntry.getBinaryResources()) {
+        // binary
+        for (VariablePath root : contentEntry.getBinaryRootPaths()) {
 
-        IPath path = new Path(projectContentResource.getRoot()).append(projectContentResource.getPath());
-        if (path.equals(eclipseResource.getRawLocation())) {
-          contentResource = projectContentResource;
+          //
+          IPath rootPath = root.getResolvedPath();
+          IPath eclipseRawLocation = eclipseResource.getRawLocation();
+
+          //
+          if (rootPath.isPrefixOf(eclipseRawLocation)) {
+
+            //
+            IProjectContentResource result = contentEntry.getResource(
+                eclipseRawLocation.removeFirstSegments(rootPath.segmentCount()).toString(), ResourceType.BINARY);
+
+            //
+            if (result != null) {
+              return result;
+            }
+          }
+        }
+
+        // source
+        for (VariablePath root : contentEntry.getSourceRootPaths()) {
+
+          //
+          IPath rootPath = root.getResolvedPath();
+          IPath eclipseRawLocation = eclipseResource.getRawLocation();
+
+          //
+          if (rootPath.isPrefixOf(eclipseRawLocation)) {
+
+            //
+            IPath path = eclipseRawLocation.makeRelativeTo(rootPath);
+
+            //
+            IProjectContentResource result = contentEntry.getResource(path.toString(), ResourceType.SOURCE);
+
+            //
+            if (result != null) {
+              return result;
+            }
+          }
         }
       }
-      for (IProjectContentResource projectContentResource : contentEntry.getSourceResources()) {
 
-        IPath path = new Path(projectContentResource.getRoot()).append(projectContentResource.getPath());
-        if (path.equals(eclipseResource.getRawLocation())) {
-          contentResource = projectContentResource;
-        }
-      }
+    } catch (CoreException e) {
+      e.printStackTrace();
     }
 
-    return contentResource;
+    return null;
   }
 
   /**

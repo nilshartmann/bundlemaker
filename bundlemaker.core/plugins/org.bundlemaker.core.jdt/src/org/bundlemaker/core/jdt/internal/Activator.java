@@ -107,32 +107,32 @@ public class Activator implements BundleActivator {
                 for (JdtProjectContentProvider jdtProjectContentProvider : entry.getValue()) {
 
                   if (delta.getKind() == IResourceDelta.ADDED) {
-                    
+
                     //
                     IProjectContentEntry contentEntry = jdtProjectContentProvider.getProjectContentEntry(resource);
                     System.out.println(contentEntry);
-                    
+
                     // jdtProjectContentProvider.fireProjectContentChangedEvent(new ContentChangedEvent(
                     // ContentChangedEvent.Type.ADDED, contentResource));
-                    
+
                   } else {
 
                     //
                     IProjectContentResource contentResource = jdtProjectContentProvider
                         .getProjectContentResource(resource);
-                    
+
                     //
                     if (delta.getKind() == IResourceDelta.CHANGED) {
                       jdtProjectContentProvider.fireProjectContentChangedEvent(new ContentChangedEvent(
                           ContentChangedEvent.Type.MODIFIED, contentResource));
-                    } 
-                    
+                    }
+
                     //
                     else if (delta.getKind() == IResourceDelta.REMOVED) {
                       jdtProjectContentProvider.fireProjectContentChangedEvent(new ContentChangedEvent(
                           ContentChangedEvent.Type.REMOVED, contentResource));
                     }
-                    
+
                   }
                 }
               }
@@ -152,7 +152,7 @@ public class Activator implements BundleActivator {
         }
       }
     };
-    // ResourcesPlugin.getWorkspace().addResourceChangeListener(_listener);
+    ResourcesPlugin.getWorkspace().addResourceChangeListener(_listener);
   }
 
   /**
@@ -160,6 +160,6 @@ public class Activator implements BundleActivator {
    */
   @Override
   public void stop(BundleContext context) throws Exception {
-    // ResourcesPlugin.getWorkspace().removeResourceChangeListener(_listener);
+    ResourcesPlugin.getWorkspace().removeResourceChangeListener(_listener);
   }
 }
