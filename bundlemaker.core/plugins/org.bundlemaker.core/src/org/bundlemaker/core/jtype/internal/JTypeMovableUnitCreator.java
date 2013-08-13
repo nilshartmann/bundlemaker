@@ -9,7 +9,7 @@ import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.jtype.ITypeResource;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IMovableUnit;
-import org.bundlemaker.core.spi.modext.AbstractMovableUnitCreator;
+import org.bundlemaker.core.spi.movableunit.AbstractMovableUnitCreator;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;

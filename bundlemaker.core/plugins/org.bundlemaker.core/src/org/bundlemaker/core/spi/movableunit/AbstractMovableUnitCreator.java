@@ -1,4 +1,4 @@
-package org.bundlemaker.core.spi.modext;
+package org.bundlemaker.core.spi.movableunit;
 
 import java.util.List;
 
