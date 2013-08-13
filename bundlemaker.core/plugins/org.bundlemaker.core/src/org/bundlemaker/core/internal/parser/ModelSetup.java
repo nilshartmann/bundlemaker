@@ -172,8 +172,8 @@ public class ModelSetup {
       //
       for (IProjectContentEntry contentEntry : projectContents) {
         ModelExtFactory.getModelExtensionFactory().resourceModelSetupCompleted(contentEntry,
-            (Set<IModuleResource>) contentEntry.getBinaryResources(),
-            (Set<IModuleResource>) contentEntry.getSourceResources());
+            (Collection<IModuleResource>) contentEntry.getBinaryResources(),
+            (Collection<IModuleResource>) contentEntry.getSourceResources());
       }
 
       progressMonitor.worked(1);

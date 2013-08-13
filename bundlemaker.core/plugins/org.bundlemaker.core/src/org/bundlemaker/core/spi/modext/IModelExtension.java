@@ -1,5 +1,6 @@
 package org.bundlemaker.core.spi.modext;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -74,8 +75,8 @@ public interface IModelExtension {
    * @param binaryResourceStandins
    * @param sourceResourceStandins
    */
-  void resourceModelSetupCompleted(IProjectContentEntry contentEntry, Set<IModuleResource> binaryResources,
-      Set<IModuleResource> sourceResources);
+  void resourceModelSetupCompleted(IProjectContentEntry contentEntry, Collection<IModuleResource> binaryResources,
+      Collection<IModuleResource> sourceResources);
 
   /**
    * <p>

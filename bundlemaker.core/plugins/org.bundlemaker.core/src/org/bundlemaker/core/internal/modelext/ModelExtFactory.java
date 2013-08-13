@@ -1,5 +1,6 @@
 package org.bundlemaker.core.internal.modelext;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -118,8 +119,9 @@ public class ModelExtFactory {
     }
   }
 
-  public void resourceModelSetupCompleted(IProjectContentEntry contentEntry, Set<IModuleResource> binaryResources,
-      Set<IModuleResource> sourceResources) {
+  public void resourceModelSetupCompleted(IProjectContentEntry contentEntry,
+      Collection<IModuleResource> binaryResources,
+      Collection<IModuleResource> sourceResources) {
 
     //
     for (IModelExtension modelExtension : _modelExtensionRegistry.getExtensionInstances()) {

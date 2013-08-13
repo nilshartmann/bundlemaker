@@ -10,10 +10,12 @@
  ******************************************************************************/
 package org.bundlemaker.core.project;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.common.ResourceType;
+import org.bundlemaker.core.resource.IModuleResource;
 
 /**
  * <p>
@@ -120,7 +122,7 @@ public interface IProjectContentEntry {
    * @param type
    * @return a Set of resources, never null.
    */
-  Set<? extends IProjectContentResource> getResources(ResourceType type);
+  Collection<? extends IProjectContentResource> getResources(ResourceType type);
 
   /**
    * <p>
@@ -136,7 +138,7 @@ public interface IProjectContentEntry {
    * 
    * @return a Set of resources, never null.
    */
-  Set<? extends IProjectContentResource> getBinaryResources();
+  Collection<? extends IProjectContentResource> getBinaryResources();
 
   /**
    * Returns all source resources
@@ -150,5 +152,5 @@ public interface IProjectContentEntry {
    * 
    * @return a Set of resources, never null.
    */
-  Set<? extends IProjectContentResource> getSourceResources();
+  Collection<? extends IModuleResource> getSourceResources();
 }

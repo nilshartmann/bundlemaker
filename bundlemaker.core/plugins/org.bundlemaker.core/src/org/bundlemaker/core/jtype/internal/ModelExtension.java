@@ -1,5 +1,6 @@
 package org.bundlemaker.core.jtype.internal;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -78,8 +79,9 @@ public class ModelExtension implements IModelExtension {
    * {@inheritDoc}
    */
   @Override
-  public void resourceModelSetupCompleted(IProjectContentEntry contentEntry, Set<IModuleResource> binaryResources,
-      Set<IModuleResource> sourceResources) {
+  public void resourceModelSetupCompleted(IProjectContentEntry contentEntry,
+      Collection<IModuleResource> binaryResources,
+      Collection<IModuleResource> sourceResources) {
 
     for (IModuleResource resourceStandin : binaryResources) {
       connectParsedResourceToModel(resourceStandin, false);

@@ -1,5 +1,6 @@
 package org.bundlemaker.core.internal.projectdescription;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,6 +35,10 @@ public class ProjectContentEntry implements IProjectContentEntry {
   private static final Set<IResourceStandin> EMPTY_RESOURCE_STANDIN_SET = Collections
                                                                             .unmodifiableSet(new HashSet<IResourceStandin>());
 
+  /** - */
+  private static final Set<VariablePath>     EMPTY_ROOTPATH_SET         = Collections
+                                                                            .unmodifiableSet(new HashSet<VariablePath>());
+
   /** the internal identifier of this content entry */
   private String                             _id;
 
@@ -52,18 +57,14 @@ public class ProjectContentEntry implements IProjectContentEntry {
   /** the source pathes */
   private Set<VariablePath>                  _sourcePaths;
 
-  /** - */
-  private static final Set<VariablePath>     EMPTY_ROOTPATH_SET         = Collections
-                                                                            .unmodifiableSet(new HashSet<VariablePath>());
-
   /** indicates that the content has been initialized */
   private boolean                            _isInitialized;
 
   /** the set of binary resource standins */
-  private Set<IResourceStandin>              _binaryResourceStandins;
+  private Map<String, IResourceStandin>      _binaryResourceStandins;
 
   /** the set of source resource standins */
-  private Set<IResourceStandin>              _sourceResourceStandins;
+  private Map<String, IResourceStandin>      _sourceResourceStandins;
 
   /** the project description */
   private IInternalProjectDescription        _projectDescription;
@@ -179,23 +180,23 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * {@inheritDoc}
    */
   @Override
-  public final Set<? extends IModuleResource> getBinaryResources() {
-    return Collections.unmodifiableSet(getBinaryResourceStandins());
+  public final Collection<? extends IModuleResource> getBinaryResources() {
+    return Collections.unmodifiableCollection(getBinaryResourceStandins());
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public final Set<? extends IModuleResource> getSourceResources() {
-    return Collections.unmodifiableSet(getSourceResourceStandins());
+  public final Collection<? extends IModuleResource> getSourceResources() {
+    return Collections.unmodifiableCollection(getSourceResourceStandins());
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public Set<? extends IModuleResource> getResources(ResourceType type) {
+  public Collection<? extends IModuleResource> getResources(ResourceType type) {
     switch (type) {
     case BINARY: {
       return getBinaryResources();
@@ -287,8 +288,8 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * 
    * @return the set of all contained binary {@link IResourceStandin}.
    */
-  public final Set<IResourceStandin> getBinaryResourceStandins() {
-    return _binaryResourceStandins != null ? _binaryResourceStandins : EMPTY_RESOURCE_STANDIN_SET;
+  public final Collection<IResourceStandin> getBinaryResourceStandins() {
+    return _binaryResourceStandins != null ? _binaryResourceStandins.values() : EMPTY_RESOURCE_STANDIN_SET;
   }
 
   /**
@@ -298,8 +299,8 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * 
    * @return the set of all contained source {@link IResourceStandin}.
    */
-  public final Set<IResourceStandin> getSourceResourceStandins() {
-    return _sourceResourceStandins != null ? _sourceResourceStandins : EMPTY_RESOURCE_STANDIN_SET;
+  public final Collection<IResourceStandin> getSourceResourceStandins() {
+    return _sourceResourceStandins != null ? _sourceResourceStandins.values() : EMPTY_RESOURCE_STANDIN_SET;
   }
 
   /**
@@ -368,12 +369,12 @@ public class ProjectContentEntry implements IProjectContentEntry {
     switch (type) {
     case BINARY: {
       _projectDescription.addBinaryResource(resourceStandin);
-      binaryResourceStandins().add(resourceStandin);
+      binaryResourceStandins().put(path, resourceStandin);
       break;
     }
     case SOURCE: {
       _projectDescription.addSourceResource(resourceStandin);
-      sourceResourceStandins().add(resourceStandin);
+      sourceResourceStandins().put(path, resourceStandin);
       break;
     }
     default:
@@ -398,11 +399,11 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * 
    * @return
    */
-  private Set<IResourceStandin> binaryResourceStandins() {
+  private Map<String, IResourceStandin> binaryResourceStandins() {
 
     //
     if (_binaryResourceStandins == null) {
-      _binaryResourceStandins = new HashSet<IResourceStandin>();
+      _binaryResourceStandins = new HashMap<String, IResourceStandin>();
     }
 
     //
@@ -415,11 +416,11 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * 
    * @return
    */
-  private Set<IResourceStandin> sourceResourceStandins() {
+  private Map<String, IResourceStandin> sourceResourceStandins() {
 
     //
     if (_sourceResourceStandins == null) {
-      _sourceResourceStandins = new HashSet<IResourceStandin>();
+      _sourceResourceStandins = new HashMap<String, IResourceStandin>();
     }
 
     //
@@ -448,8 +449,19 @@ public class ProjectContentEntry implements IProjectContentEntry {
     // add the binary resources
     for (VariablePath root : _binaryPaths) {
       for (String filePath : FileUtils.getAllChildren(root.getAsFile())) {
-        // create the resource standin
-        createNewResourceStandin(getId(), root.getResolvedPath().toString(), filePath, ResourceType.BINARY, isAnalyze());
+
+        //
+        if (!binaryResourceStandins().containsKey(filePath)) {
+
+          // create the resource standin
+          createNewResourceStandin(getId(), root.getResolvedPath().toString(), filePath, ResourceType.BINARY,
+              isAnalyze());
+
+        } else {
+
+          //
+          System.out.println(String.format("DUPLICATE RESOURCE IN ENTRY '%s': '%s'", getId(), filePath));
+        }
       }
     }
 
@@ -458,9 +470,19 @@ public class ProjectContentEntry implements IProjectContentEntry {
       if (_sourcePaths != null) {
         for (VariablePath root : _sourcePaths) {
           for (String filePath : FileUtils.getAllChildren(root.getAsFile())) {
-            // create the resource standin
-            createNewResourceStandin(getId(), root.getResolvedPath().toString(), filePath, ResourceType.SOURCE,
-                isAnalyze());
+
+            //
+            if (!sourceResourceStandins().containsKey(filePath)) {
+
+              // create the resource standin
+              createNewResourceStandin(getId(), root.getResolvedPath().toString(), filePath, ResourceType.SOURCE,
+                  isAnalyze());
+
+            } else {
+
+              //
+              System.out.println(String.format("DUPLICATE RESOURCE IN ENTRY '%s': '%s'", getId(), filePath));
+            }
           }
         }
       }
