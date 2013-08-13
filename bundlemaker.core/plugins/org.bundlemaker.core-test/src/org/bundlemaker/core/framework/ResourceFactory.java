@@ -37,13 +37,10 @@ public class ResourceFactory {
     Set<IResourceStandin> result = new HashSet<IResourceStandin>();
 
     //
-    ResourceCache resourceCache = new ResourceCache();
-
-    //
     for (String child : children) {
 
       //
-      Resource resource = new Resource("01", testDir.getAbsolutePath(), child, resourceCache);
+      Resource resource = new Resource("01", testDir.getAbsolutePath(), child);
       
       //
       if (child.endsWith(".class")) {
