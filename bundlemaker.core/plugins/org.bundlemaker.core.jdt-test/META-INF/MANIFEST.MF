@@ -5,5 +5,5 @@ Bundle-SymbolicName: org.bundlemaker.core.jdt-test
 Bundle-Version: 0.12.0.qualifier
 Fragment-Host: org.bundlemaker.core.jdt
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.junit4;bundle-version="4.8.1",
+Require-Bundle: org.junit;bundle-version="4.8.1",
  org.mockito.mockito-all;bundle-version="1.9.5"
