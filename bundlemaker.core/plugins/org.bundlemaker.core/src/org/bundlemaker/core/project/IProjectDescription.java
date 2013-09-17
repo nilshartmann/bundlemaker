@@ -12,7 +12,6 @@ package org.bundlemaker.core.project;
 
 import java.util.List;
 
-
 /**
  * <p>
  * Defines the interface of a bundle maker project description.
@@ -36,7 +35,7 @@ public interface IProjectDescription {
 
   /**
    * <p>
-   * Returns an <b>unmodifiable</b> list.
+   * Returns an <b>unmodifiable</b> list of all registered {@link IProjectContentProvider IProjectContentProviders}.
    * </p>
    * 
    * @return
@@ -45,18 +44,21 @@ public interface IProjectDescription {
 
   /**
    * <p>
-   * Returns a (read-only) list with all the defined {@link IProjectContentEntry}.
+   * Returns a <b>unmodifiable</b> list with all the defined {@link IProjectContentEntry IProjectContentEntries}.
    * </p>
    * 
-   * @return a (read-only) list with all the defined {@link IProjectContentEntry}.
+   * @return a <b>unmodifiable</b> list with all the defined {@link IProjectContentEntry IProjectContentEntries}.
    */
   List<? extends IProjectContentEntry> getContent();
 
   /**
    * <p>
+   * Returns the {@link IProjectContentEntry} with the specified {@link IProjectContentEntry}.
    * </p>
    * 
-   * @return
+   * @param identifier
+   *          the identifier (must not be null)
+   * @return the {@link IProjectContentEntry} with the specified {@link IProjectContentEntry}.
    */
   IProjectContentEntry getProjectContentEntry(String identifier);
 

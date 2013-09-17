@@ -6,7 +6,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.itestframework.AbstractJdtProjectTest;
-import org.bundlemaker.core.project.ContentChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent;
 import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.After;
@@ -23,7 +23,7 @@ import org.junit.Test;
 public class ProjectContentChangedTest extends AbstractJdtProjectTest {
 
   //
-  private List<ContentChangedEvent>          _contentChangedEvents;
+  private List<BundleMakerProjectContentChangedEvent>          _contentChangedEvents;
 
   //
   private IBundleMakerProjectChangedListener _changedListener;
@@ -36,10 +36,10 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
     super.before();
 
     //
-    _contentChangedEvents = new LinkedList<ContentChangedEvent>();
+    _contentChangedEvents = new LinkedList<BundleMakerProjectContentChangedEvent>();
     _changedListener = new IBundleMakerProjectChangedListener.Adapter() {
       @Override
-      public void projectContentChanged(ContentChangedEvent event) {
+      public void projectContentChanged(BundleMakerProjectContentChangedEvent event) {
         _contentChangedEvents.add(event);
       }
     };
@@ -63,7 +63,6 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
    * @throws Exception
    */
   @Test
-  @Ignore
   public void testSourceFileChanged() throws Exception {
 
     //
@@ -71,7 +70,7 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
 
     //
     Assert.assertEquals(1, _contentChangedEvents.size());
-    Assert.assertEquals(ContentChangedEvent.Type.MODIFIED, _contentChangedEvents.get(0).getType());
+    Assert.assertEquals(BundleMakerProjectContentChangedEvent.Type.MODIFIED, _contentChangedEvents.get(0).getType());
 
   }
 
@@ -79,7 +78,6 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
    * @throws Exception
    */
   @Test
-  @Ignore
   public void testSourceFileAdded() throws Exception {
 
     //
@@ -87,11 +85,10 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
 
     //
     Assert.assertEquals(1, _contentChangedEvents.size());
-    Assert.assertEquals(ContentChangedEvent.Type.ADDED, _contentChangedEvents.get(0).getType());
+    Assert.assertEquals(BundleMakerProjectContentChangedEvent.Type.ADDED, _contentChangedEvents.get(0).getType());
   }
 
   @Test
-  @Ignore
   public void testSourceFileRemoved() throws Exception {
 
     //
@@ -99,6 +96,6 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
 
     //
     Assert.assertEquals(1, _contentChangedEvents.size());
-    Assert.assertEquals(ContentChangedEvent.Type.REMOVED, _contentChangedEvents.get(0).getType());
+    Assert.assertEquals(BundleMakerProjectContentChangedEvent.Type.REMOVED, _contentChangedEvents.get(0).getType());
   }
 }

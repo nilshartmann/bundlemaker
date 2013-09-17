@@ -8,7 +8,7 @@ import org.bundlemaker.core.common.utils.VMInstallUtils;
 import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
 import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.AnalyzeMode;
-import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.core.resources.IProject;
@@ -74,10 +74,10 @@ public class TestProjectCreator {
   public static final IParserAwareBundleMakerProject getBundleMakerProject(String testProjectName) {
     try {
       // create simple project
-      IProject simpleProject = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(testProjectName);
+      IProject simpleProject = BundleMakerProjectCore.getOrCreateSimpleProjectWithBundleMakerNature(testProjectName);
 
       // get the BM project
-      return BundleMakerCore.getProjectDescriptionAwareBundleMakerProject(simpleProject).adaptAs(IParserAwareBundleMakerProject.class);
+      return BundleMakerProjectCore.getProjectDescriptionAwareBundleMakerProject(simpleProject).adaptAs(IParserAwareBundleMakerProject.class);
     } catch (CoreException e) {
       e.printStackTrace();
       Assert.fail(e.getMessage());

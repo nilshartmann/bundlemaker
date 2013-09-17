@@ -15,7 +15,7 @@ import org.bundlemaker.core.common.IResource;
 
 /**
  * <p>
- * An {@link IProjectContentResource} defines a resource that is definied through a project content entry. It provides
+ * An {@link IProjectContentResource} defines a resource that is defined through a project content entry. It provides
  * access to the <code>contentId</code> and the <code>root</code> directory or archive file.
  * </p>
  * 

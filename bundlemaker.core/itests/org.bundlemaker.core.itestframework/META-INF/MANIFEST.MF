@@ -15,6 +15,7 @@ Require-Bundle: org.bundlemaker.core;bundle-version="0.10.0";visibility:=reexpor
  org.apache.ant;bundle-version="1.8.3",
  org.eclipse.text;bundle-version="3.5.200"
 Export-Package: org.bundlemaker.core.itestframework,
+ org.bundlemaker.core.itestframework.internal,
  org.bundlemaker.core.itestframework.jedit_model,
  org.bundlemaker.core.itestframework.simple_artifact_model,
  org.bundlemaker.core.itestframework.utils

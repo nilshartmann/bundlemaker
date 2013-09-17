@@ -15,7 +15,7 @@ import static java.lang.String.format;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 
-import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.transformations.support.TransformationScriptSupport;
@@ -186,14 +186,14 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard, I
     }
 
     try {
-      BundleMakerCore.addBundleMakerNature(newProjectHandle);
+      BundleMakerProjectCore.addBundleMakerNature(newProjectHandle);
       if (mainPage.isTransformationScriptSupportSelected()) {
 
         TransformationScriptSupport.enableTransformationScriptSupport(newProjectHandle,
             PreferenceConstants.getDefaultJRELibrary());
 
       }
-      IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getProjectDescriptionAwareBundleMakerProject(newProjectHandle);
+      IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerProjectCore.getProjectDescriptionAwareBundleMakerProject(newProjectHandle);
       IModifiableProjectDescription modifiableProjectDescription = bundleMakerProject.getModifiableProjectDescription();
       modifiableProjectDescription.setJre(mainPage.getSelectedJreId());
       modifiableProjectDescription.save();
@@ -218,7 +218,7 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard, I
    * @param project
    */
   private void openProjectDescriptionEditor(IProject project) {
-    IFile iFile = _newProject.getProject().getFile(BundleMakerCore.PROJECT_DESCRIPTION_PATH);
+    IFile iFile = _newProject.getProject().getFile(BundleMakerProjectCore.PROJECT_DESCRIPTION_PATH);
 
     IWorkbenchPage activePage = _workbench.getActiveWorkbenchWindow().getActivePage();
 

@@ -23,7 +23,7 @@ public interface IBundleMakerProjectChangedListener {
    * 
    * @param event
    */
-  void projectDescriptionChanged(DescriptionChangedEvent event);
+  void projectDescriptionChanged(BundleMakerProjectDescriptionChangedEvent event);
 
   /**
    * <p>
@@ -31,7 +31,7 @@ public interface IBundleMakerProjectChangedListener {
    * 
    * @param event
    */
-  void projectContentChanged(ContentChangedEvent event);
+  void projectContentChanged(BundleMakerProjectContentChangedEvent event);
 
   /**
    * <p>
@@ -52,14 +52,14 @@ public interface IBundleMakerProjectChangedListener {
      * {@inheritDoc}
      */
     @Override
-    public void projectDescriptionChanged(DescriptionChangedEvent event) {
+    public void projectDescriptionChanged(BundleMakerProjectDescriptionChangedEvent event) {
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void projectContentChanged(ContentChangedEvent event) {
+    public void projectContentChanged(BundleMakerProjectContentChangedEvent event) {
     }
   }
 }

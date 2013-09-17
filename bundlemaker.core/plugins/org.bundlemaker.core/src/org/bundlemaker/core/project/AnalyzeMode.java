@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.project;
 
-
 /**
  * <p>
  * Specifies how an {@link IProjectContentEntry} entry in a {@link IProjectDescription} should be analyzed.
@@ -22,19 +21,13 @@ package org.bundlemaker.core.project;
  */
 public enum AnalyzeMode {
 
-  /**
-   * Analyze this content (binaries only)
-   */
+  /** Analyze only binaries of a content entry */
   BINARIES_ONLY,
 
-  /**
-   * Analyze this content (sources and binaries)
-   */
+  /** Analyze sources and binaries of a content entry */
   BINARIES_AND_SOURCES,
 
-  /**
-   * Do not analyze this content add all
-   */
+  /** Do not analyze this content add all */
   DO_NOT_ANALYZE;
 
   /**

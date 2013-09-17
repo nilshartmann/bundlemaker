@@ -26,15 +26,15 @@ import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescri
 import org.bundlemaker.core.internal.projectdescription.ProjectDescriptionStore;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.parser.IProblem;
-import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectCore;
+import org.bundlemaker.core.project.BundleMakerProjectDescriptionChangedEvent;
 import org.bundlemaker.core.project.BundleMakerProjectState;
-import org.bundlemaker.core.project.ContentChangedEvent;
-import org.bundlemaker.core.project.DescriptionChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectStateChangedEvent;
 import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
 import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
-import org.bundlemaker.core.project.BundleMakerProjectStateChangedEvent;
 import org.bundlemaker.core.resource.IBundleMakerProjectHook;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -90,7 +90,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
   public BundleMakerProject(IProject project) throws CoreException {
 
     // TODO: CoreException
-    Assert.isTrue(project.hasNature(BundleMakerCore.NATURE_ID));
+    Assert.isTrue(project.hasNature(BundleMakerProjectCore.NATURE_ID));
 
     // set the project
     _project = project;
@@ -108,8 +108,8 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     _projectChangedListeners = new CopyOnWriteArrayList<IBundleMakerProjectChangedListener>();
     addBundleMakerProjectChangedListener(new IBundleMakerProjectChangedListener.Adapter() {
       @Override
-      public void projectDescriptionChanged(DescriptionChangedEvent event) {
-        if (event.getType().equals(DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RECOMPUTED)) {
+      public void projectDescriptionChanged(BundleMakerProjectDescriptionChangedEvent event) {
+        if (event.getType().equals(BundleMakerProjectDescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RECOMPUTED)) {
           BundleMakerProject.this._projectState = BundleMakerProjectState.DIRTY;
         }
       }
@@ -196,7 +196,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     _projectState = BundleMakerProjectState.INITIALIZED;
 
     // notify listeners
-    fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent());
+    fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent(this));
   }
 
   @Override
@@ -234,7 +234,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     }
 
     // notify listeners
-    fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent());
+    fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent(this));
   }
 
   /**
@@ -247,7 +247,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     _projectState = BundleMakerProjectState.DISPOSED;
 
     // notify listeners
-    fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent());
+    fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent(this));
 
     //
     Activator.getDefault().removeCachedBundleMakerProject(_project);
@@ -468,7 +468,8 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     _projectDescription = loadProjectDescription();
 
     //
-    fireDescriptionChangedEvent(new DescriptionChangedEvent(DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RELOADED));
+    fireDescriptionChangedEvent(new BundleMakerProjectDescriptionChangedEvent(this,
+        BundleMakerProjectDescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RELOADED));
   }
 
   @Override
@@ -516,7 +517,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
    * 
    * @param event
    */
-  public void fireContentChangedEvent(ContentChangedEvent event) {
+  public void fireContentChangedEvent(BundleMakerProjectContentChangedEvent event) {
     Assert.isNotNull(event);
 
     //
@@ -531,7 +532,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
    * 
    * @param event
    */
-  public void fireDescriptionChangedEvent(DescriptionChangedEvent event) {
+  public void fireDescriptionChangedEvent(BundleMakerProjectDescriptionChangedEvent event) {
     Assert.isNotNull(event);
 
     //
@@ -585,7 +586,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     }
 
     // throw new exception
-    throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID, String.format(
+    throw new CoreException(new Status(IStatus.ERROR, BundleMakerProjectCore.BUNDLE_ID, String.format(
         "BundleMakerProject must be in one of the following states: '%s', but current state is '%s'.",
         Arrays.asList(state), getState())));
   }

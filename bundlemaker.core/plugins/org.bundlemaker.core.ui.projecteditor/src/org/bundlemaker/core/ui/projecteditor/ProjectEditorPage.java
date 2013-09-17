@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.project.BundleMakerProjectState;
-import org.bundlemaker.core.project.DescriptionChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectDescriptionChangedEvent;
 import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
 import org.bundlemaker.core.project.IProjectContentProvider;
@@ -635,8 +635,8 @@ public class ProjectEditorPage extends FormPage {
        * {@inheritDoc}
        */
       @Override
-      public void projectDescriptionChanged(DescriptionChangedEvent event) {
-        if (event.getType() == DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RECOMPUTED) {
+      public void projectDescriptionChanged(BundleMakerProjectDescriptionChangedEvent event) {
+        if (event.getType() == BundleMakerProjectDescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RECOMPUTED) {
           handle();
         }
       }

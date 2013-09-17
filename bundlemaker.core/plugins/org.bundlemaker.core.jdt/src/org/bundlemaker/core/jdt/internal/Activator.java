@@ -6,8 +6,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
-import org.bundlemaker.core.project.ContentChangedEvent;
-import org.bundlemaker.core.project.DescriptionChangedEvent.Type;
+import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.eclipse.core.resources.IFile;
@@ -19,8 +18,6 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -55,6 +52,7 @@ public class Activator implements BundleActivator {
   /**
    * {@inheritDoc}
    */
+  @SuppressWarnings("serial")
   @Override
   public void start(BundleContext context) throws Exception {
 
@@ -123,14 +121,18 @@ public class Activator implements BundleActivator {
 
                     //
                     if (delta.getKind() == IResourceDelta.CHANGED) {
-                      jdtProjectContentProvider.fireProjectContentChangedEvent(new ContentChangedEvent(
-                          ContentChangedEvent.Type.MODIFIED, contentResource));
+                      jdtProjectContentProvider
+                          .fireProjectContentChangedEvent(new BundleMakerProjectContentChangedEvent(
+                              jdtProjectContentProvider.getBundleMakerProject(),
+                              BundleMakerProjectContentChangedEvent.Type.MODIFIED, contentResource));
                     }
 
                     //
                     else if (delta.getKind() == IResourceDelta.REMOVED) {
-                      jdtProjectContentProvider.fireProjectContentChangedEvent(new ContentChangedEvent(
-                          ContentChangedEvent.Type.REMOVED, contentResource));
+                      jdtProjectContentProvider
+                          .fireProjectContentChangedEvent(new BundleMakerProjectContentChangedEvent(
+                              jdtProjectContentProvider.getBundleMakerProject(),
+                              BundleMakerProjectContentChangedEvent.Type.REMOVED, contentResource));
                     }
 
                   }

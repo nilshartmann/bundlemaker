@@ -189,6 +189,8 @@ public class ProjectContentEntry implements IProjectContentEntry {
    */
   @Override
   public final Collection<? extends IModuleResource> getSourceResources() {
+    assertIsInitialized();
+
     return Collections.unmodifiableCollection(getSourceResourceStandins());
   }
 
@@ -197,6 +199,8 @@ public class ProjectContentEntry implements IProjectContentEntry {
    */
   @Override
   public Collection<? extends IModuleResource> getResources(ResourceType type) {
+    assertIsInitialized();
+
     switch (type) {
     case BINARY: {
       return getBinaryResources();
@@ -215,6 +219,8 @@ public class ProjectContentEntry implements IProjectContentEntry {
    */
   @Override
   public IModuleResource getResource(String path, ResourceType type) {
+    assertIsInitialized();
+
     switch (type) {
     case BINARY: {
       return binaryResourceStandins().get(path);
@@ -307,6 +313,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * @return the set of all contained binary {@link IResourceStandin}.
    */
   public final Collection<IResourceStandin> getBinaryResourceStandins() {
+    assertIsInitialized();
     return _binaryResourceStandins != null ? _binaryResourceStandins.values() : EMPTY_RESOURCE_STANDIN_SET;
   }
 
@@ -318,6 +325,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * @return the set of all contained source {@link IResourceStandin}.
    */
   public final Collection<IResourceStandin> getSourceResourceStandins() {
+    assertIsInitialized();
     return _sourceResourceStandins != null ? _sourceResourceStandins.values() : EMPTY_RESOURCE_STANDIN_SET;
   }
 
@@ -681,5 +689,15 @@ public class ProjectContentEntry implements IProjectContentEntry {
 
     // return the source paths
     return _sourcePaths;
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  private void assertIsInitialized() {
+    if (!_isInitialized) {
+      Assert.isTrue(false, String.format("ProjectContentEntry '%s' has to be initialized.", toString()));
+    }
   }
 }

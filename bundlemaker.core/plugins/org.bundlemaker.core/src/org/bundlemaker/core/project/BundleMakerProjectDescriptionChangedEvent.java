@@ -8,7 +8,10 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class DescriptionChangedEvent {
+public class BundleMakerProjectDescriptionChangedEvent {
+
+  /** the bundle maker project */
+  private IProjectDescriptionAwareBundleMakerProject _bundleMakerProject;
 
   /**
    * <p>
@@ -39,15 +42,17 @@ public class DescriptionChangedEvent {
 
   /**
    * <p>
-   * Creates a new instance of type {@link DescriptionChangedEvent}.
+   * Creates a new instance of type {@link BundleMakerProjectDescriptionChangedEvent}.
    * </p>
    * 
    * @param type
    */
-  public DescriptionChangedEvent(Type type) {
-    Assert.isNotNull(type);
+  public BundleMakerProjectDescriptionChangedEvent(IProjectDescriptionAwareBundleMakerProject project, Type type) {
+    Assert.isNotNull(project, "Parameter 'project' must not be null.");
+    Assert.isNotNull(type, "Parameter 'type' must not be null.");
 
     _type = type;
+    _bundleMakerProject = project;
   }
 
   /**
@@ -59,5 +64,26 @@ public class DescriptionChangedEvent {
    */
   public Type getType() {
     return _type;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public IProjectDescriptionAwareBundleMakerProject getBundleMakerProject() {
+    return _bundleMakerProject;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param clazz
+   * @return
+   */
+  public <T extends IProjectDescriptionAwareBundleMakerProject> T getBundleMakerProject(Class<T> clazz) {
+    return _bundleMakerProject.adaptAs(clazz);
   }
 }

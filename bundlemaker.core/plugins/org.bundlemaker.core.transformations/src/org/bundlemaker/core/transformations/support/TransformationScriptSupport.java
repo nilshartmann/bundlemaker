@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -52,15 +52,20 @@ public class TransformationScriptSupport {
    * @param jreClasspathEntries
    * @throws CoreException
    */
+  /**
+   * @param eclipseProject
+   * @param jreClasspathEntries
+   * @throws CoreException
+   */
   public static void enableTransformationScriptSupport(IProject eclipseProject, IClasspathEntry[] jreClasspathEntries)
       throws CoreException {
     // hier: org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage.init(IJavaProject, IPath, IClasspathEntry[],
     // boolean)
 
     // Convert to JDT java project
-    boolean alreadyJavaProject = BundleMakerCore.isJavaProject(eclipseProject);
+    boolean alreadyJavaProject = BundleMakerProjectCore.isJavaProject(eclipseProject);
     if (!alreadyJavaProject) {
-      BundleMakerCore.addJavaNature(eclipseProject);
+      BundleMakerProjectCore.addJavaNature(eclipseProject);
     }
     IPath projectPath = new Path(eclipseProject.getName()).makeAbsolute();
     IWorkspaceRoot root = eclipseProject.getWorkspace().getRoot();
@@ -77,7 +82,7 @@ public class TransformationScriptSupport {
     ClasspathBuilder.forProject(eclipseProject, alreadyJavaProject) //
         .setOutputLocation(binFolderPath) //
         .addSourceEntry(sourceFolderPath) //
-        .addContainerEntry(BundleMakerCore.BUNDLEMAKER_CONTAINER_PATH) //
+        .addContainerEntry(BundleMakerProjectCore.BUNDLEMAKER_CONTAINER_PATH) //
         .addEntries(jreClasspathEntries) //
         .save();
 

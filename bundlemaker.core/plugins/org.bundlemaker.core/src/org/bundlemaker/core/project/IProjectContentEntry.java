@@ -47,9 +47,11 @@ public interface IProjectContentEntry {
 
   /**
    * <p>
+   * Returns the (modifiable) map of user attributes. This map can be used to attach {@link IProjectContentProvider}
+   * specific data to an {@link IProjectContentEntry}.
    * </p>
    * 
-   * @return
+   * @return the (modifiable) map of user attributes
    */
   Map<String, Object> getUserAttributes();
 
@@ -125,10 +127,8 @@ public interface IProjectContentEntry {
 
   /**
    * <p>
-   * Returns a {@link Set} of all binary resources
-   * </p>
-   * <p>
-   * This is a convenience method for {@link #getResources(ResourceType) getResources(ContentType.BINARY)}
+   * Returns a {@link Set} of all binary resources. This is a convenience method for {@link #getResources(ResourceType)
+   * getResources(ContentType.BINARY)}
    * </p>
    * <p>
    * If this content entry is not a resource content ( <code>isAnalyze()</code> returns <code>false</code>), an empty
@@ -140,9 +140,9 @@ public interface IProjectContentEntry {
   Collection<? extends IProjectContentResource> getBinaryResources();
 
   /**
-   * Returns all source resources
    * <p>
-   * This is a convenience method for {@link #getResources(ResourceType) getResources(ContentType.SOURCE)}
+   * Returns all source resources. This is a convenience method for {@link #getResources(ResourceType)
+   * getResources(ContentType.SOURCE)}
    * </p>
    * <p>
    * If this content entry is not a resource content ( <code>isAnalyze()</code> returns <code>false</code>), an empty

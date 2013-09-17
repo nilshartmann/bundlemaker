@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.common.classpath;
 
-import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -64,7 +64,7 @@ public class BundleMakerClasspathContainer implements IClasspathContainer {
    */
   @Override
   public IPath getPath() {
-    return BundleMakerCore.BUNDLEMAKER_CONTAINER_PATH;
+    return BundleMakerProjectCore.BUNDLEMAKER_CONTAINER_PATH;
   }
 
 }

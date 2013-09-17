@@ -17,26 +17,9 @@ public interface IProjectContentProvider {
    * <p>
    * </p>
    * 
-   * @param project
-   */
-  void setProject(IProjectDescriptionAwareBundleMakerProject project);
-
-  /**
-   * <p>
-   * </p>
-   * 
    * @return
    */
   IProjectDescriptionAwareBundleMakerProject getBundleMakerProject();
-
-  /**
-   * <p>
-   * Sets the identifier.
-   * </p>
-   * 
-   * @param identifier
-   */
-  void setId(String identifier);
 
   /**
    * <p>

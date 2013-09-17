@@ -26,8 +26,8 @@ import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.internal.api.project.IInternalProjectDescription;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.modules.jdk.JdkContentProvider;
-import org.bundlemaker.core.project.ContentChangedEvent;
-import org.bundlemaker.core.project.DescriptionChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectDescriptionChangedEvent;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
@@ -152,6 +152,8 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   @Override
   public void addContentProvider(IProjectContentProvider contentProvider) {
     Assert.isNotNull(contentProvider);
+    Assert.isTrue(contentProvider instanceof AbstractProjectContentProvider, String.format(
+        "IProjectContentProvider must be instance of %s.", AbstractProjectContentProvider.class.getName()));
 
     if (!_projectContentProviders.contains(contentProvider)) {
 
@@ -160,11 +162,11 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
 
       //
       if (true) {
-        contentProvider.setId(getNextContentProviderId());
+        ((AbstractProjectContentProvider) contentProvider).setId(getNextContentProviderId());
       }
 
       // contentProvider should always be AbstractContentProvider...
-      contentProvider.setProject(_bundleMakerProject);
+      ((AbstractProjectContentProvider) contentProvider).setProject(_bundleMakerProject);
 
       //
       fireProjectDescriptionChangedEvent();
@@ -469,8 +471,9 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
 
     // notify listeners
     if (_bundleMakerProject != null && _bundleMakerProject instanceof BundleMakerProject) {
-      ((BundleMakerProject) _bundleMakerProject).fireDescriptionChangedEvent(new DescriptionChangedEvent(
-          DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_SAVED));
+      ((BundleMakerProject) _bundleMakerProject)
+          .fireDescriptionChangedEvent(new BundleMakerProjectDescriptionChangedEvent(getBundleMakerProject(),
+              BundleMakerProjectDescriptionChangedEvent.Type.PROJECT_DESCRIPTION_SAVED));
     }
   }
 
@@ -480,8 +483,9 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   public void fireProjectDescriptionChangedEvent() {
 
     // Create the Event
-    DescriptionChangedEvent event = new DescriptionChangedEvent(
-        DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_MODIFIED);
+    BundleMakerProjectDescriptionChangedEvent event = new BundleMakerProjectDescriptionChangedEvent(
+        getBundleMakerProject(),
+        BundleMakerProjectDescriptionChangedEvent.Type.PROJECT_DESCRIPTION_MODIFIED);
 
     // notify listeners
     if (_bundleMakerProject != null && _bundleMakerProject instanceof BundleMakerProject) {
@@ -496,8 +500,9 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   public void fireProjectDescriptionRecomputedEvent() {
 
     // Create the Event
-    DescriptionChangedEvent event = new DescriptionChangedEvent(
-        DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RECOMPUTED);
+    BundleMakerProjectDescriptionChangedEvent event = new BundleMakerProjectDescriptionChangedEvent(
+        getBundleMakerProject(),
+        BundleMakerProjectDescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RECOMPUTED);
 
     // notify listeners
     if (_bundleMakerProject != null && _bundleMakerProject instanceof BundleMakerProject) {
@@ -505,7 +510,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     }
   }
 
-  public void fireProjectContentChangedEvent(ContentChangedEvent contentChangedEvent) {
+  public void fireProjectContentChangedEvent(BundleMakerProjectContentChangedEvent contentChangedEvent) {
 
     //
     Assert.isNotNull(contentChangedEvent);

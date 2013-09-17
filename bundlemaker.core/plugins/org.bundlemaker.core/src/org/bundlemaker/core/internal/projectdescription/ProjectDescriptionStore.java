@@ -18,9 +18,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.bundlemaker.core.internal.projectdescription.gson.GsonProjectDescriptionHelper;
-import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
@@ -40,7 +41,7 @@ public class ProjectDescriptionStore {
     Assert.isNotNull(projectDescription);
 
     //
-    IFile iFile = project.getFile(BundleMakerCore.PROJECT_DESCRIPTION_PATH);
+    IFile iFile = project.getFile(BundleMakerProjectCore.PROJECT_DESCRIPTION_PATH);
 
     String jsonString = GsonProjectDescriptionHelper.gson(projectDescription.getBundleMakerProject()).toJson(
         projectDescription);
@@ -73,7 +74,7 @@ public class ProjectDescriptionStore {
       throws CoreException {
 
     //
-    IFile iFile = project.getProject().getFile(BundleMakerCore.PROJECT_DESCRIPTION_PATH);
+    IFile iFile = project.getProject().getFile(BundleMakerProjectCore.PROJECT_DESCRIPTION_PATH);
 
     // refresh
     iFile.refreshLocal(IFile.DEPTH_INFINITE, null);
@@ -88,7 +89,7 @@ public class ProjectDescriptionStore {
 
     // initialize
     for (IProjectContentProvider provider : descriptionNeu.getContentProviders()) {
-      provider.setProject(project);
+      ((AbstractProjectContentProvider) provider).setProject(project);
     }
 
     //

@@ -10,7 +10,7 @@ import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescri
 import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.internal.projectdescription.gson.GsonProjectDescriptionHelper;
 import org.bundlemaker.core.project.AnalyzeMode;
-import org.bundlemaker.core.project.ContentChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProblem;
 import org.bundlemaker.core.project.IProjectContentProvider;
@@ -67,7 +67,6 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
   /**
    * {@inheritDoc}
    */
-  @Override
   public void setProject(IProjectDescriptionAwareBundleMakerProject project) {
 
     //
@@ -88,7 +87,6 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
   /**
    * {@inheritDoc}
    */
-  @Override
   public final void setId(String id) {
     _id = id;
   }
@@ -210,7 +208,7 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    * <p>
    * </p>
    */
-  public void fireProjectContentChangedEvent(ContentChangedEvent changedEvent) {
+  public void fireProjectContentChangedEvent(BundleMakerProjectContentChangedEvent changedEvent) {
     if (_bundleMakerProject.getModifiableProjectDescription() instanceof BundleMakerProjectDescription) {
       ((BundleMakerProjectDescription) _bundleMakerProject.getModifiableProjectDescription())
           .fireProjectContentChangedEvent(changedEvent);

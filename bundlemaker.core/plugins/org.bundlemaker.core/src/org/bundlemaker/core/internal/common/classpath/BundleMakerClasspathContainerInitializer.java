@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.core.internal.Activator;
-import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -72,7 +72,7 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
   @Override
   public void initialize(IPath containerPath, IJavaProject javaProject) throws CoreException {
 
-    JavaCore.setClasspathContainer(BundleMakerCore.BUNDLEMAKER_CONTAINER_PATH, new IJavaProject[] { javaProject },
+    JavaCore.setClasspathContainer(BundleMakerProjectCore.BUNDLEMAKER_CONTAINER_PATH, new IJavaProject[] { javaProject },
         new IClasspathContainer[] { new BundleMakerClasspathContainer() }, null);
 
   }

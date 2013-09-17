@@ -3,9 +3,9 @@
  */
 package org.bundlemaker.core.ui.projecteditor;
 
-import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.bundlemaker.core.project.BundleMakerProjectState;
-import org.bundlemaker.core.project.DescriptionChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectDescriptionChangedEvent;
 import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.project.BundleMakerProjectStateChangedEvent;
@@ -115,7 +115,7 @@ public class ProjectEditor extends FormEditor {
     setPartName(project.getName());
     try {
       // TODO use ProgressMonitor
-      IModuleAwareBundleMakerProject bundleMakerProject = BundleMakerCore
+      IModuleAwareBundleMakerProject bundleMakerProject = BundleMakerProjectCore
           .getProjectDescriptionAwareBundleMakerProject(project).adaptAs(IModuleAwareBundleMakerProject.class);
 
       _bundleMakerProject = bundleMakerProject;
@@ -179,12 +179,12 @@ public class ProjectEditor extends FormEditor {
      * {@inheritDoc}
      */
     @Override
-    public void projectDescriptionChanged(DescriptionChangedEvent event) {
-      if (event.getType() == DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_MODIFIED) {
+    public void projectDescriptionChanged(BundleMakerProjectDescriptionChangedEvent event) {
+      if (event.getType() == BundleMakerProjectDescriptionChangedEvent.Type.PROJECT_DESCRIPTION_MODIFIED) {
         setProjectDirty(true);
       }
 
-      if (event.getType() == DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_SAVED) {
+      if (event.getType() == BundleMakerProjectDescriptionChangedEvent.Type.PROJECT_DESCRIPTION_SAVED) {
         setProjectDirty(false);
       }
     }

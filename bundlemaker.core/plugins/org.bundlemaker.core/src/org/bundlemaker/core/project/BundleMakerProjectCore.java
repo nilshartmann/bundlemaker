@@ -35,7 +35,7 @@ import org.eclipse.jdt.core.JavaCore;
  * 
  * @noextend This class is not intended to be subclasses by clients.
  */
-public final class BundleMakerCore {
+public final class BundleMakerProjectCore {
 
   /** the nature id */
   public static final String BUNDLE_ID                  = "org.bundlemaker.core";
@@ -57,11 +57,12 @@ public final class BundleMakerCore {
 
   /**
    * <p>
+   * Returns the version of the bundle '<code>org.bundlemaker.core</code>'.
    * </p>
    * 
-   * @return
+   * @return the version of the bundle '<code>org.bundlemaker.core</code>'.
    */
-  public static String getVersion() {
+  public static String getBundleMakerVersion() {
     return Activator.getDefault().getBundleVersion();
   }
 
@@ -84,14 +85,14 @@ public final class BundleMakerCore {
     // check if nature exists
     if (!project.exists()) {
       // TODO: I18N
-      throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID, "Project '" + project.getName()
+      throw new CoreException(new Status(IStatus.ERROR, BUNDLE_ID, "Project '" + project.getName()
           + "' has to exist."));
     }
 
     // check if nature exists
     if (!project.hasNature(NATURE_ID)) {
       // TODO: I18N
-      throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID, "Project '" + project.getName()
+      throw new CoreException(new Status(IStatus.ERROR, BUNDLE_ID, "Project '" + project.getName()
           + "' must have nature '" + NATURE_ID + "'."));
     }
 
@@ -129,7 +130,7 @@ public final class BundleMakerCore {
     IProject project = EclipseProjectUtils.getOrCreateSimpleProject(projectName);
 
     // add the bundle maker nature
-    BundleMakerCore.addBundleMakerNature(project);
+    addBundleMakerNature(project);
 
     // return the newly created project
     return project;
@@ -145,18 +146,43 @@ public final class BundleMakerCore {
    * @throws CoreException
    */
   public static void addBundleMakerNature(IProject project) throws CoreException {
-    addNature(project, BundleMakerCore.NATURE_ID);
+    addNature(project, NATURE_ID);
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param project
+   * @throws CoreException
+   */
   public static void addJavaNature(IProject project) throws CoreException {
     addNature(project, JavaCore.NATURE_ID);
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param project
+   * @return
+   * @throws CoreException
+   */
   public static boolean isJavaProject(IProject project) throws CoreException {
     return project.hasNature(JavaCore.NATURE_ID);
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param project
+   * @param nature
+   * @throws CoreException
+   */
   public static void addNature(IProject project, String nature) throws CoreException {
+
+    //
     if (!project.hasNature(nature)) {
 
       // get the project description
@@ -188,7 +214,7 @@ public final class BundleMakerCore {
     IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
     for (IProject iProject : projects) {
       try {
-        if (iProject.exists() && iProject.hasNature(BundleMakerCore.NATURE_ID)) {
+        if (iProject.exists() && iProject.hasNature(NATURE_ID)) {
           getProjectDescriptionAwareBundleMakerProject(iProject);
         }
       } catch (CoreException e) {
@@ -208,14 +234,15 @@ public final class BundleMakerCore {
    * @return
    * @throws CoreException
    */
-  public static IProjectDescriptionAwareBundleMakerProject getProjectDescriptionAwareBundleMakerProject(String simpleProjectName)
+  public static IProjectDescriptionAwareBundleMakerProject getProjectDescriptionAwareBundleMakerProject(
+      String simpleProjectName)
       throws CoreException {
 
     // get the project
     IProject project = EclipseProjectUtils.getProject(simpleProjectName);
 
     // get the bundle maker project
-    return BundleMakerCore.getProjectDescriptionAwareBundleMakerProject(project);
+    return getProjectDescriptionAwareBundleMakerProject(project);
   }
 
   /**

@@ -13,7 +13,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.IVirtualRoot;
 import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
-import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.ui.artifact.Activator;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
@@ -86,10 +86,10 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
       try {
 
         //
-        if (project.hasNature(BundleMakerCore.NATURE_ID)) {
+        if (project.hasNature(BundleMakerProjectCore.NATURE_ID)) {
 
           //
-          IParserAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getProjectDescriptionAwareBundleMakerProject(project).adaptAs(
+          IParserAwareBundleMakerProject bundleMakerProject = BundleMakerProjectCore.getProjectDescriptionAwareBundleMakerProject(project).adaptAs(
               IParserAwareBundleMakerProject.class);
 
           //

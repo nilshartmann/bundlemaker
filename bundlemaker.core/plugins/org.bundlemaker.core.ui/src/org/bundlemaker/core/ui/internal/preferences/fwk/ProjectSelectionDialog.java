@@ -12,7 +12,7 @@ package org.bundlemaker.core.ui.internal.preferences.fwk;
 
 import java.util.Set;
 
-import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.eclipse.core.runtime.IStatus;
@@ -149,7 +149,7 @@ public class ProjectSelectionDialog extends SelectionStatusDialog {
     checkbox.setSelection(doFilter);
     updateFilter(doFilter);
 
-    _tableViewer.setInput(BundleMakerCore.getBundleMakerProjects());
+    _tableViewer.setInput(BundleMakerProjectCore.getBundleMakerProjects());
 
     doSelectionChanged(new Object[0]);
     Dialog.applyDialogFont(composite);

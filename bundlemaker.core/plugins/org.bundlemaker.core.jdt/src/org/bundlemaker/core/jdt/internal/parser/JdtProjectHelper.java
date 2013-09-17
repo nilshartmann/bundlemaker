@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.bundlemaker.core.common.utils.VMInstallUtils;
 import org.bundlemaker.core.jdt.parser.CoreParserJdt;
-import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.project.VariablePath;
@@ -262,7 +262,7 @@ public class JdtProjectHelper {
 
     try {
 
-      if (resource instanceof IProject && ((IProject) resource).hasNature(BundleMakerCore.NATURE_ID)) {
+      if (resource instanceof IProject && ((IProject) resource).hasNature(BundleMakerProjectCore.NATURE_ID)) {
 
         // create a new workspace job
         WorkspaceJob workspaceJob = new WorkspaceJob("delete") {
@@ -272,7 +272,7 @@ public class JdtProjectHelper {
 
             try {
 
-              IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getProjectDescriptionAwareBundleMakerProject((IProject) resource);
+              IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerProjectCore.getProjectDescriptionAwareBundleMakerProject((IProject) resource);
 
               if (JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
 
