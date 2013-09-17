@@ -338,7 +338,7 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
    * {@inheritDoc}
    */
   @Override
-  public void initializeProjectContent(IProgressMonitor progressMonitor)
+  public void onInitializeProjectContent(IProgressMonitor progressMonitor)
   {
 
     //

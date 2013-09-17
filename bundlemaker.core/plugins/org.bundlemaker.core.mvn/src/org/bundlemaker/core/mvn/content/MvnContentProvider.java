@@ -140,7 +140,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    * {@inheritDoc}
    */
   @Override
-  public void initializeProjectContent(IProgressMonitor progressMonitor) throws CoreException {
+  public void onInitializeProjectContent(IProgressMonitor progressMonitor) throws CoreException {
 
     // only reload content if the fileBasedContents are not initialized yet
     reloadContent(true, false, getBundleMakerProject());

@@ -50,6 +50,9 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
   /** the internal counter */
   private int                                        _counter = 0;
 
+  /** - */
+  private boolean                                    _isInitialized;
+
   /**
    * <p>
    * Creates a new instance of type {@link AbstractProjectContentProvider}.
@@ -134,6 +137,13 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
   public final List<IProjectContentEntry> getBundleMakerProjectContent() {
 
     //
+    try {
+      initializeProjectContent(null);
+    } catch (CoreException e) {
+      //
+    }
+
+    //
     checkProjectSet();
     return Collections.unmodifiableList(_projectContentEntries);
   }
@@ -145,8 +155,21 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    * @param progressMonitor
    * @return
    */
-  public abstract void initializeProjectContent(IProgressMonitor progressMonitor)
-      throws CoreException;
+  public final void initializeProjectContent(IProgressMonitor progressMonitor)
+      throws CoreException {
+
+    if (!_isInitialized) {
+
+      onInitializeProjectContent(progressMonitor);
+
+      _isInitialized = true;
+    }
+  }
+
+  /**
+   * @param progressMonitor
+   */
+  protected abstract void onInitializeProjectContent(IProgressMonitor progressMonitor) throws CoreException;
 
   /**
    * <p>

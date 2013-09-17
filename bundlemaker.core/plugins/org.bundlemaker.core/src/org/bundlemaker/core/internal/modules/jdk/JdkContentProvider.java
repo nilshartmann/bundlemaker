@@ -20,7 +20,7 @@ public class JdkContentProvider extends AbstractProjectContentProvider {
    * {@inheritDoc}
    */
   @Override
-  public void initializeProjectContent(IProgressMonitor progressMonitor) throws CoreException {
+  public void onInitializeProjectContent(IProgressMonitor progressMonitor) throws CoreException {
 
     //
     String jre = getBundleMakerProject().getProjectDescription().getJRE();

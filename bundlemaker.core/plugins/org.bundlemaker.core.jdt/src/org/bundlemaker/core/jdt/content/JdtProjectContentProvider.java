@@ -76,7 +76,7 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
    * @throws CoreException
    */
   @Override
-  public void initializeProjectContent(IProgressMonitor progressMonitor) throws CoreException {
+  public void onInitializeProjectContent(IProgressMonitor progressMonitor) throws CoreException {
 
     // create instance of entry helper & clear the 'already resolved' list
     clearFileBasedContents();
