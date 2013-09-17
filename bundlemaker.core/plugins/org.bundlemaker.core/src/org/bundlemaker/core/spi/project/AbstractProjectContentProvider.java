@@ -14,10 +14,12 @@ import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProblem;
 import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.project.VariablePath;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.google.gson.annotations.Expose;
@@ -317,6 +319,27 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    */
   protected boolean isProjectSet() {
     return _bundleMakerProject != null;
+  }
+
+  protected void addResourceToEntry(IProjectContentEntry contentEntry, IPath rootPath, IPath filePath, ResourceType type) {
+
+    //
+    IProjectContentResource contentResource = null;
+
+    //
+    if (type.equals(ResourceType.BINARY)) {
+      contentResource = ((ProjectContentEntry) contentEntry).createNewProjectContentResource(rootPath.toString(),
+          filePath.toString(),
+          ResourceType.BINARY);
+    } else {
+      contentResource = ((ProjectContentEntry) contentEntry).createNewProjectContentResource(rootPath.toString(),
+          filePath.toString(),
+          ResourceType.SOURCE);
+    }
+
+    //
+    fireProjectContentChangedEvent(new BundleMakerProjectContentChangedEvent(getBundleMakerProject(),
+        BundleMakerProjectContentChangedEvent.Type.ADDED, contentResource));
   }
 
   /**

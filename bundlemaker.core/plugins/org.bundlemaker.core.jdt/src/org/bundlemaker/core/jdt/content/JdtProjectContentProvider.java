@@ -13,6 +13,7 @@ import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.common.utils.IFileBasedProjectContentInfo;
 import org.bundlemaker.core.jdt.internal.Activator;
 import org.bundlemaker.core.project.AnalyzeMode;
+import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectContentResource;
@@ -142,7 +143,7 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
     }
   }
 
-  public IProjectContentEntry getProjectContentEntry(IResource eclipseResource) {
+  public void addEclipseResource(IResource eclipseResource) {
 
     //
     List<IProjectContentEntry> entries = getBundleMakerProjectContent();
@@ -154,7 +155,9 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
       for (VariablePath variablePath : contentEntry.getBinaryRootPaths()) {
         try {
           if (variablePath.getResolvedPath().isPrefixOf(eclipseResource.getRawLocation())) {
-            return contentEntry;
+
+            addResourceToEntry(contentEntry, variablePath.getResolvedPath(),
+                eclipseResource.getRawLocation().makeRelativeTo(variablePath.getResolvedPath()), ResourceType.BINARY);
           }
         } catch (CoreException e) {
           //
@@ -165,16 +168,15 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
       for (VariablePath variablePath : contentEntry.getSourceRootPaths()) {
         try {
           if (variablePath.getResolvedPath().isPrefixOf(eclipseResource.getRawLocation())) {
-            return contentEntry;
+
+            addResourceToEntry(contentEntry, variablePath.getResolvedPath(),
+                eclipseResource.getRawLocation().makeRelativeTo(variablePath.getResolvedPath()), ResourceType.SOURCE);
           }
         } catch (CoreException e) {
           //
         }
       }
     }
-
-    //
-    return null;
   }
 
   /**

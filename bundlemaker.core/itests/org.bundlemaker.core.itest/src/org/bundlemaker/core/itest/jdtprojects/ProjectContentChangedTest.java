@@ -63,7 +63,6 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
    * @throws Exception
    */
   @Test
-  @Ignore
   public void testSourceFileChanged() throws Exception {
 
     //
@@ -79,7 +78,6 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
    * @throws Exception
    */
   @Test
-  @Ignore
   public void testSourceFileAdded() throws Exception {
 
     //
@@ -91,7 +89,6 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
   }
 
   @Test
-  @Ignore
   public void testSourceFileRemoved() throws Exception {
 
     //

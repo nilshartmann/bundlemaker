@@ -84,10 +84,10 @@ public class Activator implements BundleActivator {
           public boolean visit(IResourceDelta delta) {
 
             //
-            IResource resource = delta.getResource();
+            IResource eclipseResource = delta.getResource();
 
             //
-            if (!(resource instanceof IFile)) {
+            if (!(eclipseResource instanceof IFile)) {
               return true;
             }
 
@@ -100,24 +100,20 @@ public class Activator implements BundleActivator {
               }
 
               // we can use 'getFullPath' here (getFullPath always contains the project name)
-              if (entry.getKey().getFullPath().isPrefixOf(resource.getFullPath())) {
+              if (entry.getKey().getFullPath().isPrefixOf(eclipseResource.getFullPath())) {
 
                 for (JdtProjectContentProvider jdtProjectContentProvider : entry.getValue()) {
 
                   if (delta.getKind() == IResourceDelta.ADDED) {
 
                     //
-                    IProjectContentEntry contentEntry = jdtProjectContentProvider.getProjectContentEntry(resource);
-                    System.out.println(contentEntry);
-
-                    // jdtProjectContentProvider.fireProjectContentChangedEvent(new ContentChangedEvent(
-                    // ContentChangedEvent.Type.ADDED, contentResource));
+                    jdtProjectContentProvider.addEclipseResource(eclipseResource);
 
                   } else {
 
                     //
                     IProjectContentResource contentResource = jdtProjectContentProvider
-                        .getProjectContentResource(resource);
+                        .getProjectContentResource(eclipseResource);
 
                     //
                     if (delta.getKind() == IResourceDelta.CHANGED) {

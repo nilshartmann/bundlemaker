@@ -15,6 +15,7 @@ import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.project.VariablePath;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -477,17 +478,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
       for (String filePath : FileUtils.getAllChildren(root.getAsFile())) {
 
         //
-        if (!binaryResourceStandins().containsKey(filePath)) {
-
-          // create the resource standin
-          createNewResourceStandin(getId(), root.getResolvedPath().toString(), filePath, ResourceType.BINARY,
-              isAnalyze());
-
-        } else {
-
-          //
-          System.out.println(String.format("DUPLICATE RESOURCE IN ENTRY '%s': '%s'", getId(), filePath));
-        }
+        createNewProjectContentResource(root.getResolvedPath().toString(), filePath, ResourceType.BINARY);
       }
     }
 
@@ -498,17 +489,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
           for (String filePath : FileUtils.getAllChildren(root.getAsFile())) {
 
             //
-            if (!sourceResourceStandins().containsKey(filePath)) {
-
-              // create the resource standin
-              createNewResourceStandin(getId(), root.getResolvedPath().toString(), filePath, ResourceType.SOURCE,
-                  isAnalyze());
-
-            } else {
-
-              //
-              System.out.println(String.format("DUPLICATE RESOURCE IN ENTRY '%s': '%s'", getId(), filePath));
-            }
+            createNewProjectContentResource(root.getResolvedPath().toString(), filePath, ResourceType.SOURCE);
           }
         }
       }
@@ -599,8 +580,8 @@ public class ProjectContentEntry implements IProjectContentEntry {
    */
   @Override
   public String toString() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("FileBasedContent [_binaryPaths=");
+    StringBuilder builder = new StringBuilder(getClass().getSimpleName());
+    builder.append(" [_binaryPaths=");
     builder.append(_binaryPaths);
     builder.append(", _sourcePaths=");
     builder.append(_sourcePaths);
@@ -672,6 +653,48 @@ public class ProjectContentEntry implements IProjectContentEntry {
     } else if (!_version.equals(other._version))
       return false;
     return true;
+  }
+
+  public IProjectContentResource createNewSourceStandin(String rootPath, String filePath) {
+
+    //
+    if (!sourceResourceStandins().containsKey(filePath)) {
+
+      // create the resource standin
+      return createNewResourceStandin(getId(), rootPath, filePath, ResourceType.SOURCE,
+          isAnalyze());
+
+    } else {
+
+      //
+      System.out.println(String.format("DUPLICATE RESOURCE IN ENTRY '%s': '%s'", getId(), filePath));
+      return getResource(filePath, ResourceType.SOURCE);
+    }
+  }
+
+  public IProjectContentResource createNewProjectContentResource(String root, String path,
+      ResourceType type) {
+
+    //
+    Map<String, IResourceStandin> standins = type.equals(ResourceType.BINARY) ? binaryResourceStandins()
+        : sourceResourceStandins();
+
+    //
+    if (!standins.containsKey(path)) {
+
+      // create the resource standin
+      return createNewResourceStandin(getId(), root, path, type,
+          isAnalyze());
+
+    } else {
+      //
+      System.out.println(String.format("DUPLICATE RESOURCE IN ENTRY '%s': '%s'", getId(), path));
+      if (_isInitialized) {
+        return getResource(path, type);
+      } else {
+        return null;
+      }
+    }
   }
 
   /**
