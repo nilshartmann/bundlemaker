@@ -25,7 +25,7 @@ public class ProjectDescriptionAwareBundleMakerProject_CREATED_Test {
   @Before
   public void setUp() {
     if (_bmProject == null) {
-      _bmProject = TestProjectCreator.getBundleMakerProject("BasicArtifactTest");
+      _bmProject = TestProjectCreator.getBundleMakerProject("CoreApiTest");
     }
   }
 
