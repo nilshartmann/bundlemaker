@@ -470,6 +470,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     ProjectDescriptionStore.saveProjectDescription(_bundleMakerProject.getProject(), this);
 
     // notify listeners
+    // TODO MOVE TO BundleMakerProject
     if (_bundleMakerProject != null && _bundleMakerProject instanceof BundleMakerProject) {
       ((BundleMakerProject) _bundleMakerProject)
           .fireDescriptionChangedEvent(new BundleMakerProjectDescriptionChangedEvent(getBundleMakerProject(),
@@ -480,6 +481,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   /**
    * Notifies the BundleMakerProjectChangedListeners that the description has been changed
    */
+  // TODO MOVE TO BundleMakerProject
   public void fireProjectDescriptionChangedEvent() {
 
     // Create the Event
@@ -497,6 +499,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
    * <p>
    * </p>
    */
+  // TODO MOVE TO BundleMakerProject
   public void fireProjectDescriptionRecomputedEvent() {
 
     // Create the Event
@@ -510,6 +513,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     }
   }
 
+  // TODO MOVE TO BundleMakerProject
   public void fireProjectContentChangedEvent(BundleMakerProjectContentChangedEvent contentChangedEvent) {
 
     //
