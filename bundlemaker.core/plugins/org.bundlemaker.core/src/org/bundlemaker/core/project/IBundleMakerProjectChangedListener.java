@@ -15,7 +15,7 @@ public interface IBundleMakerProjectChangedListener {
    * 
    * @param event
    */
-  void projectStateChanged(StateChangedEvent event);
+  void projectStateChanged(BundleMakerProjectStateChangedEvent event);
 
   /**
    * <p>
@@ -45,7 +45,7 @@ public interface IBundleMakerProjectChangedListener {
      * {@inheritDoc}
      */
     @Override
-    public void projectStateChanged(StateChangedEvent event) {
+    public void projectStateChanged(BundleMakerProjectStateChangedEvent event) {
     }
 
     /**

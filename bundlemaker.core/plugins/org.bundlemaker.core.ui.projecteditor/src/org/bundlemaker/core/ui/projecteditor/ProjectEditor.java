@@ -8,7 +8,7 @@ import org.bundlemaker.core.project.BundleMakerProjectState;
 import org.bundlemaker.core.project.DescriptionChangedEvent;
 import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
-import org.bundlemaker.core.project.StateChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectStateChangedEvent;
 import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
@@ -193,7 +193,7 @@ public class ProjectEditor extends FormEditor {
      * {@inheritDoc}
      */
     @Override
-    public void projectStateChanged(StateChangedEvent event) {
+    public void projectStateChanged(BundleMakerProjectStateChangedEvent event) {
       if (_bundleMakerProject.getState() == BundleMakerProjectState.DISPOSED) {
 
         // Project has been disposed => close editor

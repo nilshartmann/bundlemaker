@@ -17,7 +17,7 @@ import org.bundlemaker.core.project.DescriptionChangedEvent;
 import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
 import org.bundlemaker.core.project.IProjectContentProvider;
-import org.bundlemaker.core.project.StateChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectStateChangedEvent;
 import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.VerticalFormButtonBar;
@@ -627,7 +627,7 @@ public class ProjectEditorPage extends FormPage {
        * {@inheritDoc}
        */
       @Override
-      public void projectStateChanged(StateChangedEvent event) {
+      public void projectStateChanged(BundleMakerProjectStateChangedEvent event) {
         handle();
       }
 

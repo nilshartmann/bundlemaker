@@ -34,7 +34,7 @@ import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
 import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
-import org.bundlemaker.core.project.StateChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectStateChangedEvent;
 import org.bundlemaker.core.resource.IBundleMakerProjectHook;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -196,7 +196,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     _projectState = BundleMakerProjectState.INITIALIZED;
 
     // notify listeners
-    fireProjectStateChangedEvent(new StateChangedEvent());
+    fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent());
   }
 
   @Override
@@ -234,7 +234,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     }
 
     // notify listeners
-    fireProjectStateChangedEvent(new StateChangedEvent());
+    fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent());
   }
 
   /**
@@ -247,7 +247,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     _projectState = BundleMakerProjectState.DISPOSED;
 
     // notify listeners
-    fireProjectStateChangedEvent(new StateChangedEvent());
+    fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent());
 
     //
     Activator.getDefault().removeCachedBundleMakerProject(_project);
@@ -546,7 +546,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
    * 
    * @param event
    */
-  public void fireProjectStateChangedEvent(StateChangedEvent event) {
+  public void fireProjectStateChangedEvent(BundleMakerProjectStateChangedEvent event) {
     Assert.isNotNull(event);
 
     //

@@ -6,15 +6,15 @@ package org.bundlemaker.core.project;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class StateChangedEvent {
+public class BundleMakerProjectStateChangedEvent {
 
   /**
    * <p>
-   * Creates a new instance of type {@link StateChangedEvent}.
+   * Creates a new instance of type {@link BundleMakerProjectStateChangedEvent}.
    * </p>
    * 
    * @param type
    */
-  public StateChangedEvent() {
+  public BundleMakerProjectStateChangedEvent() {
   }
 }
