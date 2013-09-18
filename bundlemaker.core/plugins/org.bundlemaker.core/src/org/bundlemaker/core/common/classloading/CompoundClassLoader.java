@@ -1,4 +1,4 @@
-package org.bundlemaker.core.internal.common.classloading;
+package org.bundlemaker.core.common.classloading;
 
 import java.util.LinkedList;
 import java.util.List;
