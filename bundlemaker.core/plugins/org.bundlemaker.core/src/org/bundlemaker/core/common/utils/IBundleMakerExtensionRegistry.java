@@ -39,4 +39,6 @@ public interface IBundleMakerExtensionRegistry<T> {
    * @return
    */
   List<T> getExtensionInstances();
+
+  List<String> getExtensionBundleNamespaces();
 }

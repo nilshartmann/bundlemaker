@@ -1,6 +1,7 @@
 package org.bundlemaker.core.internal.modelext;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -175,5 +176,10 @@ public class ModelExtFactory {
 
     //
     return _modelExtFactory;
+  }
+
+  public List<String> getExtensionBundleNamespaces() {
+    return _modelExtensionRegistry.getExtensionBundleNamespaces();
+
   }
 }

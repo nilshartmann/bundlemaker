@@ -35,6 +35,9 @@ public abstract class AbstractBundleMakerExtensionRegistry<T> implements IExtens
   /** - */
   private List<T>          _extensionInstances;
 
+  /** - */
+  private List<String>     _extensionBundleNamespaces;
+
   /**
    * <p>
    * Creates a new instance of type {@link AbstractBundleMakerExtensionRegistry}.
@@ -47,6 +50,13 @@ public abstract class AbstractBundleMakerExtensionRegistry<T> implements IExtens
 
     //
     _extensionPointId = extensionPointId;
+  }
+
+  /**
+   * @return
+   */
+  public List<String> getExtensionBundleNamespaces() {
+    return _extensionBundleNamespaces;
   }
 
   /**
@@ -65,6 +75,7 @@ public abstract class AbstractBundleMakerExtensionRegistry<T> implements IExtens
 
     //
     _extensionInstances = new LinkedList<T>();
+    _extensionBundleNamespaces = new LinkedList<String>();
 
     // get the extension registry
     IExtensionRegistry registry = RegistryFactory.getRegistry();
@@ -77,6 +88,11 @@ public abstract class AbstractBundleMakerExtensionRegistry<T> implements IExtens
 
     //
     for (IExtension extension : extensionPoint.getExtensions()) {
+
+      //
+      _extensionBundleNamespaces.add(extension.getContributor().getName());
+
+      //
       addExtension(_tracker, extension);
     }
 

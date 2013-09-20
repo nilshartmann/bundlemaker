@@ -12,8 +12,13 @@ package org.bundlemaker.core.store.db4o.internal;
 
 import java.util.List;
 
+import org.bundlemaker.core.common.classloading.BundleDelegatingClassLoader;
+import org.bundlemaker.core.common.classloading.CompoundClassLoader;
+import org.bundlemaker.core.internal.modelext.ModelExtFactory;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.spi.parser.IParsableResource;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
 
 import com.db4o.osgi.Db4oService;
 import com.db4o.query.Query;
@@ -24,40 +29,77 @@ import com.db4o.query.Query;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class PersistentDependencyStoreImpl extends AbstractPersistentDependencyStore {
+public class PersistentDependencyStoreImpl extends
+		AbstractPersistentDependencyStore {
 
-  /**
-   * <p>
-   * Creates a new instance of type {@link PersistentDependencyStoreImpl}.
-   * </p>
-   * 
-   * @param db4oService
-   * @param fileName
-   */
-  public PersistentDependencyStoreImpl(Db4oService db4oService, String fileName) {
-    super(db4oService, fileName);
-  }
+	/** - */
+	private BundleContext _bundleContext;
 
-  /**
-   * {@inheritDoc}
-   */
-  public List<IParsableResource> getResources() {
-    Query query = getDatabase().query();
-    query.constrain(Resource.class);
-    return query.execute();
-  }
+	/**
+	 * <p>
+	 * Creates a new instance of type {@link PersistentDependencyStoreImpl}.
+	 * </p>
+	 * 
+	 * @param fileName
+	 */
+	public PersistentDependencyStoreImpl(String fileName, BundleContext bundleContext) {
+		super(fileName);
 
-  /**
-   * {@inheritDoc}
-   */
-  public void updateResource(IParsableResource bundleElement) {
-    getDatabase().store(bundleElement);
-  }
+		_bundleContext = bundleContext;
+	}
 
-  /**
-   * {@inheritDoc}
-   */
-  public void delete(IParsableResource resource) {
-    getDatabase().delete(resource);
-  }
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<IParsableResource> getResources() {
+		Query query = getDatabase().query();
+		query.constrain(Resource.class);
+		List<IParsableResource> result = query.execute();
+
+		//
+		Thread.currentThread().setContextClassLoader(getReflectorClassLoader());
+		for (IParsableResource r : result) {
+			System.out.println(r);
+		}
+
+		//
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void updateResource(IParsableResource bundleElement) {
+		getDatabase().store(bundleElement);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void delete(IParsableResource resource) {
+		getDatabase().delete(resource);
+	}
+
+	@Override
+	protected ClassLoader getReflectorClassLoader() {
+
+		//
+		List<String> namespaces = ModelExtFactory.getModelExtensionFactory()
+				.getExtensionBundleNamespaces();
+
+		//
+		CompoundClassLoader compoundClassLoader = new CompoundClassLoader();
+
+		//
+		for (Bundle bundle : _bundleContext.getBundles()) {
+
+			if (namespaces.contains(bundle.getSymbolicName())) {
+				compoundClassLoader
+						.add(new BundleDelegatingClassLoader(bundle));
+			}
+		}
+
+		//
+		return compoundClassLoader;
+	}
 }

@@ -23,6 +23,10 @@ import org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import com.db4o.osgi.Db4oService;
 
@@ -32,175 +36,179 @@ import com.db4o.osgi.Db4oService;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class PersistentDependencyStoreFactoryComponent implements IPersistentDependencyStoreFactory {
+@Component
+public class PersistentDependencyStoreFactoryComponent implements
+		IPersistentDependencyStoreFactory {
 
-  /** PREFIX_BUNDLEMAKER_DB4O_STORE */
-  private static final String                                     PREFIX_BUNDLEMAKER_DB4O_STORE               = "db4o.store";
+	/** PREFIX_BUNDLEMAKER_DB4O_STORE */
+	private static final String PREFIX_BUNDLEMAKER_DB4O_STORE = "db4o.store";
 
-  /** the cache */
-  private Map<IProjectDescriptionAwareBundleMakerProject, PersistentDependencyStoreImpl> _cache;
+	/** the cache */
+	private Map<IProjectDescriptionAwareBundleMakerProject, PersistentDependencyStoreImpl> _cache;
 
-  /** the db4o service */
-  private Db4oService                                             _db4oService;
+	/** - */
+	private String _fileName;
 
-  /** - */
-  private String                                                  _fileName;
+	/** - */
+	private static final boolean DELETE_DEPENDENCYSTORE_IF_CORE_BUNDLE_VERSION_CHANGED = true;
 
-  /** - */
-  private static final boolean                                    DELETE_DEPENDENCYSTORE_IF_CORE_BUNDLE_VERSION_CHANGED = true;
+	/** - */
+	private BundleContext _bundleContext;
 
-  /**
-   * <p>
-   * Creates a new instance of type {@link PersistentDependencyStoreFactoryComponent}.
-   * </p>
-   */
-  public PersistentDependencyStoreFactoryComponent() {
+	/**
+	 * <p>
+	 * Creates a new instance of type
+	 * {@link PersistentDependencyStoreFactoryComponent}.
+	 * </p>
+	 */
+	public PersistentDependencyStoreFactoryComponent() {
 
-    // create the cache
-    _cache = new HashMap<IProjectDescriptionAwareBundleMakerProject, PersistentDependencyStoreImpl>();
-  }
+		// create the cache
+		_cache = new HashMap<IProjectDescriptionAwareBundleMakerProject, PersistentDependencyStoreImpl>();
+	}
 
-  /**
-   * @see org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory#resetPersistentDependencyStore(org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject)
-   */
-  public void resetPersistentDependencyStore(IProjectDescriptionAwareBundleMakerProject project) throws CoreException {
+	/**
+	 * @param bundleContext
+	 */
+	@Activate
+	public void activate(BundleContext bundleContext) {
+		_bundleContext = bundleContext;
+	}
 
-    // step 1: dispose the cache if necessary
-    if (_cache.containsKey(project)) {
+	/**
+	 * @see org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory#resetPersistentDependencyStore(org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject)
+	 */
+	public void resetPersistentDependencyStore(
+			IProjectDescriptionAwareBundleMakerProject project)
+			throws CoreException {
 
-      // get the store
-      PersistentDependencyStoreImpl infoStore = _cache.get(project);
+		// step 1: dispose the cache if necessary
+		if (_cache.containsKey(project)) {
 
-      // dispose the store if necessary
-      if (infoStore.isInitialized()) {
-        infoStore.dispose();
-      }
-    }
+			// get the store
+			PersistentDependencyStoreImpl infoStore = _cache.get(project);
 
-    // step 2: delete the existing '.bundlemaker/db4o.store' file
-    IFile file = project.getProject().getFile(
-        new Path(BundleMakerProjectCore.BUNDLEMAKER_DIRECTORY_NAME).append(getFileName()));
-    if (!file.getRawLocation().toFile().delete()) {
-      System.out.println();
-      System.out.println(String.format("Could not delete file '%s'", file.getRawLocation().toFile().getAbsolutePath()));
-      System.out.println();
-    }
+			// dispose the store if necessary
+			if (infoStore.isInitialized()) {
+				infoStore.dispose();
+			}
+		}
 
-    // step 3: re-init the dependency store
-    if (_cache.containsKey(project)) {
+		// step 2: delete the existing '.bundlemaker/db4o.store' file
+		IFile file = project.getProject().getFile(
+				new Path(BundleMakerProjectCore.BUNDLEMAKER_DIRECTORY_NAME)
+						.append(getFileName()));
+		if (!file.getRawLocation().toFile().delete()) {
+			System.out.println();
+			System.out.println(String.format("Could not delete file '%s'", file
+					.getRawLocation().toFile().getAbsolutePath()));
+			System.out.println();
+		}
 
-      // get the store
-      PersistentDependencyStoreImpl dependencyStore = _cache.get(project);
+		// step 3: re-init the dependency store
+		if (_cache.containsKey(project)) {
 
-      // initialize the dependency store
-      dependencyStore.init();
-    }
-  }
+			// get the store
+			PersistentDependencyStoreImpl dependencyStore = _cache.get(project);
 
-  public void releasePersistentDependencyStore(IProjectDescriptionAwareBundleMakerProject project) {
-    // step 1: dispose the cache if necessary
-    if (_cache.containsKey(project)) {
+			// initialize the dependency store
+			dependencyStore.init();
+		}
+	}
 
-      // get the store
-      PersistentDependencyStoreImpl storeImpl = _cache.get(project);
+	public void releasePersistentDependencyStore(
+			IProjectDescriptionAwareBundleMakerProject project) {
+		// step 1: dispose the cache if necessary
+		if (_cache.containsKey(project)) {
 
-      // dispose the store if necessary
-      if (storeImpl.isInitialized()) {
-        storeImpl.dispose();
-      }
+			// get the store
+			PersistentDependencyStoreImpl storeImpl = _cache.get(project);
 
-      //
-      _cache.remove(project);
-    }
+			// dispose the store if necessary
+			if (storeImpl.isInitialized()) {
+				storeImpl.dispose();
+			}
 
-  }
+			//
+			_cache.remove(project);
+		}
 
-  /**
-   * @see org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory#getPersistentDependencyStore(org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject)
-   */
-  public IPersistentDependencyStore getPersistentDependencyStore(IProjectDescriptionAwareBundleMakerProject project) {
+	}
 
-    // step 1: return the cached version if one exists
-    if (_cache.containsKey(project)) {
+	/**
+	 * @see org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory#getPersistentDependencyStore(org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject)
+	 */
+	public IPersistentDependencyStore getPersistentDependencyStore(
+			IProjectDescriptionAwareBundleMakerProject project) {
 
-      //
-      IPersistentDependencyStore dependencyStore = _cache.get(project);
+		// step 1: return the cached version if one exists
+		if (_cache.containsKey(project)) {
 
-      //
-      if (!dependencyStore.isInitialized()) {
-        dependencyStore.init();
-      }
+			//
+			IPersistentDependencyStore dependencyStore = _cache.get(project);
 
-      //
-      return dependencyStore;
-    }
+			//
+			if (!dependencyStore.isInitialized()) {
+				dependencyStore.init();
+			}
 
-    // delete the old store
-    if (DELETE_DEPENDENCYSTORE_IF_CORE_BUNDLE_VERSION_CHANGED) {
-      try {
-        IFile parent = project.getProject().getFile(new Path(BundleMakerProjectCore.BUNDLEMAKER_DIRECTORY_NAME));
-        File parentFile = parent.getRawLocation().toFile();
-        for (String child : FileUtils.getAllChildren(parentFile)) {
-          if (!child.endsWith(getFileName())) {
-            boolean done = new File(parentFile, child).delete();
-          }
-        }
-      } catch (CoreException e) {
-        e.printStackTrace();
-      }
-    }
+			//
+			return dependencyStore;
+		}
 
-    // step 2: create a new store
-    IFile file = project.getProject().getFile(
-        new Path(BundleMakerProjectCore.BUNDLEMAKER_DIRECTORY_NAME).append(getFileName()));
-    PersistentDependencyStoreImpl store = new PersistentDependencyStoreImpl(_db4oService, file.getRawLocation()
-        .toOSString());
+		// delete the old store
+		if (DELETE_DEPENDENCYSTORE_IF_CORE_BUNDLE_VERSION_CHANGED) {
+			try {
+				IFile parent = project
+						.getProject()
+						.getFile(
+								new Path(
+										BundleMakerProjectCore.BUNDLEMAKER_DIRECTORY_NAME));
+				File parentFile = parent.getRawLocation().toFile();
+				for (String child : FileUtils.getAllChildren(parentFile)) {
+					if (!child.endsWith(getFileName())) {
+						boolean done = new File(parentFile, child).delete();
+					}
+				}
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+		}
 
-    // step 3: initialize the store
-    store.init();
+		// step 2: create a new store
+		IFile file = project.getProject().getFile(
+				new Path(BundleMakerProjectCore.BUNDLEMAKER_DIRECTORY_NAME)
+						.append(getFileName()));
+		PersistentDependencyStoreImpl store = new PersistentDependencyStoreImpl(
+				file.getRawLocation().toOSString(), _bundleContext);
 
-    // step 4: cache it
-    _cache.put(project, store);
+		// step 3: initialize the store
+		store.init();
 
-    // return the store
-    return store;
-  }
+		// step 4: cache it
+		_cache.put(project, store);
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param db4oService
-   */
-  public void setDb4oService(Db4oService db4oService) {
-    _db4oService = db4oService;
-  }
+		// return the store
+		return store;
+	}
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param db4oService
-   */
-  public void unsetDb4oService(Db4oService db4oService) {
-    _db4oService = null;
-  }
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public String getFileName() {
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public String getFileName() {
+		//
+		if (_fileName == null) {
+			_fileName = DELETE_DEPENDENCYSTORE_IF_CORE_BUNDLE_VERSION_CHANGED ? String
+					.format("%s_%s", PREFIX_BUNDLEMAKER_DB4O_STORE, Activator
+							.getDefault().getBundleVersion())
+					: PREFIX_BUNDLEMAKER_DB4O_STORE;
+		}
 
-    //
-    if (_fileName == null) {
-      _fileName = DELETE_DEPENDENCYSTORE_IF_CORE_BUNDLE_VERSION_CHANGED ? String.format("%s_%s", PREFIX_BUNDLEMAKER_DB4O_STORE,
-          Activator.getDefault().getBundleVersion()) : PREFIX_BUNDLEMAKER_DB4O_STORE;
-    }
-
-    //
-    return _fileName;
-  }
+		//
+		return _fileName;
+	}
 }

@@ -35,9 +35,6 @@ import com.db4o.reflect.jdk.JdkReflector;
 public abstract class AbstractPersistentDependencyStore implements
 		IPersistentDependencyStore {
 
-	/** the db4o service */
-	private Db4oService _db4oService;
-
 	/** the (absolute) file name of the database file */
 	private String _fileName;
 
@@ -52,18 +49,12 @@ public abstract class AbstractPersistentDependencyStore implements
 	 * Creates a new instance of type {@link AbstractPersistentDependencyStore}.
 	 * </p>
 	 * 
-	 * @param db4oService
-	 *            the db4o service
 	 * @param fileName
 	 *            the file name
 	 */
-	public AbstractPersistentDependencyStore(Db4oService db4oService,
-			String fileName) {
-
-		Assert.isNotNull(db4oService);
+	public AbstractPersistentDependencyStore(String fileName) {
 		Assert.isNotNull(fileName);
 
-		_db4oService = db4oService;
 		_fileName = fileName;
 	}
 
@@ -76,22 +67,26 @@ public abstract class AbstractPersistentDependencyStore implements
 
 		// create a new configuration
 		Configuration configuration = Db4o.newConfiguration();
-		
-		// TODO: set the reflector
-		configuration.reflectWith(
-		        new JdkReflector(Thread.currentThread().getContextClassLoader()));
-		
-		// set cascade on update
-		configuration.objectClass(Resource.class).cascadeOnUpdate(true);
-		// configuration.objectClass(Reference.class).cascadeOnUpdate(true);
-		configuration.objectClass(DefaultProjectContentResource.class)
-				.cascadeOnUpdate(true);
 
-		// set cascade on activation
-		configuration.objectClass(Resource.class).cascadeOnActivate(true);
-		// configuration.objectClass(Reference.class).cascadeOnActivate(true);
-		configuration.objectClass(DefaultProjectContentResource.class)
-				.cascadeOnActivate(true);
+		ClassLoader classLoader = getReflectorClassLoader();
+		configuration.reflectWith(new JdkReflector(classLoader));
+
+		try {
+			// set cascade on update
+			configuration.objectClass(Resource.class).cascadeOnUpdate(true);
+			configuration.objectClass(classLoader.loadClass("org.bundlemaker.core.jtype.internal.Reference")).cascadeOnUpdate(true);
+			configuration.objectClass(DefaultProjectContentResource.class)
+					.cascadeOnUpdate(true);
+
+			// set cascade on activation
+			configuration.objectClass(Resource.class).cascadeOnActivate(true);
+			configuration.objectClass(classLoader.loadClass("org.bundlemaker.core.jtype.internal.Reference")).cascadeOnActivate(true);
+			configuration.objectClass(DefaultProjectContentResource.class)
+					.cascadeOnActivate(true);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// note: cascadeOnDelete is not possible, otherwise we clean up
 		// FlyWeightCache instances!
@@ -111,11 +106,17 @@ public abstract class AbstractPersistentDependencyStore implements
 		File file = new File(_fileName);
 
 		file.getParentFile().mkdirs();
-		_database = _db4oService.openFile(configuration, _fileName);
+	
+		_database = Db4o.openFile(configuration, _fileName);
 
 		// set initialized
 		_isInitialized = true;
 	}
+
+	/**
+	 * @return
+	 */
+	protected abstract ClassLoader getReflectorClassLoader();
 
 	/**
 	 * <p>
