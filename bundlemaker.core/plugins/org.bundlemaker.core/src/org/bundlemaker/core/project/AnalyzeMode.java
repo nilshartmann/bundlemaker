@@ -27,7 +27,7 @@ public enum AnalyzeMode {
   /** Analyze sources and binaries of a content entry */
   BINARIES_AND_SOURCES,
 
-  /** Do not analyze this content add all */
+  /** Do not analyze this content at all */
   DO_NOT_ANALYZE;
 
   /**
