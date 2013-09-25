@@ -25,244 +25,279 @@ import org.junit.Assert;
  */
 public class TestProjectCreator {
 
-  /** TEST_PROJECT_NAME */
-  public static final String TEST_PROJECT_NAME                 = "TEST_PROJECT";
+	/** TEST_PROJECT_NAME */
+	public static final String TEST_PROJECT_NAME = "TEST_PROJECT";
 
-  /** TEST_PROJECT_VERSION */
-  public static final String TEST_PROJECT_VERSION              = "1.0.0";
+	/** TEST_PROJECT_VERSION */
+	public static final String TEST_PROJECT_VERSION = "1.0.0";
 
-  /** - */
-  public static final String BUNDLEMAKER_TEST_VM_PROPERTY_NAME = "org.bundlemaker.core.itestframework.vm_install";
+	/** - */
+	public static final String BUNDLEMAKER_TEST_VM_PROPERTY_NAME = "org.bundlemaker.core.itestframework.vm_install";
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param bundleMakerProject
-   */
-  public static void initializeParseAndOPen(IParserAwareBundleMakerProject bundleMakerProject) {
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param bundleMakerProject
+	 */
+	public static void initializeParseAndOPen(
+			IParserAwareBundleMakerProject bundleMakerProject) {
 
-    try {
+		try {
 
-      // initialize
-      bundleMakerProject.initialize(new ProgressMonitor());
+			// initialize
+			bundleMakerProject.initialize(new ProgressMonitor());
 
-      // parse and open the project
-      bundleMakerProject.parseAndOpen(new ProgressMonitor());
+			// parse and open the project
+			bundleMakerProject.parseAndOpen(new ProgressMonitor());
 
-      // assert no parse errors
-      if (bundleMakerProject.getProblems().size() > 0) {
-        StringBuilder builder = new StringBuilder();
-        for (IProblem problem : bundleMakerProject.getProblems()) {
-          builder.append(problem.getMessage());
-          builder.append("\n");
-        }
-        Assert.fail(builder.toString());
-      }
+			// assert no parse errors
+			if (bundleMakerProject.getProblems().size() > 0) {
+				StringBuilder builder = new StringBuilder();
+				for (IProblem problem : bundleMakerProject.getProblems()) {
+					builder.append(problem.getMessage());
+					builder.append("\n");
+				}
+				Assert.fail(builder.toString());
+			}
 
-    } catch (CoreException e) {
-      Assert.fail(e.getMessage());
-    }
-  }
+		} catch (CoreException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public static final IParserAwareBundleMakerProject getBundleMakerProject(String testProjectName) {
-    try {
-      // create simple project
-      IProject simpleProject = BundleMakerProjectCore.getOrCreateSimpleProjectWithBundleMakerNature(testProjectName);
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public static final IParserAwareBundleMakerProject getBundleMakerProject(
+			String testProjectName) {
+		try {
+			// create simple project
+			IProject simpleProject = BundleMakerProjectCore
+					.getOrCreateSimpleProjectWithBundleMakerNature(testProjectName);
 
-      // get the BM project
-      return BundleMakerProjectCore.getProjectDescriptionAwareBundleMakerProject(simpleProject).adaptAs(IParserAwareBundleMakerProject.class);
-    } catch (CoreException e) {
-      e.printStackTrace();
-      Assert.fail(e.getMessage());
-      return null;
-    }
-  }
+			// get the BM project
+			return BundleMakerProjectCore
+					.getProjectDescriptionAwareBundleMakerProject(simpleProject)
+					.adaptAs(IParserAwareBundleMakerProject.class);
+		} catch (CoreException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+			return null;
+		}
+	}
 
-  public static void addProjectDescription(IProjectDescriptionAwareBundleMakerProject bundleMakerProject,
-      String testProjectName) {
+	public static void addProjectDescription(
+			IProjectDescriptionAwareBundleMakerProject bundleMakerProject,
+			String testProjectName) {
 
-    File testDataDirectory = getTestDataDirectory(testProjectName);
+		File testDataDirectory = getTestDataDirectory(testProjectName);
 
-    // create the project description
-    addProjectDescription(bundleMakerProject, testDataDirectory, testProjectName);
-  }
+		// create the project description
+		addProjectDescription(bundleMakerProject, testDataDirectory,
+				testProjectName);
+	}
 
-  public static File getTestDataDirectory(String testProjectName) {
-    //
-    File testDataDirectory = new File(new File(System.getProperty("user.dir"), "test-data"), testProjectName);
+	public static File getTestDataDirectory(String testProjectName) {
+		//
+		File testDataDirectory = new File(new File(
+				System.getProperty("user.dir"), "test-data"), testProjectName);
 
-    //
-    if (!testDataDirectory.isDirectory()) {
+		//
+		if (!testDataDirectory.isDirectory()) {
 
-      //
-      File file = new File(TestProjectCreator.class.getProtectionDomain().getCodeSource().getLocation().getFile());
+			//
+			File file = new File(TestProjectCreator.class.getProtectionDomain()
+					.getCodeSource().getLocation().getFile());
 
-      //
-      if (file.isFile()) {
+			//
+			if (file.isFile()) {
 
-        // File myTempDir = Files.createTempDir();
-        // myTempDir.mkdirs();
-        // File parentDir = new File(myTempDir, testProjectName);
-        // String prefix = "test-data/" + testProjectName + "/";
-        //
-        // try {
-        // JarFile jar = new JarFile(file);
-        // Enumeration<JarEntry> enumeration = jar.entries();
-        // while (enumeration.hasMoreElements()) {
-        // JarEntry jarEntry = enumeration.nextElement();
-        // if (jarEntry.getName().startsWith("test-data/" + testProjectName + "/")) {
-        // InputStream in = new BufferedInputStream(jar.getInputStream(jarEntry));
-        // File dest = new File(parentDir, jarEntry.getName().substring(prefix.length()));
-        // dest.mkdirs();
-        // OutputStream out = new BufferedOutputStream(new FileOutputStream(dest));
-        // byte[] buffer = new byte[2048];
-        // for (;;) {
-        // int nBytes = in.read(buffer);
-        // if (nBytes <= 0)
-        // break;
-        // out.write(buffer, 0, nBytes);
-        // }
-        // out.flush();
-        // out.close();
-        // in.close();
-        // }
-        // }
-        // } catch (IOException e) {
-        // e.printStackTrace();
-        // throw new RuntimeException(e.getMessage(), e);
-        // }
-        //
-        // testDataDirectory = parentDir;
+				// File myTempDir = Files.createTempDir();
+				// myTempDir.mkdirs();
+				// File parentDir = new File(myTempDir, testProjectName);
+				// String prefix = "test-data/" + testProjectName + "/";
+				//
+				// try {
+				// JarFile jar = new JarFile(file);
+				// Enumeration<JarEntry> enumeration = jar.entries();
+				// while (enumeration.hasMoreElements()) {
+				// JarEntry jarEntry = enumeration.nextElement();
+				// if (jarEntry.getName().startsWith("test-data/" +
+				// testProjectName + "/")) {
+				// InputStream in = new
+				// BufferedInputStream(jar.getInputStream(jarEntry));
+				// File dest = new File(parentDir,
+				// jarEntry.getName().substring(prefix.length()));
+				// dest.mkdirs();
+				// OutputStream out = new BufferedOutputStream(new
+				// FileOutputStream(dest));
+				// byte[] buffer = new byte[2048];
+				// for (;;) {
+				// int nBytes = in.read(buffer);
+				// if (nBytes <= 0)
+				// break;
+				// out.write(buffer, 0, nBytes);
+				// }
+				// out.flush();
+				// out.close();
+				// in.close();
+				// }
+				// }
+				// } catch (IOException e) {
+				// e.printStackTrace();
+				// throw new RuntimeException(e.getMessage(), e);
+				// }
+				//
+				// testDataDirectory = parentDir;
 
-        //
-        throw new RuntimeException(String.format("File '%s' has to be a directory!", file.getAbsolutePath()));
+				//
+				throw new RuntimeException(String.format(
+						"File '%s' has to be a directory!",
+						file.getAbsolutePath()));
 
-      } else if (file.isDirectory()) {
-        testDataDirectory = new File(new File(file, "test-data"), testProjectName);
-      }
-    }
+			} else if (file.isDirectory()) {
+				testDataDirectory = new File(new File(file, "test-data"),
+						testProjectName);
+			}
+		}
 
-    Assert.assertTrue(String.format("File '%s' has to be a directory.", testDataDirectory),
-        testDataDirectory.isDirectory());
-    return testDataDirectory;
-  }
+		Assert.assertTrue(String.format("File '%s' has to be a directory.",
+				testDataDirectory), testDataDirectory.isDirectory());
+		return testDataDirectory;
+	}
 
-  public static void addProjectDescription(IProjectDescriptionAwareBundleMakerProject bundleMakerProject, File directory) {
-    addProjectDescription(bundleMakerProject, directory, TEST_PROJECT_NAME);
-  }
+	public static void addProjectDescription(
+			IProjectDescriptionAwareBundleMakerProject bundleMakerProject,
+			File directory) {
+		addProjectDescription(bundleMakerProject, directory, TEST_PROJECT_NAME);
+	}
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param bundleMakerProject
-   * @throws CoreException
-   */
-  public static void addProjectDescription(IProjectDescriptionAwareBundleMakerProject bundleMakerProject,
-      File directory, String projectName) {
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param bundleMakerProject
+	 * @throws CoreException
+	 */
+	public static void addProjectDescription(
+			IProjectDescriptionAwareBundleMakerProject bundleMakerProject,
+			File directory, String projectName) {
 
-    Assert.assertTrue(directory.isDirectory());
+		Assert.assertTrue(directory.isDirectory());
 
-    //
-    IModifiableProjectDescription projectDescription = bundleMakerProject.getModifiableProjectDescription();
+		//
+		IModifiableProjectDescription projectDescription = bundleMakerProject
+				.getModifiableProjectDescription();
 
-    // step 1:
-    projectDescription.clear();
+		// step 1:
+		projectDescription.clear();
 
-    // step 2: add the JRE
-    projectDescription.setJre(getTestVmName());
+		// step 2: add the JRE
+		projectDescription.setJre(getTestVmName());
 
-    // step 3: add the source and classes
-    String classesPath = getClassesPath(directory);
-    String sourcesPath = getSourcesPath(directory);
+		// step 3: add the source and classes
+		String classesPath = getClassesPath(directory);
+		String sourcesPath = getSourcesPath(directory);
 
-    //
-    FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(projectDescription, projectName,
-        TEST_PROJECT_VERSION, classesPath, sourcesPath);
+		//
+		FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(
+				projectDescription, projectName, TEST_PROJECT_VERSION,
+				classesPath, sourcesPath);
 
-    // step 4: process the class path entries
-    File libsDir = new File(directory, "libs");
-    if (libsDir.exists()) {
-      File[] jarFiles = libsDir.listFiles();
-      for (File externalJar : jarFiles) {
-        FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(projectDescription,
-            externalJar.getAbsolutePath(), null, AnalyzeMode.BINARIES_ONLY);
-      }
-    }
+		// step 4: process the class path entries
+		File libsDir = new File(directory, "libs");
+		if (libsDir.exists()) {
+			File[] jarFiles = libsDir.listFiles();
+			for (File externalJar : jarFiles) {
+				FileBasedProjectContentProviderFactory
+						.addNewFileBasedContentProvider(projectDescription,
+								externalJar.getAbsolutePath(), null,
+								AnalyzeMode.BINARIES_ONLY);
+			}
+		}
 
-    try {
-      //
-      projectDescription.save();
-    } catch (CoreException e) {
-      e.printStackTrace();
-      Assert.fail(e.getMessage());
-    }
-  }
+		try {
+			//
+			projectDescription.save();
+		} catch (CoreException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
 
-  public static String getClassesPath(File directory) {
-    File classes = null;
-    if (new File(directory, "classes").isDirectory()) {
-      classes = new File(directory, "classes");
-    } else if (new File(directory, "classes.zip").isFile()) {
-      classes = new File(directory, "classes.zip");
-    } else {
-      Assert.fail("No classes found!");
-    }
+	public static String getClassesPath(File directory) {
+		File classes = null;
+		if (new File(directory, "classes").isDirectory()) {
+			classes = new File(directory, "classes");
+		} else if (new File(directory, "classes.zip").isFile()) {
+			classes = new File(directory, "classes.zip");
+		} else {
+			Assert.fail("No classes found!");
+		}
 
-    return classes.getAbsolutePath();
-  }
+		return classes.getAbsolutePath();
+	}
 
-  public static String getSourcesPath(File directory) {
-    File sources = null;
-    if (new File(directory, "src").isDirectory()) {
-      sources = new File(directory, "src");
-    } else if (new File(directory, "src.zip").isFile()) {
-      sources = new File(directory, "src.zip");
-    } else {
-      // Assert.fail("No classes found!");
-    }
+	public static String getSourcesPath(File directory) {
+		File sources = null;
+		if (new File(directory, "src").isDirectory()) {
+			sources = new File(directory, "src");
+		} else if (new File(directory, "src.zip").isFile()) {
+			sources = new File(directory, "src.zip");
+		} else {
+			// Assert.fail("No classes found!");
+		}
 
-    return (sources == null ? null : sources.getAbsolutePath());
-  }
+		return (sources == null ? null : sources.getAbsolutePath());
+	}
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   * @throws CoreException
-   */
-  private static String getTestVmName() {
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 * @throws CoreException
+	 */
+	public static String getTestVmName() {
 
-    String configuredTestVmLocation = System.getProperty(BUNDLEMAKER_TEST_VM_PROPERTY_NAME);
+		IVMInstall vmInstall = getTestVm();
 
-    System.out.println("configuredTestVmLocation: " + configuredTestVmLocation);
+		System.out.println("Using Test JDK '" + vmInstall.getName() + "' from "
+				+ vmInstall.getInstallLocation());
+		return vmInstall.getName();
+	}
 
-    IVMInstall vmInstall = null;
+	public static IVMInstall getTestVm() {
 
-    if (configuredTestVmLocation == null || configuredTestVmLocation.trim().isEmpty()
-        || !new File(configuredTestVmLocation).isDirectory()) {
-      vmInstall = JavaRuntime.getDefaultVMInstall();
-    } else {
-      System.out.println("Creating Test IVMInstall for location '" + configuredTestVmLocation + "'");
-      try {
-        vmInstall = VMInstallUtils.getOrCreateIVMInstall("BundleMakerTestJDK", configuredTestVmLocation);
-      } catch (CoreException e) {
-        e.printStackTrace();
-        Assert.fail(e.getMessage());
-      }
-    }
+		String configuredTestVmLocation = System
+				.getProperty(BUNDLEMAKER_TEST_VM_PROPERTY_NAME);
 
-    assertNotNull("No VM available", vmInstall);
+		System.out.println("configuredTestVmLocation: "
+				+ configuredTestVmLocation);
 
-    System.out.println("Using Test JDK '" + vmInstall.getName() + "' from " + vmInstall.getInstallLocation());
-    return vmInstall.getName();
-  }
+		IVMInstall result = null;
+
+		if (configuredTestVmLocation == null
+				|| configuredTestVmLocation.trim().isEmpty()
+				|| !new File(configuredTestVmLocation).isDirectory()) {
+			result = JavaRuntime.getDefaultVMInstall();
+		} else {
+			System.out.println("Creating Test IVMInstall for location '"
+					+ configuredTestVmLocation + "'");
+			try {
+				result = VMInstallUtils.getOrCreateIVMInstall(
+						"BundleMakerTestJDK", configuredTestVmLocation);
+			} catch (CoreException e) {
+				e.printStackTrace();
+				Assert.fail(e.getMessage());
+			}
+		}
+
+		assertNotNull("No VM available", result);
+		return result;
+	}
 }
