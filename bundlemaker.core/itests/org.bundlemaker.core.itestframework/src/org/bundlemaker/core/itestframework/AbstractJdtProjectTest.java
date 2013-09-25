@@ -97,6 +97,7 @@ public class AbstractJdtProjectTest {
 		contentProvider.addJavaProject(_javaProject);
 		_bundleMakerProject.getModifiableProjectDescription()
 				.addContentProvider(contentProvider);
+		_bundleMakerProject.getModifiableProjectDescription().setJre(TestProjectCreator.getTestVmName());
 		_bundleMakerProject.getModifiableProjectDescription().save();
 		TestProjectCreator.initializeParseAndOPen(_bundleMakerProject);
 
