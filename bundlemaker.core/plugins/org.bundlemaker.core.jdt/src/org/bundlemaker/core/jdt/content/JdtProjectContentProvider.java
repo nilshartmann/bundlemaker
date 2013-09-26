@@ -22,6 +22,7 @@ import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -143,39 +144,59 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
     }
   }
 
-  public void addEclipseResource(IResource eclipseResource) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param eclipseResource
+   */
+  public void eclipseResourceChanged(IResource eclipseResource) {
 
     //
-    List<IProjectContentEntry> entries = getBundleMakerProjectContent();
+    ContentEntryAndPath contentEntryAndPath = getContentEntryAndPath(eclipseResource);
 
     //
-    for (IProjectContentEntry contentEntry : entries) {
+    IProjectContentResource contentResource = getProjectContentResource(eclipseResource, contentEntryAndPath);
 
-      //
-      for (VariablePath variablePath : contentEntry.getBinaryRootPaths()) {
-        try {
-          if (variablePath.getResolvedPath().isPrefixOf(eclipseResource.getRawLocation())) {
+    handleResourceModified(contentResource);
+  }
 
-            addResourceToEntry(contentEntry, variablePath.getResolvedPath(),
-                eclipseResource.getRawLocation().makeRelativeTo(variablePath.getResolvedPath()), ResourceType.BINARY);
-          }
-        } catch (CoreException e) {
-          //
-        }
-      }
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param eclipseResource
+   */
+  public void eclipseResourceRemoved(IResource eclipseResource) {
 
-      //
-      for (VariablePath variablePath : contentEntry.getSourceRootPaths()) {
-        try {
-          if (variablePath.getResolvedPath().isPrefixOf(eclipseResource.getRawLocation())) {
+    //
+    ContentEntryAndPath contentEntryAndPath = getContentEntryAndPath(eclipseResource);
+    IProjectContentResource contentResource = getProjectContentResource(eclipseResource, contentEntryAndPath);
 
-            addResourceToEntry(contentEntry, variablePath.getResolvedPath(),
-                eclipseResource.getRawLocation().makeRelativeTo(variablePath.getResolvedPath()), ResourceType.SOURCE);
-          }
-        } catch (CoreException e) {
-          //
-        }
-      }
+    //
+    handleResourceRemoved(contentEntryAndPath.getContentEntry(), contentResource,
+        contentEntryAndPath.getResourceType());
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param eclipseResource
+   */
+  public void eclipseResourceAdded(IResource eclipseResource) {
+
+    //
+    ContentEntryAndPath contentEntryAndPath = getContentEntryAndPath(eclipseResource);
+
+    try {
+      handleResourceAdded(contentEntryAndPath.getContentEntry(),
+          contentEntryAndPath.getVariablePath().getResolvedPath(),
+          eclipseResource.getRawLocation().makeRelativeTo(contentEntryAndPath.getVariablePath().getResolvedPath()),
+          ResourceType.BINARY);
+    } catch (CoreException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
   }
 
@@ -186,63 +207,32 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
    * @param eclipseResource
    * @return
    */
-  public IProjectContentResource getProjectContentResource(IResource eclipseResource) {
+  private IProjectContentResource getProjectContentResource(IResource eclipseResource,
+      ContentEntryAndPath contentEntryAndPath) {
+
+    Assert.isNotNull(eclipseResource);
+    Assert.isNotNull(contentEntryAndPath);
 
     try {
 
       //
-      for (IProjectContentEntry contentEntry : getBundleMakerProjectContent()) {
+      IProjectContentEntry contentEntry = contentEntryAndPath.getContentEntry();
+      IPath resolvedVariablePath = contentEntryAndPath.getVariablePath().getResolvedPath();
+      ResourceType resourceType = contentEntryAndPath.getResourceType();
 
-        // binary
-        for (VariablePath root : contentEntry.getBinaryRootPaths()) {
+      //
+      IPath resourcePath = eclipseResource.getRawLocation().makeRelativeTo(resolvedVariablePath);
+      String resourcePathAsString = resourcePath.toString();
 
-          //
-          IPath rootPath = root.getResolvedPath();
-          IPath eclipseRawLocation = eclipseResource.getRawLocation();
-
-          //
-          if (rootPath.isPrefixOf(eclipseRawLocation)) {
-
-            //
-            IProjectContentResource result = contentEntry.getResource(
-                eclipseRawLocation.removeFirstSegments(rootPath.segmentCount()).toString(), ResourceType.BINARY);
-
-            //
-            if (result != null) {
-              return result;
-            }
-          }
-        }
-
-        // source
-        for (VariablePath root : contentEntry.getSourceRootPaths()) {
-
-          //
-          IPath rootPath = root.getResolvedPath();
-          IPath eclipseRawLocation = eclipseResource.getRawLocation();
-
-          //
-          if (rootPath.isPrefixOf(eclipseRawLocation)) {
-
-            //
-            IPath path = eclipseRawLocation.makeRelativeTo(rootPath);
-
-            //
-            IProjectContentResource result = contentEntry.getResource(path.toString(), ResourceType.SOURCE);
-
-            //
-            if (result != null) {
-              return result;
-            }
-          }
-        }
-      }
+      //
+      IProjectContentResource result = contentEntry.getResource(resourcePathAsString, resourceType);
+      Assert.isNotNull(result, contentEntryAndPath.toString());
+      return result;
 
     } catch (CoreException e) {
-      e.printStackTrace();
+      //
     }
-
-    return null;
+    throw new RuntimeException();
   }
 
   /**
@@ -334,7 +324,111 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
       return compareKey1.compareTo(compareKey2);
 
     }
-
   }
 
+  private ContentEntryAndPath getContentEntryAndPath(IResource eclipseResource) {
+
+    ContentEntryAndPath contentEntryAndPath = getContentEntryAndPath(eclipseResource, ResourceType.BINARY);
+    if (contentEntryAndPath == null) {
+      contentEntryAndPath = getContentEntryAndPath(eclipseResource, ResourceType.SOURCE);
+    }
+
+    Assert.isNotNull(eclipseResource);
+
+    return contentEntryAndPath;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param eclipseResource
+   * @return
+   */
+  private ContentEntryAndPath getContentEntryAndPath(IResource eclipseResource, ResourceType resourceType) {
+
+    Assert.isNotNull(eclipseResource);
+    Assert.isNotNull(resourceType);
+
+    try {
+      //
+      for (IProjectContentEntry contentEntry : getBundleMakerProjectContent()) {
+
+        //
+        Set<VariablePath> paths = resourceType == ResourceType.BINARY ? contentEntry.getBinaryRootPaths()
+            : contentEntry.getSourceRootPaths();
+
+        // binary
+        for (VariablePath root : paths) {
+
+          //
+          IPath rootPath = root.getResolvedPath();
+          IPath eclipseRawLocation = eclipseResource.getRawLocation();
+
+          //
+          if (rootPath.isPrefixOf(eclipseRawLocation)) {
+            return new ContentEntryAndPath(contentEntry, root, resourceType);
+          }
+        }
+      }
+    } catch (Exception e) {
+    }
+
+    //
+    return null;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   */
+  public class ContentEntryAndPath {
+
+    /** - */
+    private IProjectContentEntry _contentEntry;
+
+    /** - */
+    private VariablePath         _variablePath;
+
+    /** - */
+    private ResourceType         _resourceType;
+
+    /**
+     * <p>
+     * Creates a new instance of type {@link ContentEntryAndPath}.
+     * </p>
+     * 
+     * @param contentEntry
+     * @param variablePath
+     */
+    public ContentEntryAndPath(IProjectContentEntry contentEntry, VariablePath variablePath, ResourceType resourceType) {
+      Assert.isNotNull(contentEntry);
+      Assert.isNotNull(variablePath);
+      Assert.isNotNull(resourceType);
+
+      _contentEntry = contentEntry;
+      _variablePath = variablePath;
+      _resourceType = resourceType;
+    }
+
+    public IProjectContentEntry getContentEntry() {
+      return _contentEntry;
+    }
+
+    public VariablePath getVariablePath() {
+      return _variablePath;
+    }
+
+    public ResourceType getResourceType() {
+      return _resourceType;
+    }
+
+    @Override
+    public String toString() {
+      return getClass().getSimpleName() + " [_contentEntry=" + _contentEntry + ", _variablePath=" + _variablePath
+          + ", _resourceType=" + _resourceType + "]";
+    }
+  }
 }

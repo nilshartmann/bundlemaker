@@ -413,12 +413,24 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
    * 
    * @param resource
    */
+  @Override
   public void addSourceResource(IResourceStandin resourceStandin) {
     _sourceResources.add(resourceStandin);
   }
 
+  @Override
   public void addBinaryResource(IResourceStandin resourceStandin) {
     _binaryResources.add(resourceStandin);
+  }
+
+  @Override
+  public void removeBinaryResource(IResourceStandin resource) {
+    _binaryResources.remove(resource);
+  }
+
+  @Override
+  public void removeSourceResource(IResourceStandin resource) {
+    _binaryResources.remove(resource);
   }
 
   /**

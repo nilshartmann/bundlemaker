@@ -3,14 +3,14 @@ package org.bundlemaker.core.itest.jdtprojects;
 import java.util.LinkedList;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.bundlemaker.core.itestframework.AbstractJdtProjectTest;
 import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent;
 import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent.Type;
 import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
+import org.bundlemaker.core.project.IProjectContentEntry;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,6 +33,11 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
    */
   @Before
   public void before() throws CoreException {
+    
+    System.out.println("**********************************************************");
+    System.out.println("");
+    System.out.println("**********************************************************");
+    
     super.before();
 
     //
@@ -63,24 +68,6 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
    * @throws Exception
    */
   @Test
-  public void testSourceFileChanged() throws Exception {
-
-    //
-    modifyClassKlasse();
-
-    //
-    Assert.assertEquals(1, _contentChangedEvents.size());
-
-    BundleMakerProjectContentChangedEvent event = _contentChangedEvents.get(0);
-    Assert.assertEquals(Type.MODIFIED, event.getType());
-    Assert.assertEquals(getBundleMakerProject(), event.getBundleMakerProject());
-    Assert.assertEquals("de/test/Klasse.java", event.getContentResource().getPath());
-  }
-
-  /**
-   * @throws Exception
-   */
-  @Test
   public void testSourceFileAdded() throws Exception {
 
     //
@@ -92,6 +79,7 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
     BundleMakerProjectContentChangedEvent event = _contentChangedEvents.get(0);
     Assert.assertEquals(Type.ADDED, event.getType());
     Assert.assertEquals(getBundleMakerProject(), event.getBundleMakerProject());
+    System.out.println(event.getContentResource());
     Assert.assertEquals("newPack/NewClass.java", event.getContentResource().getPath());
   }
 
@@ -107,6 +95,32 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
     BundleMakerProjectContentChangedEvent event = _contentChangedEvents.get(0);
     Assert.assertEquals(Type.REMOVED, event.getType());
     Assert.assertEquals(getBundleMakerProject(), event.getBundleMakerProject());
+    System.out.println(event.getContentResource());
     Assert.assertEquals("de/test/Klasse.java", event.getContentResource().getPath());
   }
+
+  /**
+   * @throws Exception
+   */
+  @Test
+  public void testSourceFileChanged() throws Exception {
+
+    //
+    IProjectContentEntry contentEntry = getBundleMakerProject().getProjectDescription().getProjectContentEntry("0000000");
+    Assert.assertEquals(2, contentEntry.getSourceResources().size());
+    System.out.println(getBundleMakerProject().getProjectDescription().getProjectContentEntry("0000000").getSourceResources());
+    
+    //
+    modifyClassKlasse();
+
+    //
+    Assert.assertEquals(1, _contentChangedEvents.size());
+
+    BundleMakerProjectContentChangedEvent event = _contentChangedEvents.get(0);
+    Assert.assertEquals(Type.MODIFIED, event.getType());
+    Assert.assertEquals(getBundleMakerProject(), event.getBundleMakerProject());
+    System.out.println(event.getContentResource());
+    Assert.assertEquals("de/test/Klasse.java", event.getContentResource().getPath());
+  }
+
 }

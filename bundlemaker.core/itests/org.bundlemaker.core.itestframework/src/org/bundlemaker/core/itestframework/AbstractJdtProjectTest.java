@@ -117,6 +117,7 @@ public class AbstractJdtProjectTest {
 
 		//
 		_javaProject.getProject().close(null);
+		_bundleMakerProject.dispose();
 		_bundleMakerProject.getProject().close(null);
 
 		//

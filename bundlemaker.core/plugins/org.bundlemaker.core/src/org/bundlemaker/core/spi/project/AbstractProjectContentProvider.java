@@ -210,7 +210,7 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    * <p>
    * </p>
    */
-  public void fireProjectContentChangedEvent(BundleMakerProjectContentChangedEvent changedEvent) {
+  protected void fireProjectContentChangedEvent(BundleMakerProjectContentChangedEvent changedEvent) {
     if (_bundleMakerProject.getModifiableProjectDescription() instanceof BundleMakerProjectDescription) {
       ((BundleMakerProjectDescription) _bundleMakerProject.getModifiableProjectDescription())
           .fireProjectContentChangedEvent(changedEvent);
@@ -321,7 +321,17 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
     return _bundleMakerProject != null;
   }
 
-  protected void addResourceToEntry(IProjectContentEntry contentEntry, IPath rootPath, IPath filePath, ResourceType type) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param contentEntry
+   * @param rootPath
+   * @param filePath
+   * @param type
+   */
+  protected void handleResourceAdded(IProjectContentEntry contentEntry, IPath rootPath, IPath filePath,
+      ResourceType type) {
 
     //
     IProjectContentResource contentResource = null;
@@ -338,8 +348,37 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
     }
 
     //
+    // TODO PARSE?
+
+    //
     fireProjectContentChangedEvent(new BundleMakerProjectContentChangedEvent(getBundleMakerProject(),
         BundleMakerProjectContentChangedEvent.Type.ADDED, contentResource));
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param contentEntry
+   * @param resource
+   * @param type
+   */
+  protected void handleResourceRemoved(IProjectContentEntry contentEntry, IProjectContentResource resource,
+      ResourceType type) {
+
+    //
+    ((ProjectContentEntry) contentEntry).removeProjectContentResource(resource,
+        type);
+
+    //
+    fireProjectContentChangedEvent(new BundleMakerProjectContentChangedEvent(getBundleMakerProject(),
+        BundleMakerProjectContentChangedEvent.Type.REMOVED, resource));
+  }
+
+  protected void handleResourceModified(IProjectContentResource contentResource) {
+    //
+    fireProjectContentChangedEvent(new BundleMakerProjectContentChangedEvent(getBundleMakerProject(),
+        BundleMakerProjectContentChangedEvent.Type.MODIFIED, contentResource));
   }
 
   /**

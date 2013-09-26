@@ -697,6 +697,27 @@ public class ProjectContentEntry implements IProjectContentEntry {
     }
   }
 
+  public void removeProjectContentResource(IProjectContentResource resource, ResourceType type) {
+
+    //
+    // add the resource
+    switch (type) {
+    case BINARY: {
+      IResourceStandin resourceStandin = binaryResourceStandins().remove(resource.getPath());
+      _projectDescription.removeBinaryResource(resourceStandin);
+      break;
+    }
+    case SOURCE: {
+      IResourceStandin resourceStandin = sourceResourceStandins().remove(resource.getPath());
+      _projectDescription.removeSourceResource(resourceStandin);
+      break;
+    }
+    default:
+      break;
+    }
+
+  }
+
   /**
    * <p>
    * </p>

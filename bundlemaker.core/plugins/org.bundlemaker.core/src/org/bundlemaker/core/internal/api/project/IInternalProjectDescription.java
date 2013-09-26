@@ -13,4 +13,7 @@ public interface IInternalProjectDescription extends IProjectDescription {
 
   void addSourceResource(IResourceStandin resourceStandin);
 
+  void removeBinaryResource(IResourceStandin resourceStandin);
+
+  void removeSourceResource(IResourceStandin resourceStandin);
 }

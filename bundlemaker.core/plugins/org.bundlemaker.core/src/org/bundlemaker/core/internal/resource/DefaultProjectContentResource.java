@@ -285,7 +285,8 @@ public class DefaultProjectContentResource implements IProjectContentResource {
 
   @Override
   public String toString() {
-    return "ResourceKey [_contentId=" + _contentId + ", _root=" + _root + ", _path=" + _path + "]";
+    return this.getClass().getCanonicalName() + " [_contentId=" + _contentId + ", _root=" + _root + ", _path=" + _path
+        + "]";
   }
 
   /**
