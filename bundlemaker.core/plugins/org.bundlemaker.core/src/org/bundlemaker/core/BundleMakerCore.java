@@ -15,6 +15,7 @@ import java.util.Collection;
 import org.bundlemaker.core.common.utils.EclipseProjectUtils;
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
+import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IProject;
@@ -24,7 +25,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.JavaCore;
 
@@ -40,22 +40,22 @@ import org.eclipse.jdt.core.JavaCore;
 public final class BundleMakerCore {
 
   /** the nature id */
-  public static final String BUNDLE_ID                                  = "org.bundlemaker.core";
+  public static final String BUNDLE_ID                                  = BundleMakerProjectCore.BUNDLE_ID;
 
   /** the nature id */
-  public static final String NATURE_ID                                  = "org.bundlemaker.core.bundlemakernature";
+  public static final String NATURE_ID                                  = BundleMakerProjectCore.NATURE_ID;
 
   /** bundlemaker classpath container */
-  public static final IPath  BUNDLEMAKER_CONTAINER_PATH                 = new Path("org.bundlemaker.core.classpath");            //$NON-NLS-1$
+  public static final IPath  BUNDLEMAKER_CONTAINER_PATH                 = BundleMakerProjectCore.BUNDLEMAKER_CONTAINER_PATH;     //$NON-NLS-1$
 
   /** the bundle make directory name */
-  public static final String BUNDLEMAKER_DIRECTORY_NAME                 = ".bundlemaker";
+  public static final String BUNDLEMAKER_DIRECTORY_NAME                 = BundleMakerProjectCore.BUNDLEMAKER_DIRECTORY_NAME;
 
   /** the project description file name */
-  public static final String PROJECT_DESCRIPTION_NAME                   = "bundlemaker.json";
+  public static final String PROJECT_DESCRIPTION_NAME                   = BundleMakerProjectCore.PROJECT_DESCRIPTION_NAME;
 
   /** the project description path */
-  public static final IPath  PROJECT_DESCRIPTION_PATH                   = new Path(PROJECT_DESCRIPTION_NAME);
+  public static final IPath  PROJECT_DESCRIPTION_PATH                   = BundleMakerProjectCore.PROJECT_DESCRIPTION_PATH;
 
   /** - */
   public static final String BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER = "#####BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER#####";
