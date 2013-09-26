@@ -98,11 +98,6 @@ public class ModelSetup {
     final SubMonitor progressMonitor = SubMonitor.convert(mainMonitor, 100);
 
     //
-    for (IParserFactory parserFactory : Activator.getDefault().getParserFactoryRegistry().getParserFactories()) {
-      parserFactory.initialize(_bundleMakerProject);
-    }
-
-    //
     setupParsers();
 
     //
@@ -170,11 +165,6 @@ public class ModelSetup {
 
     //
     notifyParseStop();
-
-    //
-    for (IParserFactory parserFactory : Activator.getDefault().getParserFactoryRegistry().getParserFactories()) {
-      parserFactory.dispose(_bundleMakerProject);
-    }
 
     //
     return result[0];
@@ -256,13 +246,15 @@ public class ModelSetup {
         int remaining = newAndModifiedSourceResources.size() + newAndModifiedBinaryResources.size();
         resourceContentMonitor.setWorkRemaining(remaining);
 
-        ModelExtFactory.getModelExtensionFactory().beforeParseResourceModel(projectContent, newAndModifiedBinaryResources,
+        ModelExtFactory.getModelExtensionFactory().beforeParseResourceModel(projectContent,
+            newAndModifiedBinaryResources,
             newAndModifiedSourceResources);
 
         result = multiThreadedReparse(storedResourcesMap, newAndModifiedSourceResources,
             newAndModifiedBinaryResources, resourceCache, projectContent, resourceContentMonitor.newChild(remaining));
 
-        ModelExtFactory.getModelExtensionFactory().afterParseResourceModel(projectContent, newAndModifiedBinaryResources,
+        ModelExtFactory.getModelExtensionFactory().afterParseResourceModel(projectContent,
+            newAndModifiedBinaryResources,
             newAndModifiedSourceResources);
 
       }
@@ -487,7 +479,12 @@ public class ModelSetup {
       for (IParser parser : parsers) {
 
         // notify 'start'
-        parser.batchParseStart(_bundleMakerProject);
+        try {
+          parser.batchParseStart(_bundleMakerProject);
+        } catch (Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
     }
   }
@@ -505,7 +502,12 @@ public class ModelSetup {
       for (IParser parser : parsers) {
 
         // notify 'stop'
-        parser.batchParseStop(_bundleMakerProject);
+        try {
+          parser.batchParseStop(_bundleMakerProject);
+        } catch (Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
     }
   }

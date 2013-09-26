@@ -42,7 +42,7 @@ public abstract class AbstractParser implements IParser {
    * {@inheritDoc}
    */
   @Override
-  public void batchParseStart(IParserAwareBundleMakerProject bundleMakerProject) {
+  public void batchParseStart(IParserAwareBundleMakerProject bundleMakerProject) throws Exception {
     // ignore
   }
 
@@ -50,7 +50,7 @@ public abstract class AbstractParser implements IParser {
    * {@inheritDoc}
    */
   @Override
-  public void batchParseStop(IParserAwareBundleMakerProject bundleMakerProject) {
+  public void batchParseStop(IParserAwareBundleMakerProject bundleMakerProject) throws Exception {
     // ignore
   }
 

@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.jdt.internal.parser;
 
-import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.spi.parser.IParser;
 import org.bundlemaker.core.spi.parser.IParserFactory;
 import org.eclipse.core.runtime.CoreException;
@@ -22,28 +21,6 @@ import org.eclipse.core.runtime.CoreException;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class JdtParserFactory extends IParserFactory.Adapter {
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void initialize(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException {
-
-    // create or get the java project
-    if (!JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
-      JdtProjectHelper.newAssociatedJavaProject(bundleMakerProject);
-    }
-
-    JdtProjectHelper.setupAssociatedJavaProject(bundleMakerProject);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void dispose(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
-    JdtProjectHelper.deleteAssociatedProjectIfNecessary(bundleMakerProject.getProject());
-  }
 
   /**
    * {@inheritDoc}

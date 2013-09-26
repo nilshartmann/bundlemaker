@@ -64,7 +64,7 @@ public interface IParser {
    * 
    * @param bundleMakerProject
    */
-  void batchParseStart(IParserAwareBundleMakerProject bundleMakerProject);
+  void batchParseStart(IParserAwareBundleMakerProject bundleMakerProject) throws Exception;
 
   /**
    * <p>
@@ -72,7 +72,7 @@ public interface IParser {
    * 
    * @param bundleMakerProject
    */
-  void batchParseStop(IParserAwareBundleMakerProject bundleMakerProject);
+  void batchParseStop(IParserAwareBundleMakerProject bundleMakerProject) throws Exception;
 
   /**
    * <p>

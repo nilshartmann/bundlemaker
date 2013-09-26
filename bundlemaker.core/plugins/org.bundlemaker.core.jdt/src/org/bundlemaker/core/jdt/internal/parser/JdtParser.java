@@ -14,6 +14,7 @@ import org.bundlemaker.core.jdt.parser.CoreParserJdt;
 import org.bundlemaker.core.jtype.IParsableTypeResource;
 import org.bundlemaker.core.jtype.IType;
 import org.bundlemaker.core.jtype.JavaTypeUtils;
+import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
 import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.spi.parser.AbstractParser;
@@ -49,6 +50,28 @@ public class JdtParser extends AbstractParser {
     // create the AST parser
     _parser = ASTParser.newParser(AST.JLS4);
   }
+  
+  @Override
+  public void batchParseStart(IParserAwareBundleMakerProject bundleMakerProject) throws CoreException {
+    
+    // create or get the java project
+    if (!JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
+      JdtProjectHelper.newAssociatedJavaProject(bundleMakerProject);
+    }
+
+    JdtProjectHelper.setupAssociatedJavaProject(bundleMakerProject);
+    
+  }
+
+
+
+  @Override
+  public void batchParseStop(IParserAwareBundleMakerProject bundleMakerProject) {
+    
+    JdtProjectHelper.deleteAssociatedProjectIfNecessary(bundleMakerProject.getProject());
+  }
+
+
 
   /**
    * {@inheritDoc}
