@@ -255,6 +255,7 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
     //
     checkProjectSet();
 
+    _isInitialized = false;
     _projectContentEntries.clear();
   }
 
