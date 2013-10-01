@@ -57,12 +57,11 @@ public abstract class AbstractParser implements IParser {
   /**
    * <p>
    * </p>
-   * 
    * @param context
    * @param resourceKey
    */
   public List<IProblem> parseResource(IProjectContentEntry content, IParsableResource resource,
-      boolean parseReferences) {
+      boolean parseReferences, boolean isBatchParse) {
 
     // Reset problem list
     _problems = new LinkedList<IProblem>();

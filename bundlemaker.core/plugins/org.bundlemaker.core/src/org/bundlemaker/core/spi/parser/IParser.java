@@ -49,13 +49,14 @@ public interface IParser {
    * 
    * @param content
    * @param resource
-   * @param context
    * @param parseReferences
    *          TODO
+   * @param isBatchParse TODO
+   * @param context
    * @throws CoreException
    */
   List<IProblem> parseResource(IProjectContentEntry content, IParsableResource resource,
-      boolean parseReferences)
+      boolean parseReferences, boolean isBatchParse)
       throws CoreException;
 
   /**
