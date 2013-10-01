@@ -11,6 +11,7 @@ import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.common.utils.FileUtils;
 import org.bundlemaker.core.internal.api.project.IInternalProjectDescription;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
+import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.IProjectContentEntry;
@@ -655,23 +656,6 @@ public class ProjectContentEntry implements IProjectContentEntry {
     return true;
   }
 
-  public IProjectContentResource createNewSourceStandin(String rootPath, String filePath) {
-
-    //
-    if (!sourceResourceStandins().containsKey(filePath)) {
-
-      // create the resource standin
-      return createNewResourceStandin(getId(), rootPath, filePath, ResourceType.SOURCE,
-          isAnalyze());
-
-    } else {
-
-      //
-      System.out.println(String.format("DUPLICATE RESOURCE IN ENTRY '%s': '%s'", getId(), filePath));
-      return getResource(filePath, ResourceType.SOURCE);
-    }
-  }
-
   public IProjectContentResource createNewProjectContentResource(String root, String path,
       ResourceType type) {
 
@@ -683,8 +667,15 @@ public class ProjectContentEntry implements IProjectContentEntry {
     if (!standins.containsKey(path)) {
 
       // create the resource standin
-      return createNewResourceStandin(getId(), root, path, type,
+      ResourceStandin resourceStandin = (ResourceStandin) createNewResourceStandin(getId(), root, path, type,
           isAnalyze());
+
+      // set resource
+      resourceStandin.setResource(new Resource(resourceStandin.getProjectContentEntryId(), resourceStandin.getRoot(),
+          resourceStandin.getPath()));
+
+      // return resource
+      return resourceStandin;
 
     } else {
       //

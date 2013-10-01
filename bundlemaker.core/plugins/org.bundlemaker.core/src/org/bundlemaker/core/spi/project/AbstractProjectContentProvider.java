@@ -9,6 +9,7 @@ import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.internal.projectdescription.gson.GsonProjectDescriptionHelper;
+import org.bundlemaker.core.parser.IParserService;
 import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent;
 import org.bundlemaker.core.project.IProjectContentEntry;
@@ -17,6 +18,7 @@ import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.project.VariablePath;
+import org.bundlemaker.core.spi.parser.IParsableResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -349,7 +351,12 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
     }
 
     //
-    // TODO PARSE?
+    try {
+      parse(contentEntry, contentResource.adaptAs(IParsableResource.class));
+    } catch (CoreException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
     //
     fireProjectContentChangedEvent(new BundleMakerProjectContentChangedEvent(getBundleMakerProject(),
@@ -377,9 +384,22 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
   }
 
   protected void handleResourceModified(IProjectContentResource contentResource) {
+
+    //
+    try {
+      parse(null, contentResource.adaptAs(IParsableResource.class));
+    } catch (CoreException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
     //
     fireProjectContentChangedEvent(new BundleMakerProjectContentChangedEvent(getBundleMakerProject(),
         BundleMakerProjectContentChangedEvent.Type.MODIFIED, contentResource));
+  }
+
+  private void parse(IProjectContentEntry contentEntry, IParsableResource contentResource) throws CoreException {
+    IParserService.Factory.getParserService().parseResource(contentEntry, contentResource, true);
   }
 
   /**
