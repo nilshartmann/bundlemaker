@@ -48,7 +48,8 @@ public class FunctionalHelper {
           //
           if (parser.canParse(resource)) {
             ((Resource) resource).storeCurrentTimestamp();
-            List<IProblem> problems = parser.parseResource(content, resource, resourceStandin.isAnalyzeReferences());
+            List<IProblem> problems = parser.parseResource(content, resource, resourceStandin.isAnalyzeReferences(),
+                true);
             result.addAll(problems);
             resource.setErroneous(!problems.isEmpty());
           }

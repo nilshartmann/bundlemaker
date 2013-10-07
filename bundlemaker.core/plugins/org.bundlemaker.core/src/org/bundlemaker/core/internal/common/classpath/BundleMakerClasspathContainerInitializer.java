@@ -12,12 +12,14 @@ package org.bundlemaker.core.internal.common.classpath;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.core.internal.Activator;
+import org.bundlemaker.core.internal.modelext.ModelExtFactory;
 import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -72,7 +74,8 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
   @Override
   public void initialize(IPath containerPath, IJavaProject javaProject) throws CoreException {
 
-    JavaCore.setClasspathContainer(BundleMakerProjectCore.BUNDLEMAKER_CONTAINER_PATH, new IJavaProject[] { javaProject },
+    JavaCore.setClasspathContainer(BundleMakerProjectCore.BUNDLEMAKER_CONTAINER_PATH,
+        new IJavaProject[] { javaProject },
         new IClasspathContainer[] { new BundleMakerClasspathContainer() }, null);
 
   }
@@ -97,7 +100,14 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
 
     final List<IClasspathEntry> classpathEntries = new LinkedList<IClasspathEntry>();
 
-    for (String bundleMakerLibraryBundleName : BUNDLEMAKER_LIBRARY_BUNDLES) {
+    //
+    List<String> libBundles = new LinkedList<String>();
+    libBundles.addAll(Arrays.asList(BUNDLEMAKER_LIBRARY_BUNDLES));
+    libBundles.addAll(ModelExtFactory.getModelExtensionFactory()
+        .getExtensionBundleNamespaces());
+
+    //
+    for (String bundleMakerLibraryBundleName : libBundles) {
 
       Bundle bundle = installedBundles.get(bundleMakerLibraryBundleName);
       if (bundle == null) {
