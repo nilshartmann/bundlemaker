@@ -198,8 +198,8 @@ public class AbstractJdtProjectTest {
 
 		Expression expression = ast.newQualifiedName(
 				ast.newQualifiedName(
-						ast.newQualifiedName(ast.newSimpleName("value"),
-								ast.newSimpleName("value")),
+						ast.newQualifiedName(ast.newSimpleName("javax"),
+								ast.newSimpleName("naming")),
 						ast.newSimpleName("Context")),
 				ast.newSimpleName("AUTHORITATIVE"));
 		fragment.setInitializer(expression);

@@ -157,8 +157,8 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
 
     //
     IProjectContentResource contentResource = getProjectContentResource(eclipseResource, contentEntryAndPath);
-
-    handleResourceModified(contentResource);
+    
+    handleResourceModified(contentEntryAndPath.getContentEntry(), contentResource);
   }
 
   /**

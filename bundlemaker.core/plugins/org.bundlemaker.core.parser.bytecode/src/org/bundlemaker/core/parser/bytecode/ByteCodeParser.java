@@ -55,7 +55,7 @@ public class ByteCodeParser extends AbstractParser {
 
 	@Override
   protected void doParseResource(IProjectContentEntry content,
-			IParsableResource resource, boolean parseReferences) {
+			IParsableResource resource, boolean parseReferences, boolean isBatchParse) {
 
 		// if the resource already contains a type, it already has been parsed.
 		// In this case we can return immediately

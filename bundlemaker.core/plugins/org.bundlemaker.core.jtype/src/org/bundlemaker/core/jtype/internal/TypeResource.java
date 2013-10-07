@@ -1,7 +1,9 @@
 package org.bundlemaker.core.jtype.internal;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.jtype.IParsableTypeResource;
@@ -11,6 +13,7 @@ import org.bundlemaker.core.jtype.IType;
 import org.bundlemaker.core.jtype.ReferenceAttributes;
 import org.bundlemaker.core.jtype.TypeEnum;
 import org.bundlemaker.core.project.BundleMakerProjectCore;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;

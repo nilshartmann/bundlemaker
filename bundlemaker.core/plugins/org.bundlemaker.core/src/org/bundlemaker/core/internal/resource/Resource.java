@@ -91,9 +91,10 @@ public class Resource extends DefaultProjectContentResource implements IParsable
    * @param modelExtension
    *          the modelExtension to set
    */
-  public void setModelExtension(Object modelExtension) {
+  public void addResourceModelExtension(Object modelExtension) {
 
-    if (_modelExtension != null) {
+    // TODO allow more than one extensions
+    if (modelExtension != null && _modelExtension != null) {
       throw new RuntimeException();
     }
 

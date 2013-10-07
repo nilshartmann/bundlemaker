@@ -57,6 +57,7 @@ public abstract class AbstractParser implements IParser {
   /**
    * <p>
    * </p>
+   * 
    * @param context
    * @param resourceKey
    */
@@ -67,7 +68,7 @@ public abstract class AbstractParser implements IParser {
     _problems = new LinkedList<IProblem>();
 
     // do the parsing
-    doParseResource(content, resource, parseReferences);
+    doParseResource(content, resource, parseReferences, isBatchParse);
 
     //
     return _problems;
@@ -81,7 +82,7 @@ public abstract class AbstractParser implements IParser {
    * @param context
    */
   protected abstract void doParseResource(IProjectContentEntry content, IParsableResource resource,
-      boolean parseReferences);
+      boolean parseReferences, boolean isBatchParse);
 
   /**
    * <p>

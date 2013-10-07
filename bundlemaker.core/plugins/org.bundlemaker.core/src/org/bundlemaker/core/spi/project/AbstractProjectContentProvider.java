@@ -6,10 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.common.ResourceType;
+import org.bundlemaker.core.internal.parser.IParserService;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.internal.projectdescription.gson.GsonProjectDescriptionHelper;
-import org.bundlemaker.core.parser.IParserService;
 import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent;
 import org.bundlemaker.core.project.IProjectContentEntry;
@@ -383,11 +383,11 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
         BundleMakerProjectContentChangedEvent.Type.REMOVED, resource));
   }
 
-  protected void handleResourceModified(IProjectContentResource contentResource) {
+  protected void handleResourceModified(IProjectContentEntry contentEntry, IProjectContentResource contentResource) {
 
     //
     try {
-      parse(null, contentResource.adaptAs(IParsableResource.class));
+      parse(contentEntry, contentResource.adaptAs(IParsableResource.class));
     } catch (CoreException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -398,6 +398,11 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
         BundleMakerProjectContentChangedEvent.Type.MODIFIED, contentResource));
   }
 
+  /**
+   * @param contentEntry
+   * @param contentResource
+   * @throws CoreException
+   */
   private void parse(IProjectContentEntry contentEntry, IParsableResource contentResource) throws CoreException {
     IParserService.Factory.getParserService().parseResource(contentEntry, contentResource, true);
   }

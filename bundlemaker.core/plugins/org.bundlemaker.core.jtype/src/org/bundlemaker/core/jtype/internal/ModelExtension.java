@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.jtype.HelperUtil;
 import org.bundlemaker.core.jtype.IParsableTypeResource;
 import org.bundlemaker.core.jtype.IReference;
 import org.bundlemaker.core.jtype.IType;
@@ -79,15 +80,14 @@ public class ModelExtension implements IModelExtension {
    */
   @Override
   public void resourceModelSetupCompleted(IProjectContentEntry contentEntry,
-      Collection<IModuleResource> binaryResources,
-      Collection<IModuleResource> sourceResources) {
+      Collection<IModuleResource> binaryResources, Collection<IModuleResource> sourceResources) {
 
     for (IModuleResource resourceStandin : binaryResources) {
-      connectParsedResourceToModel(resourceStandin, false);
+      HelperUtil.connectParsedResourceToModel(resourceStandin, false);
     }
 
     for (IModuleResource resourceStandin : sourceResources) {
-      connectParsedResourceToModel(resourceStandin, true);
+      HelperUtil.connectParsedResourceToModel(resourceStandin, true);
     }
   }
 
@@ -104,8 +104,8 @@ public class ModelExtension implements IModelExtension {
 
       // add the
       for (IModule module : modules) {
-        for (IReference iReference : context.getModularizedSystem()
-            .adaptAs(ITypeModularizedSystem.class).getUnsatisfiedReferences(module)) {
+        for (IReference iReference : context.getModularizedSystem().adaptAs(ITypeModularizedSystem.class)
+            .getUnsatisfiedReferences(module)) {
           _typeSubCache.getOrCreate(new TypeKey(iReference.getFullyQualifiedName()));
         }
       }
@@ -166,51 +166,6 @@ public class ModelExtension implements IModelExtension {
   }
 
   /**
-   * {@inheritDoc}
-   */
-  private void connectParsedResourceToModel(IModuleResource resource, boolean isSource) {
-
-    // set the references
-    Set<Reference> resourceReferences = new HashSet<Reference>();
-    for (Reference reference : resource.adaptAs(IParsableTypeResource.class).getModifiableReferences()) {
-      Reference newReference = new Reference(reference);
-      newReference.setResource(resource);
-      resourceReferences.add(newReference);
-    }
-    resource.adaptAs(IParsableTypeResource.class).getModifiableReferences().clear();
-    resource.adaptAs(IParsableTypeResource.class).getModifiableReferences().addAll(resourceReferences);
-
-    // set the type-back-references
-    for (Type type : resource.adaptAs(IParsableTypeResource.class).getModifiableContainedTypes()) {
-
-      //
-      if (isSource) {
-        type.setSourceResource(resource);
-      } else {
-        type.setBinaryResource(resource);
-      }
-
-      // set the references
-      Map<String, Reference> typeReferences = new HashMap<String, Reference>();
-      for (Reference reference : type.getModifiableReferences()) {
-        // TODO
-        if (reference == null) {
-          continue;
-        }
-        Reference newReference = new Reference(reference);
-        newReference.setType(type);
-        if (typeReferences.containsKey(newReference)) {
-          throw new RuntimeException();
-        } else {
-          typeReferences.put(newReference.getFullyQualifiedName(), newReference);
-        }
-      }
-      type.getModifiableReferences().clear();
-      type.getModifiableReferences().addAll(typeReferences.values());
-    }
-  }
-
-  /**
    * <p>
    * </p>
    * 
@@ -232,7 +187,7 @@ public class ModelExtension implements IModelExtension {
 
           if (adaptableObject instanceof IParsableResource) {
             IParsableResource parsableResource = (IParsableResource) adaptableObject;
-            parsableResource.setModelExtension(new TypeResource(getTypeCache()));
+            parsableResource.addResourceModelExtension(new TypeResource(getTypeCache()));
           }
         }
 
@@ -272,8 +227,7 @@ public class ModelExtension implements IModelExtension {
         if (!modularizedSystem.getUserAttributes().containsKey(ITypeModularizedSystem.class.getName())) {
 
           //
-          final TypeModularizedSystem typeModularizedSystem = new TypeModularizedSystem(
-              modularizedSystem);
+          final TypeModularizedSystem typeModularizedSystem = new TypeModularizedSystem(modularizedSystem);
 
           modularizedSystem.getUserAttributes().put(ITypeModularizedSystem.class.getName(), typeModularizedSystem);
         }
@@ -312,8 +266,7 @@ public class ModelExtension implements IModelExtension {
         IModule module = (IModule) adaptableObject;
 
         if (!module.getUserAttributes().containsKey(ITypeModule.class.getName())) {
-          module.getUserAttributes().put(ITypeModule.class.getName(),
-              new TypeModule(module));
+          module.getUserAttributes().put(ITypeModule.class.getName(), new TypeModule(module));
         }
 
         return module.getUserAttributes().get(ITypeModule.class.getName());
