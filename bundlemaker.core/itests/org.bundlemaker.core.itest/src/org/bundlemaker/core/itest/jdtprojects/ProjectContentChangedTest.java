@@ -119,6 +119,7 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
     ITypeResource typeResource = contentResource.adaptAs(ITypeResource.class);
     Assert.assertNotNull(typeResource);
     Assert.assertNotNull(typeResource.getContainedType());
+    Assert.assertEquals(2, typeResource.getContainedType().getReferences().size());
     Assert.assertEquals(1, typeResource.getReferences().size());
 
     //
@@ -136,7 +137,8 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
     typeResource = event.getContentResource().adaptAs(ITypeResource.class);
     Assert.assertNotNull(typeResource);
     Assert.assertNotNull(typeResource.getContainedType());
-    Assert.assertEquals(2, typeResource.getReferences().size());
+    Assert.assertEquals(3, typeResource.getContainedType().getReferences().size());
+    Assert.assertEquals(1, typeResource.getReferences().size());
   }
 
 }

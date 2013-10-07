@@ -93,9 +93,7 @@ public class JdtParser extends AbstractParser {
     }
 
     try {
-      String content = new String(resource.getContent());
-      System.out.println(content);
-      _parser.setSource(content.toCharArray());
+      _parser.setSource(new String(resource.getContent()).toCharArray());
       _parser.setCompilerOptions(CoreParserJdt.getCompilerOptionsWithComplianceLevel(null));
       _parser.setResolveBindings(true);
 
@@ -140,11 +138,6 @@ public class JdtParser extends AbstractParser {
       String primaryTypeName = JavaTypeUtils.convertToFullyQualifiedName(resource.getPath(), ".java");
       IType primaryType = resource.adaptAs(IParsableTypeResource.class).getType(primaryTypeName);
       resource.adaptAs(IParsableTypeResource.class).setPrimaryType(primaryType);
-
-      // //
-      // if (!isBatchParse) {
-      // HelperUtil.connectParsedResourceToModel(resource, true);
-      // }
 
     } catch (Exception e) {
       getProblems().add(new IProblem.DefaultProblem(resource, "Error while parsing: " + e));
