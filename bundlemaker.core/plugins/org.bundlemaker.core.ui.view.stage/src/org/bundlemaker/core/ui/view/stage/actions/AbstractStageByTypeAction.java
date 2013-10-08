@@ -93,7 +93,7 @@ public abstract class AbstractStageByTypeAction extends AbstractStageAction {
 
     for (IBundleMakerArtifact iBundleMakerArtifact : selectedArtifacts) {
 
-      List<IBundleMakerArtifact> resourceChildren = (List<IBundleMakerArtifact>) AnalysisModelQueries.findChildren(
+      List<IBundleMakerArtifact> resourceChildren = (List<IBundleMakerArtifact>) AnalysisModelQueries.findSuccessors(
           iBundleMakerArtifact, _handledType);
       resources.addAll(resourceChildren);
     }

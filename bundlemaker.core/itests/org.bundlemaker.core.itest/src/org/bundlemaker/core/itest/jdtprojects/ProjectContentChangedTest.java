@@ -1,8 +1,17 @@
 package org.bundlemaker.core.itest.jdtprojects;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.analysis.AnalysisCore;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
+import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact.IResourceArtifactContent;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.itestframework.AbstractJdtProjectTest;
 import org.bundlemaker.core.jtype.ITypeResource;
@@ -90,16 +99,31 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
   public void testSourceFileRemoved() throws Exception {
 
     //
+    IRootArtifact rootArtifact = AnalysisCore.getAnalysisModel(getModularizedSystem(),
+        AnalysisModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION);
+
+    //
+    IModuleArtifact moduleArtifact = AnalysisModelQueries.getModuleArtifact(rootArtifact,
+        "SimpleArtifactModelTest-JDT <bin>");
+    Assert.assertNotNull(moduleArtifact);
+
+    //
+    assertEquals(2, AnalysisModelQueries.findSuccessors(moduleArtifact, IResourceArtifact.class).size());
+
+    //
     removeClassKlasse();
 
     //
     Assert.assertEquals(1, _contentChangedEvents.size());
 
+    //
     BundleMakerProjectContentChangedEvent event = _contentChangedEvents.get(0);
     Assert.assertEquals(Type.REMOVED, event.getType());
     Assert.assertEquals(getBundleMakerProject(), event.getBundleMakerProject());
-    System.out.println(event.getContentResource());
     Assert.assertEquals("de/test/Klasse.java", event.getContentResource().getPath());
+
+    //
+    assertEquals(1, AnalysisModelQueries.findSuccessors(moduleArtifact, IResourceArtifact.class).size());
   }
 
   /**

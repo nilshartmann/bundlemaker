@@ -584,7 +584,7 @@ public class AnalysisModelQueries {
   public static <T extends IBundleMakerArtifact> T findChild(IBundleMakerArtifact artifact, final String regexp,
       final Class<T> clazz) {
 
-    List<T> children = findChildren(artifact, regexp, clazz);
+    List<T> children = findSuccessor(artifact, regexp, clazz);
 
     if (children.size() == 0) {
       return null;
@@ -599,7 +599,7 @@ public class AnalysisModelQueries {
   /**
    * {@inheritDoc}
    */
-  public static <T extends IBundleMakerArtifact> List<T> findChildren(IBundleMakerArtifact artifact,
+  public static <T extends IBundleMakerArtifact> List<T> findSuccessor(IBundleMakerArtifact artifact,
       final String regexp, final Class<T> clazz) {
 
     Assert.isNotNull(regexp);
@@ -690,7 +690,7 @@ public class AnalysisModelQueries {
   /**
    * {@inheritDoc}
    */
-  public static <T extends IBundleMakerArtifact> List<T> findChildren(IBundleMakerArtifact artifact,
+  public static <T extends IBundleMakerArtifact> List<T> findSuccessors(IBundleMakerArtifact artifact,
       final Class<T> clazz) {
 
     Assert.isNotNull(clazz);
