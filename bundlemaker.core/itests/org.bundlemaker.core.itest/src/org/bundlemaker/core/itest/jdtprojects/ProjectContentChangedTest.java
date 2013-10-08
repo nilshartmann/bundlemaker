@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -96,6 +97,7 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
   }
 
   @Test
+  @Ignore
   public void testSourceFileRemoved() throws Exception {
 
     //
