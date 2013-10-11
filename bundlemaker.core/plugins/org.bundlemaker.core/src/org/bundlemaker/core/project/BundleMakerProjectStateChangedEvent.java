@@ -17,6 +17,9 @@ public class BundleMakerProjectStateChangedEvent {
   /** the bundle maker project */
   private IProjectDescriptionAwareBundleMakerProject _bundleMakerProject;
 
+  /** - */
+  private BundleMakerProjectState                    _newState;
+
   /**
    * <p>
    * Creates a new instance of type {@link BundleMakerProjectStateChangedEvent}.
@@ -25,10 +28,13 @@ public class BundleMakerProjectStateChangedEvent {
    * @param project
    *          the changed project (must not be null)
    */
-  public BundleMakerProjectStateChangedEvent(IProjectDescriptionAwareBundleMakerProject project) {
+  public BundleMakerProjectStateChangedEvent(IProjectDescriptionAwareBundleMakerProject project,
+      BundleMakerProjectState newState) {
     Assert.isNotNull(project, "Parameter 'project' must not be null.");
+    Assert.isNotNull(newState, "Parameter 'newState' must not be null.");
 
     _bundleMakerProject = project;
+    _newState = newState;
   }
 
   /**
@@ -50,5 +56,15 @@ public class BundleMakerProjectStateChangedEvent {
    */
   public <T extends IProjectDescriptionAwareBundleMakerProject> T getBundleMakerProject(Class<T> clazz) {
     return _bundleMakerProject.adaptAs(clazz);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public BundleMakerProjectState getNewState() {
+    return _newState;
   }
 }

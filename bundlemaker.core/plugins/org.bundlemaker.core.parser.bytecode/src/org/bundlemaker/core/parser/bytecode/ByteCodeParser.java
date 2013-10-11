@@ -59,7 +59,7 @@ public class ByteCodeParser extends AbstractParser {
 
 		// if the resource already contains a type, it already has been parsed.
 		// In this case we can return immediately
-		if (!resource.adaptAs(ITypeResource.class).getContainedTypes()
+		if (resource.adaptAs(ITypeResource.class) != null && !resource.adaptAs(ITypeResource.class).getContainedTypes()
 				.isEmpty()) {
 			return;
 		}

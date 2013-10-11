@@ -14,7 +14,14 @@ import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.algorithms.AdjacencyList;
 import org.bundlemaker.core.internal.analysis.ModelTransformerCache;
+import org.bundlemaker.core.internal.api.resource.IModifiableModule;
+import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent.Type;
+import org.bundlemaker.core.project.BundleMakerProjectDescriptionChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectStateChangedEvent;
+import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
@@ -29,7 +36,10 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 public class ModularizedSystem extends AbstractTransformationAwareModularizedSystem {
 
   /** - */
-  private ModelTransformerCache _transformerCache = null;
+  private ModelTransformerCache              _transformerCache = null;
+
+  /** - */
+  private IBundleMakerProjectChangedListener _changedListener;
 
   /**
    * <p>
@@ -41,7 +51,42 @@ public class ModularizedSystem extends AbstractTransformationAwareModularizedSys
   public ModularizedSystem(String name, IModuleAwareBundleMakerProject project) {
     super(name, project);
 
+    //
     _transformerCache = new ModelTransformerCache();
+
+    //
+    _changedListener = new IBundleMakerProjectChangedListener() {
+
+      @Override
+      public void projectStateChanged(BundleMakerProjectStateChangedEvent event) {
+        System.out.println("***** projectStateChanged *****" + event.getNewState());
+      }
+
+      @Override
+      public void projectDescriptionChanged(BundleMakerProjectDescriptionChangedEvent event) {
+        System.out.println("***** projectDescriptionChanged *****");
+      }
+
+      @Override
+      public void projectContentChanged(BundleMakerProjectContentChangedEvent event) {
+        System.out.println("***** projectContentChanged *****");
+
+        if (event.getType() == Type.REMOVED) {
+
+          IModuleResource moduleResource = (IModuleResource) event
+              .getContentResource();
+
+          IModifiableModule modifiableModule = (IModifiableModule) getAssociatedResourceModule(moduleResource);
+
+          if (modifiableModule != null && moduleResource.getMovableUnit() != null) {
+            modifiableModule.removeMovableUnit(moduleResource.getMovableUnit());
+          }
+        }
+
+      }
+    };
+
+    project.addBundleMakerProjectChangedListener(_changedListener);
   }
 
   /**

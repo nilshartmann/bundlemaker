@@ -213,7 +213,8 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    * </p>
    */
   protected void fireProjectContentChangedEvent(BundleMakerProjectContentChangedEvent changedEvent) {
-    if (_bundleMakerProject.getModifiableProjectDescription() instanceof BundleMakerProjectDescription) {
+    if (_bundleMakerProject != null
+        && _bundleMakerProject.getModifiableProjectDescription() instanceof BundleMakerProjectDescription) {
       ((BundleMakerProjectDescription) _bundleMakerProject.getModifiableProjectDescription())
           .fireProjectContentChangedEvent(changedEvent);
     }
@@ -223,7 +224,7 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    * This method should be called after this provider has been changed.
    */
   public void fireProjectDescriptionChangedEvent() {
-    if (_bundleMakerProject.getModifiableProjectDescription() != null) {
+    if (_bundleMakerProject != null && _bundleMakerProject.getModifiableProjectDescription() != null) {
       ((BundleMakerProjectDescription) _bundleMakerProject.getModifiableProjectDescription())
           .fireProjectDescriptionChangedEvent();
     }
@@ -234,7 +235,7 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    * </p>
    */
   public void fireProjectDescriptionRecomputedEvent() {
-    if (_bundleMakerProject.getModifiableProjectDescription() != null) {
+    if (_bundleMakerProject != null && _bundleMakerProject.getModifiableProjectDescription() != null) {
       ((BundleMakerProjectDescription) _bundleMakerProject.getModifiableProjectDescription())
           .fireProjectDescriptionRecomputedEvent();
     }

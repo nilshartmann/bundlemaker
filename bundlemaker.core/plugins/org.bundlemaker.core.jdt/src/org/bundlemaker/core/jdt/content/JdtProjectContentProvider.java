@@ -13,7 +13,6 @@ import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.common.utils.IFileBasedProjectContentInfo;
 import org.bundlemaker.core.jdt.internal.Activator;
 import org.bundlemaker.core.project.AnalyzeMode;
-import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectContentResource;
@@ -176,7 +175,7 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
     //
     handleResourceRemoved(contentEntryAndPath.getContentEntry(), contentResource,
         contentEntryAndPath.getResourceType());
-  }
+   }
 
   /**
    * <p>

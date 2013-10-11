@@ -97,7 +97,6 @@ public class ProjectContentChangedTest extends AbstractJdtProjectTest {
   }
 
   @Test
-  @Ignore
   public void testSourceFileRemoved() throws Exception {
 
     //

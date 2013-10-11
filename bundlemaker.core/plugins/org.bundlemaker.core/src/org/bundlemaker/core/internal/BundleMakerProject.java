@@ -38,6 +38,7 @@ import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.resource.IBundleMakerProjectHook;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.ITransformation;
 import org.bundlemaker.core.spi.store.IPersistentDependencyStore;
 import org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory;
@@ -196,7 +197,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     _projectState = BundleMakerProjectState.INITIALIZED;
 
     // notify listeners
-    fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent(this));
+    fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent(this, _projectState));
   }
 
   @Override
@@ -234,7 +235,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     }
 
     // notify listeners
-    fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent(this));
+    fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent(this, _projectState));
   }
 
   /**
@@ -247,7 +248,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     _projectState = BundleMakerProjectState.DISPOSED;
 
     // notify listeners
-    fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent(this));
+    fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent(this, _projectState));
 
     //
     Activator.getDefault().removeCachedBundleMakerProject(_project);
@@ -347,6 +348,24 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     ITransformation basicContentTransformation = new BasicProjectContentTransformation();
     modularizedSystem.initialize(null);
     modularizedSystem.applyTransformations(null, basicContentTransformation);
+
+    // *****************************************************//
+    // TESTS
+    for (IModuleResource moduleResource : getBinaryResources()) {
+      IMovableUnit movableUnit = moduleResource.getMovableUnit();
+      Assert.isNotNull(movableUnit);
+      Assert.isNotNull(movableUnit.getAssociatedBinaryResources());
+      Assert.isTrue(!movableUnit.getAssociatedBinaryResources().isEmpty());
+      Assert.isNotNull(modularizedSystem.getAssociatedResourceModule(moduleResource));
+    }
+    for (IModuleResource moduleResource : getSourceResources()) {
+      IMovableUnit movableUnit = moduleResource.getMovableUnit();
+      Assert.isNotNull(movableUnit);
+      // Assert.isNotNull(movableUnit.getAssociatedBinaryResources());
+      Assert.isNotNull(movableUnit.getAssociatedSourceResource());
+      Assert.isNotNull(modularizedSystem.getAssociatedResourceModule(moduleResource));
+    }
+    // *****************************************************//
 
     // invoke hook if available
     IBundleMakerProjectHook projectHook = Activator.getDefault().getBundleMakerProjectHook();
