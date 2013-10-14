@@ -16,11 +16,11 @@ import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
 import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.ui.artifact.Activator;
-import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * <p>
@@ -32,18 +32,21 @@ import org.eclipse.jface.viewers.Viewer;
 public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtualRootContentProvider {
 
   /** EMPTY_OBJECT_ARRAY */
-  private static final Object[]                                 EMPTY_OBJECT_ARRAY                    = new Object[0];
+  private static final Object[]                          EMPTY_OBJECT_ARRAY                    = new Object[0];
 
   /**
    * Listener used to refresh navigator on artifact model changes
    */
-  private final static RefreshArtifactTreeModelModifiedListener ARTIFACT_TREE_MODEL_MODIFIED_LISTENER = new RefreshArtifactTreeModelModifiedListener();
+  private final RefreshArtifactTreeModelModifiedListener ARTIFACT_TREE_MODEL_MODIFIED_LISTENER = new
+                                                                                                   RefreshArtifactTreeModelModifiedListener();
 
   /** - */
-  private boolean                                               _showRoot;
+  private boolean                                        _showRoot;
 
   /** needed to show the root in the tree viewer, see [BM-165 Show Root-Node in Dependency Tree / XRef View] */
-  private IRootArtifact                                         _virtualRoot;
+  private IRootArtifact                                  _virtualRoot;
+
+  private Viewer                                         _viewer;
 
   /**
    * <p>
@@ -89,8 +92,9 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
         if (project.hasNature(BundleMakerProjectCore.NATURE_ID)) {
 
           //
-          IParserAwareBundleMakerProject bundleMakerProject = BundleMakerProjectCore.getProjectDescriptionAwareBundleMakerProject(project).adaptAs(
-              IParserAwareBundleMakerProject.class);
+          IParserAwareBundleMakerProject bundleMakerProject = BundleMakerProjectCore
+              .getProjectDescriptionAwareBundleMakerProject(project).adaptAs(
+                  IParserAwareBundleMakerProject.class);
 
           //
           Collection<IModularizedSystem> modularizedSystems = bundleMakerProject.getModularizedSystemWorkingCopies();
@@ -171,13 +175,23 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
 
   @Override
   public void dispose() {
+    if (_virtualRoot != null) {
+      _virtualRoot.getRoot().removeAnalysisModelModifiedListener(ARTIFACT_TREE_MODEL_MODIFIED_LISTENER);
+    }
   }
 
   @Override
   public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+
+    _viewer = viewer;
+
     if (newInput != null && newInput instanceof IRootArtifact) {
       _virtualRoot = newVirtualRoot((IRootArtifact) newInput);
+      _virtualRoot.getRoot().addAnalysisModelModifiedListener(ARTIFACT_TREE_MODEL_MODIFIED_LISTENER);
     } else {
+      if (_virtualRoot != null) {
+        _virtualRoot.getRoot().removeAnalysisModelModifiedListener(ARTIFACT_TREE_MODEL_MODIFIED_LISTENER);
+      }
       _virtualRoot = null;
     }
   }
@@ -260,11 +274,29 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
 
   }
 
-  static class RefreshArtifactTreeModelModifiedListener implements IAnalysisModelModifiedListener {
+  class RefreshArtifactTreeModelModifiedListener implements IAnalysisModelModifiedListener {
     @Override
     public void analysisModelModified() {
+      if (_viewer != null) {
+        getDisplay().syncExec(
+            new Runnable() {
+              @Override
+              public void run() {
+                _viewer.refresh();
+              }
+            });
+      }
+
       //
-      CommonNavigatorUtils.update(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
+      // CommonNavigatorUtils.update(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
+    }
+
+    private Display getDisplay() {
+      Display display = Display.getCurrent();
+      // may be null if outside the UI thread
+      if (display == null)
+        display = Display.getDefault();
+      return display;
     }
   }
 
