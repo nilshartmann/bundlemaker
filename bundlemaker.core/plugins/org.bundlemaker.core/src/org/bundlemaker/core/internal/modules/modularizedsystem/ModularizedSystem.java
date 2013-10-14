@@ -15,11 +15,13 @@ import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.algorithms.AdjacencyList;
 import org.bundlemaker.core.internal.analysis.ModelTransformerCache;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
+import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent;
 import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent.Type;
 import org.bundlemaker.core.project.BundleMakerProjectDescriptionChangedEvent;
 import org.bundlemaker.core.project.BundleMakerProjectStateChangedEvent;
 import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
+import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -69,10 +71,9 @@ public class ModularizedSystem extends AbstractTransformationAwareModularizedSys
 
       @Override
       public void projectContentChanged(BundleMakerProjectContentChangedEvent event) {
-        System.out.println("***** projectContentChanged *****");
 
         if (event.getType() == Type.REMOVED) {
-
+          System.out.println("***** projectContentChanged - REMOVED *****");
           IModuleResource moduleResource = (IModuleResource) event
               .getContentResource();
 
@@ -81,6 +82,28 @@ public class ModularizedSystem extends AbstractTransformationAwareModularizedSys
           if (modifiableModule != null && moduleResource.getMovableUnit() != null) {
             modifiableModule.removeMovableUnit(moduleResource.getMovableUnit());
           }
+        }
+
+        else if (event.getType() == Type.ADDED) {
+          System.out.println("***** projectContentChanged - ADDED *****");
+
+          //
+          IModuleResource moduleResource = (IModuleResource) event
+              .getContentResource();
+
+          //
+          IProjectContentEntry entry =
+              getBundleMakerProject().getProjectDescription().getProjectContentEntry(
+                  moduleResource.getProjectContentEntryId());
+
+          System.out.println(moduleResource.getProjectContentEntryId());
+
+          IModifiableModule module = getModifiableResourceModule(new ModuleIdentifier(entry
+              .getName(), entry.getVersion()));
+
+          // if (module != null && moduleResource.getMovableUnit() != null) {
+          module.addMovableUnit(moduleResource.getMovableUnit());
+          // }
         }
 
       }

@@ -192,7 +192,7 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
       handleResourceAdded(contentEntryAndPath.getContentEntry(),
           contentEntryAndPath.getVariablePath().getResolvedPath(),
           eclipseResource.getRawLocation().makeRelativeTo(contentEntryAndPath.getVariablePath().getResolvedPath()),
-          ResourceType.BINARY);
+          contentEntryAndPath.getResourceType());
     } catch (CoreException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -212,6 +212,8 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
     Assert.isNotNull(eclipseResource);
     Assert.isNotNull(contentEntryAndPath);
 
+    System.out.println(eclipseResource);
+    
     try {
 
       //
@@ -225,7 +227,7 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
 
       //
       IProjectContentResource result = contentEntry.getResource(resourcePathAsString, resourceType);
-      Assert.isNotNull(result, contentEntryAndPath.toString());
+      Assert.isNotNull(result, resourcePathAsString);
       return result;
 
     } catch (CoreException e) {
