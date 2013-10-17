@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.common.fileinfo;
+package org.bundlemaker.core.common.internal.fileinfo;
 
 import org.bundlemaker.core.common.utils.IFileBasedProjectContentInfo;
 import org.eclipse.core.runtime.Assert;

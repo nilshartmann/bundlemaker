@@ -14,7 +14,6 @@ import java.util.concurrent.FutureTask;
 
 import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.common.utils.StopWatch;
-import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.internal.api.project.IInternalBundleMakerProject;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
@@ -433,7 +432,7 @@ public class ModelSetup {
   private void setupParsers() throws CoreException {
 
     // get the registered parser factories
-    List<IParserFactory> parserFactories = Activator.getDefault().getParserFactoryRegistry().getParserFactories();
+    List<IParserFactory> parserFactories = XYZService.instance().getParserFactoryRegistry().getParserFactories();
 
     // no parsers defined
     if (parserFactories.isEmpty()) {

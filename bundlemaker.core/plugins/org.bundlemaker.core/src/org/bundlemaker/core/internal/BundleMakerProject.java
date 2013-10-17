@@ -18,10 +18,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.bundlemaker.core.common.Activator;
+import org.bundlemaker.core.common.Constants;
 import org.bundlemaker.core.internal.api.project.IInternalBundleMakerProject;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ModelSetup;
+import org.bundlemaker.core.internal.parser.XYZService;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.internal.projectdescription.ProjectDescriptionStore;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
@@ -35,6 +38,7 @@ import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
 import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.internal.BundleMakerProjectCache;
 import org.bundlemaker.core.resource.IBundleMakerProjectHook;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -49,6 +53,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * <p>
@@ -211,7 +216,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     _modifiableModualizedSystemWorkingCopies.clear();
 
     // get the store
-    IPersistentDependencyStoreFactory factory = Activator.getDefault().getPersistentDependencyStoreFactory();
+    IPersistentDependencyStoreFactory factory = XYZService.instance().getPersistentDependencyStoreFactory();
     IPersistentDependencyStore store = factory.getPersistentDependencyStore(this);
 
     try {
@@ -251,7 +256,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent(this, _projectState));
 
     //
-    Activator.getDefault().removeCachedBundleMakerProject(_project);
+    BundleMakerProjectCache.instance().removeCachedBundleMakerProject(_project);
   }
 
   /**
@@ -368,7 +373,19 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     // *****************************************************//
 
     // invoke hook if available
-    IBundleMakerProjectHook projectHook = Activator.getDefault().getBundleMakerProjectHook();
+    /**
+     * Returns an instance of {@link IBundleMakerProjectHook} or null if no hook is registered
+     * 
+     * @return
+     */
+    // TODO
+    ServiceTracker<IBundleMakerProjectHook, IBundleMakerProjectHook> _projectHookTracker = new ServiceTracker<IBundleMakerProjectHook, IBundleMakerProjectHook>(
+        Activator.getDefault().getContext(),
+        IBundleMakerProjectHook.class, null);
+    _projectHookTracker.open();
+    IBundleMakerProjectHook projectHook = _projectHookTracker.getService();
+    _projectHookTracker.close();
+
     if (projectHook != null) {
       try {
         projectHook.modularizedSystemCreated(
@@ -378,7 +395,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
         throw coreException;
       } catch (Exception ex) {
         // TODO: log exception instead of re-throw?
-        throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+        throw new CoreException(new Status(IStatus.ERROR, Constants.BUNDLE_ID_BUNDLEMAKER_CORE,
             "BundleMaker project hook failed: " + ex, ex));
       }
     }

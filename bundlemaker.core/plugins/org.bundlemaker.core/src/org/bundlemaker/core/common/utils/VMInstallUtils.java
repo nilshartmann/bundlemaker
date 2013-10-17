@@ -3,7 +3,7 @@ package org.bundlemaker.core.common.utils;
 import java.io.File;
 import java.util.Arrays;
 
-import org.bundlemaker.core.internal.Activator;
+import org.bundlemaker.core.common.Constants;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -124,7 +124,8 @@ public class VMInstallUtils {
       System.out.println("  Library Locations: "
           + (defaultLibraryLocations == null ? "null" : Arrays.asList(defaultLibraryLocations)));
 
-      throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Install location '" + directoryName
+      throw new CoreException(new Status(IStatus.ERROR, Constants.BUNDLE_ID_BUNDLEMAKER_CORE, "Install location '"
+          + directoryName
           + "' not valid: " + status.getMessage()));
     }
 

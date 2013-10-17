@@ -2,7 +2,7 @@ package org.bundlemaker.core.common.utils;
 
 import java.io.File;
 
-import org.bundlemaker.core.internal.common.fileinfo.FileBasedProjectContentInfoServiceImpl;
+import org.bundlemaker.core.common.internal.fileinfo.FileBasedProjectContentInfoServiceImpl;
 
 /**
  * <p>

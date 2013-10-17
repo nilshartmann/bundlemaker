@@ -235,6 +235,7 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
       for (String child : FileUtils.getAllChildren(templateDirectory)) {
 
         // create the resource standin
+        // TODO DON'T USE DefaultProjectContentResource here
         IResource resourceKey = new DefaultProjectContentResource("ADDITIONAL_CONTENT_DUMMY_ID",
             templateDirectory.getAbsolutePath(),
             child);

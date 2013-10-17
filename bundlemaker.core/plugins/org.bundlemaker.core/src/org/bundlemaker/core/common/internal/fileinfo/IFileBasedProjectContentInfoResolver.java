@@ -1,4 +1,4 @@
-package org.bundlemaker.core.internal.common.fileinfo;
+package org.bundlemaker.core.common.internal.fileinfo;
 
 import java.io.File;
 

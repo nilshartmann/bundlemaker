@@ -38,7 +38,7 @@ public class MovableUnit implements IMovableUnit {
     _sourceResource = sourceResource;
     _binaryResources = binaryResources;
 
-    associate();
+    setMovableUnit();
   }
 
   public MovableUnit(IModuleResource sourceResource,
@@ -53,7 +53,7 @@ public class MovableUnit implements IMovableUnit {
       _binaryResources.add(binaryResources);
     }
 
-    associate();
+    setMovableUnit();
   }
 
   /**
@@ -130,6 +130,50 @@ public class MovableUnit implements IMovableUnit {
     return _sourceResource;
   }
 
+  public void addBinaryResource(IModuleResource moduleResource) {
+    Assert.isNotNull(moduleResource);
+
+    //
+    if (!_binaryResources.contains(moduleResource)) {
+      _binaryResources.add(moduleResource);
+      setMovableUnit(moduleResource, this);
+    }
+  }
+
+  public void removeBinaryResource(IModuleResource moduleResource) {
+    Assert.isNotNull(moduleResource);
+
+    //
+    if (_binaryResources.contains(moduleResource)) {
+      _binaryResources.remove(moduleResource);
+      setMovableUnit(moduleResource, null);
+    }
+  }
+
+  public void addSourceResource(IModuleResource moduleResource) {
+    Assert.isNotNull(moduleResource);
+
+    // TODO
+    if (_sourceResource != null) {
+      throw new RuntimeException();
+    }
+
+    _sourceResource = moduleResource;
+    setMovableUnit(_sourceResource, this);
+  }
+
+  public void removeSourceResource(IModuleResource moduleResource) {
+    Assert.isNotNull(moduleResource);
+
+    // TODO
+    if (_sourceResource != moduleResource) {
+      throw new RuntimeException();
+    }
+
+    setMovableUnit(_sourceResource, null);
+    _sourceResource = null;
+  }
+
   /**
    * {@inheritDoc}
    */
@@ -174,23 +218,23 @@ public class MovableUnit implements IMovableUnit {
     return true;
   }
 
-  private void associate() {
-    associate(_sourceResource);
+  private void setMovableUnit() {
+    setMovableUnit(_sourceResource, this);
     if (_binaryResources != null) {
       for (IModuleResource resource : _binaryResources) {
-        associate(resource);
+        setMovableUnit(resource, this);
       }
     }
   }
 
-  private void associate(IModuleResource resource) {
+  private void setMovableUnit(IModuleResource resource, MovableUnit movableUnit) {
 
     if (resource != null) {
       if (resource instanceof Resource) {
-        ((Resource) resource).setMovableUnit(this);
+        ((Resource) resource).setMovableUnit(movableUnit);
       }
       else if (resource instanceof ResourceStandin) {
-        ((Resource) ((ResourceStandin) resource).getResource()).setMovableUnit(this);
+        ((Resource) ((ResourceStandin) resource).getResource()).setMovableUnit(movableUnit);
       }
     }
   }

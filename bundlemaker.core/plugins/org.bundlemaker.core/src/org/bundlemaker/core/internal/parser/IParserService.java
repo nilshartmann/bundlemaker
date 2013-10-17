@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.spi.parser.IParsableResource;
@@ -54,7 +53,7 @@ public interface IParserService {
         _parsers = new LinkedList<IParser>();
 
         //
-        for (IParserFactory parserFactory : Activator.getDefault().getParserFactoryRegistry().getParserFactories()) {
+        for (IParserFactory parserFactory : XYZService.instance().getParserFactoryRegistry().getParserFactories()) {
 
           try {
 

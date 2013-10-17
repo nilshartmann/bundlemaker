@@ -96,8 +96,6 @@ public class ModularizedSystem extends AbstractTransformationAwareModularizedSys
               getBundleMakerProject().getProjectDescription().getProjectContentEntry(
                   moduleResource.getProjectContentEntryId());
 
-          System.out.println(moduleResource.getProjectContentEntryId());
-
           IModifiableModule module = getModifiableResourceModule(new ModuleIdentifier(entry
               .getName(), entry.getVersion()));
 

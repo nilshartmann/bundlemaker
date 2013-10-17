@@ -12,9 +12,11 @@ package org.bundlemaker.core.project;
 
 import java.util.Collection;
 
+import org.bundlemaker.core.common.Activator;
+import org.bundlemaker.core.common.Constants;
 import org.bundlemaker.core.common.utils.EclipseProjectUtils;
-import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
+import org.bundlemaker.core.project.internal.BundleMakerProjectCache;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -97,8 +99,7 @@ public final class BundleMakerProjectCore {
     }
 
     // // try to get project from cache
-    IProjectDescriptionAwareBundleMakerProject bundleMakerProject = Activator
-        .getDefault()
+    IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerProjectCache.instance()
         .getBundleMakerProject(project);
 
     // create project if necessary
@@ -108,7 +109,7 @@ public final class BundleMakerProjectCore {
       bundleMakerProject = new BundleMakerProject(project);
 
       // step 2: cache the bundle maker project
-      Activator.getDefault().cacheBundleMakerProject(project, bundleMakerProject);
+      BundleMakerProjectCache.instance().cacheBundleMakerProject(project, bundleMakerProject);
     }
 
     // return result
@@ -223,7 +224,57 @@ public final class BundleMakerProjectCore {
     }
 
     //
-    return Activator.getDefault().getBundleMakerProjects();
+    return BundleMakerProjectCache.instance().getBundleMakerProjects();
+  }
+
+  /**
+   * <p>
+   * Creates a bundle maker project for the given {@link IProject}. The specified project must have the bundle maker
+   * nature.
+   * </p>
+   * <p>
+   * You can use {@link #isBundleMakerProject(IProject)} to check if the project is BundleMaker project
+   * 
+   * @param project
+   * @return
+   * @throws CoreException
+   */
+  public static IProjectDescriptionAwareBundleMakerProject getBundleMakerProject(IProject project)
+      throws CoreException {
+    Assert.isNotNull(project);
+
+    // check if nature exists
+    if (!project.exists()) {
+      // TODO: I18N
+      throw new CoreException(new Status(IStatus.ERROR, Constants.BUNDLE_ID_BUNDLEMAKER_CORE, "Project '"
+          + project.getName()
+          + "' has to exist."));
+    }
+
+    // check if nature exists
+    if (!project.hasNature(NATURE_ID)) {
+      // TODO: I18N
+      throw new CoreException(new Status(IStatus.ERROR, Constants.BUNDLE_ID_BUNDLEMAKER_CORE, "Project '"
+          + project.getName()
+          + "' must have nature '" + NATURE_ID + "'."));
+    }
+
+    // // try to get project from cache
+    IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerProjectCache.instance()
+        .getBundleMakerProject(project);
+
+    // create project if necessary
+    if (bundleMakerProject == null) {
+
+      // step 1: create the project
+      bundleMakerProject = new BundleMakerProject(project);
+
+      // step 2: cache the bundle maker project
+      BundleMakerProjectCache.instance().cacheBundleMakerProject(project, bundleMakerProject);
+    }
+
+    // return result
+    return bundleMakerProject;
   }
 
   /**

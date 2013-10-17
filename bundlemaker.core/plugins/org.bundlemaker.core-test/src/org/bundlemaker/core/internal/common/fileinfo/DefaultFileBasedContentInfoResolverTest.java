@@ -2,6 +2,7 @@ package org.bundlemaker.core.internal.common.fileinfo;
 
 import java.io.File;
 
+import org.bundlemaker.core.common.internal.fileinfo.DefaultFileBasedContentInfoResolver;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Ignore;

@@ -12,20 +12,17 @@ package org.bundlemaker.core;
 
 import java.util.Collection;
 
+import org.bundlemaker.core.common.Activator;
 import org.bundlemaker.core.common.utils.EclipseProjectUtils;
-import org.bundlemaker.core.internal.Activator;
-import org.bundlemaker.core.internal.BundleMakerProject;
+import org.bundlemaker.core.internal.parser.XYZService;
 import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.JavaCore;
 
 /**
@@ -86,36 +83,8 @@ public final class BundleMakerCore {
       throws CoreException {
     Assert.isNotNull(project);
 
-    // check if nature exists
-    if (!project.exists()) {
-      // TODO: I18N
-      throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID, "Project '" + project.getName()
-          + "' has to exist."));
-    }
-
-    // check if nature exists
-    if (!project.hasNature(NATURE_ID)) {
-      // TODO: I18N
-      throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID, "Project '" + project.getName()
-          + "' must have nature '" + NATURE_ID + "'."));
-    }
-
-    // // try to get project from cache
-    IBundleMakerProject bundleMakerProject = (IBundleMakerProject) Activator.getDefault()
-        .getBundleMakerProject(project);
-
-    // create project if necessary
-    if (bundleMakerProject == null) {
-
-      // step 1: create the project
-      bundleMakerProject = new BundleMakerProject(project);
-
-      // step 2: cache the bundle maker project
-      Activator.getDefault().cacheBundleMakerProject(project, bundleMakerProject);
-    }
-
     // return result
-    return bundleMakerProject;
+    return (IBundleMakerProject) BundleMakerProjectCore.getBundleMakerProject(project);
   }
 
   /**
@@ -190,19 +159,7 @@ public final class BundleMakerCore {
   public static Collection<IBundleMakerProject> getBundleMakerProjects() {
 
     //
-    IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-    for (IProject iProject : projects) {
-      try {
-        if (iProject.exists() && iProject.hasNature(BundleMakerCore.NATURE_ID)) {
-          getBundleMakerProject(iProject);
-        }
-      } catch (CoreException e) {
-        //
-      }
-    }
-
-    //
-    return (Collection<IBundleMakerProject>) Activator.getDefault().getBundleMakerProjects();
+    return (Collection<IBundleMakerProject>) BundleMakerProjectCore.getBundleMakerProjects();
   }
 
   /**
@@ -263,7 +220,7 @@ public final class BundleMakerCore {
   public static void clearDependencyStore(IProjectDescriptionAwareBundleMakerProject bundleMakerProject)
       throws CoreException {
 
-    IPersistentDependencyStoreFactory factory = Activator.getDefault().getPersistentDependencyStoreFactory();
+    IPersistentDependencyStoreFactory factory = XYZService.instance().getPersistentDependencyStoreFactory();
     factory.resetPersistentDependencyStore(bundleMakerProject);
   }
 }

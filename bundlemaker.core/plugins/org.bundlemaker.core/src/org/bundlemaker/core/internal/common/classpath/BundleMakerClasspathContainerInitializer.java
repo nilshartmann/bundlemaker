@@ -18,7 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.core.internal.Activator;
+import org.bundlemaker.core.common.Activator;
 import org.bundlemaker.core.internal.modelext.ModelExtFactory;
 import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.eclipse.core.runtime.CoreException;
@@ -144,8 +144,8 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
       ServiceTracker<Location, Location> serviceTracker;
       try {
         serviceTracker = new ServiceTracker<Location, Location>(
-            Activator.getContext(),
-            Activator.getContext().createFilter(Location.ECLIPSE_HOME_FILTER),
+            Activator.getDefault().getContext(),
+            Activator.getDefault().getContext().createFilter(Location.ECLIPSE_HOME_FILTER),
             null);
         serviceTracker.open();
         location = serviceTracker.getService();

@@ -41,6 +41,6 @@ Require-Bundle: org.eclipse.core.runtime,
  com.google.gson;bundle-version="2.2.2",
  com.google.guava;bundle-version="13.0.1",
  org.bundlemaker.com.tinkerpop.blueprints.blueprints-core;bundle-version="2.2.0";visibility:=reexport
-Bundle-Activator: org.bundlemaker.core.internal.Activator
+Bundle-Activator: org.bundlemaker.core.common.Activator
 Service-Component: OSGI-INF/dependencyStore.xml
 Bundle-ActivationPolicy: lazy
