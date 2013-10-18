@@ -1,11 +1,11 @@
-package org.bundlemaker.core.internal.projectdescription.gson;
+package org.bundlemaker.core.project.internal.gson;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bundlemaker.core.common.classloading.BundleDelegatingClassLoader;
 import org.bundlemaker.core.common.classloading.CompoundClassLoader;
-import org.bundlemaker.core.internal.projectdescription.contentprovider.ProjectContentProviderExtension;
+import org.bundlemaker.core.project.internal.ProjectContentProviderExtension;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;

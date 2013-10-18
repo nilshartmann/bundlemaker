@@ -1,4 +1,4 @@
-package org.bundlemaker.core.internal.api.project;
+package org.bundlemaker.core.project.internal;
 
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.project.IProjectDescription;

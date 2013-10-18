@@ -1,9 +1,9 @@
-package org.bundlemaker.core.internal.projectdescription.gson;
+package org.bundlemaker.core.project.internal.gson;
 
 import java.lang.reflect.Type;
 
-import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.internal.BundleMakerProjectDescription;
 import org.eclipse.core.runtime.Assert;
 
 import com.google.gson.InstanceCreator;
@@ -17,7 +17,7 @@ import com.google.gson.InstanceCreator;
 public class BundleMakerProjectDescriptionInstanceCreator implements InstanceCreator<BundleMakerProjectDescription> {
 
   /** - */
-  private BundleMakerProject _bundleMakerProject;
+  private IProjectDescriptionAwareBundleMakerProject _bundleMakerProject;
 
   /**
    * <p>
@@ -26,7 +26,7 @@ public class BundleMakerProjectDescriptionInstanceCreator implements InstanceCre
    * 
    * @param bundleMakerProject
    */
-  public BundleMakerProjectDescriptionInstanceCreator(BundleMakerProject bundleMakerProject) {
+  public BundleMakerProjectDescriptionInstanceCreator(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
     Assert.isNotNull(bundleMakerProject);
 
     _bundleMakerProject = bundleMakerProject;

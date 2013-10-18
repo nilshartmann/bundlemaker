@@ -2,8 +2,8 @@ package org.bundlemaker.core.projectdescription.file;
 
 import static org.junit.Assert.assertEquals;
 
-import org.bundlemaker.core.internal.projectdescription.gson.GsonProjectDescriptionHelper;
 import org.bundlemaker.core.project.VariablePath;
+import org.bundlemaker.core.project.internal.gson.GsonProjectDescriptionHelper;
 import org.junit.Test;
 
 public class IPathDeserializerTest {

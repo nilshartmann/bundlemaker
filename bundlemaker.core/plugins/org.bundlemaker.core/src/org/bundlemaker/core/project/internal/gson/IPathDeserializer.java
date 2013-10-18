@@ -1,4 +1,4 @@
-package org.bundlemaker.core.internal.projectdescription.gson;
+package org.bundlemaker.core.project.internal.gson;
 
 import java.lang.reflect.Type;
 

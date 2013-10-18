@@ -10,9 +10,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal;
 
-import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
-import org.bundlemaker.core.internal.projectdescription.ProjectDescriptionStore;
 import org.bundlemaker.core.project.BundleMakerProjectCore;
+import org.bundlemaker.core.project.internal.BundleMakerProjectDescription;
+import org.bundlemaker.core.project.internal.ProjectDescriptionStore;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;

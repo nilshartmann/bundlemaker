@@ -1,4 +1,4 @@
-package org.bundlemaker.core.internal.projectdescription.contentprovider;
+package org.bundlemaker.core.project.internal;
 
 import java.util.HashMap;
 import java.util.Map;

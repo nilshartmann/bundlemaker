@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.projectdescription;
+package org.bundlemaker.core.project.internal;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -17,10 +17,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.bundlemaker.core.internal.projectdescription.gson.GsonProjectDescriptionHelper;
 import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.internal.gson.GsonProjectDescriptionHelper;
 import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;

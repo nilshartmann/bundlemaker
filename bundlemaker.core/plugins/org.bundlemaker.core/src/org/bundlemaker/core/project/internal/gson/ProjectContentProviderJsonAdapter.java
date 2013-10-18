@@ -1,9 +1,9 @@
-package org.bundlemaker.core.internal.projectdescription.gson;
+package org.bundlemaker.core.project.internal.gson;
 
 import java.lang.reflect.Type;
 
-import org.bundlemaker.core.internal.projectdescription.contentprovider.ProjectContentProviderExtension;
 import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.internal.ProjectContentProviderExtension;
 import org.eclipse.core.runtime.Assert;
 
 import com.google.gson.JsonDeserializationContext;

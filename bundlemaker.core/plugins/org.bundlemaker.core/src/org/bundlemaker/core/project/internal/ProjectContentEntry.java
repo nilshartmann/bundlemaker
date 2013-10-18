@@ -1,4 +1,4 @@
-package org.bundlemaker.core.internal.projectdescription;
+package org.bundlemaker.core.project.internal;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -9,7 +9,6 @@ import java.util.Set;
 
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.common.utils.FileUtils;
-import org.bundlemaker.core.internal.api.project.IInternalProjectDescription;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;

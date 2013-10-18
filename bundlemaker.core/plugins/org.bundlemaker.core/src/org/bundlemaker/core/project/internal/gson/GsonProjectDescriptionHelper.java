@@ -1,9 +1,8 @@
-package org.bundlemaker.core.internal.projectdescription.gson;
+package org.bundlemaker.core.project.internal.gson;
 
-import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.internal.BundleMakerProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
@@ -50,7 +49,7 @@ public class GsonProjectDescriptionHelper {
       //
       if (project != null) {
         builder.registerTypeAdapter(BundleMakerProjectDescription.class,
-            new BundleMakerProjectDescriptionInstanceCreator((BundleMakerProject) project));
+            new BundleMakerProjectDescriptionInstanceCreator(project));
       }
 
       return builder.create();

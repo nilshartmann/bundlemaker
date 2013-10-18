@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -73,7 +72,7 @@ public class BundleMakerProjectCache {
    * @param bundleMakerProject
    */
   public void cacheBundleMakerProject(IProject project, IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
-    _projectCache.put(project, bundleMakerProject.adaptAs(IParserAwareBundleMakerProject.class));
+    _projectCache.put(project, bundleMakerProject);
   }
 
   /**

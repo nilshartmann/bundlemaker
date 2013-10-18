@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.projectdescription;
+package org.bundlemaker.core.project.internal;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -21,9 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.internal.api.project.IInternalProjectDescription;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.modules.jdk.JdkContentProvider;
 import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent;
@@ -50,46 +48,46 @@ import com.google.gson.annotations.SerializedName;
 public class BundleMakerProjectDescription implements IModifiableProjectDescription, IInternalProjectDescription {
 
   /** - */
-  private static NumberFormat               FORMATTER  = new DecimalFormat("000000");
+  private static NumberFormat                        FORMATTER  = new DecimalFormat("000000");
 
   /** the current identifier */
   @Expose
   @SerializedName("current-id")
-  private int                               _currentId = 0;
+  private int                                        _currentId = 0;
 
   /** - */
   @Expose
   @SerializedName("project-content-providers")
-  private List<IProjectContentProvider>     _projectContentProviders;
+  private List<IProjectContentProvider>              _projectContentProviders;
 
   /** - */
   @Expose
   @SerializedName("jre")
-  private String                            _jre;
+  private String                                     _jre;
 
   /** - */
-  private Object                            _identifierLock;
+  private Object                                     _identifierLock;
 
   /** - */
-  private List<IProjectContentEntry>        _projectContentEntries;
+  private List<IProjectContentEntry>                 _projectContentEntries;
 
   /** - */
-  private Map<String, IProjectContentEntry> _projectContentEntriesMap;
+  private Map<String, IProjectContentEntry>          _projectContentEntriesMap;
 
   /** the resource list */
-  private List<IResourceStandin>            _sourceResources;
+  private List<IResourceStandin>                     _sourceResources;
 
   /** the resource list */
-  private List<IResourceStandin>            _binaryResources;
+  private List<IResourceStandin>                     _binaryResources;
 
   /** - */
-  private boolean                           _initialized;
+  private boolean                                    _initialized;
 
   /** - */
-  private IBundleMakerProject               _bundleMakerProject;
+  private IProjectDescriptionAwareBundleMakerProject _bundleMakerProject;
 
   /** - */
-  private JdkContentProvider                _jdkContentProvider;
+  private JdkContentProvider                         _jdkContentProvider;
 
   /**
    * <p>
@@ -98,7 +96,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
    * 
    * @param bundleMakerProject
    */
-  public BundleMakerProjectDescription(IBundleMakerProject bundleMakerProject) {
+  public BundleMakerProjectDescription(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
 
     //
     _bundleMakerProject = bundleMakerProject;
