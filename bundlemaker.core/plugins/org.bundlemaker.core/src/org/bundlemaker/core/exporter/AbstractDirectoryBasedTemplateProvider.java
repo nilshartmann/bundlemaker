@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.common.IResource;
 import org.bundlemaker.core.common.utils.FileUtils;
-import org.bundlemaker.core.internal.resource.DefaultProjectContentResource;
+import org.bundlemaker.core.project.internal.DefaultProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.eclipse.core.runtime.Assert;

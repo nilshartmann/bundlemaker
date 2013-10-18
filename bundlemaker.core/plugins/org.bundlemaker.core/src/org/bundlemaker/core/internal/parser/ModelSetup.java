@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.FutureTask;
 
+import org.bundlemaker.core.common.ZipFileCache;
 import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.common.utils.StopWatch;
 import org.bundlemaker.core.internal.BundleMakerProject;
@@ -19,7 +20,6 @@ import org.bundlemaker.core.internal.api.project.IInternalBundleMakerProject;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.modelext.ModelExtFactory;
 import org.bundlemaker.core.internal.resource.Resource;
-import org.bundlemaker.core.internal.resource.ZipFileCache;
 import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.IProjectContentEntry;

@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.bundlemaker.core.framework.FileUtil;
-import org.bundlemaker.core.internal.resource.DefaultProjectContentResource;
+import org.bundlemaker.core.project.internal.DefaultProjectContentResource;
 import org.junit.Test;
 
 /**

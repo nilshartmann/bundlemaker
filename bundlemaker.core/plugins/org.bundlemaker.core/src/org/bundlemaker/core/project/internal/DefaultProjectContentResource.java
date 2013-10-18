@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.resource;
+package org.bundlemaker.core.project.internal;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -20,6 +20,7 @@ import java.util.zip.ZipFile;
 
 import org.bundlemaker.core.common.FlyWeightString;
 import org.bundlemaker.core.common.FlyWeightStringCache;
+import org.bundlemaker.core.common.ZipFileCache;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.Platform;
