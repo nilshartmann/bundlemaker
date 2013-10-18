@@ -7,13 +7,13 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.analysis.AnalysisCore;
 import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.IVirtualRoot;
 import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
-import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.ui.artifact.Activator;
 import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;
@@ -89,11 +89,11 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
       try {
 
         //
-        if (project.hasNature(BundleMakerProjectCore.NATURE_ID)) {
+        if (project.hasNature(BundleMakerCore.NATURE_ID)) {
 
           //
-          IParserAwareBundleMakerProject bundleMakerProject = BundleMakerProjectCore
-              .getProjectDescriptionAwareBundleMakerProject(project).adaptAs(
+          IParserAwareBundleMakerProject bundleMakerProject = BundleMakerCore
+              .getBundleMakerProject(project).adaptAs(
                   IParserAwareBundleMakerProject.class);
 
           //

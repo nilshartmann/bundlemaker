@@ -28,7 +28,6 @@ import org.bundlemaker.core.internal.parser.XYZService;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent;
-import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.bundlemaker.core.project.BundleMakerProjectDescriptionChangedEvent;
 import org.bundlemaker.core.project.BundleMakerProjectState;
 import org.bundlemaker.core.project.BundleMakerProjectStateChangedEvent;
@@ -96,7 +95,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
   public BundleMakerProject(IProject project) throws CoreException {
 
     // TODO: CoreException
-    Assert.isTrue(project.hasNature(BundleMakerProjectCore.NATURE_ID));
+    Assert.isTrue(project.hasNature(Constants.NATURE_ID));
 
     // set the project
     _project = project;
@@ -622,7 +621,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     }
 
     // throw new exception
-    throw new CoreException(new Status(IStatus.ERROR, BundleMakerProjectCore.BUNDLE_ID, String.format(
+    throw new CoreException(new Status(IStatus.ERROR, Constants.BUNDLE_ID_BUNDLEMAKER_CORE, String.format(
         "BundleMakerProject must be in one of the following states: '%s', but current state is '%s'.",
         Arrays.asList(state), getState())));
   }

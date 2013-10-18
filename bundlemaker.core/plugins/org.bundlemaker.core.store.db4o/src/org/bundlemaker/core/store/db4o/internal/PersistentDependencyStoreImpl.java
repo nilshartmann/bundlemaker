@@ -266,7 +266,7 @@ public class PersistentDependencyStoreImpl implements IPersistentDependencyStore
 
     // add the bundles
     for (Bundle bundle : _bundleContext.getBundles()) {
-      if (namespaces.contains(bundle.getSymbolicName()) || BundleMakerCore.BUNDLE_ID.equals(bundle.getSymbolicName())) {
+      if (namespaces.contains(bundle.getSymbolicName()) || BundleMakerCore.BUNDLE_ID_BUNDLEMAKER_CORE.equals(bundle.getSymbolicName())) {
         System.out.println(" - " + bundle.getSymbolicName());
         result.add(bundle);
       }

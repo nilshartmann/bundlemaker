@@ -1,6 +1,6 @@
 package org.bundlemaker.core.ui.internal.classpath;
 
-import org.bundlemaker.core.project.BundleMakerProjectCore;
+import org.bundlemaker.core.BundleMakerCore;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -76,7 +76,7 @@ public class BundleMakerClasspathContainerPage extends WizardPage implements ICl
   public void setSelection(IClasspathEntry containerEntry) {
     _entry = containerEntry;
     if (_entry == null) {
-      _entry = JavaCore.newContainerEntry(BundleMakerProjectCore.BUNDLEMAKER_CONTAINER_PATH);
+      _entry = JavaCore.newContainerEntry(BundleMakerCore.BUNDLEMAKER_CONTAINER_PATH);
     }
   }
 

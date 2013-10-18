@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.transformations.internal;
 
-import org.bundlemaker.core.project.BundleMakerProjectCore;
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.resource.IBundleMakerProjectHook;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.transformations.script.runner.TransformationScriptRunner;
@@ -41,7 +41,7 @@ public class InitialTransformationRunnerHook implements IBundleMakerProjectHook 
 
     IProject eclipseProject = modularizedSystem.getBundleMakerProject().getProject();
 
-    if (!BundleMakerProjectCore.isJavaProject(eclipseProject)) {
+    if (!BundleMakerCore.isJavaProject(eclipseProject)) {
       // nothing to do
       return;
     }

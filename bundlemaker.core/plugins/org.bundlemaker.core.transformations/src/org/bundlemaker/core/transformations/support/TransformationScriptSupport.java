@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bundlemaker.core.project.BundleMakerProjectCore;
+import org.bundlemaker.core.BundleMakerCore;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -63,9 +63,9 @@ public class TransformationScriptSupport {
     // boolean)
 
     // Convert to JDT java project
-    boolean alreadyJavaProject = BundleMakerProjectCore.isJavaProject(eclipseProject);
+    boolean alreadyJavaProject = BundleMakerCore.isJavaProject(eclipseProject);
     if (!alreadyJavaProject) {
-      BundleMakerProjectCore.addJavaNature(eclipseProject);
+      BundleMakerCore.addJavaNature(eclipseProject);
     }
     IPath projectPath = new Path(eclipseProject.getName()).makeAbsolute();
     IWorkspaceRoot root = eclipseProject.getWorkspace().getRoot();
@@ -82,7 +82,7 @@ public class TransformationScriptSupport {
     ClasspathBuilder.forProject(eclipseProject, alreadyJavaProject) //
         .setOutputLocation(binFolderPath) //
         .addSourceEntry(sourceFolderPath) //
-        .addContainerEntry(BundleMakerProjectCore.BUNDLEMAKER_CONTAINER_PATH) //
+        .addContainerEntry(BundleMakerCore.BUNDLEMAKER_CONTAINER_PATH) //
         .addEntries(jreClasspathEntries) //
         .save();
 

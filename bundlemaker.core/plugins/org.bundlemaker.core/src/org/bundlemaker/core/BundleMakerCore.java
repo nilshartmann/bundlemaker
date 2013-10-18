@@ -13,16 +13,20 @@ package org.bundlemaker.core;
 import java.util.Collection;
 
 import org.bundlemaker.core.common.Activator;
+import org.bundlemaker.core.common.Constants;
 import org.bundlemaker.core.common.utils.EclipseProjectUtils;
+import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.internal.parser.XYZService;
-import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.internal.BundleMakerProjectCache;
 import org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.JavaCore;
 
 /**
@@ -34,28 +38,7 @@ import org.eclipse.jdt.core.JavaCore;
  * 
  * @noextend This class is not intended to be subclasses by clients.
  */
-public final class BundleMakerCore {
-
-  /** the nature id */
-  public static final String BUNDLE_ID                                  = BundleMakerProjectCore.BUNDLE_ID;
-
-  /** the nature id */
-  public static final String NATURE_ID                                  = BundleMakerProjectCore.NATURE_ID;
-
-  /** bundlemaker classpath container */
-  public static final IPath  BUNDLEMAKER_CONTAINER_PATH                 = BundleMakerProjectCore.BUNDLEMAKER_CONTAINER_PATH;     //$NON-NLS-1$
-
-  /** the bundle make directory name */
-  public static final String BUNDLEMAKER_DIRECTORY_NAME                 = BundleMakerProjectCore.BUNDLEMAKER_DIRECTORY_NAME;
-
-  /** the project description file name */
-  public static final String PROJECT_DESCRIPTION_NAME                   = BundleMakerProjectCore.PROJECT_DESCRIPTION_NAME;
-
-  /** the project description path */
-  public static final IPath  PROJECT_DESCRIPTION_PATH                   = BundleMakerProjectCore.PROJECT_DESCRIPTION_PATH;
-
-  /** - */
-  public static final String BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER = "#####BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER#####";
+public final class BundleMakerCore implements Constants {
 
   /**
    * <p>
@@ -83,8 +66,38 @@ public final class BundleMakerCore {
       throws CoreException {
     Assert.isNotNull(project);
 
+    // check if nature exists
+    if (!project.exists()) {
+      // TODO: I18N
+      throw new CoreException(new Status(IStatus.ERROR, Constants.BUNDLE_ID_BUNDLEMAKER_CORE, "Project '"
+          + project.getName()
+          + "' has to exist."));
+    }
+
+    // check if nature exists
+    if (!project.hasNature(NATURE_ID)) {
+      // TODO: I18N
+      throw new CoreException(new Status(IStatus.ERROR, Constants.BUNDLE_ID_BUNDLEMAKER_CORE, "Project '"
+          + project.getName()
+          + "' must have nature '" + NATURE_ID + "'."));
+    }
+
+    // // try to get project from cache
+    IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerProjectCache.instance()
+        .getBundleMakerProject(project);
+
+    // create project if necessary
+    if (bundleMakerProject == null) {
+
+      // step 1: create the project
+      bundleMakerProject = new BundleMakerProject(project);
+
+      // step 2: cache the bundle maker project
+      BundleMakerProjectCache.instance().cacheBundleMakerProject(project, bundleMakerProject);
+    }
+
     // return result
-    return (IBundleMakerProject) BundleMakerProjectCore.getBundleMakerProject(project);
+    return bundleMakerProject.adaptAs(IBundleMakerProject.class);
   }
 
   /**
@@ -157,9 +170,20 @@ public final class BundleMakerCore {
    */
   @SuppressWarnings("unchecked")
   public static Collection<IBundleMakerProject> getBundleMakerProjects() {
+    //
+    IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+    for (IProject iProject : projects) {
+      try {
+        if (iProject.exists() && iProject.hasNature(NATURE_ID)) {
+          getBundleMakerProject(iProject);
+        }
+      } catch (CoreException e) {
+        //
+      }
+    }
 
     //
-    return (Collection<IBundleMakerProject>) BundleMakerProjectCore.getBundleMakerProjects();
+    return (Collection<IBundleMakerProject>) BundleMakerProjectCache.instance().getBundleMakerProjects();
   }
 
   /**
@@ -176,7 +200,7 @@ public final class BundleMakerCore {
     IProject project = EclipseProjectUtils.getProject(simpleProjectName);
 
     // get the bundle maker project
-    return BundleMakerCore.getBundleMakerProject(project);
+    return getBundleMakerProject(project);
   }
 
   /**

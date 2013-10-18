@@ -12,7 +12,7 @@ package org.bundlemaker.core.ui.handler;
 
 import java.util.List;
 
-import org.bundlemaker.core.project.BundleMakerProjectCore;
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.project.BundleMakerProjectState;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.ui.internal.Activator;
@@ -127,7 +127,7 @@ public class RunTransformationScriptHandler extends AbstractBundleMakerHandler {
         return null;
       }
       IProject selectedProject = (IProject) firstResult;
-      return BundleMakerProjectCore.getProjectDescriptionAwareBundleMakerProject(selectedProject);
+      return BundleMakerCore.getBundleMakerProject(selectedProject);
     }
     return null;
 
@@ -145,8 +145,9 @@ public class RunTransformationScriptHandler extends AbstractBundleMakerHandler {
         }
 
         try {
-          if (project.hasNature(BundleMakerProjectCore.NATURE_ID)) {
-            IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerProjectCore.getProjectDescriptionAwareBundleMakerProject(project);
+          if (project.hasNature(BundleMakerCore.NATURE_ID)) {
+            IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerCore
+                .getBundleMakerProject(project);
             return (bundleMakerProject.getState() == BundleMakerProjectState.READY);
           }
         } catch (CoreException e) {

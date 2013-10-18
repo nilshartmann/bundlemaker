@@ -17,7 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.bundlemaker.core.project.BundleMakerProjectCore;
+import org.bundlemaker.core.common.Constants;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.project.internal.gson.GsonProjectDescriptionHelper;
@@ -41,7 +41,7 @@ public class ProjectDescriptionStore {
     Assert.isNotNull(projectDescription);
 
     //
-    IFile iFile = project.getFile(BundleMakerProjectCore.PROJECT_DESCRIPTION_PATH);
+    IFile iFile = project.getFile(Constants.PROJECT_DESCRIPTION_PATH);
 
     String jsonString = GsonProjectDescriptionHelper.gson(projectDescription.getBundleMakerProject()).toJson(
         projectDescription);
@@ -74,7 +74,7 @@ public class ProjectDescriptionStore {
       throws CoreException {
 
     //
-    IFile iFile = project.getProject().getFile(BundleMakerProjectCore.PROJECT_DESCRIPTION_PATH);
+    IFile iFile = project.getProject().getFile(Constants.PROJECT_DESCRIPTION_PATH);
 
     // refresh
     iFile.refreshLocal(IFile.DEPTH_INFINITE, null);

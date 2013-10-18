@@ -6,13 +6,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.jtype.IParsableTypeResource;
 import org.bundlemaker.core.jtype.IReference;
 import org.bundlemaker.core.jtype.IReferenceRecorder;
 import org.bundlemaker.core.jtype.IType;
 import org.bundlemaker.core.jtype.ReferenceAttributes;
 import org.bundlemaker.core.jtype.TypeEnum;
-import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -99,7 +99,7 @@ public class TypeResource implements IParsableTypeResource, IReferenceRecorder {
     }
 
     // throw new exception
-    throw new CoreException(new Status(IStatus.ERROR, BundleMakerProjectCore.BUNDLE_ID,
+    throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID_BUNDLEMAKER_CORE,
         String.format("Resource '%s' contains more than one type.", this)));
   }
 

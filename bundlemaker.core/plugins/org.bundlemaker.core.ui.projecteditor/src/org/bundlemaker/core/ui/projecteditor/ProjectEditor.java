@@ -3,12 +3,12 @@
  */
 package org.bundlemaker.core.ui.projecteditor;
 
-import org.bundlemaker.core.project.BundleMakerProjectCore;
-import org.bundlemaker.core.project.BundleMakerProjectState;
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.project.BundleMakerProjectDescriptionChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectState;
+import org.bundlemaker.core.project.BundleMakerProjectStateChangedEvent;
 import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
-import org.bundlemaker.core.project.BundleMakerProjectStateChangedEvent;
 import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
@@ -115,8 +115,8 @@ public class ProjectEditor extends FormEditor {
     setPartName(project.getName());
     try {
       // TODO use ProgressMonitor
-      IModuleAwareBundleMakerProject bundleMakerProject = BundleMakerProjectCore
-          .getProjectDescriptionAwareBundleMakerProject(project).adaptAs(IModuleAwareBundleMakerProject.class);
+      IModuleAwareBundleMakerProject bundleMakerProject = BundleMakerCore
+          .getBundleMakerProject(project).adaptAs(IModuleAwareBundleMakerProject.class);
 
       _bundleMakerProject = bundleMakerProject;
 

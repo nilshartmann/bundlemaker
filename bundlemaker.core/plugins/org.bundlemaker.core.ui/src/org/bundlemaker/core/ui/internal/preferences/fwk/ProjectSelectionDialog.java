@@ -12,7 +12,7 @@ package org.bundlemaker.core.ui.internal.preferences.fwk;
 
 import java.util.Set;
 
-import org.bundlemaker.core.project.BundleMakerProjectCore;
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.eclipse.core.runtime.IStatus;
@@ -54,18 +54,18 @@ import org.eclipse.ui.dialogs.SelectionStatusDialog;
 public class ProjectSelectionDialog extends SelectionStatusDialog {
 
   // the visual selection widget group
-  private TableViewer              _tableViewer;
+  private TableViewer                                     _tableViewer;
 
   private Set<IProjectDescriptionAwareBundleMakerProject> _projectsWithSpecifics;
 
   // sizing constants
-  private final static int         SIZING_SELECTION_WIDGET_HEIGHT = 250;
+  private final static int                                SIZING_SELECTION_WIDGET_HEIGHT = 250;
 
-  private final static int         SIZING_SELECTION_WIDGET_WIDTH  = 300;
+  private final static int                                SIZING_SELECTION_WIDGET_WIDTH  = 300;
 
-  private final static String      DIALOG_SETTINGS_SHOW_ALL       = "ProjectSelectionDialog.show_all"; //$NON-NLS-1$
+  private final static String                             DIALOG_SETTINGS_SHOW_ALL       = "ProjectSelectionDialog.show_all"; //$NON-NLS-1$
 
-  private ViewerFilter             fFilter;
+  private ViewerFilter                                    fFilter;
 
   public ProjectSelectionDialog(Shell parentShell, Set<IProjectDescriptionAwareBundleMakerProject> projectsWithSpecifics) {
     super(parentShell);
@@ -149,7 +149,7 @@ public class ProjectSelectionDialog extends SelectionStatusDialog {
     checkbox.setSelection(doFilter);
     updateFilter(doFilter);
 
-    _tableViewer.setInput(BundleMakerProjectCore.getBundleMakerProjects());
+    _tableViewer.setInput(BundleMakerCore.getBundleMakerProjects());
 
     doSelectionChanged(new Object[0]);
     Dialog.applyDialogFont(composite);

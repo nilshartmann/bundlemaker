@@ -16,7 +16,6 @@ import java.util.Map;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.common.utils.FileUtils;
-import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.spi.store.IPersistentDependencyStore;
 import org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory;
@@ -89,7 +88,7 @@ public class PersistentDependencyStoreFactoryComponent implements IPersistentDep
 
     // step 2: delete the existing '.bundlemaker/db4o.store' file
     IFile file = project.getProject().getFile(
-        new Path(BundleMakerProjectCore.BUNDLEMAKER_DIRECTORY_NAME).append(getFileName()));
+        new Path(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME).append(getFileName()));
     if (!file.getRawLocation().toFile().delete()) {
       System.out.println();
       System.out.println(String.format("Could not delete file '%s'", file.getRawLocation().toFile().getAbsolutePath()));
@@ -148,7 +147,7 @@ public class PersistentDependencyStoreFactoryComponent implements IPersistentDep
     // delete the old store
     if (DELETE_DEPENDENCYSTORE_IF_CORE_BUNDLE_VERSION_CHANGED) {
       try {
-        IFile parent = project.getProject().getFile(new Path(BundleMakerProjectCore.BUNDLEMAKER_DIRECTORY_NAME));
+        IFile parent = project.getProject().getFile(new Path(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME));
         File parentFile = parent.getRawLocation().toFile();
         for (String child : FileUtils.getAllChildren(parentFile)) {
           if (!child.endsWith(getFileName())) {
@@ -162,7 +161,7 @@ public class PersistentDependencyStoreFactoryComponent implements IPersistentDep
 
     // step 2: create a new store
     IFile file = project.getProject().getFile(
-        new Path(BundleMakerProjectCore.BUNDLEMAKER_DIRECTORY_NAME).append(getFileName()));
+        new Path(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME).append(getFileName()));
     PersistentDependencyStoreImpl store = new PersistentDependencyStoreImpl(file.getRawLocation().toOSString(),
         _bundleContext);
 

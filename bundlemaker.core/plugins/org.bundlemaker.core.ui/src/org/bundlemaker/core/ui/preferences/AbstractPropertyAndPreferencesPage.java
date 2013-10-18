@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import org.bundlemaker.core.project.BundleMakerProjectCore;
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.ui.internal.preferences.fwk.DialogField;
 import org.bundlemaker.core.ui.internal.preferences.fwk.IDialogFieldListener;
@@ -426,7 +426,7 @@ public abstract class AbstractPropertyAndPreferencesPage extends PreferencePage 
 
       //
       HashSet<IProjectDescriptionAwareBundleMakerProject> projectsWithSpecifics = new HashSet<IProjectDescriptionAwareBundleMakerProject>();
-      for (IProjectDescriptionAwareBundleMakerProject bundleMakerProject : BundleMakerProjectCore
+      for (IProjectDescriptionAwareBundleMakerProject bundleMakerProject : BundleMakerCore
           .getBundleMakerProjects()) {
         if (hasProjectSpecificOptions(bundleMakerProject.getProject())) {
           projectsWithSpecifics.add(bundleMakerProject);

@@ -2,7 +2,7 @@ package org.bundlemaker.core.ui.transformations.handlers;
 
 import java.util.Collection;
 
-import org.bundlemaker.core.project.BundleMakerProjectCore;
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.project.BundleMakerProjectState;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
@@ -35,7 +35,7 @@ public class RunAsTransformationScriptHandler extends AbstractBundleMakerHandler
 
     IProject project = transformationScriptType.getResource().getProject();
 
-    IModuleAwareBundleMakerProject bundleMakerProject = BundleMakerProjectCore.getProjectDescriptionAwareBundleMakerProject(project).adaptAs(
+    IModuleAwareBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project).adaptAs(
         IModuleAwareBundleMakerProject.class);
 
     if (bundleMakerProject.getState() != BundleMakerProjectState.READY) {

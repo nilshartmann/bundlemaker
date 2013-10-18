@@ -15,9 +15,9 @@ import static java.lang.String.format;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 
-import org.bundlemaker.core.project.BundleMakerProjectCore;
+import org.bundlemaker.core.BundleMakerCore;
+import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
-import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.transformations.support.TransformationScriptSupport;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
@@ -186,14 +186,15 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard, I
     }
 
     try {
-      BundleMakerProjectCore.addBundleMakerNature(newProjectHandle);
+      BundleMakerCore.addBundleMakerNature(newProjectHandle);
       if (mainPage.isTransformationScriptSupportSelected()) {
 
         TransformationScriptSupport.enableTransformationScriptSupport(newProjectHandle,
             PreferenceConstants.getDefaultJRELibrary());
 
       }
-      IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerProjectCore.getProjectDescriptionAwareBundleMakerProject(newProjectHandle);
+      IBundleMakerProject bundleMakerProject = BundleMakerCore
+          .getBundleMakerProject(newProjectHandle);
       IModifiableProjectDescription modifiableProjectDescription = bundleMakerProject.getModifiableProjectDescription();
       modifiableProjectDescription.setJre(mainPage.getSelectedJreId());
       modifiableProjectDescription.save();
@@ -218,7 +219,7 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard, I
    * @param project
    */
   private void openProjectDescriptionEditor(IProject project) {
-    IFile iFile = _newProject.getProject().getFile(BundleMakerProjectCore.PROJECT_DESCRIPTION_PATH);
+    IFile iFile = _newProject.getProject().getFile(BundleMakerCore.PROJECT_DESCRIPTION_PATH);
 
     IWorkbenchPage activePage = _workbench.getActiveWorkbenchWindow().getActivePage();
 

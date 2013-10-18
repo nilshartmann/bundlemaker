@@ -13,9 +13,9 @@ package org.bundlemaker.core.jdt.internal.parser;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.common.utils.VMInstallUtils;
 import org.bundlemaker.core.jdt.parser.CoreParserJdt;
-import org.bundlemaker.core.project.BundleMakerProjectCore;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.project.VariablePath;
@@ -54,7 +54,8 @@ public class JdtProjectHelper {
    * @param bundleMakerProject
    * @throws CoreException
    */
-  public static void setupAssociatedJavaProject(IProjectDescriptionAwareBundleMakerProject project) throws CoreException {
+  public static void setupAssociatedJavaProject(IProjectDescriptionAwareBundleMakerProject project)
+      throws CoreException {
 
     try {
 
@@ -79,8 +80,7 @@ public class JdtProjectHelper {
         // TODO!!
         IPath sourceRoot = null;
         if (!projectContent.getSourceRootPaths().isEmpty()) {
-          sourceRoot = projectContent.getSourceRootPaths().toArray(new VariablePath[0])[0]
-              .getResolvedPath();
+          sourceRoot = projectContent.getSourceRootPaths().toArray(new VariablePath[0])[0].getResolvedPath();
         }
 
         // add binary paths
@@ -187,7 +187,8 @@ public class JdtProjectHelper {
     return associatedProject;
   }
 
-  public static IJavaProject newAssociatedJavaProject(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException {
+  public static IJavaProject newAssociatedJavaProject(IProjectDescriptionAwareBundleMakerProject bundleMakerProject)
+      throws CoreException {
     return newAssociatedJavaProject(bundleMakerProject.getProject());
   }
 
@@ -262,7 +263,7 @@ public class JdtProjectHelper {
 
     try {
 
-      if (resource instanceof IProject && ((IProject) resource).hasNature(BundleMakerProjectCore.NATURE_ID)) {
+      if (resource instanceof IProject && ((IProject) resource).hasNature(BundleMakerCore.NATURE_ID)) {
 
         // create a new workspace job
         WorkspaceJob workspaceJob = new WorkspaceJob("delete") {
@@ -272,7 +273,8 @@ public class JdtProjectHelper {
 
             try {
 
-              IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerProjectCore.getProjectDescriptionAwareBundleMakerProject((IProject) resource);
+              IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerCore
+                  .getBundleMakerProject((IProject) resource);
 
               if (JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
 
