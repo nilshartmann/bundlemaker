@@ -89,8 +89,8 @@ public class ModelExtFactory {
    * @param newAndModifiedSourceResources
    */
   public void beforeParseResourceModel(IProjectContentEntry projectContent,
-      Set<? extends IModuleResource> newAndModifiedBinaryResources,
-      Set<? extends IModuleResource> newAndModifiedSourceResources) {
+      Set<? extends IProjectContentResource> newAndModifiedBinaryResources,
+      Set<? extends IProjectContentResource> newAndModifiedSourceResources) {
 
     //
     for (IModelExtension modelExtension : _modelExtensionRegistry.getExtensionInstances()) {
@@ -109,8 +109,8 @@ public class ModelExtFactory {
    * @param newAndModifiedSourceResources
    */
   public void afterParseResourceModel(IProjectContentEntry projectContent,
-      Set<? extends IModuleResource> newAndModifiedBinaryResources,
-      Set<? extends IModuleResource> newAndModifiedSourceResources) {
+      Set<? extends IProjectContentResource> newAndModifiedBinaryResources,
+      Set<? extends IProjectContentResource> newAndModifiedSourceResources) {
 
     //
     for (IModelExtension modelExtension : _modelExtensionRegistry.getExtensionInstances()) {

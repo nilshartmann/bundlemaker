@@ -9,7 +9,6 @@ import java.util.Set;
 
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.common.utils.FileUtils;
-import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.project.AnalyzeMode;
@@ -18,7 +17,6 @@ import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.project.VariablePath;
-import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -33,48 +31,48 @@ import org.eclipse.core.runtime.CoreException;
 public class ProjectContentEntry implements IProjectContentEntry {
 
   /** the empty resource standin set */
-  private static final Set<IResourceStandin> EMPTY_RESOURCE_STANDIN_SET = Collections
-                                                                            .unmodifiableSet(new HashSet<IResourceStandin>());
+  private static final Set<IResourceStandinNEW> EMPTY_RESOURCE_STANDIN_SET = Collections
+                                                                               .unmodifiableSet(new HashSet<IResourceStandinNEW>());
 
   /** - */
-  private static final Set<VariablePath>     EMPTY_ROOTPATH_SET         = Collections
-                                                                            .unmodifiableSet(new HashSet<VariablePath>());
+  private static final Set<VariablePath>        EMPTY_ROOTPATH_SET         = Collections
+                                                                               .unmodifiableSet(new HashSet<VariablePath>());
 
   /** the internal identifier of this content entry */
-  private String                             _id;
+  private String                                _id;
 
   /** the name of this entry */
-  private String                             _name;
+  private String                                _name;
 
   /** the version of this entry */
-  private String                             _version;
+  private String                                _version;
 
   /** the analyze mode of this entry */
-  private AnalyzeMode                        _analyze;
+  private AnalyzeMode                           _analyze;
 
   /** the binary pathes */
-  protected Set<VariablePath>                _binaryPaths;
+  protected Set<VariablePath>                   _binaryPaths;
 
   /** the source pathes */
-  private Set<VariablePath>                  _sourcePaths;
+  private Set<VariablePath>                     _sourcePaths;
 
   /** indicates that the content has been initialized */
-  private boolean                            _isInitialized;
+  private boolean                               _isInitialized;
 
   /** the set of binary resource standins */
-  private Map<String, IResourceStandin>      _binaryResourceStandins;
+  private Map<String, IResourceStandinNEW>      _binaryResourceStandins;
 
   /** the set of source resource standins */
-  private Map<String, IResourceStandin>      _sourceResourceStandins;
+  private Map<String, IResourceStandinNEW>      _sourceResourceStandins;
 
   /** the project description */
-  private IInternalProjectDescription        _projectDescription;
+  private IInternalProjectDescription           _projectDescription;
 
   /** the bundle maker project content provider */
-  private IProjectContentProvider            _provider;
+  private IProjectContentProvider               _provider;
 
   /** the user attributes */
-  private Map<String, Object>                _userAttributes;
+  private Map<String, Object>                   _userAttributes;
 
   /**
    * indicates wether changes to this instance should be notified.
@@ -83,7 +81,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * This flag may be set to 'false' to prevent change notification while initializing this Content instance.
    * 
    */
-  private boolean                            _notifyChanges             = true;
+  private boolean                               _notifyChanges             = true;
 
   /**
    * <p>
@@ -181,7 +179,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * {@inheritDoc}
    */
   @Override
-  public final Collection<? extends IModuleResource> getBinaryResources() {
+  public final Collection<? extends IProjectContentResource> getBinaryResources() {
     return Collections.unmodifiableCollection(getBinaryResourceStandins());
   }
 
@@ -189,7 +187,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * {@inheritDoc}
    */
   @Override
-  public final Collection<? extends IModuleResource> getSourceResources() {
+  public final Collection<? extends IProjectContentResource> getSourceResources() {
     assertIsInitialized();
 
     return Collections.unmodifiableCollection(getSourceResourceStandins());
@@ -199,7 +197,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * {@inheritDoc}
    */
   @Override
-  public Collection<? extends IModuleResource> getResources(ResourceType type) {
+  public Collection<? extends IProjectContentResource> getResources(ResourceType type) {
     assertIsInitialized();
 
     switch (type) {
@@ -219,7 +217,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * {@inheritDoc}
    */
   @Override
-  public IModuleResource getResource(String path, ResourceType type) {
+  public IProjectContentResource getResource(String path, ResourceType type) {
     assertIsInitialized();
 
     switch (type) {
@@ -308,24 +306,24 @@ public class ProjectContentEntry implements IProjectContentEntry {
 
   /**
    * <p>
-   * Returns the set of all contained binary {@link IResourceStandin}.
+   * Returns the set of all contained binary {@link IResourceStandinNEW}.
    * </p>
    * 
-   * @return the set of all contained binary {@link IResourceStandin}.
+   * @return the set of all contained binary {@link IResourceStandinNEW}.
    */
-  public final Collection<IResourceStandin> getBinaryResourceStandins() {
+  public final Collection<IResourceStandinNEW> getBinaryResourceStandins() {
     assertIsInitialized();
     return _binaryResourceStandins != null ? _binaryResourceStandins.values() : EMPTY_RESOURCE_STANDIN_SET;
   }
 
   /**
    * <p>
-   * Returns the set of all contained source {@link IResourceStandin}.
+   * Returns the set of all contained source {@link IResourceStandinNEW}.
    * </p>
    * 
-   * @return the set of all contained source {@link IResourceStandin}.
+   * @return the set of all contained source {@link IResourceStandinNEW}.
    */
-  public final Collection<IResourceStandin> getSourceResourceStandins() {
+  public final Collection<IResourceStandinNEW> getSourceResourceStandins() {
     assertIsInitialized();
     return _sourceResourceStandins != null ? _sourceResourceStandins.values() : EMPTY_RESOURCE_STANDIN_SET;
   }
@@ -380,7 +378,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * @param type
    * @return
    */
-  protected IResourceStandin createNewResourceStandin(String contentId, String root, String path,
+  protected IResourceStandinNEW createNewResourceStandin(String contentId, String root, String path,
       ResourceType type, boolean analyzeReferences) {
 
     Assert.isNotNull(contentId);
@@ -426,11 +424,11 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * 
    * @return
    */
-  private Map<String, IResourceStandin> binaryResourceStandins() {
+  private Map<String, IResourceStandinNEW> binaryResourceStandins() {
 
     //
     if (_binaryResourceStandins == null) {
-      _binaryResourceStandins = new HashMap<String, IResourceStandin>();
+      _binaryResourceStandins = new HashMap<String, IResourceStandinNEW>();
     }
 
     //
@@ -443,11 +441,11 @@ public class ProjectContentEntry implements IProjectContentEntry {
    * 
    * @return
    */
-  private Map<String, IResourceStandin> sourceResourceStandins() {
+  private Map<String, IResourceStandinNEW> sourceResourceStandins() {
 
     //
     if (_sourceResourceStandins == null) {
-      _sourceResourceStandins = new HashMap<String, IResourceStandin>();
+      _sourceResourceStandins = new HashMap<String, IResourceStandinNEW>();
     }
 
     //
@@ -659,7 +657,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
       ResourceType type) {
 
     //
-    Map<String, IResourceStandin> standins = type.equals(ResourceType.BINARY) ? binaryResourceStandins()
+    Map<String, IResourceStandinNEW> standins = type.equals(ResourceType.BINARY) ? binaryResourceStandins()
         : sourceResourceStandins();
 
     //
@@ -693,12 +691,12 @@ public class ProjectContentEntry implements IProjectContentEntry {
     // add the resource
     switch (type) {
     case BINARY: {
-      IResourceStandin resourceStandin = binaryResourceStandins().remove(resource.getPath());
+      IResourceStandinNEW resourceStandin = binaryResourceStandins().remove(resource.getPath());
       _projectDescription.removeBinaryResource(resourceStandin);
       break;
     }
     case SOURCE: {
-      IResourceStandin resourceStandin = sourceResourceStandins().remove(resource.getPath());
+      IResourceStandinNEW resourceStandin = sourceResourceStandins().remove(resource.getPath());
       _projectDescription.removeSourceResource(resourceStandin);
       break;
     }

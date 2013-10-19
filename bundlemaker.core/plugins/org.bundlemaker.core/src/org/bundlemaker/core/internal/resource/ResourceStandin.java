@@ -17,6 +17,7 @@ import java.util.Set;
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.project.internal.DefaultProjectContentResource;
+import org.bundlemaker.core.project.internal.IResourceStandinNEW;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -29,7 +30,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ResourceStandin extends DefaultProjectContentResource implements IResourceStandin {
+public class ResourceStandin extends DefaultProjectContentResource implements IResourceStandin, IResourceStandinNEW {
 
   /** - */
   private Resource             _resource;

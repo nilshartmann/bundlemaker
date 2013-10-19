@@ -1,6 +1,5 @@
 package org.bundlemaker.core.project.internal;
 
-import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.project.IProjectDescription;
 
 public interface IInternalProjectDescription extends IProjectDescription {
@@ -9,11 +8,11 @@ public interface IInternalProjectDescription extends IProjectDescription {
 
   void fireProjectDescriptionRecomputedEvent();
 
-  void addBinaryResource(IResourceStandin resourceStandin);
+  void addBinaryResource(IResourceStandinNEW resourceStandin);
 
-  void addSourceResource(IResourceStandin resourceStandin);
+  void addSourceResource(IResourceStandinNEW resourceStandin);
 
-  void removeBinaryResource(IResourceStandin resourceStandin);
+  void removeBinaryResource(IResourceStandinNEW resourceStandin);
 
-  void removeSourceResource(IResourceStandin resourceStandin);
+  void removeSourceResource(IResourceStandinNEW resourceStandin);
 }

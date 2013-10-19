@@ -48,8 +48,8 @@ public interface IModelExtension {
    * @param newAndModifiedSourceResources
    */
   void beforeParseResourceModel(IProjectContentEntry projectContent,
-      Set<? extends IModuleResource> newAndModifiedBinaryResources,
-      Set<? extends IModuleResource> newAndModifiedSourceResources);
+      Set<? extends IProjectContentResource> newAndModifiedBinaryResources,
+      Set<? extends IProjectContentResource> newAndModifiedSourceResources);
 
   /**
    * <p>
@@ -61,8 +61,8 @@ public interface IModelExtension {
    * @param newAndModifiedSourceResources
    */
   void afterParseResourceModel(IProjectContentEntry projectContent,
-      Set<? extends IModuleResource> newAndModifiedBinaryResources,
-      Set<? extends IModuleResource> newAndModifiedSourceResources);
+      Set<? extends IProjectContentResource> newAndModifiedBinaryResources,
+      Set<? extends IProjectContentResource> newAndModifiedSourceResources);
 
   /**
    * <p>

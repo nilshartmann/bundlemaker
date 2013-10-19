@@ -22,15 +22,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.modules.jdk.JdkContentProvider;
 import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent;
 import org.bundlemaker.core.project.BundleMakerProjectDescriptionChangedEvent;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
-import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -75,10 +74,10 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   private Map<String, IProjectContentEntry>          _projectContentEntriesMap;
 
   /** the resource list */
-  private List<IResourceStandin>                     _sourceResources;
+  private List<IResourceStandinNEW>                  _sourceResources;
 
   /** the resource list */
-  private List<IResourceStandin>                     _binaryResources;
+  private List<IResourceStandinNEW>                  _binaryResources;
 
   /** - */
   private boolean                                    _initialized;
@@ -105,8 +104,8 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     _projectContentEntries = new ArrayList<IProjectContentEntry>();
     _projectContentProviders = new ArrayList<IProjectContentProvider>();
     _projectContentEntriesMap = new HashMap<String, IProjectContentEntry>();
-    _sourceResources = new ArrayList<IResourceStandin>();
-    _binaryResources = new ArrayList<IResourceStandin>();
+    _sourceResources = new ArrayList<IResourceStandinNEW>();
+    _binaryResources = new ArrayList<IResourceStandinNEW>();
     _identifierLock = new Object();
   }
 
@@ -386,23 +385,15 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   }
 
   @SuppressWarnings("unchecked")
-  public final List<IModuleResource> getSourceResources() {
-    List<? extends IModuleResource> result = Collections.unmodifiableList(_sourceResources);
-    return (List<IModuleResource>) result;
+  public final List<IProjectContentResource> getSourceResources() {
+    List<? extends IProjectContentResource> result = Collections.unmodifiableList(_sourceResources);
+    return (List<IProjectContentResource>) result;
   }
 
   @SuppressWarnings("unchecked")
-  public final List<IModuleResource> getBinaryResources() {
-    List<? extends IModuleResource> result = Collections.unmodifiableList(_binaryResources);
-    return (List<IModuleResource>) result;
-  }
-
-  public final List<IResourceStandin> getSourceResourceStandins() {
-    return Collections.unmodifiableList(_sourceResources);
-  }
-
-  public final List<IResourceStandin> getBinaryResourceStandins() {
-    return Collections.unmodifiableList(_binaryResources);
+  public final List<IProjectContentResource> getBinaryResources() {
+    List<? extends IProjectContentResource> result = Collections.unmodifiableList(_binaryResources);
+    return (List<IProjectContentResource>) result;
   }
 
   /**
@@ -412,22 +403,22 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
    * @param resource
    */
   @Override
-  public void addSourceResource(IResourceStandin resourceStandin) {
+  public void addSourceResource(IResourceStandinNEW resourceStandin) {
     _sourceResources.add(resourceStandin);
   }
 
   @Override
-  public void addBinaryResource(IResourceStandin resourceStandin) {
+  public void addBinaryResource(IResourceStandinNEW resourceStandin) {
     _binaryResources.add(resourceStandin);
   }
 
   @Override
-  public void removeBinaryResource(IResourceStandin resource) {
+  public void removeBinaryResource(IResourceStandinNEW resource) {
     _binaryResources.remove(resource);
   }
 
   @Override
-  public void removeSourceResource(IResourceStandin resource) {
+  public void removeSourceResource(IResourceStandinNEW resource) {
     _binaryResources.remove(resource);
   }
 

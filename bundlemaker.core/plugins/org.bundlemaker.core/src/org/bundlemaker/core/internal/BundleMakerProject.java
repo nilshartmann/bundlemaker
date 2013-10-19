@@ -18,10 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.common.Activator;
 import org.bundlemaker.core.common.Constants;
-import org.bundlemaker.core.internal.api.project.IInternalBundleMakerProject;
-import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ModelSetup;
 import org.bundlemaker.core.internal.parser.XYZService;
@@ -40,8 +39,6 @@ import org.bundlemaker.core.project.internal.BundleMakerProjectDescription;
 import org.bundlemaker.core.project.internal.ProjectDescriptionStore;
 import org.bundlemaker.core.resource.IBundleMakerProjectHook;
 import org.bundlemaker.core.resource.IModularizedSystem;
-import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.resource.ITransformation;
 import org.bundlemaker.core.spi.store.IPersistentDependencyStore;
 import org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory;
@@ -61,7 +58,7 @@ import org.osgi.util.tracker.ServiceTracker;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class BundleMakerProject implements IInternalBundleMakerProject {
+public class BundleMakerProject implements IBundleMakerProject {
 
   /** the associated eclipse project (the bundle make project) */
   private IProject                                 _project;
@@ -271,47 +268,47 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     return _problems == null ? emptyList : _problems;
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  @Override
-  public final List<IModuleResource> getSourceResources() {
-    return _projectDescription.getSourceResources();
-  }
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @return
+  // */
+  // @Override
+  // public final List<IModuleResource> getSourceResources() {
+  // return _projectDescription.getSourceResources();
+  // }
+  //
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @return
+  // */
+  // @Override
+  // public final List<IModuleResource> getBinaryResources() {
+  // return _projectDescription.getBinaryResources();
+  // }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  @Override
-  public final List<IModuleResource> getBinaryResources() {
-    return _projectDescription.getBinaryResources();
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public final List<IResourceStandin> getSourceResourceStandins() {
-    return _projectDescription.getSourceResourceStandins();
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public final List<IResourceStandin> getBinaryResourceStandins() {
-    return _projectDescription.getBinaryResourceStandins();
-  }
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @return
+  // */
+  // public final List<IResourceStandin> getSourceResourceStandins() {
+  // return _projectDescription.getSourceResourceStandins();
+  // }
+  //
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @return
+  // */
+  // public final List<IResourceStandin> getBinaryResourceStandins() {
+  // return _projectDescription.getBinaryResourceStandins();
+  // }
 
   /**
    * {@inheritDoc}
@@ -354,21 +351,21 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     modularizedSystem.applyTransformations(null, basicContentTransformation);
 
     // *****************************************************//
-    // TESTS
-    for (IModuleResource moduleResource : getBinaryResources()) {
-      IMovableUnit movableUnit = moduleResource.getMovableUnit();
-      Assert.isNotNull(movableUnit);
-      Assert.isNotNull(movableUnit.getAssociatedBinaryResources());
-      Assert.isTrue(!movableUnit.getAssociatedBinaryResources().isEmpty());
-      Assert.isNotNull(modularizedSystem.getAssociatedResourceModule(moduleResource));
-    }
-    for (IModuleResource moduleResource : getSourceResources()) {
-      IMovableUnit movableUnit = moduleResource.getMovableUnit();
-      Assert.isNotNull(movableUnit);
-      // Assert.isNotNull(movableUnit.getAssociatedBinaryResources());
-      Assert.isNotNull(movableUnit.getAssociatedSourceResource());
-      Assert.isNotNull(modularizedSystem.getAssociatedResourceModule(moduleResource));
-    }
+    // // TESTS
+    // for (IModuleResource moduleResource : getBinaryResources()) {
+    // IMovableUnit movableUnit = moduleResource.getMovableUnit();
+    // Assert.isNotNull(movableUnit);
+    // Assert.isNotNull(movableUnit.getAssociatedBinaryResources());
+    // Assert.isTrue(!movableUnit.getAssociatedBinaryResources().isEmpty());
+    // Assert.isNotNull(modularizedSystem.getAssociatedResourceModule(moduleResource));
+    // }
+    // for (IModuleResource moduleResource : getSourceResources()) {
+    // IMovableUnit movableUnit = moduleResource.getMovableUnit();
+    // Assert.isNotNull(movableUnit);
+    // // Assert.isNotNull(movableUnit.getAssociatedBinaryResources());
+    // Assert.isNotNull(movableUnit.getAssociatedSourceResource());
+    // Assert.isNotNull(modularizedSystem.getAssociatedResourceModule(moduleResource));
+    // }
     // *****************************************************//
 
     // invoke hook if available
