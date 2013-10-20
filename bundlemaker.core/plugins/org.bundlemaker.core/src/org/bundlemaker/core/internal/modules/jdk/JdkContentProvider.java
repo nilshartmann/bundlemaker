@@ -7,7 +7,7 @@ import java.util.List;
 import org.bundlemaker.core.common.utils.VMInstallUtils;
 import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.IProjectContentEntry;
-import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
+import org.bundlemaker.core.project.spi.AbstractProjectContentProvider;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.launching.IVMInstall;

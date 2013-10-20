@@ -11,7 +11,7 @@ import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.VariablePath;
-import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
+import org.bundlemaker.core.project.spi.AbstractProjectContentProvider;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 

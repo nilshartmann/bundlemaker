@@ -21,7 +21,7 @@ import org.bundlemaker.core.common.Constants;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.project.internal.gson.GsonProjectDescriptionHelper;
-import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
+import org.bundlemaker.core.project.spi.AbstractProjectContentProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;

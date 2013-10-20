@@ -17,7 +17,7 @@ import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.project.VariablePath;
-import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
+import org.bundlemaker.core.project.spi.AbstractProjectContentProvider;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;

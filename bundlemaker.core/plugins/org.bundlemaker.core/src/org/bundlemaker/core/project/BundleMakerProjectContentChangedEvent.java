@@ -32,9 +32,6 @@ public class BundleMakerProjectContentChangedEvent {
   private Type                                       _type;
 
   /** - */
-  private IProjectContentResource                    _affectedResource;
-
-  /** - */
   private IProjectContentResource                    _contentResource;
 
   /** the bundle maker project */
