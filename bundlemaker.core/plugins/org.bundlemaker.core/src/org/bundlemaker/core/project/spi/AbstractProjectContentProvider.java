@@ -16,6 +16,7 @@ import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.project.VariablePath;
 import org.bundlemaker.core.project.internal.BundleMakerProjectDescription;
+import org.bundlemaker.core.project.internal.IHandleChangedProjectContentInterceptor;
 import org.bundlemaker.core.project.internal.ProjectContentEntry;
 import org.bundlemaker.core.project.internal.gson.GsonProjectDescriptionHelper;
 import org.bundlemaker.core.spi.parser.IParsableResource;
@@ -56,6 +57,8 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
 
   /** - */
   private boolean                                    _isInitialized;
+
+  private IHandleChangedProjectContentInterceptor    _interceptor;
 
   /**
    * <p>
@@ -352,12 +355,7 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
     }
 
     //
-    try {
-      parse(contentEntry, contentResource.adaptAs(IParsableResource.class));
-    } catch (CoreException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    getInterceptor().resourceContentAdded(contentEntry, contentResource);
 
     //
     fireProjectContentChangedEvent(new BundleMakerProjectContentChangedEvent(getBundleMakerProject(),
@@ -387,25 +385,11 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
   protected void handleResourceModified(IProjectContentEntry contentEntry, IProjectContentResource contentResource) {
 
     //
-    try {
-      parse(contentEntry, contentResource.adaptAs(IParsableResource.class));
-    } catch (CoreException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    getInterceptor().resourceContentModified(contentEntry, contentResource);
 
     //
     fireProjectContentChangedEvent(new BundleMakerProjectContentChangedEvent(getBundleMakerProject(),
         BundleMakerProjectContentChangedEvent.Type.MODIFIED, contentResource));
-  }
-
-  /**
-   * @param contentEntry
-   * @param contentResource
-   * @throws CoreException
-   */
-  private void parse(IProjectContentEntry contentEntry, IParsableResource contentResource) throws CoreException {
-    IParserService.Factory.getParserService().parseResource(contentEntry, contentResource, true);
   }
 
   /**
@@ -414,5 +398,65 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    */
   private void checkProjectSet() {
     Assert.isNotNull(_bundleMakerProject, "BundleMaker project has not been set.");
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  // TODO MOVE
+  private IHandleChangedProjectContentInterceptor getInterceptor() {
+
+    //
+    if (_interceptor == null) {
+
+      //
+      _interceptor = new IHandleChangedProjectContentInterceptor() {
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void resourceContentModified(IProjectContentEntry contentEntry, IProjectContentResource contentResource) {
+
+          //
+          try {
+            parse(contentEntry, contentResource.adaptAs(IParsableResource.class));
+          } catch (CoreException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void resourceContentAdded(IProjectContentEntry contentEntry, IProjectContentResource contentResource) {
+
+          //
+          try {
+            parse(contentEntry, contentResource.adaptAs(IParsableResource.class));
+          } catch (CoreException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+        }
+
+        /**
+         * @param contentEntry
+         * @param contentResource
+         * @throws CoreException
+         */
+        private void parse(IProjectContentEntry contentEntry, IParsableResource contentResource) throws CoreException {
+          IParserService.Factory.getParserService().parseResource(contentEntry, contentResource, true);
+        }
+      };
+    }
+
+    //
+    return _interceptor;
   }
 }

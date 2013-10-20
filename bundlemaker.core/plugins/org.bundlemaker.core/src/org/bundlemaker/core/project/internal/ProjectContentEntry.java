@@ -74,6 +74,9 @@ public class ProjectContentEntry implements IProjectContentEntry {
   /** the user attributes */
   private Map<String, Object>                   _userAttributes;
 
+  /** - */
+  private IResourceFactory                      _resourceFactory;
+
   /**
    * indicates wether changes to this instance should be notified.
    * 
@@ -387,7 +390,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
     Assert.isNotNull(type);
 
     //
-    ResourceStandin resourceStandin = new ResourceStandin(contentId, root, path);
+    IResourceStandinNEW resourceStandin = getResourceFactory().createResourceStandin(contentId, root, path);
     resourceStandin.setAnalyzeReferences(analyzeReferences);
 
     // add the resource
@@ -664,12 +667,17 @@ public class ProjectContentEntry implements IProjectContentEntry {
     if (!standins.containsKey(path)) {
 
       // create the resource standin
-      ResourceStandin resourceStandin = (ResourceStandin) createNewResourceStandin(getId(), root, path, type,
+      IResourceStandinNEW resourceStandin = createNewResourceStandin(getId(), root, path, type,
           isAnalyze());
 
       // set resource
-      resourceStandin.setResource(new Resource(resourceStandin.getProjectContentEntryId(), resourceStandin.getRoot(),
-          resourceStandin.getPath()));
+      IProjectContentResource resource = getResourceFactory().createResource(
+          resourceStandin.getProjectContentEntryId(),
+          resourceStandin.getRoot(),
+          resourceStandin.getPath());
+
+      //
+      resourceStandin.setResource(resource);
 
       // return resource
       return resourceStandin;
@@ -731,5 +739,35 @@ public class ProjectContentEntry implements IProjectContentEntry {
     if (!_isInitialized) {
       Assert.isTrue(false, String.format("ProjectContentEntry '%s' has to be initialized.", toString()));
     }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  private IResourceFactory getResourceFactory() {
+
+    // TODO: REPLACE
+    if (_resourceFactory == null) {
+
+      //
+      _resourceFactory = new IResourceFactory() {
+
+        @Override
+        public IResourceStandinNEW createResourceStandin(String contentId, String root, String path) {
+          return new ResourceStandin(contentId, root, path);
+        }
+
+        @Override
+        public IProjectContentResource createResource(String contentId, String root, String path) {
+          return new Resource(contentId, root, path);
+        }
+      };
+    }
+
+    //
+    return _resourceFactory;
   }
 }
