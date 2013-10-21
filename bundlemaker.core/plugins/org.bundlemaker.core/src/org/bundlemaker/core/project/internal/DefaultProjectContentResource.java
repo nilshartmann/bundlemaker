@@ -21,6 +21,7 @@ import java.util.zip.ZipFile;
 import org.bundlemaker.core.common.FlyWeightString;
 import org.bundlemaker.core.common.FlyWeightStringCache;
 import org.bundlemaker.core.common.ZipFileCache;
+import org.bundlemaker.core.internal.resource.MovableUnit;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.Platform;
@@ -37,16 +38,22 @@ import org.eclipse.core.runtime.Platform;
 public class DefaultProjectContentResource implements IProjectContentResource {
 
   /** the content id */
-  private FlyWeightString _contentId;
+  private FlyWeightString               _contentId;
 
   /** the root of the resource */
-  private FlyWeightString _root;
+  private FlyWeightString               _root;
 
   /** the path of the resource */
-  private String          _path;
+  private String                        _path;
 
   /** - */
-  private boolean         _analyzeReferences = true;
+  private boolean                       _analyzeReferences = true;
+
+  /**  */
+  private transient IResourceStandinNEW _resourceStandin;
+
+  /** - */
+  private transient MovableUnit         _movableUnit;
 
   /**
    * <p>
