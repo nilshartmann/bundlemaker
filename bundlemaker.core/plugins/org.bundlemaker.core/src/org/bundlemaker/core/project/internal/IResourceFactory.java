@@ -1,6 +1,5 @@
 package org.bundlemaker.core.project.internal;
 
-import org.bundlemaker.core.project.IProjectContentResource;
 
 /**
  * <p>
@@ -19,7 +18,7 @@ public interface IResourceFactory {
    * @param path
    * @return
    */
-  IProjectContentResource createResource(String contentId, String root, String path);
+  IResourceStandinAwareProjectContentResource createResource(String contentId, String root, String path);
 
   /**
    * <p>

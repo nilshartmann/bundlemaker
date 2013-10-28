@@ -671,7 +671,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
           isAnalyze());
 
       // set resource
-      IProjectContentResource resource = getResourceFactory().createResource(
+      IResourceStandinAwareProjectContentResource resource = getResourceFactory().createResource(
           resourceStandin.getProjectContentEntryId(),
           resourceStandin.getRoot(),
           resourceStandin.getPath());
@@ -761,7 +761,7 @@ public class ProjectContentEntry implements IProjectContentEntry {
         }
 
         @Override
-        public IProjectContentResource createResource(String contentId, String root, String path) {
+        public IResourceStandinAwareProjectContentResource createResource(String contentId, String root, String path) {
           return new Resource(contentId, root, path);
         }
       };

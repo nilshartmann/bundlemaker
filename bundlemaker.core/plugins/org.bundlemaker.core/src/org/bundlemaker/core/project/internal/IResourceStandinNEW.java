@@ -4,9 +4,9 @@ import org.bundlemaker.core.project.IProjectContentResource;
 
 public interface IResourceStandinNEW extends IProjectContentResource {
 
-  IProjectContentResource getResource();
+  IResourceStandinAwareProjectContentResource getResource();
 
-  void setResource(IProjectContentResource resource);
+  void setResource(IResourceStandinAwareProjectContentResource resource);
 
   void setAnalyzeReferences(boolean analyzeReferences);
 }

@@ -17,6 +17,7 @@ import java.util.Set;
 import org.bundlemaker.core.common.FlyWeightStringCache;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.project.internal.DefaultProjectContentResource;
+import org.bundlemaker.core.project.internal.IResourceStandinAwareProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -29,7 +30,8 @@ import org.bundlemaker.core.spi.parser.IParsableResource;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class Resource extends DefaultProjectContentResource implements IParsableResource {
+public class Resource extends DefaultProjectContentResource implements IParsableResource,
+    IResourceStandinAwareProjectContentResource {
 
   //
   private Object                    _modelExtension;

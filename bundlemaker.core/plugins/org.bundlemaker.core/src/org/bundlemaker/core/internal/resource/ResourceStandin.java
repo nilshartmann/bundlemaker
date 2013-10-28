@@ -16,8 +16,8 @@ import java.util.Set;
 
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
-import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.project.internal.DefaultProjectContentResource;
+import org.bundlemaker.core.project.internal.IResourceStandinAwareProjectContentResource;
 import org.bundlemaker.core.project.internal.IResourceStandinNEW;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
@@ -34,10 +34,10 @@ import org.eclipse.core.runtime.Assert;
 public class ResourceStandin extends DefaultProjectContentResource implements IResourceStandin, IResourceStandinNEW {
 
   /** - */
-  private IProjectContentResource _resource;
+  private IResourceStandinAwareProjectContentResource _resource;
 
   /** - */
-  private Set<IModuleResource>    _stickyResourceStandins;
+  private Set<IModuleResource>                        _stickyResourceStandins;
 
   /**
    * <p>
@@ -89,8 +89,8 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
     return ((ModularizedSystem) modularizedSystem).getAssociatedResourceModule(this);
   }
 
-  public IModuleResource getResource() {
-    return _resource.adaptAs(IModuleResource.class);
+  public IResourceStandinAwareProjectContentResource getResource() {
+    return _resource;
   }
 
   /**
@@ -118,13 +118,8 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
     return (T) _resource.adaptAs(clazz);
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resource
-   */
-  public void setResource(IProjectContentResource resource) {
+  @Override
+  public void setResource(IResourceStandinAwareProjectContentResource resource) {
     _resource = resource;
   }
 
