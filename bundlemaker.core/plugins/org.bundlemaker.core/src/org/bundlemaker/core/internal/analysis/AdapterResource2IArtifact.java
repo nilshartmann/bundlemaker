@@ -20,7 +20,7 @@ import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
 
 /**
@@ -30,7 +30,7 @@ import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class AdapterResource2IArtifact extends AbstractArtifactContainer implements IResourceArtifact,
-    IMovableUnit {
+    IModuleAwareMovableUnit {
 
   /** the bundle maker resource */
   private IModuleResource _resource;
@@ -39,7 +39,7 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
   private boolean         _isSourceResource;
 
   /** - */
-  private IMovableUnit    _movableUnit;
+  private IModuleAwareMovableUnit    _movableUnit;
 
   /**
    * <p>

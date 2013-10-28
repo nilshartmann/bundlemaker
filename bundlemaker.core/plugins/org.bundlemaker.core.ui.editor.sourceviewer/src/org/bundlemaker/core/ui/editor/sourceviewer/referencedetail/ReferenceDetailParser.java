@@ -12,7 +12,7 @@ import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.project.VariablePath;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.spi.parser.IReferenceDetailParser;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.dom.AST;
@@ -30,7 +30,7 @@ public class ReferenceDetailParser implements IReferenceDetailParser {
 
     //
     try {
-      IMovableUnit movableUnit = resource.getMovableUnit();
+      IModuleAwareMovableUnit movableUnit = resource.getMovableUnit();
       CompilationUnit compilationUnit = parse(movableUnit.getAssociatedSourceResource(),
           modularizedSystem.getBundleMakerProject());
       JdtAstVisitor jdtAstVisitor = new JdtAstVisitor();

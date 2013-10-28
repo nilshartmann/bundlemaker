@@ -22,7 +22,7 @@ import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public class BasicProjectContentTransformation implements IInternalTransformation {
@@ -41,7 +41,7 @@ public class BasicProjectContentTransformation implements IInternalTransformatio
       module.getUserAttributes().putAll(projectContentEntry.getUserAttributes());
 
       //
-      for (IMovableUnit movableUnit : setupMovableUnits(projectContentEntry)) {
+      for (IModuleAwareMovableUnit movableUnit : setupMovableUnits(projectContentEntry)) {
         module.addMovableUnit(movableUnit);
       }
 
@@ -56,7 +56,7 @@ public class BasicProjectContentTransformation implements IInternalTransformatio
    * <p>
    * </p>
    */
-  public Set<IMovableUnit> setupMovableUnits(IProjectContentEntry projectContentEntry) {
+  public Set<IModuleAwareMovableUnit> setupMovableUnits(IProjectContentEntry projectContentEntry) {
 
     //
     DispatchingMovableUnitCreator unitCreator = new DispatchingMovableUnitCreator();

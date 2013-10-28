@@ -21,7 +21,7 @@ import org.bundlemaker.core.project.internal.IResourceStandinAwareProjectContent
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.spi.parser.IParsableResource;
 
 /**
@@ -124,7 +124,7 @@ public class Resource extends DefaultProjectContentResource implements IParsable
    * {@inheritDoc}
    */
   @Override
-  public IMovableUnit getMovableUnit() {
+  public IModuleAwareMovableUnit getMovableUnit() {
     return _movableUnit;
   }
 

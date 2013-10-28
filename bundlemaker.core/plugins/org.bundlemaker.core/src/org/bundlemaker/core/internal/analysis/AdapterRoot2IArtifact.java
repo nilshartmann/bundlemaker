@@ -31,7 +31,7 @@ import org.bundlemaker.core.internal.modules.event.ModuleMovedEvent;
 import org.bundlemaker.core.internal.modules.event.MovableUnitMovedEvent;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.spi.analysis.AbstractArtifact;
 import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
 import org.eclipse.core.runtime.Assert;
@@ -313,7 +313,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
     switch (action) {
     case ADDED: {
       // get the movable unit
-      IMovableUnit movableUnit = event.getMovableUnit();
+      IModuleAwareMovableUnit movableUnit = event.getMovableUnit();
       IAnalysisModelConfiguration configuration = getConfiguration();
 
       // Step 1: Handle resources
@@ -344,7 +344,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
     }
     case REMOVED: {
       //
-      IMovableUnit movableUnit = event.getMovableUnit();
+      IModuleAwareMovableUnit movableUnit = event.getMovableUnit();
       IAnalysisModelConfiguration configuration = getConfiguration();
 
       if (configuration.isBinaryContent() && movableUnit.hasAssociatedBinaryResources()

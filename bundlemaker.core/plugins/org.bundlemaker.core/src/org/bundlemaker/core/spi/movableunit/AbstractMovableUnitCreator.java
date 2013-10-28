@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.bundlemaker.core.internal.resource.MovableUnit;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 
 /**
  * <p>
@@ -22,7 +22,7 @@ public abstract class AbstractMovableUnitCreator implements IMovableUnitCreator 
    * @param binaryResources
    * @return
    */
-  protected IMovableUnit createMovableUnit(IModuleResource sourceResource,
+  protected IModuleAwareMovableUnit createMovableUnit(IModuleResource sourceResource,
       List<IModuleResource> binaryResources) {
 
     //
@@ -37,7 +37,7 @@ public abstract class AbstractMovableUnitCreator implements IMovableUnitCreator 
    * @param binaryResources
    * @return
    */
-  protected IMovableUnit createMovableUnit(IModuleResource sourceResource,
+  protected IModuleAwareMovableUnit createMovableUnit(IModuleResource sourceResource,
       IModuleResource binaryResources) {
 
     //

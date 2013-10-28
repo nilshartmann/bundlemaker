@@ -22,7 +22,7 @@ import org.bundlemaker.core.project.internal.IResourceStandinNEW;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -143,7 +143,7 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
    * {@inheritDoc}
    */
   @Override
-  public IMovableUnit getMovableUnit() {
+  public IModuleAwareMovableUnit getMovableUnit() {
 
     //
     if (_resource == null) {

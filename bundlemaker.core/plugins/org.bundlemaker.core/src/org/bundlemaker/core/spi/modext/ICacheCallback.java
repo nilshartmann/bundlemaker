@@ -1,7 +1,7 @@
 package org.bundlemaker.core.spi.modext;
 
 import org.bundlemaker.core.resource.IModule;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 
 public interface ICacheCallback {
 
@@ -15,11 +15,11 @@ public interface ICacheCallback {
    * <p>
    * </p>
    */
-  void movableUnitAdded(IMovableUnit movableUnit, IModule module);
+  void movableUnitAdded(IModuleAwareMovableUnit movableUnit, IModule module);
 
   /**
    * <p>
    * </p>
    */
-  void movableUnitRemoved(IMovableUnit movableUnit, IModule module);
+  void movableUnitRemoved(IModuleAwareMovableUnit movableUnit, IModule module);
 }

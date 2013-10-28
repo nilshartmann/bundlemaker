@@ -2,17 +2,17 @@ package org.bundlemaker.core.internal.modules.event;
 
 import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.resource.IModule;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 
 public class MovableUnitMovedEvent {
 
-  private IMovableUnit _movableUnit;
+  private IModuleAwareMovableUnit _movableUnit;
 
   private IModule      _module;
 
   private ChangeAction _changeAction;
 
-  public MovableUnitMovedEvent(IMovableUnit movableUnit, IModule module, ChangeAction changeAction) {
+  public MovableUnitMovedEvent(IModuleAwareMovableUnit movableUnit, IModule module, ChangeAction changeAction) {
     super();
     _movableUnit = movableUnit;
     _module = module;
@@ -25,7 +25,7 @@ public class MovableUnitMovedEvent {
    * 
    * @return
    */
-  public IMovableUnit getMovableUnit() {
+  public IModuleAwareMovableUnit getMovableUnit() {
     return _movableUnit;
   }
 

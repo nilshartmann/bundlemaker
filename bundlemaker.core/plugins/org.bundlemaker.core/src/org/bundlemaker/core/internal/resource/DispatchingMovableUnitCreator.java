@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.spi.movableunit.IMovableUnitCreator;
 
 public class DispatchingMovableUnitCreator implements IMovableUnitCreator {
@@ -16,11 +16,11 @@ public class DispatchingMovableUnitCreator implements IMovableUnitCreator {
    * {@inheritDoc}
    */
   @Override
-  public Set<IMovableUnit> assignMovableUnits(Map<String, IModuleResource> binaries,
+  public Set<IModuleAwareMovableUnit> assignMovableUnits(Map<String, IModuleResource> binaries,
       Map<String, IModuleResource> sources) {
 
     //
-    Set<IMovableUnit> result = new HashSet<IMovableUnit>();
+    Set<IModuleAwareMovableUnit> result = new HashSet<IModuleAwareMovableUnit>();
 
     //
     List<IMovableUnitCreator> creators = new LinkedList<IMovableUnitCreator>(MovableUnitRegistry.instance()
@@ -31,11 +31,11 @@ public class DispatchingMovableUnitCreator implements IMovableUnitCreator {
     for (IMovableUnitCreator creator : creators) {
 
       //
-      Set<IMovableUnit> movableUnits = creator.assignMovableUnits(binaries, sources);
+      Set<IModuleAwareMovableUnit> movableUnits = creator.assignMovableUnits(binaries, sources);
       result.addAll(movableUnits);
 
       //
-      for (IMovableUnit unit : movableUnits) {
+      for (IModuleAwareMovableUnit unit : movableUnits) {
 
         // remove binaries
         for (IModuleResource moduleResource : unit.getAssociatedBinaryResources()) {

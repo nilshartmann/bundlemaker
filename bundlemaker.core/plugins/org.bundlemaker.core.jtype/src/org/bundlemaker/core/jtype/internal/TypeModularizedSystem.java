@@ -17,7 +17,7 @@ import org.bundlemaker.core.jtype.ITypeResource;
 import org.bundlemaker.core.jtype.ITypeSelector;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.spi.modext.ICacheAwareModularizedSystem;
 import org.bundlemaker.core.spi.modext.ICacheCallback;
 import org.eclipse.core.runtime.Assert;
@@ -58,7 +58,7 @@ public class TypeModularizedSystem implements ITypeModularizedSystem, ICacheCall
 
     //
     for (IModule module : system.getModules()) {
-      for (IMovableUnit movableUnit : module.getMovableUnits()) {
+      for (IModuleAwareMovableUnit movableUnit : module.getMovableUnits()) {
         movableUnitAdded(movableUnit, module);
       }
     }
@@ -390,7 +390,7 @@ public class TypeModularizedSystem implements ITypeModularizedSystem, ICacheCall
    * {@inheritDoc}
    */
   @Override
-  public void movableUnitAdded(IMovableUnit movableUnit, IModule module) {
+  public void movableUnitAdded(IModuleAwareMovableUnit movableUnit, IModule module) {
 
     for (IModuleResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
       typesChanged(
@@ -412,7 +412,7 @@ public class TypeModularizedSystem implements ITypeModularizedSystem, ICacheCall
    * {@inheritDoc}
    */
   @Override
-  public void movableUnitRemoved(IMovableUnit movableUnit, IModule module) {
+  public void movableUnitRemoved(IModuleAwareMovableUnit movableUnit, IModule module) {
 
     for (IModuleResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
       typesChanged(

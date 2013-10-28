@@ -8,10 +8,10 @@ import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.eclipse.core.runtime.Assert;
 
-public class MovableUnit implements IMovableUnit {
+public class MovableUnit implements IModuleAwareMovableUnit {
 
   /** EMPTY_RESOURCE_LIST */
   private static final List<IResourceStandin> EMPTY_RESOURCE_LIST = Collections.emptyList();

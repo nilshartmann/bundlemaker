@@ -30,7 +30,7 @@ import org.bundlemaker.core.jtype.ITypeModularizedSystem;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.spi.analysis.AbstractArtifact;
 import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
 import org.bundlemaker.core.spi.analysis.Dependency;
@@ -45,7 +45,7 @@ import org.eclipse.core.runtime.Path;
 /**
  * 
  */
-public class AdapterType2IArtifact extends AbstractArtifact implements IMovableUnit,
+public class AdapterType2IArtifact extends AbstractArtifact implements IModuleAwareMovableUnit,
     ITypeArtifact, IReferencingArtifact, IReferencedArtifact {
 
   /** the bundle maker type */
@@ -55,7 +55,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   private TypeArtifactCache             _artifactCache;
 
   /** - */
-  private IMovableUnit             _movableUnit;
+  private IModuleAwareMovableUnit             _movableUnit;
 
   /** - */
   private ReferencingArtifactTrait _referencingArtifact;

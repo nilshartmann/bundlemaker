@@ -42,7 +42,7 @@ public interface IModuleResource extends IProjectContentResource, Comparable<IMo
    * @param modularizedSystem
    * @return
    */
-  IMovableUnit getMovableUnit();
+  IModuleAwareMovableUnit getMovableUnit();
 
   /**
    * <p>

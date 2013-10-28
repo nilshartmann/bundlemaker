@@ -30,7 +30,7 @@ import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.resource.ITransformation;
 import org.bundlemaker.core.spi.modext.ICacheCallback;
 import org.eclipse.core.runtime.Assert;
@@ -478,7 +478,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * @param resourceModule
    * @param action
    */
-  public void movableUnitChanged(IMovableUnit movableUnit, IModule resourceModule, ChangeAction action) {
+  public void movableUnitChanged(IModuleAwareMovableUnit movableUnit, IModule resourceModule, ChangeAction action) {
 
     for (IModuleResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
       internalResourceChanged(moduleResource, resourceModule, action);
@@ -515,7 +515,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     getListenerList().fireModuleChanged(resourceModule, ChangeAction.ADDED);
 
     //
-    for (IMovableUnit movableUnit : resourceModule.getMovableUnits()) {
+    for (IModuleAwareMovableUnit movableUnit : resourceModule.getMovableUnits()) {
       movableUnitChanged(movableUnit, resourceModule, ChangeAction.ADDED);
     }
   }
@@ -528,7 +528,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     Assert.isNotNull(resourceModule);
 
     //
-    for (IMovableUnit movableUnit : resourceModule.getMovableUnits()) {
+    for (IModuleAwareMovableUnit movableUnit : resourceModule.getMovableUnits()) {
       movableUnitChanged(movableUnit, resourceModule, ChangeAction.REMOVED);
     }
 

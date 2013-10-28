@@ -10,7 +10,7 @@ import org.bundlemaker.core.jtype.IType;
 import org.bundlemaker.core.jtype.ITypeModule;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -116,12 +116,12 @@ public class MovableUnitTest extends AbstractBundleMakerModelTest {
 
   /**
    * <p>
-   * Helper method that checks the specified {@link IMovableUnit}.
+   * Helper method that checks the specified {@link IModuleAwareMovableUnit}.
    * </p>
    * 
    * @param movableUnit
    */
-  private void assertMovableUnit(IMovableUnit movableUnit) {
+  private void assertMovableUnit(IModuleAwareMovableUnit movableUnit) {
 
     // assert not null
     Assert.assertNotNull(movableUnit);

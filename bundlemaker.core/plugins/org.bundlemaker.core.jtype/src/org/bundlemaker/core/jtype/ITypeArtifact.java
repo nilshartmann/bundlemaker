@@ -3,7 +3,7 @@ package org.bundlemaker.core.jtype;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact.IResourceArtifactContent;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 
 /**
  * <p>
@@ -13,7 +13,7 @@ import org.bundlemaker.core.resource.IMovableUnit;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface ITypeArtifact extends IBundleMakerArtifact, IMovableUnit, IResourceArtifact.IResourceArtifactContent {
+public interface ITypeArtifact extends IBundleMakerArtifact, IModuleAwareMovableUnit, IResourceArtifact.IResourceArtifactContent {
 
   /**
    * <p>

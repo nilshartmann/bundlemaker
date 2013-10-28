@@ -16,7 +16,7 @@ import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.Module;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -333,23 +333,23 @@ public class AdapterUtils {
    * @param artifact
    * @return
    */
-  public static List<IMovableUnit> getAllMovableUnits(IBundleMakerArtifact artifact) {
+  public static List<IModuleAwareMovableUnit> getAllMovableUnits(IBundleMakerArtifact artifact) {
 
     // asserts
     Assert.isNotNull(artifact);
 
     // create the result list
-    final List<IMovableUnit> result = new LinkedList<IMovableUnit>();
+    final List<IModuleAwareMovableUnit> result = new LinkedList<IModuleAwareMovableUnit>();
 
     // accept the visitor
     artifact.accept(new IAnalysisModelVisitor.Adapter() {
       @Override
       public boolean onVisit(IBundleMakerArtifact artifact) {
         // continue the search if artifact is not instance of
-        if (!(artifact instanceof IMovableUnit)) {
+        if (!(artifact instanceof IModuleAwareMovableUnit)) {
           return true;
         } else {
-          result.add((IMovableUnit) artifact);
+          result.add((IModuleAwareMovableUnit) artifact);
           return false;
         }
       }
@@ -366,7 +366,7 @@ public class AdapterUtils {
    * @param resourceModule
    * @param movableUnit
    */
-  public static void addResourceToModule(IModifiableModule resourceModule, IMovableUnit movableUnit) {
+  public static void addResourceToModule(IModifiableModule resourceModule, IModuleAwareMovableUnit movableUnit) {
 
     //
     Assert.isNotNull(resourceModule);
@@ -391,13 +391,13 @@ public class AdapterUtils {
    * @param resourceModule
    * @param resourceHolder
    */
-  public static void addResourcesToModule(IModifiableModule resourceModule, List<IMovableUnit> movableUnits) {
+  public static void addResourcesToModule(IModifiableModule resourceModule, List<IModuleAwareMovableUnit> movableUnits) {
 
     Assert.isNotNull(resourceModule);
     Assert.isNotNull(movableUnits);
 
     //
-    for (IMovableUnit movableUnit : movableUnits) {
+    for (IModuleAwareMovableUnit movableUnit : movableUnits) {
 
       addResourceToModule(resourceModule, movableUnit);
     }
@@ -405,21 +405,21 @@ public class AdapterUtils {
 
   /**
    * <p>
-   * Removes all {@link IMovableUnit IMovableUnits} from the given resource module.
+   * Removes all {@link IModuleAwareMovableUnit IMovableUnits} from the given resource module.
    * </p>
    * 
    * @param resourceModule
    * @param movableUnits
    */
   private static void removeResourcesFromModule(IModifiableModule resourceModule,
-      List<IMovableUnit> movableUnits) {
+      List<IModuleAwareMovableUnit> movableUnits) {
 
     // asserts
     Assert.isNotNull(resourceModule);
     Assert.isNotNull(movableUnits);
 
     // remove all units
-    for (IMovableUnit resourceHolder : movableUnits) {
+    for (IModuleAwareMovableUnit resourceHolder : movableUnits) {
       resourceModule.removeMovableUnit(resourceHolder);
     }
   }

@@ -2,7 +2,7 @@ package org.bundlemaker.core.internal.api.resource;
 
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleIdentifier;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.eclipse.core.runtime.IPath;
 
 /**
@@ -31,7 +31,7 @@ public interface IModifiableModule extends IModule {
    * 
    * @param movableUnit
    */
-  void addMovableUnit(IMovableUnit movableUnit);
+  void addMovableUnit(IModuleAwareMovableUnit movableUnit);
 
   /**
    * <p>
@@ -39,5 +39,5 @@ public interface IModifiableModule extends IModule {
    * 
    * @param movableUnit
    */
-  void removeMovableUnit(IMovableUnit movableUnit);
+  void removeMovableUnit(IModuleAwareMovableUnit movableUnit);
 }

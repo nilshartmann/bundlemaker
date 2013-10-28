@@ -1,7 +1,7 @@
 package org.bundlemaker.core.analysis;
 
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 
 /**
  * <p>
@@ -10,7 +10,7 @@ import org.bundlemaker.core.resource.IMovableUnit;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IResourceArtifact extends IBundleMakerArtifact, IMovableUnit {
+public interface IResourceArtifact extends IBundleMakerArtifact, IModuleAwareMovableUnit {
 
   /**
    * <p>

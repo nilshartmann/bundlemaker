@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 
 /**
  * <p>
@@ -17,5 +17,5 @@ public interface IMovableUnitCreator {
    * @param sources
    * @return
    */
-  Set<IMovableUnit> assignMovableUnits(Map<String, IModuleResource> binaries, Map<String, IModuleResource> sources);
+  Set<IModuleAwareMovableUnit> assignMovableUnits(Map<String, IModuleResource> binaries, Map<String, IModuleResource> sources);
 }

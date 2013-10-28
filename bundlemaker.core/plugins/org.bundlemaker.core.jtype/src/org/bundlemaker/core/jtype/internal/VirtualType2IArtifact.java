@@ -24,7 +24,7 @@ import org.bundlemaker.core.jtype.ITypeArtifact;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.spi.analysis.AbstractArtifact;
 import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
 import org.eclipse.core.runtime.Assert;
@@ -34,7 +34,7 @@ import org.eclipse.core.runtime.Path;
 /**
  * 
  */
-public class VirtualType2IArtifact extends AbstractArtifact implements IMovableUnit, ITypeArtifact {
+public class VirtualType2IArtifact extends AbstractArtifact implements IModuleAwareMovableUnit, ITypeArtifact {
 
   /** - */
   private String        _fullyQualifiedName;

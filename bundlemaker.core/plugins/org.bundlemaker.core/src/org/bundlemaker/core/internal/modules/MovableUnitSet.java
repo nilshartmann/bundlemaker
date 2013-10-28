@@ -6,13 +6,13 @@ import java.util.Set;
 
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.eclipse.core.runtime.Assert;
 
 public class MovableUnitSet {
 
   /** the movable units */
-  private Set<IMovableUnit>    _movableUnits;
+  private Set<IModuleAwareMovableUnit>    _movableUnits;
 
   /** the binary resources */
   private Set<IModuleResource> _binaryResources;
@@ -32,7 +32,7 @@ public class MovableUnitSet {
     _sourceResources = new HashSet<IModuleResource>();
 
     //
-    _movableUnits = new HashSet<IMovableUnit>();
+    _movableUnits = new HashSet<IModuleAwareMovableUnit>();
   }
 
   /**
@@ -41,7 +41,7 @@ public class MovableUnitSet {
    * 
    * @param movableUnit
    */
-  public void addMovableUnit(IMovableUnit movableUnit) {
+  public void addMovableUnit(IModuleAwareMovableUnit movableUnit) {
     Assert.isNotNull(movableUnit);
 
     //
@@ -65,7 +65,7 @@ public class MovableUnitSet {
    * 
    * @param movableUnit
    */
-  public void removeMovableUnit(IMovableUnit movableUnit) {
+  public void removeMovableUnit(IModuleAwareMovableUnit movableUnit) {
     Assert.isNotNull(movableUnit);
 
     //
@@ -116,7 +116,7 @@ public class MovableUnitSet {
    * 
    * @return
    */
-  public Set<? extends IMovableUnit> getMovableUnits() {
+  public Set<? extends IModuleAwareMovableUnit> getMovableUnits() {
     return Collections.unmodifiableSet(_movableUnits);
   }
 
