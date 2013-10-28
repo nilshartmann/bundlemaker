@@ -26,6 +26,15 @@ import org.bundlemaker.core.common.IResource;
  */
 public interface IProjectContentResource extends IResource, IGenericAdaptable {
 
+  // /**
+  // * <p>
+  // * Returns the identifier of the project content entry that defines the resource.
+  // * </p>
+  // *
+  // * @return the identifier of the project content entry that defines the resource.
+  // */
+  // IProjectContentEntry getProjectContentEntry();
+
   /**
    * <p>
    * Returns the identifier of the project content entry that defines the resource.
@@ -37,13 +46,11 @@ public interface IProjectContentResource extends IResource, IGenericAdaptable {
 
   /**
    * <p>
-   * Returns the root directory or archive file that contains the resource (e.g. <code>'c:/dev/classes.zip'</code> or
-   * <code>'c:/dev/source'</code>). Note that resource paths are always slash-delimited ('/').
    * </p>
    * 
-   * @return the root directory or archive file that contains the resource.
+   * @return
    */
-  String getRoot();
+  boolean isAnalyzeReferences();
 
   /**
    * <p>
@@ -51,5 +58,5 @@ public interface IProjectContentResource extends IResource, IGenericAdaptable {
    * 
    * @return
    */
-  boolean isAnalyzeReferences();
+  IMovableUnit getMovableUnit();
 }

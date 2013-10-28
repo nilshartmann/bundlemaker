@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.project.internal;
+package org.bundlemaker.core.common;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,12 +18,8 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.bundlemaker.core.common.FlyWeightString;
-import org.bundlemaker.core.common.FlyWeightStringCache;
-import org.bundlemaker.core.common.ZipFileCache;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.Platform;
 
 /**
  * <p>
@@ -34,10 +30,7 @@ import org.eclipse.core.runtime.Platform;
  * 
  * @noextend This class is not intended to be extended by clients.
  */
-public abstract class DefaultProjectContentResource implements IProjectContentResource {
-
-  /** the content id */
-  private FlyWeightString _contentId;
+public class DefaultResource implements IResource {
 
   /** the root of the resource */
   private FlyWeightString _root;
@@ -45,80 +38,39 @@ public abstract class DefaultProjectContentResource implements IProjectContentRe
   /** the path of the resource */
   private String          _path;
 
-  /** - */
-  private boolean         _analyzeReferences = true;
-
   /**
    * <p>
-   * Creates a new instance of type {@link DefaultProjectContentResource}.
+   * Creates a new instance of type {@link DefaultResource}.
    * </p>
    * 
-   * @param contentId
    * @param root
    * @param path
    */
-  public DefaultProjectContentResource(String contentId, String root, String path) {
-    Assert.isNotNull(contentId);
+  public DefaultResource(String root, String path) {
     Assert.isNotNull(root);
     Assert.isNotNull(path);
 
-    _contentId = new FlyWeightString(normalize(contentId));
     _root = new FlyWeightString(normalize(root));
     _path = path;
   }
 
   /**
    * <p>
-   * Creates a new instance of type {@link DefaultProjectContentResource}.
+   * Creates a new instance of type {@link DefaultResource}.
    * </p>
    * 
-   * @param contentId
    * @param root
    * @param path
    * @param cache
    */
-  protected DefaultProjectContentResource(String contentId, String root, String path, FlyWeightStringCache cache) {
+  protected DefaultResource(String root, String path, FlyWeightStringCache cache) {
 
-    Assert.isNotNull(contentId);
     Assert.isNotNull(root);
     Assert.isNotNull(path);
     Assert.isNotNull(cache);
 
-    _contentId = cache.getFlyWeightString(contentId);
     _root = cache.getFlyWeightString(root);
     _path = path;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public <T> T adaptAs(Class<T> clazz) {
-
-    //
-    T result = (T) Platform.getAdapterManager().getAdapter(this, clazz);
-    if (result != null) {
-      return result;
-    }
-
-    //
-    return null;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Object getAdapter(Class adapter) {
-    return adaptAs(adapter);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public String getProjectContentEntryId() {
-    return _contentId.toString();
   }
 
   /**
@@ -257,7 +209,6 @@ public abstract class DefaultProjectContentResource implements IProjectContentRe
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + _contentId.hashCode();
     result = prime * result + _path.hashCode();
     result = prime * result + _root.hashCode();
     return result;
@@ -272,11 +223,9 @@ public abstract class DefaultProjectContentResource implements IProjectContentRe
       return true;
     if (obj == null)
       return false;
-    if (!(DefaultProjectContentResource.class.isAssignableFrom(obj.getClass())))
+    if (!(DefaultResource.class.isAssignableFrom(obj.getClass())))
       return false;
-    DefaultProjectContentResource other = (DefaultProjectContentResource) obj;
-    if (!_contentId.equals(other.getProjectContentEntryId()))
-      return false;
+    DefaultResource other = (DefaultResource) obj;
     if (!_path.equals(other.getPath()))
       return false;
     if (!_root.equals(other.getRoot()))
@@ -286,7 +235,7 @@ public abstract class DefaultProjectContentResource implements IProjectContentRe
 
   @Override
   public String toString() {
-    return this.getClass().getCanonicalName() + " [_contentId=" + _contentId + ", _root=" + _root + ", _path=" + _path
+    return this.getClass().getCanonicalName() + " [_root=" + _root + ", _path=" + _path
         + "]";
   }
 
@@ -298,27 +247,5 @@ public abstract class DefaultProjectContentResource implements IProjectContentRe
    */
   private String normalize(String string) {
     return string.replace('\\', '/');
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return the analyzeReferences
-   */
-  @Override
-  public boolean isAnalyzeReferences() {
-    return _analyzeReferences;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param analyzeReferences
-   *          the analyzeReferences to set
-   */
-  public void setAnalyzeReferences(boolean analyzeReferences) {
-    _analyzeReferences = analyzeReferences;
   }
 }

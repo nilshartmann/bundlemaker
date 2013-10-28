@@ -224,6 +224,11 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
       final IResource movedSource = new IResource() {
         
         @Override
+        public String getRoot() {
+          return source.getRoot();
+        }
+        
+        @Override
         public String getPath() {
           return "OSGI-OPT/src/" + source.getPath();
         }

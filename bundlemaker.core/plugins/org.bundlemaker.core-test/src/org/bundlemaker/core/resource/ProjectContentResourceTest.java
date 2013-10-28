@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.io.IOException;
 
+import org.bundlemaker.core.common.DefaultResource;
 import org.bundlemaker.core.framework.FileUtil;
 import org.bundlemaker.core.project.internal.DefaultProjectContentResource;
 import org.junit.Test;
@@ -23,7 +24,7 @@ public class ProjectContentResourceTest {
 
     File tempFile = File.createTempFile("temp", Long.toString(System.nanoTime()));
 
-    DefaultProjectContentResource resource = new DefaultProjectContentResource("123", tempFile.getParentFile()
+    DefaultResource resource = new DefaultResource(tempFile.getParentFile()
         .getAbsolutePath(), tempFile.getName());
 
     // FileUtil.touch(tempFile, 1234);

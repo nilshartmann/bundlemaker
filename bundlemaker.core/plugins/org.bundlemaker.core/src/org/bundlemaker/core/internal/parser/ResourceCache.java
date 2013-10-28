@@ -16,7 +16,6 @@ import java.util.Map;
 import org.bundlemaker.core.common.FlyWeightStringCache;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.project.IProjectContentResource;
-import org.bundlemaker.core.project.internal.DefaultProjectContentResource;
 import org.bundlemaker.core.spi.parser.IParsableResource;
 import org.bundlemaker.core.spi.store.IPersistentDependencyStore;
 import org.eclipse.core.runtime.Assert;
@@ -132,16 +131,6 @@ public class ResourceCache {
     if (progressMonitor != null) {
       progressMonitor.done();
     }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  // TODO synchronized
-  public synchronized IParsableResource getOrCreateResource(String contentId, String root, String path) {
-
-    // return the result
-    return getOrCreateResource(new DefaultProjectContentResource(contentId, root, path));
   }
 
   public synchronized IParsableResource getOrCreateResource(IProjectContentResource resourceKey) {
