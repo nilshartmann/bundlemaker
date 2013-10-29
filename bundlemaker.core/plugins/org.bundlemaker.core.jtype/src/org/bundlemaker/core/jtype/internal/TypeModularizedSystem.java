@@ -15,6 +15,7 @@ import org.bundlemaker.core.jtype.ITypeModularizedSystem;
 import org.bundlemaker.core.jtype.ITypeModule;
 import org.bundlemaker.core.jtype.ITypeResource;
 import org.bundlemaker.core.jtype.ITypeSelector;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
@@ -153,8 +154,7 @@ public class TypeModularizedSystem implements ITypeModularizedSystem, ICacheCall
     Set<IReference> result = new HashSet<IReference>();
 
     //
-    Set<IReference> references = resourceModule.adaptAs(ITypeModule.class)
-        .getReferences();
+    Set<IReference> references = resourceModule.adaptAs(ITypeModule.class).getReferences();
 
     for (IReference iReference : references) {
       if (getType(iReference.getFullyQualifiedName(), resourceModule) == null) {
@@ -392,17 +392,12 @@ public class TypeModularizedSystem implements ITypeModularizedSystem, ICacheCall
   @Override
   public void movableUnitAdded(IModuleAwareMovableUnit movableUnit, IModule module) {
 
-    for (IModuleResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
-      typesChanged(
-          moduleResource.adaptAs(ITypeResource.class).getContainedTypes(),
-          module,
-          ChangeAction.ADDED);
+    for (IProjectContentResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
+      typesChanged(moduleResource.adaptAs(ITypeResource.class).getContainedTypes(), module, ChangeAction.ADDED);
     }
 
     if (movableUnit.hasAssociatedSourceResource()) {
-      typesChanged(
-          movableUnit.getAssociatedSourceResource().adaptAs(ITypeResource.class).getContainedTypes(),
-          module,
+      typesChanged(movableUnit.getAssociatedSourceResource().adaptAs(ITypeResource.class).getContainedTypes(), module,
           ChangeAction.ADDED);
     }
 
@@ -414,17 +409,12 @@ public class TypeModularizedSystem implements ITypeModularizedSystem, ICacheCall
   @Override
   public void movableUnitRemoved(IModuleAwareMovableUnit movableUnit, IModule module) {
 
-    for (IModuleResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
-      typesChanged(
-          moduleResource.adaptAs(ITypeResource.class).getContainedTypes(),
-          module,
-          ChangeAction.REMOVED);
+    for (IProjectContentResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
+      typesChanged(moduleResource.adaptAs(ITypeResource.class).getContainedTypes(), module, ChangeAction.REMOVED);
     }
 
     if (movableUnit.hasAssociatedSourceResource()) {
-      typesChanged(
-          movableUnit.getAssociatedSourceResource().adaptAs(ITypeResource.class).getContainedTypes(),
-          module,
+      typesChanged(movableUnit.getAssociatedSourceResource().adaptAs(ITypeResource.class).getContainedTypes(), module,
           ChangeAction.REMOVED);
     }
   }

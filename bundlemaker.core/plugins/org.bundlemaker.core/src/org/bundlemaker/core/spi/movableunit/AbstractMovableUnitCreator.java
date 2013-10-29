@@ -3,8 +3,8 @@ package org.bundlemaker.core.spi.movableunit;
 import java.util.List;
 
 import org.bundlemaker.core.internal.resource.MovableUnit;
-import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
+import org.bundlemaker.core.project.IMovableUnit;
+import org.bundlemaker.core.project.IProjectContentResource;
 
 /**
  * <p>
@@ -22,8 +22,8 @@ public abstract class AbstractMovableUnitCreator implements IMovableUnitCreator 
    * @param binaryResources
    * @return
    */
-  protected IModuleAwareMovableUnit createMovableUnit(IModuleResource sourceResource,
-      List<IModuleResource> binaryResources) {
+  protected IMovableUnit createMovableUnit(IProjectContentResource sourceResource,
+      List<IProjectContentResource> binaryResources) {
 
     //
     return new MovableUnit(sourceResource, binaryResources);
@@ -37,10 +37,10 @@ public abstract class AbstractMovableUnitCreator implements IMovableUnitCreator 
    * @param binaryResources
    * @return
    */
-  protected IModuleAwareMovableUnit createMovableUnit(IModuleResource sourceResource,
-      IModuleResource binaryResources) {
+  protected IMovableUnit createMovableUnit(IProjectContentResource sourceResource,
+      IProjectContentResource binaryResource) {
 
     //
-    return new MovableUnit(sourceResource, binaryResources);
+    return new MovableUnit(sourceResource, binaryResource);
   }
 }

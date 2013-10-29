@@ -5,10 +5,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
-import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
 
 public class MovableUnit implements IModuleAwareMovableUnit {
@@ -17,10 +18,10 @@ public class MovableUnit implements IModuleAwareMovableUnit {
   private static final List<IResourceStandin> EMPTY_RESOURCE_LIST = Collections.emptyList();
 
   /** the source resource */
-  private IModuleResource                     _sourceResource;
+  private IProjectContentResource             _sourceResource;
 
   /** the binary resource */
-  private List<IModuleResource>               _binaryResources;
+  private List<IProjectContentResource>       _binaryResources;
 
   /**
    * <p>
@@ -30,8 +31,8 @@ public class MovableUnit implements IModuleAwareMovableUnit {
    * @param sourceResource
    * @param binaryResources
    */
-  public MovableUnit(IModuleResource sourceResource,
-      List<IModuleResource> binaryResources) {
+  public MovableUnit(IProjectContentResource sourceResource,
+      List<IProjectContentResource> binaryResources) {
 
     Assert.isTrue(sourceResource != null || (binaryResources != null && !binaryResources.isEmpty()));
 
@@ -41,15 +42,15 @@ public class MovableUnit implements IModuleAwareMovableUnit {
     setMovableUnit();
   }
 
-  public MovableUnit(IModuleResource sourceResource,
-      IModuleResource binaryResources) {
+  public MovableUnit(IProjectContentResource sourceResource,
+      IProjectContentResource binaryResources) {
 
     Assert.isTrue(sourceResource != null || binaryResources != null);
 
     _sourceResource = sourceResource;
 
     if (binaryResources != null) {
-      _binaryResources = new LinkedList<IModuleResource>();
+      _binaryResources = new LinkedList<IProjectContentResource>();
       _binaryResources.add(binaryResources);
     }
 
@@ -67,14 +68,14 @@ public class MovableUnit implements IModuleAwareMovableUnit {
     if (_binaryResources != null && !_binaryResources.isEmpty()) {
 
       //
-      return _binaryResources.toArray(new IResourceStandin[0])[0]
+      return _binaryResources.get(0).adaptAs(IModuleResource.class)
           .getModule(modularizedSystem);
 
     }
 
     //
     else {
-      return _sourceResource.getModule(modularizedSystem);
+      return _sourceResource.adaptAs(IModuleResource.class).getModule(modularizedSystem);
     }
   }
 
@@ -104,7 +105,7 @@ public class MovableUnit implements IModuleAwareMovableUnit {
    * {@inheritDoc}
    */
   @Override
-  public List<? extends IModuleResource> getAssociatedBinaryResources() {
+  public List<? extends IProjectContentResource> getAssociatedBinaryResources() {
 
     //
     return _binaryResources != null ? _binaryResources : EMPTY_RESOURCE_LIST;
@@ -124,7 +125,7 @@ public class MovableUnit implements IModuleAwareMovableUnit {
    * {@inheritDoc}
    */
   @Override
-  public IModuleResource getAssociatedSourceResource() {
+  public IProjectContentResource getAssociatedSourceResource() {
 
     //
     return _sourceResource;
@@ -221,13 +222,13 @@ public class MovableUnit implements IModuleAwareMovableUnit {
   private void setMovableUnit() {
     setMovableUnit(_sourceResource, this);
     if (_binaryResources != null) {
-      for (IModuleResource resource : _binaryResources) {
+      for (IProjectContentResource resource : _binaryResources) {
         setMovableUnit(resource, this);
       }
     }
   }
 
-  private void setMovableUnit(IModuleResource resource, MovableUnit movableUnit) {
+  private void setMovableUnit(IProjectContentResource resource, MovableUnit movableUnit) {
 
     if (resource != null) {
       if (resource instanceof Resource) {

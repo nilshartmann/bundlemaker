@@ -21,8 +21,8 @@ import org.bundlemaker.core.internal.resource.DispatchingMovableUnitCreator;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
-import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
+import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public class BasicProjectContentTransformation implements IInternalTransformation {
@@ -62,18 +62,18 @@ public class BasicProjectContentTransformation implements IInternalTransformatio
     DispatchingMovableUnitCreator unitCreator = new DispatchingMovableUnitCreator();
 
     //
-    Map<String, IModuleResource> binaries = new HashMap<String, IModuleResource>();
+    Map<String, IProjectContentResource> binaries = new HashMap<String, IProjectContentResource>();
     for (IProjectContentResource resource : projectContentEntry.getBinaryResources()) {
-      if (resource instanceof IModuleResource) {
+      if (resource instanceof IProjectContentResource) {
         binaries.put(resource.getPath(), (IModuleResource) resource);
       }
     }
 
     //
-    Map<String, IModuleResource> sources = new HashMap<String, IModuleResource>();
+    Map<String, IProjectContentResource> sources = new HashMap<String, IProjectContentResource>();
     for (IProjectContentResource resource : projectContentEntry.getSourceResources()) {
-      if (resource instanceof IModuleResource) {
-        sources.put(resource.getPath(), (IModuleResource) resource);
+      if (resource instanceof IProjectContentResource) {
+        sources.put(resource.getPath(), (IProjectContentResource) resource);
       }
     }
 

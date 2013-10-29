@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.project.IMovableUnit;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.spi.movableunit.IMovableUnitCreator;
 
 public class DispatchingMovableUnitCreator implements IMovableUnitCreator {
@@ -16,11 +17,11 @@ public class DispatchingMovableUnitCreator implements IMovableUnitCreator {
    * {@inheritDoc}
    */
   @Override
-  public Set<IModuleAwareMovableUnit> assignMovableUnits(Map<String, IModuleResource> binaries,
-      Map<String, IModuleResource> sources) {
+  public Set<IMovableUnit> assignMovableUnits(Map<String, IProjectContentResource> binaries,
+      Map<String, IProjectContentResource> sources) {
 
     //
-    Set<IModuleAwareMovableUnit> result = new HashSet<IModuleAwareMovableUnit>();
+    Set<IMovableUnit> result = new HashSet<IMovableUnit>();
 
     //
     List<IMovableUnitCreator> creators = new LinkedList<IMovableUnitCreator>(MovableUnitRegistry.instance()
@@ -31,14 +32,14 @@ public class DispatchingMovableUnitCreator implements IMovableUnitCreator {
     for (IMovableUnitCreator creator : creators) {
 
       //
-      Set<IModuleAwareMovableUnit> movableUnits = creator.assignMovableUnits(binaries, sources);
+      Set<IMovableUnit> movableUnits = creator.assignMovableUnits(binaries, sources);
       result.addAll(movableUnits);
 
       //
-      for (IModuleAwareMovableUnit unit : movableUnits) {
+      for (IMovableUnit unit : movableUnits) {
 
         // remove binaries
-        for (IModuleResource moduleResource : unit.getAssociatedBinaryResources()) {
+        for (IProjectContentResource moduleResource : unit.getAssociatedBinaryResources()) {
           binaries.remove(moduleResource.getPath());
         }
 
@@ -48,12 +49,12 @@ public class DispatchingMovableUnitCreator implements IMovableUnitCreator {
     }
 
     //
-    for (IModuleResource moduleResource : sources.values()) {
-      result.add(new MovableUnit(moduleResource, (IModuleResource) null));
+    for (IProjectContentResource moduleResource : sources.values()) {
+      result.add(new MovableUnit(moduleResource, (IProjectContentResource) null));
     }
 
     //
-    for (IModuleResource moduleResource : binaries.values()) {
+    for (IProjectContentResource moduleResource : binaries.values()) {
       result.add(new MovableUnit((IModuleResource) null, moduleResource));
     }
 

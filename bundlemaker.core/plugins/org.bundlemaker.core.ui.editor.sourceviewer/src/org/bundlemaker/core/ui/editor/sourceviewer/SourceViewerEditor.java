@@ -9,6 +9,7 @@ import java.util.Set;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.selection.IDependencySelection;
@@ -227,8 +228,8 @@ public class SourceViewerEditor extends AbstractDependencySelectionAwareEditorPa
     IReferenceDetailParser detailParser = new ReferenceDetailParser();
     IModuleResource resource = _resourceArtifact.getAssociatedResource();
     IModuleAwareMovableUnit movableUnit = resource.getMovableUnit();
-    IModuleResource sourceResource = movableUnit.getAssociatedBinaryResources().get(0);
-    _positions = detailParser.parseReferencePositions(sourceResource, _resourceArtifact.getModularizedSystem());
+    IProjectContentResource sourceResource = movableUnit.getAssociatedBinaryResources().get(0);
+    _positions = detailParser.parseReferencePositions(sourceResource.adaptAs(IModuleResource.class), _resourceArtifact.getModularizedSystem());
 
     //
     recomputeAnnotationModel();
@@ -285,7 +286,7 @@ public class SourceViewerEditor extends AbstractDependencySelectionAwareEditorPa
   private String readEditorInput(ResourceArtifactEditorInput editorInput) {
 
     //
-    IModuleResource resource = editorInput.getResourceArtifact().hasAssociatedSourceResource() ? editorInput
+    IProjectContentResource resource = editorInput.getResourceArtifact().hasAssociatedSourceResource() ? editorInput
         .getResourceArtifact().getAssociatedSourceResource() : editorInput.getResourceArtifact()
         .getAssociatedResource();
 

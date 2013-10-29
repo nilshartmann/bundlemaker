@@ -3,8 +3,8 @@ package org.bundlemaker.core.spi.movableunit;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
+import org.bundlemaker.core.project.IMovableUnit;
+import org.bundlemaker.core.project.IProjectContentResource;
 
 /**
  * <p>
@@ -17,5 +17,6 @@ public interface IMovableUnitCreator {
    * @param sources
    * @return
    */
-  Set<IModuleAwareMovableUnit> assignMovableUnits(Map<String, IModuleResource> binaries, Map<String, IModuleResource> sources);
+  Set<IMovableUnit> assignMovableUnits(Map<String, IProjectContentResource> binaries,
+      Map<String, IProjectContentResource> sources);
 }

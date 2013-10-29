@@ -7,6 +7,8 @@ import java.util.Set;
 
 import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.jtype.ITypeResource;
+import org.bundlemaker.core.project.IMovableUnit;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.spi.movableunit.AbstractMovableUnitCreator;
@@ -26,19 +28,19 @@ public class JTypeMovableUnitCreator extends AbstractMovableUnitCreator {
    * 
    * @return
    */
-  public Set<IModuleAwareMovableUnit> assignMovableUnits(Map<String, IModuleResource> binaries,
-      Map<String, IModuleResource> sources) {
+  public Set<IMovableUnit> assignMovableUnits(Map<String, IProjectContentResource> binaries,
+      Map<String, IProjectContentResource> sources) {
 
     //
-    GenericCache<IModuleResource, Set<IModuleResource>> cache = new GenericCache<IModuleResource, Set<IModuleResource>>() {
+    GenericCache<IProjectContentResource, Set<IProjectContentResource>> cache = new GenericCache<IProjectContentResource, Set<IProjectContentResource>>() {
       @Override
-      protected Set<IModuleResource> create(IModuleResource key) {
-        return new HashSet<IModuleResource>();
+      protected Set<IProjectContentResource> create(IProjectContentResource key) {
+        return new HashSet<IProjectContentResource>();
       }
     };
 
     //
-    for (IModuleResource moduleResource : binaries.values()) {
+    for (IProjectContentResource moduleResource : binaries.values()) {
 
       //
       ITypeResource typeResource = moduleResource.adaptAs(ITypeResource.class);
@@ -62,10 +64,9 @@ public class JTypeMovableUnitCreator extends AbstractMovableUnitCreator {
     }
 
     // create the result
-    Set<IModuleAwareMovableUnit> result = new HashSet<IModuleAwareMovableUnit>();
-    for (IModuleResource sourceResource : cache.keySet()) {
-      result.add(createMovableUnit(sourceResource, new LinkedList<IModuleResource>(cache
-          .get(sourceResource))));
+    Set<IMovableUnit> result = new HashSet<IMovableUnit>();
+    for (IProjectContentResource sourceResource : cache.keySet()) {
+      result.add(createMovableUnit(sourceResource, new LinkedList<IProjectContentResource>(cache.get(sourceResource))));
     }
 
     //
@@ -81,8 +82,8 @@ public class JTypeMovableUnitCreator extends AbstractMovableUnitCreator {
    * @param cache
    * @return
    */
-  private boolean assignByType(IModuleResource moduleResource, ITypeResource typeResource,
-      GenericCache<IModuleResource, Set<IModuleResource>> cache) {
+  private boolean assignByType(IProjectContentResource moduleResource, ITypeResource typeResource,
+      GenericCache<IProjectContentResource, Set<IProjectContentResource>> cache) {
 
     //
     Assert.isNotNull(moduleResource);
@@ -93,7 +94,8 @@ public class JTypeMovableUnitCreator extends AbstractMovableUnitCreator {
     try {
 
       if (typeResource.containsTypes() && typeResource.getContainedType().hasSourceResource()) {
-        cache.getOrCreate(typeResource.getContainedType().getSourceResource()).add(moduleResource);
+        cache.getOrCreate(typeResource.getContainedType().getSourceResource()).add(
+            moduleResource.adaptAs(IModuleResource.class));
         return true;
       }
 
@@ -115,15 +117,15 @@ public class JTypeMovableUnitCreator extends AbstractMovableUnitCreator {
    * @param cache
    * @return
    */
-  private boolean assignBySourceName(IModuleResource moduleResource, ITypeResource typeResource,
-      Map<String, IModuleResource> sources, GenericCache<IModuleResource, Set<IModuleResource>> cache) {
+  private boolean assignBySourceName(IProjectContentResource moduleResource, ITypeResource typeResource,
+      Map<String, IProjectContentResource> sources, GenericCache<IProjectContentResource, Set<IProjectContentResource>> cache) {
 
     //
     String sourceName = typeResource.getSourceName();
 
     if (sourceName != null) {
       IPath path = new Path(moduleResource.getPath()).removeLastSegments(1).append(sourceName);
-      cache.getOrCreate(sources.get(path.toString())).add(moduleResource);
+      cache.getOrCreate(sources.get(path.toString())).add(moduleResource.adaptAs(IModuleResource.class));
       return true;
     }
 
@@ -141,8 +143,8 @@ public class JTypeMovableUnitCreator extends AbstractMovableUnitCreator {
    * @param cache
    * @return
    */
-  private boolean assignByName(IModuleResource moduleResource, ITypeResource typeResource,
-      Map<String, IModuleResource> sources, GenericCache<IModuleResource, Set<IModuleResource>> cache) {
+  private boolean assignByName(IProjectContentResource moduleResource, ITypeResource typeResource,
+      Map<String, IProjectContentResource> sources, GenericCache<IProjectContentResource, Set<IProjectContentResource>> cache) {
 
     //
     if (moduleResource.getPath().endsWith(".class") && moduleResource.getPath().contains("$")) {

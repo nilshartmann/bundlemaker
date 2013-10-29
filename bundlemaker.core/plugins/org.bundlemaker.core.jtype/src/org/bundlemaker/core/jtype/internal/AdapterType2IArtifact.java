@@ -27,6 +27,7 @@ import org.bundlemaker.core.jtype.IReference;
 import org.bundlemaker.core.jtype.IType;
 import org.bundlemaker.core.jtype.ITypeArtifact;
 import org.bundlemaker.core.jtype.ITypeModularizedSystem;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -298,7 +299,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IModuleAw
    * {@inheritDoc}
    */
   @Override
-  public List<? extends IModuleResource> getAssociatedBinaryResources() {
+  public List<? extends IProjectContentResource> getAssociatedBinaryResources() {
     return _movableUnit.getAssociatedBinaryResources();
   }
 
@@ -314,7 +315,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IModuleAw
    * {@inheritDoc}
    */
   @Override
-  public IModuleResource getAssociatedSourceResource() {
+  public IProjectContentResource getAssociatedSourceResource() {
     return _movableUnit.getAssociatedSourceResource();
   }
 

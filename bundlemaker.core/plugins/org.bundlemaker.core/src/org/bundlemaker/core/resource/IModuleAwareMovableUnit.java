@@ -1,7 +1,5 @@
 package org.bundlemaker.core.resource;
 
-import java.util.List;
-
 import org.bundlemaker.core.project.IMovableUnit;
 
 /**
@@ -29,38 +27,4 @@ public interface IModuleAwareMovableUnit extends IMovableUnit {
    * @return
    */
   public boolean hasModule(IModularizedSystem modularizedSystem);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  boolean hasAssociatedBinaryResources();
-
-  /**
-   * <p>
-   * Returns the list of binary resources that are associated with this movable unit.
-   * </p>
-   * 
-   * @return the list of binary resources that are associated with this movable unit.
-   */
-  List<? extends IModuleResource> getAssociatedBinaryResources();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  boolean hasAssociatedSourceResource();
-
-  /**
-   * <p>
-   * Returns the source resource that is associated with this movable type.
-   * </p>
-   * 
-   * @return the source resource that is associated with this movable type.
-   */
-  IModuleResource getAssociatedSourceResource();
 }
