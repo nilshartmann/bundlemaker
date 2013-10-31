@@ -9,6 +9,7 @@ import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -145,7 +146,7 @@ public class ManifestCreatorAdapter {
     if (_originalManifestContents == null) {
 
       // the existing bundle manifest resource
-      IModuleResource existingManifestResource = getModule().getResource("META-INF/MANIFEST.MF", ResourceType.BINARY);
+      IProjectContentResource existingManifestResource = getModule().getResource("META-INF/MANIFEST.MF", ResourceType.BINARY);
 
       // create default manifest
       if (existingManifestResource == null) {

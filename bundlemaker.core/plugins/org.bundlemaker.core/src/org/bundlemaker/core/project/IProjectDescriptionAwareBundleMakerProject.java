@@ -197,9 +197,6 @@ public interface IProjectDescriptionAwareBundleMakerProject extends IGenericAdap
    *     // add new file based content
    *     FileBasedContentProviderFactory.addNewFileBasedContentProvider(projectDescription, new File(
    *       "hibernate-validator/hibernate-validator-4.2.0.Final.jar").getAbsolutePath());
-   * 
-   *     // set the JRE
-   *     projectDescription.setJre("jdk16");
    *   }
    * });
    * </code>

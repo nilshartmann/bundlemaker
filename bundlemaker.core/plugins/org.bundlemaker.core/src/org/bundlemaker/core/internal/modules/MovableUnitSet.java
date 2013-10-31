@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.common.ResourceType;
+import org.bundlemaker.core.project.IMovableUnit;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.eclipse.core.runtime.Assert;
@@ -116,7 +117,7 @@ public class MovableUnitSet {
    * 
    * @return
    */
-  public Set<? extends IModuleAwareMovableUnit> getMovableUnits() {
+  public Set<? extends IMovableUnit> getMovableUnits() {
     return Collections.unmodifiableSet(_movableUnits);
   }
 

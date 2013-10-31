@@ -26,10 +26,10 @@ import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.internal.transformation.IInternalTransformation;
 import org.bundlemaker.core.internal.transformation.IUndoableTransformation;
+import org.bundlemaker.core.project.IMovableUnit;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
-import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.ITransformation;
@@ -479,7 +479,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * @param resourceModule
    * @param action
    */
-  public void movableUnitChanged(IModuleAwareMovableUnit movableUnit, IModule resourceModule, ChangeAction action) {
+  public void movableUnitChanged(IMovableUnit movableUnit, IModule resourceModule, ChangeAction action) {
 
     for (IProjectContentResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
       internalResourceChanged(moduleResource.adaptAs(IModuleResource.class), resourceModule, action);
@@ -517,7 +517,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     getListenerList().fireModuleChanged(resourceModule, ChangeAction.ADDED);
 
     //
-    for (IModuleAwareMovableUnit movableUnit : resourceModule.getMovableUnits()) {
+    for (IMovableUnit movableUnit : resourceModule.getMovableUnits()) {
       movableUnitChanged(movableUnit, resourceModule, ChangeAction.ADDED);
     }
   }
@@ -530,7 +530,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     Assert.isNotNull(resourceModule);
 
     //
-    for (IModuleAwareMovableUnit movableUnit : resourceModule.getMovableUnits()) {
+    for (IMovableUnit movableUnit : resourceModule.getMovableUnits()) {
       movableUnitChanged(movableUnit, resourceModule, ChangeAction.REMOVED);
     }
 

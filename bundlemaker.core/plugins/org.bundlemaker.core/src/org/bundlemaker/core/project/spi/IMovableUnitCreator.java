@@ -1,4 +1,4 @@
-package org.bundlemaker.core.spi.movableunit;
+package org.bundlemaker.core.project.spi;
 
 import java.util.Map;
 import java.util.Set;

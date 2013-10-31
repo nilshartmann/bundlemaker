@@ -21,10 +21,12 @@ import org.bundlemaker.core.internal.modules.event.ModuleClassificationChangedEv
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractTransformationAwareModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
+import org.bundlemaker.core.project.IMovableUnit;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
@@ -247,17 +249,18 @@ public class Module implements IModifiableModule {
    * {@inheritDoc}
    */
   @Override
-  public void addMovableUnit(IModuleAwareMovableUnit movableUnit) {
+  public void addMovableUnit(IMovableUnit movableUnit) {
     Assert.isNotNull(movableUnit);
 
     //
-    _movableUnitSet.addMovableUnit(movableUnit);
+    _movableUnitSet.addMovableUnit((IModuleAwareMovableUnit) movableUnit);
 
-    ((IModifiableModularizedSystem) getModularizedSystem()).movableUnitChanged(movableUnit,
+    ((IModifiableModularizedSystem) getModularizedSystem()).movableUnitChanged((IModuleAwareMovableUnit) movableUnit,
         this, ChangeAction.ADDED);
 
     //
-    ((ModularizedSystem) getModularizedSystem()).getListenerList().fireMovableUnitEvent(movableUnit, this,
+    ((ModularizedSystem) getModularizedSystem()).getListenerList().fireMovableUnitEvent(
+        (IModuleAwareMovableUnit) movableUnit, this,
         ChangeAction.ADDED);
   }
 
@@ -265,17 +268,18 @@ public class Module implements IModifiableModule {
    * {@inheritDoc}
    */
   @Override
-  public void removeMovableUnit(IModuleAwareMovableUnit movableUnit) {
+  public void removeMovableUnit(IMovableUnit movableUnit) {
 
     //
-    _movableUnitSet.removeMovableUnit(movableUnit);
+    _movableUnitSet.removeMovableUnit((IModuleAwareMovableUnit) movableUnit);
 
     //
-    ((IModifiableModularizedSystem) getModularizedSystem()).movableUnitChanged(movableUnit,
+    ((IModifiableModularizedSystem) getModularizedSystem()).movableUnitChanged((IModuleAwareMovableUnit) movableUnit,
         this, ChangeAction.REMOVED);
 
     //
-    ((ModularizedSystem) getModularizedSystem()).getListenerList().fireMovableUnitEvent(movableUnit, this,
+    ((ModularizedSystem) getModularizedSystem()).getListenerList().fireMovableUnitEvent(
+        (IModuleAwareMovableUnit) movableUnit, this,
         ChangeAction.REMOVED);
   }
 
@@ -292,7 +296,7 @@ public class Module implements IModifiableModule {
     Map<String, IModuleResource> entries = new HashMap<String, IModuleResource>();
 
     //
-    for (IModuleResource resource : getResources(ResourceType.SOURCE)) {
+    for (IProjectContentResource resource : getResources(ResourceType.SOURCE)) {
 
       if (entries.containsKey(resource.getPath())) {
 
@@ -306,13 +310,13 @@ public class Module implements IModifiableModule {
       } else {
 
         //
-        entries.put(resource.getPath(), resource);
+        entries.put(resource.getPath(), resource.adaptAs(IModuleResource.class));
       }
     }
 
     //
     entries.clear();
-    for (IModuleResource resource : getResources(ResourceType.BINARY)) {
+    for (IProjectContentResource resource : getResources(ResourceType.BINARY)) {
 
       if (entries.containsKey(resource.getPath())) {
 
@@ -326,7 +330,7 @@ public class Module implements IModifiableModule {
       } else {
 
         //
-        entries.put(resource.getPath(), resource);
+        entries.put(resource.getPath(), resource.adaptAs(IModuleResource.class));
       }
     }
   }
@@ -354,7 +358,7 @@ public class Module implements IModifiableModule {
    * {@inheritDoc}
    */
   @Override
-  public Set<IModuleResource> getResources(ResourceType contentType) {
+  public Set<IProjectContentResource> getResources(ResourceType contentType) {
 
     //
     return _movableUnitSet.getResources(contentType);
@@ -369,7 +373,7 @@ public class Module implements IModifiableModule {
    * {@inheritDoc}
    */
   @Override
-  public Set<? extends IModuleAwareMovableUnit> getMovableUnits() {
+  public Set<? extends IMovableUnit> getMovableUnits() {
     return _movableUnitSet.getMovableUnits();
   }
 

@@ -17,10 +17,10 @@ import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.event.ModularizedSystemChangedListenerList;
 import org.bundlemaker.core.internal.resource.ModuleIdentifier;
+import org.bundlemaker.core.project.IMovableUnit;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleIdentifier;
-import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.resource.ITransformation;
 import org.bundlemaker.core.spi.modext.ICacheAwareModularizedSystem;
 import org.eclipse.core.runtime.IPath;
@@ -155,7 +155,7 @@ public interface IModifiableModularizedSystem extends ICacheAwareModularizedSyst
    */
   void applyTransformations(IProgressMonitor monitor, ITransformation... transformation);
 
-  void movableUnitChanged(IModuleAwareMovableUnit movableUnit, IModule resourceModule, ChangeAction action);
+  void movableUnitChanged(IMovableUnit movableUnit, IModule resourceModule, ChangeAction action);
 
   ModularizedSystemChangedListenerList getListenerList();
 }

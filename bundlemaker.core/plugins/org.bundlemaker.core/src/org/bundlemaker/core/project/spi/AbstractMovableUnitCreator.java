@@ -1,8 +1,8 @@
-package org.bundlemaker.core.spi.movableunit;
+package org.bundlemaker.core.project.spi;
 
 import java.util.List;
 
-import org.bundlemaker.core.internal.resource.MovableUnit;
+import org.bundlemaker.core.internal.resource.ModuleAwareMovableUnit;
 import org.bundlemaker.core.project.IMovableUnit;
 import org.bundlemaker.core.project.IProjectContentResource;
 
@@ -26,7 +26,7 @@ public abstract class AbstractMovableUnitCreator implements IMovableUnitCreator 
       List<IProjectContentResource> binaryResources) {
 
     //
-    return new MovableUnit(sourceResource, binaryResources);
+    return new ModuleAwareMovableUnit(sourceResource, binaryResources);
   }
 
   /**
@@ -41,6 +41,6 @@ public abstract class AbstractMovableUnitCreator implements IMovableUnitCreator 
       IProjectContentResource binaryResource) {
 
     //
-    return new MovableUnit(sourceResource, binaryResource);
+    return new ModuleAwareMovableUnit(sourceResource, binaryResource);
   }
 }

@@ -21,9 +21,9 @@ import java.util.Set;
 import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.exporter.AbstractExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
-import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -58,14 +58,13 @@ public class SimpleReportExporter extends AbstractExporter {
     StringBuilder builder = new StringBuilder();
     String classification = getCurrentModule().hasClassification() ? getCurrentModule().getClassification()
         .toPortableString() : "";
-    builder.append(classification + " : "
-        + getCurrentModule().getModuleIdentifier().toString() + "\n");
+    builder.append(classification + " : " + getCurrentModule().getModuleIdentifier().toString() + "\n");
 
     builder.append("\n");
     builder.append("Source-Content: \n");
 
-    for (IModuleResource resource : asSortedList((Set<IModuleResource>) getCurrentModule().getResources(
-        ResourceType.SOURCE))) {
+    for (IProjectContentResource resource : asSortedList((Set<IProjectContentResource>) getCurrentModule()
+        .getResources(ResourceType.SOURCE))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : resource.adaptAs(ITypeResource.class).getReferences()) {
@@ -84,17 +83,17 @@ public class SimpleReportExporter extends AbstractExporter {
 
     builder.append("\n");
     builder.append("Binary-Content: \n");
-    for (IModuleResource resource : asSortedList((Set<IModuleResource>) getCurrentModule().getResources(
-        ResourceType.BINARY))) {
+    for (IProjectContentResource resource : asSortedList((Set<IProjectContentResource>) getCurrentModule()
+        .getResources(ResourceType.BINARY))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : resource.adaptAs(ITypeResource.class).getReferences()) {
         builder.append(" * " + reference.toString() + "\n");
       }
 
-      for (IModuleResource stickyResources : resource.getStickyResources()) {
-        builder.append(" ~sticky~ " + stickyResources.getPath() + "\n");
-      }
+      // for (IProjectContentResource stickyResources : resource.getStickyResources()) {
+      // builder.append(" ~sticky~ " + stickyResources.getPath() + "\n");
+      // }
 
       for (IType type : resource.adaptAs(ITypeResource.class).getContainedTypes()) {
         builder.append(" - " + type.getFullyQualifiedName() + "\n");

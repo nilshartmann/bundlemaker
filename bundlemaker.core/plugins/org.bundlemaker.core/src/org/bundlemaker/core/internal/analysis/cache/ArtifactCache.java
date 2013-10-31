@@ -26,10 +26,10 @@ import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.internal.modelext.ModelExtFactory;
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractModularizedSystem;
+import org.bundlemaker.core.project.IMovableUnit;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
-import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.spi.modext.IAnalysisModelContext;
 import org.eclipse.core.runtime.Assert;
@@ -300,7 +300,7 @@ public class ArtifactCache implements IAnalysisModelContext {
       this.getModuleArtifact(module);
 
       // iterate over all contained resources
-      for (IModuleAwareMovableUnit movableUnit : module.getMovableUnits()) {
+      for (IMovableUnit movableUnit : module.getMovableUnits()) {
 
         //
         if (progressMonitor != null) {

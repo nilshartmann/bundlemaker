@@ -8,8 +8,10 @@ import java.util.Set;
 
 import org.bundlemaker.core.project.IMovableUnit;
 import org.bundlemaker.core.project.IProjectContentResource;
+import org.bundlemaker.core.project.internal.movableunit.DefaultMovableUnitCreator;
+import org.bundlemaker.core.project.internal.movableunit.MovableUnitRegistry;
+import org.bundlemaker.core.project.spi.IMovableUnitCreator;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.spi.movableunit.IMovableUnitCreator;
 
 public class DispatchingMovableUnitCreator implements IMovableUnitCreator {
 
@@ -50,12 +52,12 @@ public class DispatchingMovableUnitCreator implements IMovableUnitCreator {
 
     //
     for (IProjectContentResource moduleResource : sources.values()) {
-      result.add(new MovableUnit(moduleResource, (IProjectContentResource) null));
+      result.add(new ModuleAwareMovableUnit(moduleResource, (IProjectContentResource) null));
     }
 
     //
     for (IProjectContentResource moduleResource : binaries.values()) {
-      result.add(new MovableUnit((IModuleResource) null, moduleResource));
+      result.add(new ModuleAwareMovableUnit((IModuleResource) null, moduleResource));
     }
 
     //

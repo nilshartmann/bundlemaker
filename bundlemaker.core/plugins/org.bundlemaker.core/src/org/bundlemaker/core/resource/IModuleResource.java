@@ -12,6 +12,7 @@ package org.bundlemaker.core.resource;
 
 import java.util.Set;
 
+import org.bundlemaker.core.project.IMovableUnit;
 import org.bundlemaker.core.project.IProjectContentResource;
 
 /**
@@ -23,7 +24,7 @@ import org.bundlemaker.core.project.IProjectContentResource;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IModuleResource extends IProjectContentResource, Comparable<IModuleResource> {
+public interface IModuleResource extends IProjectContentResource {
 
   /**
    * <p>
@@ -42,7 +43,7 @@ public interface IModuleResource extends IProjectContentResource, Comparable<IMo
    * @param modularizedSystem
    * @return
    */
-  IModuleAwareMovableUnit getMovableUnit();
+  IMovableUnit getMovableUnit();
 
   /**
    * <p>

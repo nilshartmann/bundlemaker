@@ -16,13 +16,14 @@ import java.util.Set;
 
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
+import org.bundlemaker.core.project.IMovableUnit;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.project.internal.DefaultProjectContentResource;
 import org.bundlemaker.core.project.internal.IResourceStandinAwareProjectContentResource;
 import org.bundlemaker.core.project.internal.IResourceStandinNEW;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -124,7 +125,7 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
   }
 
   @Override
-  public int compareTo(IModuleResource other) {
+  public int compareTo(IProjectContentResource other) {
 
     if (!getProjectContentEntryId().equals(other.getProjectContentEntryId())) {
       return getProjectContentEntryId().compareTo(other.getProjectContentEntryId());
@@ -143,7 +144,7 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
    * {@inheritDoc}
    */
   @Override
-  public IModuleAwareMovableUnit getMovableUnit() {
+  public IMovableUnit getMovableUnit() {
 
     //
     if (_resource == null) {

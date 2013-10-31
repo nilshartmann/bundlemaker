@@ -23,6 +23,7 @@ import org.bundlemaker.core.osgi.exporter.AbstractManifestAwareExporter;
 import org.bundlemaker.core.osgi.internal.Activator;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -165,7 +166,7 @@ public class PdePluginProjectModuleExporter extends AbstractManifestAwareExporte
     IFolder srcFolder = project.getFolder(SRC_DIRECTORY_NAME);
 
     // copy the source
-    for (IModuleResource resourceStandin : getCurrentModule().getResources(ResourceType.SOURCE)) {
+    for (IProjectContentResource resourceStandin : getCurrentModule().getResources(ResourceType.SOURCE)) {
 
       if (!resourceStandin.getPath().startsWith("META-INF")) {
 

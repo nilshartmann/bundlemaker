@@ -1,27 +1,25 @@
-package org.bundlemaker.core.internal.resource;
+package org.bundlemaker.core.project.internal.movableunit;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.internal.api.resource.IResourceStandin;
+import org.bundlemaker.core.internal.resource.Resource;
+import org.bundlemaker.core.project.IMovableUnit;
 import org.bundlemaker.core.project.IProjectContentResource;
-import org.bundlemaker.core.resource.IModularizedSystem;
-import org.bundlemaker.core.resource.IModule;
-import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
-import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.project.internal.IResourceStandinNEW;
 import org.eclipse.core.runtime.Assert;
 
-public class MovableUnit implements IModuleAwareMovableUnit {
+public class MovableUnit implements IMovableUnit {
 
   /** EMPTY_RESOURCE_LIST */
-  private static final List<IResourceStandin> EMPTY_RESOURCE_LIST = Collections.emptyList();
+  private static final List<IResourceStandinNEW> EMPTY_RESOURCE_LIST = Collections.emptyList();
 
   /** the source resource */
-  private IProjectContentResource             _sourceResource;
+  private IProjectContentResource                _sourceResource;
 
   /** the binary resource */
-  private List<IProjectContentResource>       _binaryResources;
+  private List<IProjectContentResource>          _binaryResources;
 
   /**
    * <p>
@@ -55,40 +53,6 @@ public class MovableUnit implements IModuleAwareMovableUnit {
     }
 
     setMovableUnit();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public IModule getAssoicatedModule(IModularizedSystem modularizedSystem) {
-
-    Assert.isNotNull(modularizedSystem);
-
-    //
-    if (_binaryResources != null && !_binaryResources.isEmpty()) {
-
-      //
-      return _binaryResources.get(0).adaptAs(IModuleResource.class)
-          .getModule(modularizedSystem);
-
-    }
-
-    //
-    else {
-      return _sourceResource.adaptAs(IModuleResource.class).getModule(modularizedSystem);
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public boolean hasModule(IModularizedSystem modularizedSystem) {
-
-    //
-    Assert.isNotNull(modularizedSystem);
-
-    //
-    return getAssoicatedModule(modularizedSystem) != null;
   }
 
   /**
@@ -131,7 +95,7 @@ public class MovableUnit implements IModuleAwareMovableUnit {
     return _sourceResource;
   }
 
-  public void addBinaryResource(IModuleResource moduleResource) {
+  public void addBinaryResource(IProjectContentResource moduleResource) {
     Assert.isNotNull(moduleResource);
 
     //
@@ -141,7 +105,7 @@ public class MovableUnit implements IModuleAwareMovableUnit {
     }
   }
 
-  public void removeBinaryResource(IModuleResource moduleResource) {
+  public void removeBinaryResource(IProjectContentResource moduleResource) {
     Assert.isNotNull(moduleResource);
 
     //
@@ -151,7 +115,7 @@ public class MovableUnit implements IModuleAwareMovableUnit {
     }
   }
 
-  public void addSourceResource(IModuleResource moduleResource) {
+  public void addSourceResource(IProjectContentResource moduleResource) {
     Assert.isNotNull(moduleResource);
 
     // TODO
@@ -163,7 +127,7 @@ public class MovableUnit implements IModuleAwareMovableUnit {
     setMovableUnit(_sourceResource, this);
   }
 
-  public void removeSourceResource(IModuleResource moduleResource) {
+  public void removeSourceResource(IProjectContentResource moduleResource) {
     Assert.isNotNull(moduleResource);
 
     // TODO
@@ -234,8 +198,8 @@ public class MovableUnit implements IModuleAwareMovableUnit {
       if (resource instanceof Resource) {
         ((Resource) resource).setMovableUnit(movableUnit);
       }
-      else if (resource instanceof ResourceStandin) {
-        ((Resource) ((ResourceStandin) resource).getResource()).setMovableUnit(movableUnit);
+      else if (resource instanceof IResourceStandinNEW) {
+        ((Resource) ((IResourceStandinNEW) resource).getResource()).setMovableUnit(movableUnit);
       }
     }
   }
