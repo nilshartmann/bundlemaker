@@ -29,9 +29,10 @@ import org.bundlemaker.core.internal.modules.event.ModuleClassificationChangedEv
 import org.bundlemaker.core.internal.modules.event.ModuleIdentifierChangedEvent;
 import org.bundlemaker.core.internal.modules.event.ModuleMovedEvent;
 import org.bundlemaker.core.internal.modules.event.MovableUnitMovedEvent;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.spi.analysis.AbstractArtifact;
 import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
 import org.eclipse.core.runtime.Assert;
@@ -313,7 +314,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
     switch (action) {
     case ADDED: {
       // get the movable unit
-      IMovableUnit movableUnit = event.getMovableUnit();
+      IModuleAwareMovableUnit movableUnit = event.getMovableUnit();
       IAnalysisModelConfiguration configuration = getConfiguration();
 
       // Step 1: Handle resources
@@ -321,22 +322,22 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
       if (configuration.isBinaryContent() && movableUnit.hasAssociatedBinaryResources()) {
 
         // iterate over the associated binary resources
-        for (IModuleResource resource : movableUnit.getAssociatedBinaryResources()) {
-          _addResource(resource);
+        for (IProjectContentResource resource : movableUnit.getAssociatedBinaryResources()) {
+          _addResource(resource.adaptAs(IModuleResource.class));
         }
       }
       // Step 1b: Handle SourceContent
       else if (configuration.isSourceContent() && movableUnit.hasAssociatedSourceResource()) {
 
         // iterate over the associated binary resources
-        _addResource(movableUnit.getAssociatedSourceResource());
+        _addResource(movableUnit.getAssociatedSourceResource().adaptAs(IModuleResource.class));
       }
       // TODO: BUGFIX!!
       else if (configuration.isSourceContent() && movableUnit.hasAssociatedBinaryResources()) {
 
         // iterate over the associated binary resources
-        for (IModuleResource resource : movableUnit.getAssociatedBinaryResources()) {
-          _addResource(resource);
+        for (IProjectContentResource resource : movableUnit.getAssociatedBinaryResources()) {
+          _addResource(resource.adaptAs(IModuleResource.class));
         }
       }
 
@@ -344,12 +345,12 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
     }
     case REMOVED: {
       //
-      IMovableUnit movableUnit = event.getMovableUnit();
+      IModuleAwareMovableUnit movableUnit = event.getMovableUnit();
       IAnalysisModelConfiguration configuration = getConfiguration();
 
       if (configuration.isBinaryContent() && movableUnit.hasAssociatedBinaryResources()
       /* && ( configuration.containsAllResources() || !movableUnit.hasAssociatedTypes()) */) {
-        for (IModuleResource resource : movableUnit.getAssociatedBinaryResources()) {
+        for (IProjectContentResource resource : movableUnit.getAssociatedBinaryResources()) {
           IBundleMakerArtifact artifact = _artifactCache.getResourceCache().get(resource);
 
           if (artifact != null && artifact.getParent() != null) {
@@ -358,7 +359,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
         }
       } else if (configuration.isSourceContent() && movableUnit.hasAssociatedSourceResource()
       /* && ( configuration.containsAllResources() || !movableUnit.hasAssociatedTypes()) */) {
-        IModuleResource resource = movableUnit.getAssociatedSourceResource();
+        IProjectContentResource resource = movableUnit.getAssociatedSourceResource();
         IBundleMakerArtifact artifact = _artifactCache.getResourceCache().get(resource);
 
         if (artifact != null && artifact.getParent() != null) {

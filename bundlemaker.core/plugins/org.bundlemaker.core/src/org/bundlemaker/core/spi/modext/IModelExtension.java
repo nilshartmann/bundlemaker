@@ -1,5 +1,6 @@
 package org.bundlemaker.core.spi.modext;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,7 +10,6 @@ import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.spi.parser.IParsableResource;
-import org.bundlemaker.core.spi.parser.IParserContext;
 import org.eclipse.core.runtime.IAdapterFactory;
 
 /**
@@ -47,9 +47,9 @@ public interface IModelExtension {
    * @param newAndModifiedBinaryResources
    * @param newAndModifiedSourceResources
    */
-  void beforeParseResourceModel(IProjectContentEntry projectContent, IParserContext resourceCache,
-      Set<? extends IModuleResource> newAndModifiedBinaryResources,
-      Set<? extends IModuleResource> newAndModifiedSourceResources);
+  void beforeParseResourceModel(IProjectContentEntry projectContent,
+      Set<? extends IProjectContentResource> newAndModifiedBinaryResources,
+      Set<? extends IProjectContentResource> newAndModifiedSourceResources);
 
   /**
    * <p>
@@ -60,9 +60,9 @@ public interface IModelExtension {
    * @param newAndModifiedBinaryResources
    * @param newAndModifiedSourceResources
    */
-  void afterParseResourceModel(IProjectContentEntry projectContent, IParserContext resourceCache,
-      Set<? extends IModuleResource> newAndModifiedBinaryResources,
-      Set<? extends IModuleResource> newAndModifiedSourceResources);
+  void afterParseResourceModel(IProjectContentEntry projectContent,
+      Set<? extends IProjectContentResource> newAndModifiedBinaryResources,
+      Set<? extends IProjectContentResource> newAndModifiedSourceResources);
 
   /**
    * <p>
@@ -74,8 +74,8 @@ public interface IModelExtension {
    * @param binaryResourceStandins
    * @param sourceResourceStandins
    */
-  void resourceModelSetupCompleted(IProjectContentEntry contentEntry, Set<IModuleResource> binaryResources,
-      Set<IModuleResource> sourceResources);
+  void resourceModelSetupCompleted(IProjectContentEntry contentEntry, Collection<IModuleResource> binaryResources,
+      Collection<IModuleResource> sourceResources);
 
   /**
    * <p>

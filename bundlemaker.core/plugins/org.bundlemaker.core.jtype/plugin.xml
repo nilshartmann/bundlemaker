@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+ 
+  <extension
+        point="org.bundlemaker.core.modelextension">
+     <modelextension
+           class="org.bundlemaker.core.jtype.internal.ModelExtension"
+           id="org.bundlemaker.core.jtype.ModelExtension">
+     </modelextension>
+  </extension>
+  
+  <extension
+        point="org.bundlemaker.core.movableunitcreator">
+     <movableunitcreator
+           class="org.bundlemaker.core.jtype.internal.JTypeMovableUnitCreator"
+           id="org.bundlemaker.core.jtype.jTypeMovableUnitCreator">
+     </movableunitcreator>
+  </extension>
+
+</plugin>

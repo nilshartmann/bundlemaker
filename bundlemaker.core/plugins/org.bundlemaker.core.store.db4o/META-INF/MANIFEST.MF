@@ -3,12 +3,11 @@ Bundle-ManifestVersion: 2
 Bundle-Name: BundleMaker Core DB4O Store
 Bundle-SymbolicName: org.bundlemaker.core.store.db4o
 Bundle-Version: 0.12.0.qualifier
+Bundle-Vendor: bundlemaker.org
 Fragment-Host: org.bundlemaker.core
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.5.1",
  org.eclipse.jdt.core;bundle-version="3.5.1",
  org.bundlemaker.com.db4o.osgi;bundle-version="8.0.184"
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Bundle-Vendor: bundlemaker.org
-
-
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.osgi.service.component.annotations

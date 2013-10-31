@@ -1,5 +1,7 @@
 package org.bundlemaker.core.internal.modelext;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,7 +15,6 @@ import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.spi.modext.IAnalysisModelContext;
 import org.bundlemaker.core.spi.modext.IModelExtension;
 import org.bundlemaker.core.spi.parser.IParsableResource;
-import org.bundlemaker.core.spi.parser.IParserContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -87,13 +88,13 @@ public class ModelExtFactory {
    * @param newAndModifiedBinaryResources
    * @param newAndModifiedSourceResources
    */
-  public void beforeParseResourceModel(IProjectContentEntry projectContent, IParserContext resourceCache,
-      Set<? extends IModuleResource> newAndModifiedBinaryResources,
-      Set<? extends IModuleResource> newAndModifiedSourceResources) {
+  public void beforeParseResourceModel(IProjectContentEntry projectContent,
+      Set<? extends IProjectContentResource> newAndModifiedBinaryResources,
+      Set<? extends IProjectContentResource> newAndModifiedSourceResources) {
 
     //
     for (IModelExtension modelExtension : _modelExtensionRegistry.getExtensionInstances()) {
-      modelExtension.beforeParseResourceModel(projectContent, resourceCache, newAndModifiedBinaryResources,
+      modelExtension.beforeParseResourceModel(projectContent, newAndModifiedBinaryResources,
           newAndModifiedSourceResources);
     }
   }
@@ -107,19 +108,20 @@ public class ModelExtFactory {
    * @param newAndModifiedBinaryResources
    * @param newAndModifiedSourceResources
    */
-  public void afterParseResourceModel(IProjectContentEntry projectContent, IParserContext resourceCache,
-      Set<? extends IModuleResource> newAndModifiedBinaryResources,
-      Set<? extends IModuleResource> newAndModifiedSourceResources) {
+  public void afterParseResourceModel(IProjectContentEntry projectContent,
+      Set<? extends IProjectContentResource> newAndModifiedBinaryResources,
+      Set<? extends IProjectContentResource> newAndModifiedSourceResources) {
 
     //
     for (IModelExtension modelExtension : _modelExtensionRegistry.getExtensionInstances()) {
-      modelExtension.afterParseResourceModel(projectContent, resourceCache, newAndModifiedBinaryResources,
+      modelExtension.afterParseResourceModel(projectContent, newAndModifiedBinaryResources,
           newAndModifiedSourceResources);
     }
   }
 
-  public void resourceModelSetupCompleted(IProjectContentEntry contentEntry, Set<IModuleResource> binaryResources,
-      Set<IModuleResource> sourceResources) {
+  public void resourceModelSetupCompleted(IProjectContentEntry contentEntry,
+      Collection<IModuleResource> binaryResources,
+      Collection<IModuleResource> sourceResources) {
 
     //
     for (IModelExtension modelExtension : _modelExtensionRegistry.getExtensionInstances()) {
@@ -174,5 +176,10 @@ public class ModelExtFactory {
 
     //
     return _modelExtFactory;
+  }
+
+  public List<String> getExtensionBundleNamespaces() {
+    return _modelExtensionRegistry.getExtensionBundleNamespaces();
+
   }
 }

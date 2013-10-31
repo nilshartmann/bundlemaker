@@ -133,5 +133,5 @@ public interface IModule extends IGenericAdaptable {
    * 
    * @return
    */
-  Set<? extends IMovableUnit> getMovableUnits();
+  Set<? extends IModuleAwareMovableUnit> getMovableUnits();
 }

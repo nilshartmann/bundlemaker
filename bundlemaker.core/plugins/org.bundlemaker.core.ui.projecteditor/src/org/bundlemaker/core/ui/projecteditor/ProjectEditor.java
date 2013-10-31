@@ -3,12 +3,12 @@
  */
 package org.bundlemaker.core.ui.projecteditor;
 
-import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.BundleMakerCore;
+import org.bundlemaker.core.project.BundleMakerProjectDescriptionChangedEvent;
 import org.bundlemaker.core.project.BundleMakerProjectState;
-import org.bundlemaker.core.project.DescriptionChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectStateChangedEvent;
 import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
-import org.bundlemaker.core.project.StateChangedEvent;
 import org.bundlemaker.core.resource.IModuleAwareBundleMakerProject;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
@@ -116,7 +116,7 @@ public class ProjectEditor extends FormEditor {
     try {
       // TODO use ProgressMonitor
       IModuleAwareBundleMakerProject bundleMakerProject = BundleMakerCore
-          .getProjectDescriptionAwareBundleMakerProject(project).adaptAs(IModuleAwareBundleMakerProject.class);
+          .getBundleMakerProject(project).adaptAs(IModuleAwareBundleMakerProject.class);
 
       _bundleMakerProject = bundleMakerProject;
 
@@ -179,12 +179,12 @@ public class ProjectEditor extends FormEditor {
      * {@inheritDoc}
      */
     @Override
-    public void projectDescriptionChanged(DescriptionChangedEvent event) {
-      if (event.getType() == DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_MODIFIED) {
+    public void projectDescriptionChanged(BundleMakerProjectDescriptionChangedEvent event) {
+      if (event.getType() == BundleMakerProjectDescriptionChangedEvent.Type.PROJECT_DESCRIPTION_MODIFIED) {
         setProjectDirty(true);
       }
 
-      if (event.getType() == DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_SAVED) {
+      if (event.getType() == BundleMakerProjectDescriptionChangedEvent.Type.PROJECT_DESCRIPTION_SAVED) {
         setProjectDirty(false);
       }
     }
@@ -193,7 +193,7 @@ public class ProjectEditor extends FormEditor {
      * {@inheritDoc}
      */
     @Override
-    public void projectStateChanged(StateChangedEvent event) {
+    public void projectStateChanged(BundleMakerProjectStateChangedEvent event) {
       if (_bundleMakerProject.getState() == BundleMakerProjectState.DISPOSED) {
 
         // Project has been disposed => close editor

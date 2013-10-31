@@ -13,6 +13,16 @@ public interface IResource {
 
   /**
    * <p>
+   * Returns the root directory or archive file that contains the resource (e.g. <code>'c:/dev/classes.zip'</code> or
+   * <code>'c:/dev/source'</code>). Note that resource paths are always slash-delimited ('/').
+   * </p>
+   * 
+   * @return the root directory or archive file that contains the resource.
+   */
+  String getRoot();
+
+  /**
+   * <p>
    * Returns the full path of the resource, e.g. <code>'org/example/Test.java'</code>. Note that resource paths are
    * always slash-delimited ('/').
    * </p>

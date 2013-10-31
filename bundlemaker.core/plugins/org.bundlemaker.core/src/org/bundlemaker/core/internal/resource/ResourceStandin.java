@@ -16,10 +16,13 @@ import java.util.Set;
 
 import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
+import org.bundlemaker.core.project.internal.DefaultProjectContentResource;
+import org.bundlemaker.core.project.internal.IResourceStandinAwareProjectContentResource;
+import org.bundlemaker.core.project.internal.IResourceStandinNEW;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -28,13 +31,13 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ResourceStandin extends DefaultProjectContentResource implements IResourceStandin {
+public class ResourceStandin extends DefaultProjectContentResource implements IResourceStandin, IResourceStandinNEW {
 
   /** - */
-  private Resource             _resource;
+  private IResourceStandinAwareProjectContentResource _resource;
 
   /** - */
-  private Set<IModuleResource> _stickyResourceStandins;
+  private Set<IModuleResource>                        _stickyResourceStandins;
 
   /**
    * <p>
@@ -76,7 +79,7 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
       throw new RuntimeException();
     }
 
-    return _resource.getModelExtension();
+    return _resource.adaptAs(IModuleResource.class).getModelExtension();
   }
 
   @Override
@@ -86,7 +89,7 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
     return ((ModularizedSystem) modularizedSystem).getAssociatedResourceModule(this);
   }
 
-  public IModuleResource getResource() {
+  public IResourceStandinAwareProjectContentResource getResource() {
     return _resource;
   }
 
@@ -115,13 +118,8 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
     return (T) _resource.adaptAs(clazz);
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resource
-   */
-  public void setResource(Resource resource) {
+  @Override
+  public void setResource(IResourceStandinAwareProjectContentResource resource) {
     _resource = resource;
   }
 
@@ -145,7 +143,7 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
    * {@inheritDoc}
    */
   @Override
-  public IMovableUnit getMovableUnit() {
+  public IModuleAwareMovableUnit getMovableUnit() {
 
     //
     if (_resource == null) {
@@ -153,7 +151,7 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
       throw new RuntimeException();
     }
 
-    return _resource.getMovableUnit();
+    return _resource.adaptAs(IModuleResource.class).getMovableUnit();
   }
 
   @Override
@@ -165,7 +163,7 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
     }
 
     //
-    if (_resource.getStickyResources().isEmpty()) {
+    if (_resource.adaptAs(IModuleResource.class).getStickyResources().isEmpty()) {
       return Collections.emptySet();
     }
 
@@ -176,7 +174,7 @@ public class ResourceStandin extends DefaultProjectContentResource implements IR
       _stickyResourceStandins = new HashSet<IModuleResource>();
 
       // add resource standins
-      for (IModuleResource resource : _resource.getStickyResources()) {
+      for (IModuleResource resource : _resource.adaptAs(IModuleResource.class).getStickyResources()) {
         _stickyResourceStandins.add(((Resource) resource).getResourceStandin());
       }
     }

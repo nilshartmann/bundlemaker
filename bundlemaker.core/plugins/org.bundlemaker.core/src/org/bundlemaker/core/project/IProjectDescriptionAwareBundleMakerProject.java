@@ -13,7 +13,6 @@ package org.bundlemaker.core.project;
 import java.util.Map;
 
 import org.bundlemaker.core.common.IGenericAdaptable;
-import org.bundlemaker.core.resource.IModularizedSystem;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -32,10 +31,10 @@ public interface IProjectDescriptionAwareBundleMakerProject extends IGenericAdap
 
   /**
    * <p>
-   * Returns the user attributes of this {@link IModularizedSystem}.
+   * Returns the user attributes of this project.
    * </p>
    * 
-   * @return the user attributes of this {@link IModularizedSystem}.
+   * @return the user attributes of this project.
    */
   Map<String, Object> getUserAttributes();
 

@@ -11,6 +11,7 @@
 		<module>plugins/org.bundlemaker.core</module>
 		<module>plugins/org.bundlemaker.core-test</module>
 		<module>plugins/org.bundlemaker.core.jdt</module>
+		<module>plugins/org.bundlemaker.core.jtype</module>
 		<module>plugins/org.bundlemaker.core.mvn</module>
 		<module>plugins/org.bundlemaker.core.osgi</module>
 		<module>plugins/org.bundlemaker.core.parser.bytecode</module>

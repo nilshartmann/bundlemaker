@@ -2,9 +2,6 @@ package org.bundlemaker.core.project;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-
 /**
  * <p>
  * </p>
@@ -18,12 +15,11 @@ public interface IProjectContentProvider {
 
   /**
    * <p>
-   * Sets the identifier.
    * </p>
    * 
-   * @param identifier
+   * @return
    */
-  void setId(String identifier);
+  IProjectDescriptionAwareBundleMakerProject getBundleMakerProject();
 
   /**
    * <p>
@@ -40,9 +36,7 @@ public interface IProjectContentProvider {
    * 
    * @return
    */
-  List<IProjectContentEntry> getBundleMakerProjectContent(
-      IProgressMonitor progressMonitor,
-      IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException;
+  List<IProjectContentEntry> getBundleMakerProjectContent();
 
   /**
    * <p>

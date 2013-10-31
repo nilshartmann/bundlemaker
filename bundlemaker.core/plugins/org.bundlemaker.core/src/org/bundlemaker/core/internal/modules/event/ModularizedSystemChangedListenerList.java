@@ -16,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.bundlemaker.core.internal.modules.ChangeAction;
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.resource.IModule;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -77,7 +77,7 @@ public class ModularizedSystemChangedListenerList {
    * @param module
    * @param changeAction
    */
-  public void fireMovableUnitEvent(IMovableUnit movableUnit, IModule module, ChangeAction changeAction) {
+  public void fireMovableUnitEvent(IModuleAwareMovableUnit movableUnit, IModule module, ChangeAction changeAction) {
 
     MovableUnitMovedEvent event = new MovableUnitMovedEvent(movableUnit, module, changeAction);
 

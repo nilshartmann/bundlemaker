@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core.project.DescriptionChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectDescriptionChangedEvent;
 import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
@@ -60,9 +60,9 @@ public class ProjectEditorTreeViewerContentProvider implements ITreeContentProvi
        * {@inheritDoc}
        */
       @Override
-      public void projectDescriptionChanged(DescriptionChangedEvent event) {
+      public void projectDescriptionChanged(BundleMakerProjectDescriptionChangedEvent event) {
 
-        if (event.getType().equals(DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RECOMPUTED) && _viewer != null) {
+        if (event.getType().equals(BundleMakerProjectDescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RECOMPUTED) && _viewer != null) {
 
           // async refresh
           Display.getDefault().asyncExec(new Runnable() {

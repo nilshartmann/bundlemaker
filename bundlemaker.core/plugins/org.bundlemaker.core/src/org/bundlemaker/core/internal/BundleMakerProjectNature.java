@@ -10,9 +10,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal;
 
-import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
-import org.bundlemaker.core.internal.projectdescription.ProjectDescriptionStore;
-import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.common.Constants;
+import org.bundlemaker.core.project.internal.BundleMakerProjectDescription;
+import org.bundlemaker.core.project.internal.ProjectDescriptionStore;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -49,7 +49,7 @@ public class BundleMakerProjectNature implements IProjectNature {
    * {@inheritDoc}
    */
   public void configure() throws CoreException {
-    createFolder(_project.getFolder(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME));
+    createFolder(_project.getFolder(Constants.BUNDLEMAKER_DIRECTORY_NAME));
     addConfigurationFile();
   }
 
@@ -57,7 +57,7 @@ public class BundleMakerProjectNature implements IProjectNature {
    * {@inheritDoc}
    */
   public void deconfigure() throws CoreException {
-    IFolder folder = _project.getFolder(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME);
+    IFolder folder = _project.getFolder(Constants.BUNDLEMAKER_DIRECTORY_NAME);
     folder.delete(true, null);
   }
 

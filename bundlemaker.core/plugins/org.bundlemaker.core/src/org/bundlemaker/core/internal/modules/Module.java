@@ -24,7 +24,7 @@ import org.bundlemaker.core.internal.resource.ModuleIdentifier;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModuleIdentifier;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
@@ -247,7 +247,7 @@ public class Module implements IModifiableModule {
    * {@inheritDoc}
    */
   @Override
-  public void addMovableUnit(IMovableUnit movableUnit) {
+  public void addMovableUnit(IModuleAwareMovableUnit movableUnit) {
     Assert.isNotNull(movableUnit);
 
     //
@@ -265,7 +265,7 @@ public class Module implements IModifiableModule {
    * {@inheritDoc}
    */
   @Override
-  public void removeMovableUnit(IMovableUnit movableUnit) {
+  public void removeMovableUnit(IModuleAwareMovableUnit movableUnit) {
 
     //
     _movableUnitSet.removeMovableUnit(movableUnit);
@@ -369,7 +369,7 @@ public class Module implements IModifiableModule {
    * {@inheritDoc}
    */
   @Override
-  public Set<? extends IMovableUnit> getMovableUnits() {
+  public Set<? extends IModuleAwareMovableUnit> getMovableUnits() {
     return _movableUnitSet.getMovableUnits();
   }
 

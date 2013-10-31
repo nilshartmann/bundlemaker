@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.transformations.internal;
 
-import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.resource.IBundleMakerProjectHook;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.transformations.script.runner.TransformationScriptRunner;

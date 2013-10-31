@@ -19,8 +19,8 @@ import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
 
 /**
@@ -30,16 +30,16 @@ import org.bundlemaker.core.spi.analysis.AbstractArtifactContainer;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class AdapterResource2IArtifact extends AbstractArtifactContainer implements IResourceArtifact,
-    IMovableUnit {
+    IModuleAwareMovableUnit {
 
   /** the bundle maker resource */
-  private IModuleResource _resource;
+  private IModuleResource         _resource;
 
   /** - */
-  private boolean         _isSourceResource;
+  private boolean                 _isSourceResource;
 
   /** - */
-  private IMovableUnit    _movableUnit;
+  private IModuleAwareMovableUnit _movableUnit;
 
   /**
    * <p>
@@ -68,7 +68,7 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
   }
 
   public List<? extends IModuleResource> getAssociatedBinaryResources() {
-    return _movableUnit.getAssociatedBinaryResources();
+    return (List<IModuleResource>) _movableUnit.getAssociatedBinaryResources();
   }
 
   public boolean hasAssociatedBinaryResources() {
@@ -84,7 +84,7 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
   }
 
   public IModuleResource getAssociatedSourceResource() {
-    return _movableUnit.getAssociatedSourceResource();
+    return (IModuleResource) _movableUnit.getAssociatedSourceResource();
   }
 
   /**

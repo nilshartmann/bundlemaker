@@ -52,7 +52,7 @@ public interface IParsableResource extends IModuleResource {
    * <p>
    * </p>
    * 
-   * @param modelExtension
+   * @param resourceModelExtension
    */
-  void setModelExtension(Object modelExtension);
+  void addResourceModelExtension(Object resourceModelExtension);
 }

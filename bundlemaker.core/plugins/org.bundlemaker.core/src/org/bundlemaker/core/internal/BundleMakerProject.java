@@ -18,26 +18,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.bundlemaker.core.internal.api.project.IInternalBundleMakerProject;
-import org.bundlemaker.core.internal.api.resource.IResourceStandin;
+import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.common.Activator;
+import org.bundlemaker.core.common.Constants;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ModelSetup;
-import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
-import org.bundlemaker.core.internal.projectdescription.ProjectDescriptionStore;
+import org.bundlemaker.core.internal.parser.XYZService;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.parser.IProblem;
-import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.project.BundleMakerProjectContentChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectDescriptionChangedEvent;
 import org.bundlemaker.core.project.BundleMakerProjectState;
-import org.bundlemaker.core.project.ContentChangedEvent;
-import org.bundlemaker.core.project.DescriptionChangedEvent;
+import org.bundlemaker.core.project.BundleMakerProjectStateChangedEvent;
 import org.bundlemaker.core.project.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
 import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
-import org.bundlemaker.core.project.StateChangedEvent;
+import org.bundlemaker.core.project.internal.BundleMakerProjectCache;
+import org.bundlemaker.core.project.internal.BundleMakerProjectDescription;
+import org.bundlemaker.core.project.internal.ProjectDescriptionStore;
 import org.bundlemaker.core.resource.IBundleMakerProjectHook;
 import org.bundlemaker.core.resource.IModularizedSystem;
-import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.resource.ITransformation;
 import org.bundlemaker.core.spi.store.IPersistentDependencyStore;
 import org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory;
@@ -48,6 +49,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * <p>
@@ -56,7 +58,7 @@ import org.eclipse.core.runtime.Status;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class BundleMakerProject implements IInternalBundleMakerProject {
+public class BundleMakerProject implements IBundleMakerProject {
 
   /** the associated eclipse project (the bundle make project) */
   private IProject                                 _project;
@@ -90,7 +92,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
   public BundleMakerProject(IProject project) throws CoreException {
 
     // TODO: CoreException
-    Assert.isTrue(project.hasNature(BundleMakerCore.NATURE_ID));
+    Assert.isTrue(project.hasNature(Constants.NATURE_ID));
 
     // set the project
     _project = project;
@@ -108,8 +110,8 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     _projectChangedListeners = new CopyOnWriteArrayList<IBundleMakerProjectChangedListener>();
     addBundleMakerProjectChangedListener(new IBundleMakerProjectChangedListener.Adapter() {
       @Override
-      public void projectDescriptionChanged(DescriptionChangedEvent event) {
-        if (event.getType().equals(DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RECOMPUTED)) {
+      public void projectDescriptionChanged(BundleMakerProjectDescriptionChangedEvent event) {
+        if (event.getType().equals(BundleMakerProjectDescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RECOMPUTED)) {
           BundleMakerProject.this._projectState = BundleMakerProjectState.DIRTY;
         }
       }
@@ -196,7 +198,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     _projectState = BundleMakerProjectState.INITIALIZED;
 
     // notify listeners
-    fireProjectStateChangedEvent(new StateChangedEvent());
+    fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent(this, _projectState));
   }
 
   @Override
@@ -210,7 +212,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     _modifiableModualizedSystemWorkingCopies.clear();
 
     // get the store
-    IPersistentDependencyStoreFactory factory = Activator.getDefault().getPersistentDependencyStoreFactory();
+    IPersistentDependencyStoreFactory factory = XYZService.instance().getPersistentDependencyStoreFactory();
     IPersistentDependencyStore store = factory.getPersistentDependencyStore(this);
 
     try {
@@ -234,7 +236,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     }
 
     // notify listeners
-    fireProjectStateChangedEvent(new StateChangedEvent());
+    fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent(this, _projectState));
   }
 
   /**
@@ -247,10 +249,10 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     _projectState = BundleMakerProjectState.DISPOSED;
 
     // notify listeners
-    fireProjectStateChangedEvent(new StateChangedEvent());
+    fireProjectStateChangedEvent(new BundleMakerProjectStateChangedEvent(this, _projectState));
 
     //
-    Activator.getDefault().removeCachedBundleMakerProject(_project);
+    BundleMakerProjectCache.instance().removeCachedBundleMakerProject(_project);
   }
 
   /**
@@ -266,47 +268,47 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     return _problems == null ? emptyList : _problems;
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  @Override
-  public final List<IModuleResource> getSourceResources() {
-    return _projectDescription.getSourceResources();
-  }
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @return
+  // */
+  // @Override
+  // public final List<IModuleResource> getSourceResources() {
+  // return _projectDescription.getSourceResources();
+  // }
+  //
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @return
+  // */
+  // @Override
+  // public final List<IModuleResource> getBinaryResources() {
+  // return _projectDescription.getBinaryResources();
+  // }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  @Override
-  public final List<IModuleResource> getBinaryResources() {
-    return _projectDescription.getBinaryResources();
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public final List<IResourceStandin> getSourceResourceStandins() {
-    return _projectDescription.getSourceResourceStandins();
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public final List<IResourceStandin> getBinaryResourceStandins() {
-    return _projectDescription.getBinaryResourceStandins();
-  }
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @return
+  // */
+  // public final List<IResourceStandin> getSourceResourceStandins() {
+  // return _projectDescription.getSourceResourceStandins();
+  // }
+  //
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @return
+  // */
+  // public final List<IResourceStandin> getBinaryResourceStandins() {
+  // return _projectDescription.getBinaryResourceStandins();
+  // }
 
   /**
    * {@inheritDoc}
@@ -348,8 +350,38 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     modularizedSystem.initialize(null);
     modularizedSystem.applyTransformations(null, basicContentTransformation);
 
+    // *****************************************************//
+    // // TESTS
+    // for (IModuleResource moduleResource : getBinaryResources()) {
+    // IMovableUnit movableUnit = moduleResource.getMovableUnit();
+    // Assert.isNotNull(movableUnit);
+    // Assert.isNotNull(movableUnit.getAssociatedBinaryResources());
+    // Assert.isTrue(!movableUnit.getAssociatedBinaryResources().isEmpty());
+    // Assert.isNotNull(modularizedSystem.getAssociatedResourceModule(moduleResource));
+    // }
+    // for (IModuleResource moduleResource : getSourceResources()) {
+    // IMovableUnit movableUnit = moduleResource.getMovableUnit();
+    // Assert.isNotNull(movableUnit);
+    // // Assert.isNotNull(movableUnit.getAssociatedBinaryResources());
+    // Assert.isNotNull(movableUnit.getAssociatedSourceResource());
+    // Assert.isNotNull(modularizedSystem.getAssociatedResourceModule(moduleResource));
+    // }
+    // *****************************************************//
+
     // invoke hook if available
-    IBundleMakerProjectHook projectHook = Activator.getDefault().getBundleMakerProjectHook();
+    /**
+     * Returns an instance of {@link IBundleMakerProjectHook} or null if no hook is registered
+     * 
+     * @return
+     */
+    // TODO
+    ServiceTracker<IBundleMakerProjectHook, IBundleMakerProjectHook> _projectHookTracker = new ServiceTracker<IBundleMakerProjectHook, IBundleMakerProjectHook>(
+        Activator.getDefault().getContext(),
+        IBundleMakerProjectHook.class, null);
+    _projectHookTracker.open();
+    IBundleMakerProjectHook projectHook = _projectHookTracker.getService();
+    _projectHookTracker.close();
+
     if (projectHook != null) {
       try {
         projectHook.modularizedSystemCreated(
@@ -359,7 +391,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
         throw coreException;
       } catch (Exception ex) {
         // TODO: log exception instead of re-throw?
-        throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+        throw new CoreException(new Status(IStatus.ERROR, Constants.BUNDLE_ID_BUNDLEMAKER_CORE,
             "BundleMaker project hook failed: " + ex, ex));
       }
     }
@@ -468,7 +500,8 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     _projectDescription = loadProjectDescription();
 
     //
-    fireDescriptionChangedEvent(new DescriptionChangedEvent(DescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RELOADED));
+    fireDescriptionChangedEvent(new BundleMakerProjectDescriptionChangedEvent(this,
+        BundleMakerProjectDescriptionChangedEvent.Type.PROJECT_DESCRIPTION_RELOADED));
   }
 
   @Override
@@ -516,7 +549,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
    * 
    * @param event
    */
-  public void fireContentChangedEvent(ContentChangedEvent event) {
+  public void fireContentChangedEvent(BundleMakerProjectContentChangedEvent event) {
     Assert.isNotNull(event);
 
     //
@@ -531,7 +564,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
    * 
    * @param event
    */
-  public void fireDescriptionChangedEvent(DescriptionChangedEvent event) {
+  public void fireDescriptionChangedEvent(BundleMakerProjectDescriptionChangedEvent event) {
     Assert.isNotNull(event);
 
     //
@@ -546,7 +579,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
    * 
    * @param event
    */
-  public void fireProjectStateChangedEvent(StateChangedEvent event) {
+  public void fireProjectStateChangedEvent(BundleMakerProjectStateChangedEvent event) {
     Assert.isNotNull(event);
 
     //
@@ -585,7 +618,7 @@ public class BundleMakerProject implements IInternalBundleMakerProject {
     }
 
     // throw new exception
-    throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID, String.format(
+    throw new CoreException(new Status(IStatus.ERROR, Constants.BUNDLE_ID_BUNDLEMAKER_CORE, String.format(
         "BundleMakerProject must be in one of the following states: '%s', but current state is '%s'.",
         Arrays.asList(state), getState())));
   }

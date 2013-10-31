@@ -10,7 +10,7 @@ import org.bundlemaker.core.analysis.IResourceArtifact.IResourceArtifactContent;
 import org.bundlemaker.core.internal.analysis.AdapterUtils;
 import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.resource.IModule;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 
 /**
  * <p>
@@ -22,7 +22,7 @@ import org.bundlemaker.core.resource.IMovableUnit;
 public class AddMovableUnitsToModule implements IAddArtifactAction<IBundleMakerArtifact> {
 
   /** - */
-  private List<IMovableUnit> _movedMovableUnits;
+  private List<IModuleAwareMovableUnit> _movedMovableUnits;
 
   /** - */
   private IModule            _oldParentModule;

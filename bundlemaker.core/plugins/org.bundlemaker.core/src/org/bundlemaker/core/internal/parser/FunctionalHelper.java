@@ -7,17 +7,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
-import org.bundlemaker.core.resource.IModuleResource;
+import org.bundlemaker.core.project.internal.IResourceStandinNEW;
 import org.bundlemaker.core.spi.parser.IParsableResource;
 import org.bundlemaker.core.spi.parser.IParser;
 import org.bundlemaker.core.spi.parser.IParser.ParserType;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -25,7 +23,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 public class FunctionalHelper {
 
   static List<IProblem> parseNewOrModifiedResources(IProjectContentEntry content,
-      Collection<IResourceStandin> resources, ResourceCache resourceCache, ParserType parserType, IParser[] parsers,
+      Collection<IResourceStandinNEW> resources, ResourceCache resourceCache, ParserType parserType, IParser[] parsers,
       IProgressMonitor monitor) throws CoreException {
 
     //
@@ -38,7 +36,7 @@ public class FunctionalHelper {
 
       if (parser.getParserType().equals(parserType)) {
 
-        for (IResourceStandin resourceStandin : resources) {
+        for (IResourceStandinNEW resourceStandin : resources) {
 
           // check if the operation has been canceled
           FunctionalHelper.checkIfCanceled(monitor);
@@ -49,8 +47,8 @@ public class FunctionalHelper {
           //
           if (parser.canParse(resource)) {
             ((Resource) resource).storeCurrentTimestamp();
-            List<IProblem> problems = parser.parseResource(content, resource, resourceCache,
-                resourceStandin.isAnalyzeReferences());
+            List<IProblem> problems = parser.parseResource(content, resource, resourceStandin.isAnalyzeReferences(),
+                true);
             result.addAll(problems);
             resource.setErroneous(!problems.isEmpty());
           }
@@ -74,21 +72,21 @@ public class FunctionalHelper {
    * @param monitor
    * @return
    */
-  static Set<IResourceStandin> computeNewAndModifiedResources(Collection<IResourceStandin> resourceStandins,
+  static Set<IResourceStandinNEW> computeNewAndModifiedResources(Collection<IResourceStandinNEW> resourceStandins,
       Map<IProjectContentResource, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor monitor) {
 
     //
     monitor.beginTask("", resourceStandins.size());
 
     //
-    Set<IResourceStandin> result;
+    Set<IResourceStandinNEW> result;
 
     try {
 
-      result = new HashSet<IResourceStandin>();
+      result = new HashSet<IResourceStandinNEW>();
 
       //
-      for (IResourceStandin resourceStandin : resourceStandins) {
+      for (IResourceStandinNEW resourceStandin : resourceStandins) {
 
         // check if the operation has been canceled
         checkIfCanceled(monitor);
@@ -98,10 +96,13 @@ public class FunctionalHelper {
 
         // add if resource has to be re-parsed
         if (hasToBeReparsed(resourceStandin, resource)) {
+          resource = (Resource) resourceCache.getOrCreateResource(resourceStandin);
           result.add(resourceStandin);
-        } else {
-          resourceCache.addToStoredResourcesMap(resource, resource);
         }
+
+        // associate resource and resource stand-in...
+        ((ResourceStandin) resourceStandin).setResource(resource);
+        resource.setResourceStandin((ResourceStandin) resourceStandin);
 
         monitor.worked(1);
       }
@@ -119,50 +120,7 @@ public class FunctionalHelper {
     // Boolean.getBoolean("org.bundlemaker.ignoreMissingBinaries") == false;
   }
 
-  static void associateResourceStandinsWithResources(Collection<IResourceStandin> resourceStandins,
-      Map<IProjectContentResource, Resource> map, boolean isSource, IProgressMonitor monitor) {
-
-    Assert.isNotNull(resourceStandins);
-    Assert.isNotNull(map);
-    Assert.isNotNull(monitor);
-
-    //
-    for (IResourceStandin resourceStandin : resourceStandins) {
-
-      // check if the operation has been canceled
-      checkIfCanceled(monitor);
-
-      // get the associated resource
-      Resource resource = map.get(resourceStandin);
-
-      if (resource == null) {
-        throw new RuntimeException(resourceStandin.toString());
-      }
-
-      // set up the resource stand-in
-      setupResourceStandin(resourceStandin, resource, isSource);
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resourceStandin
-   * @param map
-   */
-  static void setupResourceStandin(IResourceStandin resourceStandin, Resource resource, boolean isSource) {
-
-    Assert.isNotNull(resourceStandin);
-    Assert.isNotNull(resource, "No resource for " + resourceStandin.toString());
-
-    // associate resource and resource stand-in...
-    ((ResourceStandin) resourceStandin).setResource(resource);
-    // ... and set the opposite
-    resource.setResourceStandin((ResourceStandin) resourceStandin);
-  }
-
-  static boolean hasToBeReparsed(IModuleResource resourceStandin, Resource resource) {
+  static boolean hasToBeReparsed(IProjectContentResource resourceStandin, Resource resource) {
 
     // resource has to be re-parsed if no resource was stored in the database
     if (resource == null) {

@@ -13,9 +13,9 @@ package org.bundlemaker.core.spi.parser;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
 import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.IProjectContentEntry;
-import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 
 /**
  * <p>
@@ -42,7 +42,7 @@ public abstract class AbstractParser implements IParser {
    * {@inheritDoc}
    */
   @Override
-  public void parseBundleMakerProjectStart(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
+  public void batchParseStart(IParserAwareBundleMakerProject bundleMakerProject) throws Exception {
     // ignore
   }
 
@@ -50,7 +50,7 @@ public abstract class AbstractParser implements IParser {
    * {@inheritDoc}
    */
   @Override
-  public void parseBundleMakerProjectStop(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
+  public void batchParseStop(IParserAwareBundleMakerProject bundleMakerProject) throws Exception {
     // ignore
   }
 
@@ -62,13 +62,13 @@ public abstract class AbstractParser implements IParser {
    * @param resourceKey
    */
   public List<IProblem> parseResource(IProjectContentEntry content, IParsableResource resource,
-      IParserContext context, boolean parseReferences) {
+      boolean parseReferences, boolean isBatchParse) {
 
     // Reset problem list
     _problems = new LinkedList<IProblem>();
 
     // do the parsing
-    doParseResource(content, resource, context, parseReferences);
+    doParseResource(content, resource, parseReferences, isBatchParse);
 
     //
     return _problems;
@@ -82,7 +82,7 @@ public abstract class AbstractParser implements IParser {
    * @param context
    */
   protected abstract void doParseResource(IProjectContentEntry content, IParsableResource resource,
-      IParserContext context, boolean parseReferences);
+      boolean parseReferences, boolean isBatchParse);
 
   /**
    * <p>

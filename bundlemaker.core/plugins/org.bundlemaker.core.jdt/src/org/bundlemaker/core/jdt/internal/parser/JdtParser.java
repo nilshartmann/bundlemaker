@@ -11,21 +11,17 @@
 package org.bundlemaker.core.jdt.internal.parser;
 
 import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
-import org.bundlemaker.core.jdt.internal.ExtensionRegistryTracker;
 import org.bundlemaker.core.jdt.parser.CoreParserJdt;
-import org.bundlemaker.core.jdt.parser.IJdtSourceParserHook;
 import org.bundlemaker.core.jtype.IParsableTypeResource;
 import org.bundlemaker.core.jtype.IType;
 import org.bundlemaker.core.jtype.JavaTypeUtils;
+import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
 import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.IProjectContentEntry;
-import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.spi.parser.AbstractParser;
 import org.bundlemaker.core.spi.parser.IParsableResource;
-import org.bundlemaker.core.spi.parser.IParserContext;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -36,33 +32,39 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class JdtParser extends AbstractHookAwareJdtParser {
+public class JdtParser extends AbstractParser {
 
   /** the AST parser */
-  private ASTParser    _parser;
-
-  /** the associated java project */
-  private IJavaProject _javaProject;
+  private ASTParser _parser;
 
   /**
    * <p>
    * </p>
    * 
-   * @param bundleMakerProject
    * @throws CoreException
    */
-  public JdtParser(IProjectDescriptionAwareBundleMakerProject bundleMakerProject, ExtensionRegistryTracker<IJdtSourceParserHook> hookRegistry)
-      throws CoreException {
-
-    super(hookRegistry);
-
-    Assert.isNotNull(bundleMakerProject);
+  public JdtParser() throws CoreException {
 
     // create the AST parser
-    _parser = ASTParser.newParser(AST.JLS3);
+    _parser = ASTParser.newParser(AST.JLS4);
+  }
 
-    // the associated java project
-    _javaProject = JdtProjectHelper.getAssociatedJavaProject(bundleMakerProject);
+  @Override
+  public void batchParseStart(IParserAwareBundleMakerProject bundleMakerProject) throws CoreException {
+
+    // create or get the java project
+    if (!JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
+      JdtProjectHelper.newAssociatedJavaProject(bundleMakerProject);
+    }
+
+    JdtProjectHelper.setupAssociatedJavaProject(bundleMakerProject);
+
+  }
+
+  @Override
+  public void batchParseStop(IParserAwareBundleMakerProject bundleMakerProject) {
+
+    JdtProjectHelper.deleteAssociatedProjectIfNecessary(bundleMakerProject.getProject());
   }
 
   /**
@@ -73,11 +75,17 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     return ParserType.SOURCE;
   }
 
+  @Override
+  public boolean canParse(IParsableResource resource) {
+    return resource.getPath().endsWith(".java");
+  }
+
   /**
    * {@inheritDoc}
    */
   @Override
-  protected synchronized void doParseResource(IProjectContentEntry projectContent, IParsableResource resource, IParserContext cache, boolean parseReferences) {
+  protected synchronized void doParseResource(IProjectContentEntry projectContent, IParsableResource resource,
+      boolean parseReferences, boolean isBatchParse) {
 
     //
     if (!canParse(resource)) {
@@ -85,29 +93,46 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     }
 
     try {
-
-      // _parser.setSource(iCompilationUnit);
-
-
-      // TODO
-//      if (projectContent.getProvider() instanceof JdtProjectContentProvider) {
-//        String root = resource.getRoot();
-//        IJavaProject javaProject = ((JdtProjectContentProvider) projectContent.getProvider()).getSourceJavaProject(
-//            projectContent, root);
-//        _parser.setProject(javaProject);
-//        _parser.setUnitName("/" + _javaProject.getProject().getName() + "/" + resource.getPath());
-//      } else {
-
-//      }
-      
       _parser.setSource(new String(resource.getContent()).toCharArray());
-      _parser.setProject(_javaProject);
-      _parser.setUnitName("/" + _javaProject.getProject().getName() + "/" + resource.getPath());
       _parser.setCompilerOptions(CoreParserJdt.getCompilerOptionsWithComplianceLevel(null));
       _parser.setResolveBindings(true);
 
+      if (isBatchParse) {
+
+        // the associated java project
+        IJavaProject javaProject = JdtProjectHelper.getAssociatedJavaProject(projectContent.getProvider()
+            .getBundleMakerProject());
+        _parser.setProject(javaProject);
+        _parser.setUnitName("/" + javaProject.getProject().getName() + "/" + resource.getPath());
+
+      } else {
+
+        if (projectContent.getProvider() instanceof JdtProjectContentProvider) {
+
+          // reset model extension
+          resource.addResourceModelExtension(null);
+
+          String root = resource.getRoot();
+          IJavaProject javaProject = ((JdtProjectContentProvider) projectContent.getProvider()).getSourceJavaProject(
+              projectContent, root);
+          _parser.setProject(javaProject);
+          _parser.setUnitName("/" + javaProject.getProject().getName() + "/" + resource.getPath());
+        }
+      }
+
       //
-      analyzeCompilationUnit(resource, (CompilationUnit) _parser.createAST(null));
+      // step 1: set the directly referenced types
+      JdtAstVisitor visitor = new JdtAstVisitor(resource);
+      ((CompilationUnit) _parser.createAST(null)).accept(visitor);
+
+      // step 4: add the errors to the error list
+      for (IProblem problem : visitor.getProblems()) {
+
+        // add errors
+        if (problem.isError()) {
+          getProblems().add(problem);
+        }
+      }
 
       // set the primary type
       String primaryTypeName = JavaTypeUtils.convertToFullyQualifiedName(resource.getPath(), ".java");
@@ -117,42 +142,6 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     } catch (Exception e) {
       getProblems().add(new IProblem.DefaultProblem(resource, "Error while parsing: " + e));
       e.printStackTrace();
-    }
-  }
-
-  @Override
-  public boolean canParse(IParsableResource resource) {
-    return resource.getPath().endsWith(".java");
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param rootMap
-   * @param progressMonitor
-   * 
-   * @param entry
-   * @param content
-   * @throws JavaModelException
-   */
-  private void analyzeCompilationUnit(IParsableResource modifiableResource, CompilationUnit compilationUnit)
-      throws CoreException {
-
-    // step 1: set the directly referenced types
-    JdtAstVisitor visitor = new JdtAstVisitor(modifiableResource);
-    compilationUnit.accept(visitor);
-
-    // step 2:
-    callSourceParserHooks(modifiableResource, compilationUnit);
-
-    // step 4: add the errors to the error list
-    for (IProblem problem : visitor.getProblems()) {
-
-      // add errors
-      if (problem.isError()) {
-        getProblems().add(problem);
-      }
     }
   }
 }

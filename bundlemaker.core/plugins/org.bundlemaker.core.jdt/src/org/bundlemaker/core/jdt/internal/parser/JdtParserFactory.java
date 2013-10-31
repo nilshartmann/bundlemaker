@@ -10,10 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.jdt.internal.parser;
 
-import org.bundlemaker.core.jdt.internal.ExtensionRegistryTracker;
-import org.bundlemaker.core.jdt.parser.CoreParserJdt;
-import org.bundlemaker.core.jdt.parser.IJdtSourceParserHook;
-import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.spi.parser.IParser;
 import org.bundlemaker.core.spi.parser.IParserFactory;
 import org.eclipse.core.runtime.CoreException;
@@ -26,53 +22,11 @@ import org.eclipse.core.runtime.CoreException;
  */
 public class JdtParserFactory extends IParserFactory.Adapter {
 
-  /** - */
-  private ExtensionRegistryTracker<IJdtSourceParserHook> _hookRegistry;
-
   /**
    * {@inheritDoc}
    */
   @Override
-  public void initialize() {
-    _hookRegistry = new ExtensionRegistryTracker<IJdtSourceParserHook>(CoreParserJdt.EXTENSION_POINT_ID);
-    _hookRegistry.initialize();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void dispose() {
-    _hookRegistry.dispose();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void initialize(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException {
-
-    // create or get the java project
-    if (!JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
-      JdtProjectHelper.newAssociatedJavaProject(bundleMakerProject);
-    }
-
-    JdtProjectHelper.setupAssociatedJavaProject(bundleMakerProject);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void dispose(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) {
-    JdtProjectHelper.deleteAssociatedProjectIfNecessary(bundleMakerProject.getProject());
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public IParser createParser(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException {
-    return new JdtParser(bundleMakerProject, _hookRegistry);
+  public IParser createParser() throws CoreException {
+    return new JdtParser();
   }
 }

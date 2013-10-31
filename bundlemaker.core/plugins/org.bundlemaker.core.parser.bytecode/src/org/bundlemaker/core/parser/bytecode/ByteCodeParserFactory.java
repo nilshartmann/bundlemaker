@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser.bytecode;
 
-import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.spi.parser.IParser;
 import org.bundlemaker.core.spi.parser.IParserFactory;
 import org.eclipse.core.runtime.CoreException;
@@ -27,7 +26,7 @@ public class ByteCodeParserFactory extends IParserFactory.Adapter {
    * {@inheritDoc}
    */
   @Override
-  public IParser createParser(IProjectDescriptionAwareBundleMakerProject bundleMakerProject) throws CoreException {
+  public IParser createParser() throws CoreException {
 
     // return the new byte code parser
     return new ByteCodeParser();

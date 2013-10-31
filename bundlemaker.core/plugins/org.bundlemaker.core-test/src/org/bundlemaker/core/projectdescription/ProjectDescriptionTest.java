@@ -1,13 +1,16 @@
 package org.bundlemaker.core.projectdescription;
 
+import static org.mockito.Mockito.mock;
 import junit.framework.Assert;
 
+import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.common.ResourceType;
-import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
-import org.bundlemaker.core.internal.projectdescription.gson.GsonProjectDescriptionHelper;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
+import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.project.VariablePath;
 import org.bundlemaker.core.project.filecontent.FileBasedProjectContentProvider;
+import org.bundlemaker.core.project.internal.BundleMakerProjectDescription;
+import org.bundlemaker.core.project.internal.gson.GsonProjectDescriptionHelper;
 import org.junit.Test;
 
 public class ProjectDescriptionTest {
@@ -17,8 +20,12 @@ public class ProjectDescriptionTest {
    * </p>
    */
   @Test
-  public void testProjectDescription() {
+  public void testJsonSerialization() {
 
+    //
+    IBundleMakerProject bundleMakerProject = mock(IBundleMakerProject.class);
+    
+    //
     FileBasedProjectContentProvider provider = new FileBasedProjectContentProvider();
     provider.setId("honk");
     provider.setName("name");
@@ -26,7 +33,7 @@ public class ProjectDescriptionTest {
     provider.addRootPath(new VariablePath("BLa7BLa23"), ResourceType.SOURCE);
     provider.addRootPath(new VariablePath("BinBin"), ResourceType.BINARY);
 
-    IModifiableProjectDescription description = new BundleMakerProjectDescription(null);
+    IModifiableProjectDescription description = new BundleMakerProjectDescription(bundleMakerProject);
     description.addContentProvider(provider);
 
     //

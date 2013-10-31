@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bundlemaker.core.project.BundleMakerCore;
+import org.bundlemaker.core.BundleMakerCore;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -48,6 +48,11 @@ public class TransformationScriptSupport {
    * <p>
    * This method adds all missing natures, classpaths and folders to the specified project
    * 
+   * @param eclipseProject
+   * @param jreClasspathEntries
+   * @throws CoreException
+   */
+  /**
    * @param eclipseProject
    * @param jreClasspathEntries
    * @throws CoreException

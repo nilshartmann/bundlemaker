@@ -8,9 +8,10 @@ import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
 import org.bundlemaker.core.jtype.IType;
 import org.bundlemaker.core.jtype.ITypeModule;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -116,12 +117,12 @@ public class MovableUnitTest extends AbstractBundleMakerModelTest {
 
   /**
    * <p>
-   * Helper method that checks the specified {@link IMovableUnit}.
+   * Helper method that checks the specified {@link IModuleAwareMovableUnit}.
    * </p>
    * 
    * @param movableUnit
    */
-  private void assertMovableUnit(IMovableUnit movableUnit) {
+  private void assertMovableUnit(IModuleAwareMovableUnit movableUnit) {
 
     // assert not null
     Assert.assertNotNull(movableUnit);
@@ -140,9 +141,9 @@ public class MovableUnitTest extends AbstractBundleMakerModelTest {
     // Assert.assertEquals("B$BB", types.get(3).getName());
 
     // assert binary resources
-    List<? extends IModuleResource> binaryResources = movableUnit.getAssociatedBinaryResources();
-    Collections.sort(binaryResources, new Comparator<IModuleResource>() {
-      public int compare(IModuleResource o1, IModuleResource o2) {
+    List<? extends IProjectContentResource> binaryResources = movableUnit.getAssociatedBinaryResources();
+    Collections.sort(binaryResources, new Comparator<IProjectContentResource>() {
+      public int compare(IProjectContentResource o1, IProjectContentResource o2) {
         return o1.getName().compareTo(o2.getName());
       }
     });
@@ -155,7 +156,7 @@ public class MovableUnitTest extends AbstractBundleMakerModelTest {
     Assert.assertEquals("B.class", binaryResources.get(5).getName());
 
     // test source resources
-    IModuleResource sourceResources = movableUnit.getAssociatedSourceResource();
+    IProjectContentResource sourceResources = movableUnit.getAssociatedSourceResource();
     Assert.assertNotNull(sourceResources);
     Assert.assertEquals("A.java", sourceResources.getName());
   }

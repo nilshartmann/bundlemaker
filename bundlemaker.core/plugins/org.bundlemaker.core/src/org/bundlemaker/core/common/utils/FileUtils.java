@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.bundlemaker.core.internal.Activator;
+import org.bundlemaker.core.common.Constants;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -165,12 +165,12 @@ public class FileUtils {
 
       } catch (Exception e) {
         // throw the core exception
-        throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID, ""));
+        throw new CoreException(new Status(IStatus.ERROR, Constants.BUNDLE_ID_BUNDLEMAKER_CORE, ""));
       }
     }
 
     // throw the core exception
-    throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID, String.format(
+    throw new CoreException(new Status(IStatus.ERROR, Constants.BUNDLE_ID_BUNDLEMAKER_CORE, String.format(
         "File '%s' does not exist.", file.getAbsolutePath())));
   }
 

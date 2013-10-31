@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.bundlemaker.core.common.utils.AbstractBundleMakerExtensionRegistry;
 import org.bundlemaker.core.common.utils.IBundleMakerExtensionRegistry;
-import org.bundlemaker.core.spi.modext.IMovableUnitCreator;
+import org.bundlemaker.core.spi.movableunit.IMovableUnitCreator;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;

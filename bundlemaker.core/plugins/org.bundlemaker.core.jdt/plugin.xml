@@ -2,8 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
 
-   <extension-point id="jdtsourceparserhook" name="jdtsourceparserhook" schema="schema/jdtsourceparserhook.exsd"/>
-   
    <extension
          point="org.bundlemaker.core.parserfactory">
       <parserfactory

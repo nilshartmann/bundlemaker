@@ -5,20 +5,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.common.ResourceType;
-import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.project.IProjectContentResource;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.eclipse.core.runtime.Assert;
 
 public class MovableUnitSet {
 
   /** the movable units */
-  private Set<IMovableUnit>    _movableUnits;
+  private Set<IModuleAwareMovableUnit> _movableUnits;
 
   /** the binary resources */
-  private Set<IModuleResource> _binaryResources;
+  private Set<IProjectContentResource> _binaryResources;
 
   /** the source resources */
-  private Set<IModuleResource> _sourceResources;
+  private Set<IProjectContentResource> _sourceResources;
 
   /**
    * <p>
@@ -28,11 +28,11 @@ public class MovableUnitSet {
   public MovableUnitSet() {
 
     // create the resource sets
-    _binaryResources = new HashSet<IModuleResource>();
-    _sourceResources = new HashSet<IModuleResource>();
+    _binaryResources = new HashSet<IProjectContentResource>();
+    _sourceResources = new HashSet<IProjectContentResource>();
 
     //
-    _movableUnits = new HashSet<IMovableUnit>();
+    _movableUnits = new HashSet<IModuleAwareMovableUnit>();
   }
 
   /**
@@ -41,14 +41,14 @@ public class MovableUnitSet {
    * 
    * @param movableUnit
    */
-  public void addMovableUnit(IMovableUnit movableUnit) {
+  public void addMovableUnit(IModuleAwareMovableUnit movableUnit) {
     Assert.isNotNull(movableUnit);
 
     //
     if (_movableUnits.add(movableUnit)) {
 
       // add binary resources
-      for (IModuleResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
+      for (IProjectContentResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
         _binaryResources.add(moduleResource);
       }
 
@@ -65,14 +65,14 @@ public class MovableUnitSet {
    * 
    * @param movableUnit
    */
-  public void removeMovableUnit(IMovableUnit movableUnit) {
+  public void removeMovableUnit(IModuleAwareMovableUnit movableUnit) {
     Assert.isNotNull(movableUnit);
 
     //
     if (_movableUnits.remove(movableUnit)) {
 
       // add binary resources
-      for (IModuleResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
+      for (IProjectContentResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
         _binaryResources.remove(moduleResource);
       }
 
@@ -86,10 +86,10 @@ public class MovableUnitSet {
   /**
    * {@inheritDoc}
    */
-  public IModuleResource getResource(String path, ResourceType contentType) {
+  public IProjectContentResource getResource(String path, ResourceType contentType) {
 
     //
-    for (IModuleResource resourceStandin : getModifiableResourcesSet(contentType)) {
+    for (IProjectContentResource resourceStandin : getModifiableResourcesSet(contentType)) {
 
       //
       if (resourceStandin.getPath().equalsIgnoreCase(path)) {
@@ -104,7 +104,7 @@ public class MovableUnitSet {
   /**
    * {@inheritDoc}
    */
-  public Set<IModuleResource> getResources(ResourceType contentType) {
+  public Set<IProjectContentResource> getResources(ResourceType contentType) {
 
     //
     return Collections.unmodifiableSet(getModifiableResourcesSet(contentType));
@@ -116,7 +116,7 @@ public class MovableUnitSet {
    * 
    * @return
    */
-  public Set<? extends IMovableUnit> getMovableUnits() {
+  public Set<? extends IModuleAwareMovableUnit> getMovableUnits() {
     return Collections.unmodifiableSet(_movableUnits);
   }
 
@@ -127,7 +127,7 @@ public class MovableUnitSet {
    * @param contentType
    * @return
    */
-  private Set<IModuleResource> getModifiableResourcesSet(ResourceType contentType) {
+  private Set<IProjectContentResource> getModifiableResourcesSet(ResourceType contentType) {
     Assert.isNotNull(contentType);
 
     // return the resource set

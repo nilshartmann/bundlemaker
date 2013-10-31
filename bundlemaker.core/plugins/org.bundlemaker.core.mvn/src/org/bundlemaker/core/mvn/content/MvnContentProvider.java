@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.common.prefs.BundleMakerPreferences;
 import org.bundlemaker.core.common.prefs.IBundleMakerPreferences;
@@ -19,8 +20,8 @@ import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentProvider;
 import org.bundlemaker.core.project.IProjectDescription;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.spi.AbstractProjectContentProvider;
 import org.bundlemaker.core.resource.IModuleIdentifier;
-import org.bundlemaker.core.spi.project.AbstractProjectContentProvider;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -81,13 +82,18 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    * {@inheritDoc}
    */
   @Override
-  protected void init(IProjectDescription description) {
+  protected void prepare() {
 
     //
-    IBundleMakerPreferences preferences = getBundleMakerPreferences(description);
+    IBundleMakerPreferences preferences = getBundleMakerPreferences();
 
     //
     _repositoryAdapter = new DispatchingRepositoryAdapter(preferences);
+  }
+
+  protected IBundleMakerPreferences getBundleMakerPreferences() {
+    return BundleMakerPreferences.getBundleMakerPreferences(MvnCoreActivator.PLUGIN_ID, getBundleMakerProject()
+        .getProject());
   }
 
   /**
@@ -134,12 +140,10 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    * {@inheritDoc}
    */
   @Override
-  protected void onGetBundleMakerProjectContent(IProgressMonitor progressMonitor) throws CoreException {
+  public void onInitializeProjectContent(IProgressMonitor progressMonitor) throws CoreException {
 
     // only reload content if the fileBasedContents are not initialized yet
-    if (getFileBasedContents().isEmpty()) {
-      reloadContent(true, false, getBundleMakerProject());
-    }
+    reloadContent(true, false, getBundleMakerProject());
   }
 
   /**
@@ -167,7 +171,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
       // create the collect request
       CollectRequest collectRequest = new CollectRequest();
       collectRequest.setRoot(new Dependency(artifact, SCOPE_COMPILE));
-      
+
       // add the remote repository is necessary
       if (useRemoteRepository) {
         for (RemoteRepository remoteRepository : _repositoryAdapter.getRemoteRepositories()) {
@@ -201,12 +205,12 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
           @Override
           public boolean visitEnter(DependencyNode node) {
             try {
-              
+
               System.out.println("NODE: " + node);
               for (DependencyNode dependencyNode : node.getChildren()) {
                 System.out.println("  - " + dependencyNode + " : " + dependencyNode.getDependency());
               }
-              
+
               return handleDependencyNode(node, useRemoteRepository, alreadyHandled,
                   artifact.equals(node.getDependency().getArtifact()));
             } catch (CoreException e) {
@@ -265,18 +269,6 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    */
   public List<MvnArtifactType> getMvnArtifacts() {
     return _mvnArtifactTypes;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param description
-   * @return
-   */
-  protected IBundleMakerPreferences getBundleMakerPreferences(IProjectDescription description) {
-    return BundleMakerPreferences.getBundleMakerPreferences(MvnCoreActivator.PLUGIN_ID, description
-        .getBundleMakerProject().getProject());
   }
 
   /**

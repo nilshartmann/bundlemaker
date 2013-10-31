@@ -26,10 +26,11 @@ import org.bundlemaker.core.internal.api.resource.IModifiableModule;
 import org.bundlemaker.core.internal.modelext.ModelExtFactory;
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractModularizedSystem;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
 import org.bundlemaker.core.spi.modext.IAnalysisModelContext;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -299,7 +300,7 @@ public class ArtifactCache implements IAnalysisModelContext {
       this.getModuleArtifact(module);
 
       // iterate over all contained resources
-      for (IMovableUnit movableUnit : module.getMovableUnits()) {
+      for (IModuleAwareMovableUnit movableUnit : module.getMovableUnits()) {
 
         //
         if (progressMonitor != null) {
@@ -312,7 +313,7 @@ public class ArtifactCache implements IAnalysisModelContext {
           if (movableUnit.hasAssociatedSourceResource()) {
             setupIt(movableUnit.getAssociatedSourceResource());
           } else {
-            for (IModuleResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
+            for (IProjectContentResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
               setupIt(moduleResource);
             }
           }
@@ -320,7 +321,7 @@ public class ArtifactCache implements IAnalysisModelContext {
         else if (getConfiguration().isBinaryContent()) {
 
           if (movableUnit.hasAssociatedBinaryResources()) {
-            for (IModuleResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
+            for (IProjectContentResource moduleResource : movableUnit.getAssociatedBinaryResources()) {
               setupIt(moduleResource);
             }
           } else {
@@ -346,7 +347,9 @@ public class ArtifactCache implements IAnalysisModelContext {
    * @param resourceArtifact
    * @param resource
    */
-  private void setupIt(IModuleResource resource) {
+  private void setupIt(IProjectContentResource res) {
+
+    IModuleResource resource = res.adaptAs(IModuleResource.class);
 
     //
     if (ModelExtFactory.getModelExtensionFactory().shouldAddResourceArtifact(resource)) {

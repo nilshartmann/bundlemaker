@@ -4,9 +4,9 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bundlemaker.core.common.DefaultResource;
 import org.bundlemaker.core.common.IResource;
 import org.bundlemaker.core.common.utils.FileUtils;
-import org.bundlemaker.core.internal.resource.DefaultProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.eclipse.core.runtime.Assert;
@@ -235,7 +235,7 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
       for (String child : FileUtils.getAllChildren(templateDirectory)) {
 
         // create the resource standin
-        IResource resourceKey = new DefaultProjectContentResource("ADDITIONAL_CONTENT_DUMMY_ID",
+        IResource resourceKey = new DefaultResource(
             templateDirectory.getAbsolutePath(),
             child);
 

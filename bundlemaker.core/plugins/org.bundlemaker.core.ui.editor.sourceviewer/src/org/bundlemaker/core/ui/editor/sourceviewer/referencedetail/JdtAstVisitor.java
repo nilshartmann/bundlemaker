@@ -17,7 +17,7 @@ import java.util.Stack;
 import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.jtype.IReference;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.spi.parser.IReferenceDetailParser;
 import org.bundlemaker.core.spi.parser.IReferenceDetailParser.IPosition;
 import org.eclipse.core.runtime.Assert;

@@ -4,11 +4,11 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.common.utils.VMInstallUtils;
 import org.bundlemaker.core.parser.IParserAwareBundleMakerProject;
 import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.AnalyzeMode;
-import org.bundlemaker.core.project.BundleMakerCore;
 import org.bundlemaker.core.project.IModifiableProjectDescription;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.core.resources.IProject;
@@ -77,7 +77,7 @@ public class TestProjectCreator {
       IProject simpleProject = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(testProjectName);
 
       // get the BM project
-      return BundleMakerCore.getProjectDescriptionAwareBundleMakerProject(simpleProject).adaptAs(IParserAwareBundleMakerProject.class);
+      return BundleMakerCore.getBundleMakerProject(simpleProject).adaptAs(IParserAwareBundleMakerProject.class);
     } catch (CoreException e) {
       e.printStackTrace();
       Assert.fail(e.getMessage());
@@ -88,6 +88,13 @@ public class TestProjectCreator {
   public static void addProjectDescription(IProjectDescriptionAwareBundleMakerProject bundleMakerProject,
       String testProjectName) {
 
+    File testDataDirectory = getTestDataDirectory(testProjectName);
+
+    // create the project description
+    addProjectDescription(bundleMakerProject, testDataDirectory, testProjectName);
+  }
+
+  public static File getTestDataDirectory(String testProjectName) {
     //
     File testDataDirectory = new File(new File(System.getProperty("user.dir"), "test-data"), testProjectName);
 
@@ -110,11 +117,15 @@ public class TestProjectCreator {
         // Enumeration<JarEntry> enumeration = jar.entries();
         // while (enumeration.hasMoreElements()) {
         // JarEntry jarEntry = enumeration.nextElement();
-        // if (jarEntry.getName().startsWith("test-data/" + testProjectName + "/")) {
-        // InputStream in = new BufferedInputStream(jar.getInputStream(jarEntry));
-        // File dest = new File(parentDir, jarEntry.getName().substring(prefix.length()));
+        // if (jarEntry.getName().startsWith("test-data/" +
+        // testProjectName + "/")) {
+        // InputStream in = new
+        // BufferedInputStream(jar.getInputStream(jarEntry));
+        // File dest = new File(parentDir,
+        // jarEntry.getName().substring(prefix.length()));
         // dest.mkdirs();
-        // OutputStream out = new BufferedOutputStream(new FileOutputStream(dest));
+        // OutputStream out = new BufferedOutputStream(new
+        // FileOutputStream(dest));
         // byte[] buffer = new byte[2048];
         // for (;;) {
         // int nBytes = in.read(buffer);
@@ -144,9 +155,7 @@ public class TestProjectCreator {
 
     Assert.assertTrue(String.format("File '%s' has to be a directory.", testDataDirectory),
         testDataDirectory.isDirectory());
-
-    // create the project description
-    addProjectDescription(bundleMakerProject, testDataDirectory, testProjectName);
+    return testDataDirectory;
   }
 
   public static void addProjectDescription(IProjectDescriptionAwareBundleMakerProject bundleMakerProject, File directory) {
@@ -234,30 +243,36 @@ public class TestProjectCreator {
    * @return
    * @throws CoreException
    */
-  private static String getTestVmName() {
+  public static String getTestVmName() {
+
+    IVMInstall vmInstall = getTestVm();
+
+    System.out.println("Using Test JDK '" + vmInstall.getName() + "' from " + vmInstall.getInstallLocation());
+    return vmInstall.getName();
+  }
+
+  public static IVMInstall getTestVm() {
 
     String configuredTestVmLocation = System.getProperty(BUNDLEMAKER_TEST_VM_PROPERTY_NAME);
 
     System.out.println("configuredTestVmLocation: " + configuredTestVmLocation);
 
-    IVMInstall vmInstall = null;
+    IVMInstall result = null;
 
     if (configuredTestVmLocation == null || configuredTestVmLocation.trim().isEmpty()
         || !new File(configuredTestVmLocation).isDirectory()) {
-      vmInstall = JavaRuntime.getDefaultVMInstall();
+      result = JavaRuntime.getDefaultVMInstall();
     } else {
       System.out.println("Creating Test IVMInstall for location '" + configuredTestVmLocation + "'");
       try {
-        vmInstall = VMInstallUtils.getOrCreateIVMInstall("BundleMakerTestJDK", configuredTestVmLocation);
+        result = VMInstallUtils.getOrCreateIVMInstall("BundleMakerTestJDK", configuredTestVmLocation);
       } catch (CoreException e) {
         e.printStackTrace();
         Assert.fail(e.getMessage());
       }
     }
 
-    assertNotNull("No VM available", vmInstall);
-
-    System.out.println("Using Test JDK '" + vmInstall.getName() + "' from " + vmInstall.getInstallLocation());
-    return vmInstall.getName();
+    assertNotNull("No VM available", result);
+    return result;
   }
 }

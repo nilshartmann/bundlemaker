@@ -12,19 +12,20 @@ package org.bundlemaker.core;
 
 import java.util.Collection;
 
+import org.bundlemaker.core.common.Activator;
+import org.bundlemaker.core.common.Constants;
 import org.bundlemaker.core.common.utils.EclipseProjectUtils;
-import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
+import org.bundlemaker.core.internal.parser.XYZService;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
+import org.bundlemaker.core.project.internal.BundleMakerProjectCache;
 import org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.JavaCore;
 
@@ -37,28 +38,7 @@ import org.eclipse.jdt.core.JavaCore;
  * 
  * @noextend This class is not intended to be subclasses by clients.
  */
-public final class BundleMakerCore {
-
-  /** the nature id */
-  public static final String BUNDLE_ID                                  = "org.bundlemaker.core";
-
-  /** the nature id */
-  public static final String NATURE_ID                                  = "org.bundlemaker.core.bundlemakernature";
-
-  /** bundlemaker classpath container */
-  public static final IPath  BUNDLEMAKER_CONTAINER_PATH                 = new Path("org.bundlemaker.core.classpath");            //$NON-NLS-1$
-
-  /** the bundle make directory name */
-  public static final String BUNDLEMAKER_DIRECTORY_NAME                 = ".bundlemaker";
-
-  /** the project description file name */
-  public static final String PROJECT_DESCRIPTION_NAME                   = "bundlemaker.json";
-
-  /** the project description path */
-  public static final IPath  PROJECT_DESCRIPTION_PATH                   = new Path(PROJECT_DESCRIPTION_NAME);
-
-  /** - */
-  public static final String BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER = "#####BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER#####";
+public final class BundleMakerCore implements Constants {
 
   /**
    * <p>
@@ -89,19 +69,21 @@ public final class BundleMakerCore {
     // check if nature exists
     if (!project.exists()) {
       // TODO: I18N
-      throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID, "Project '" + project.getName()
+      throw new CoreException(new Status(IStatus.ERROR, Constants.BUNDLE_ID_BUNDLEMAKER_CORE, "Project '"
+          + project.getName()
           + "' has to exist."));
     }
 
     // check if nature exists
     if (!project.hasNature(NATURE_ID)) {
       // TODO: I18N
-      throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID, "Project '" + project.getName()
+      throw new CoreException(new Status(IStatus.ERROR, Constants.BUNDLE_ID_BUNDLEMAKER_CORE, "Project '"
+          + project.getName()
           + "' must have nature '" + NATURE_ID + "'."));
     }
 
     // // try to get project from cache
-    IBundleMakerProject bundleMakerProject = (IBundleMakerProject) Activator.getDefault()
+    IProjectDescriptionAwareBundleMakerProject bundleMakerProject = BundleMakerProjectCache.instance()
         .getBundleMakerProject(project);
 
     // create project if necessary
@@ -111,11 +93,11 @@ public final class BundleMakerCore {
       bundleMakerProject = new BundleMakerProject(project);
 
       // step 2: cache the bundle maker project
-      Activator.getDefault().cacheBundleMakerProject(project, bundleMakerProject);
+      BundleMakerProjectCache.instance().cacheBundleMakerProject(project, bundleMakerProject);
     }
 
     // return result
-    return bundleMakerProject;
+    return bundleMakerProject.adaptAs(IBundleMakerProject.class);
   }
 
   /**
@@ -188,12 +170,11 @@ public final class BundleMakerCore {
    */
   @SuppressWarnings("unchecked")
   public static Collection<IBundleMakerProject> getBundleMakerProjects() {
-
     //
     IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
     for (IProject iProject : projects) {
       try {
-        if (iProject.exists() && iProject.hasNature(BundleMakerCore.NATURE_ID)) {
+        if (iProject.exists() && iProject.hasNature(NATURE_ID)) {
           getBundleMakerProject(iProject);
         }
       } catch (CoreException e) {
@@ -202,7 +183,7 @@ public final class BundleMakerCore {
     }
 
     //
-    return (Collection<IBundleMakerProject>) Activator.getDefault().getBundleMakerProjects();
+    return (Collection<IBundleMakerProject>) BundleMakerProjectCache.instance().getBundleMakerProjects();
   }
 
   /**
@@ -219,7 +200,7 @@ public final class BundleMakerCore {
     IProject project = EclipseProjectUtils.getProject(simpleProjectName);
 
     // get the bundle maker project
-    return BundleMakerCore.getBundleMakerProject(project);
+    return getBundleMakerProject(project);
   }
 
   /**
@@ -263,7 +244,7 @@ public final class BundleMakerCore {
   public static void clearDependencyStore(IProjectDescriptionAwareBundleMakerProject bundleMakerProject)
       throws CoreException {
 
-    IPersistentDependencyStoreFactory factory = Activator.getDefault().getPersistentDependencyStoreFactory();
+    IPersistentDependencyStoreFactory factory = XYZService.instance().getPersistentDependencyStoreFactory();
     factory.resetPersistentDependencyStore(bundleMakerProject);
   }
 }

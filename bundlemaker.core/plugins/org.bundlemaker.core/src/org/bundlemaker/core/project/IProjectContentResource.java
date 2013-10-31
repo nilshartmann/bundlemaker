@@ -10,11 +10,12 @@
  ******************************************************************************/
 package org.bundlemaker.core.project;
 
+import org.bundlemaker.core.common.IGenericAdaptable;
 import org.bundlemaker.core.common.IResource;
 
 /**
  * <p>
- * An {@link IProjectContentResource} defines a resource that is definied through a project content entry. It provides
+ * An {@link IProjectContentResource} defines a resource that is defined through a project content entry. It provides
  * access to the <code>contentId</code> and the <code>root</code> directory or archive file.
  * </p>
  * 
@@ -23,7 +24,16 @@ import org.bundlemaker.core.common.IResource;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IProjectContentResource extends IResource {
+public interface IProjectContentResource extends IResource, IGenericAdaptable {
+
+  // /**
+  // * <p>
+  // * Returns the identifier of the project content entry that defines the resource.
+  // * </p>
+  // *
+  // * @return the identifier of the project content entry that defines the resource.
+  // */
+  // IProjectContentEntry getProjectContentEntry();
 
   /**
    * <p>
@@ -36,13 +46,11 @@ public interface IProjectContentResource extends IResource {
 
   /**
    * <p>
-   * Returns the root directory or archive file that contains the resource (e.g. <code>'c:/dev/classes.zip'</code> or
-   * <code>'c:/dev/source'</code>). Note that resource paths are always slash-delimited ('/').
    * </p>
    * 
-   * @return the root directory or archive file that contains the resource.
+   * @return
    */
-  String getRoot();
+  boolean isAnalyzeReferences();
 
   /**
    * <p>
@@ -50,5 +58,5 @@ public interface IProjectContentResource extends IResource {
    * 
    * @return
    */
-  boolean isAnalyzeReferences();
+  IMovableUnit getMovableUnit();
 }

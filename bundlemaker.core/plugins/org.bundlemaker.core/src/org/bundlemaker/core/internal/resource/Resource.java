@@ -14,14 +14,15 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bundlemaker.core.common.FlyWeightStringCache;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
-import org.bundlemaker.core.internal.parser.ResourceCache;
+import org.bundlemaker.core.project.internal.DefaultProjectContentResource;
+import org.bundlemaker.core.project.internal.IResourceStandinAwareProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IMovableUnit;
+import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.spi.parser.IParsableResource;
-import org.eclipse.core.runtime.Platform;
 
 /**
  * <p>
@@ -29,7 +30,8 @@ import org.eclipse.core.runtime.Platform;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class Resource extends DefaultProjectContentResource implements IParsableResource {
+public class Resource extends DefaultProjectContentResource implements IParsableResource,
+    IResourceStandinAwareProjectContentResource {
 
   //
   private Object                    _modelExtension;
@@ -58,8 +60,8 @@ public class Resource extends DefaultProjectContentResource implements IParsable
    * @param root
    * @param path
    */
-  public Resource(String contentId, String root, String path, ResourceCache resourceCache) {
-    super(contentId, root, path, resourceCache.getFlyWeightCache());
+  public Resource(String contentId, String root, String path, FlyWeightStringCache flyWeightStringCache) {
+    super(contentId, root, path, flyWeightStringCache);
   }
 
   /**
@@ -73,30 +75,6 @@ public class Resource extends DefaultProjectContentResource implements IParsable
    */
   public Resource(String contentId, String root, String path) {
     super(contentId, root, path);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public <T> T adaptAs(Class<T> clazz) {
-
-    //
-    T result = (T) Platform.getAdapterManager().getAdapter(this, clazz);
-    if (result != null) {
-      return result;
-    }
-
-    //
-    return null;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Object getAdapter(Class adapter) {
-    return adaptAs(adapter);
   }
 
   /**
@@ -116,9 +94,10 @@ public class Resource extends DefaultProjectContentResource implements IParsable
    * @param modelExtension
    *          the modelExtension to set
    */
-  public void setModelExtension(Object modelExtension) {
+  public void addResourceModelExtension(Object modelExtension) {
 
-    if (_modelExtension != null) {
+    // TODO allow more than one extensions
+    if (modelExtension != null && _modelExtension != null) {
       throw new RuntimeException();
     }
 
@@ -145,7 +124,7 @@ public class Resource extends DefaultProjectContentResource implements IParsable
    * {@inheritDoc}
    */
   @Override
-  public IMovableUnit getMovableUnit() {
+  public IModuleAwareMovableUnit getMovableUnit() {
     return _movableUnit;
   }
 

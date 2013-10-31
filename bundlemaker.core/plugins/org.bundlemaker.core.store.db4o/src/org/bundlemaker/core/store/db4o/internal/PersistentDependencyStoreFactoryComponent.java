@@ -14,17 +14,17 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.common.utils.FileUtils;
-import org.bundlemaker.core.internal.Activator;
-import org.bundlemaker.core.project.BundleMakerCore;
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.bundlemaker.core.spi.store.IPersistentDependencyStore;
 import org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
-
-import com.db4o.osgi.Db4oService;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
 
 /**
  * <p>
@@ -32,22 +32,23 @@ import com.db4o.osgi.Db4oService;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
+@Component
 public class PersistentDependencyStoreFactoryComponent implements IPersistentDependencyStoreFactory {
 
   /** PREFIX_BUNDLEMAKER_DB4O_STORE */
-  private static final String                                     PREFIX_BUNDLEMAKER_DB4O_STORE               = "db4o.store";
+  private static final String                                                            PREFIX_BUNDLEMAKER_DB4O_STORE                         = "db4o.store";
 
   /** the cache */
   private Map<IProjectDescriptionAwareBundleMakerProject, PersistentDependencyStoreImpl> _cache;
 
-  /** the db4o service */
-  private Db4oService                                             _db4oService;
+  /** - */
+  private String                                                                         _fileName;
 
   /** - */
-  private String                                                  _fileName;
+  private static final boolean                                                           DELETE_DEPENDENCYSTORE_IF_CORE_BUNDLE_VERSION_CHANGED = true;
 
   /** - */
-  private static final boolean                                    DELETE_DEPENDENCYSTORE_IF_CORE_BUNDLE_VERSION_CHANGED = true;
+  private BundleContext                                                                  _bundleContext;
 
   /**
    * <p>
@@ -58,6 +59,14 @@ public class PersistentDependencyStoreFactoryComponent implements IPersistentDep
 
     // create the cache
     _cache = new HashMap<IProjectDescriptionAwareBundleMakerProject, PersistentDependencyStoreImpl>();
+  }
+
+  /**
+   * @param bundleContext
+   */
+  @Activate
+  public void activate(BundleContext bundleContext) {
+    _bundleContext = bundleContext;
   }
 
   /**
@@ -153,8 +162,8 @@ public class PersistentDependencyStoreFactoryComponent implements IPersistentDep
     // step 2: create a new store
     IFile file = project.getProject().getFile(
         new Path(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME).append(getFileName()));
-    PersistentDependencyStoreImpl store = new PersistentDependencyStoreImpl(_db4oService, file.getRawLocation()
-        .toOSString());
+    PersistentDependencyStoreImpl store = new PersistentDependencyStoreImpl(file.getRawLocation().toOSString(),
+        _bundleContext);
 
     // step 3: initialize the store
     store.init();
@@ -170,34 +179,14 @@ public class PersistentDependencyStoreFactoryComponent implements IPersistentDep
    * <p>
    * </p>
    * 
-   * @param db4oService
-   */
-  public void setDb4oService(Db4oService db4oService) {
-    _db4oService = db4oService;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param db4oService
-   */
-  public void unsetDb4oService(Db4oService db4oService) {
-    _db4oService = null;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
    * @return
    */
   public String getFileName() {
 
     //
     if (_fileName == null) {
-      _fileName = DELETE_DEPENDENCYSTORE_IF_CORE_BUNDLE_VERSION_CHANGED ? String.format("%s_%s", PREFIX_BUNDLEMAKER_DB4O_STORE,
-          Activator.getDefault().getBundleVersion()) : PREFIX_BUNDLEMAKER_DB4O_STORE;
+      _fileName = DELETE_DEPENDENCYSTORE_IF_CORE_BUNDLE_VERSION_CHANGED ? String.format("%s_%s",
+          PREFIX_BUNDLEMAKER_DB4O_STORE, BundleMakerCore.getVersion()) : PREFIX_BUNDLEMAKER_DB4O_STORE;
     }
 
     //

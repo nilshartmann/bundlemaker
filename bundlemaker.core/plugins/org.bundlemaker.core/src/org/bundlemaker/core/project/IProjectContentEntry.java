@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.project;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,9 +47,11 @@ public interface IProjectContentEntry {
 
   /**
    * <p>
+   * Returns the (modifiable) map of user attributes. This map can be used to attach {@link IProjectContentProvider}
+   * specific data to an {@link IProjectContentEntry}.
    * </p>
    * 
-   * @return
+   * @return the (modifiable) map of user attributes
    */
   Map<String, Object> getUserAttributes();
 
@@ -120,14 +123,12 @@ public interface IProjectContentEntry {
    * @param type
    * @return a Set of resources, never null.
    */
-  Set<? extends IProjectContentResource> getResources(ResourceType type);
+  Collection<? extends IProjectContentResource> getResources(ResourceType type);
 
   /**
    * <p>
-   * Returns a {@link Set} of all binary resources
-   * </p>
-   * <p>
-   * This is a convenience method for {@link #getResources(ResourceType) getResources(ContentType.BINARY)}
+   * Returns a {@link Set} of all binary resources. This is a convenience method for {@link #getResources(ResourceType)
+   * getResources(ContentType.BINARY)}
    * </p>
    * <p>
    * If this content entry is not a resource content ( <code>isAnalyze()</code> returns <code>false</code>), an empty
@@ -136,12 +137,12 @@ public interface IProjectContentEntry {
    * 
    * @return a Set of resources, never null.
    */
-  Set<? extends IProjectContentResource> getBinaryResources();
+  Collection<? extends IProjectContentResource> getBinaryResources();
 
   /**
-   * Returns all source resources
    * <p>
-   * This is a convenience method for {@link #getResources(ResourceType) getResources(ContentType.SOURCE)}
+   * Returns all source resources. This is a convenience method for {@link #getResources(ResourceType)
+   * getResources(ContentType.SOURCE)}
    * </p>
    * <p>
    * If this content entry is not a resource content ( <code>isAnalyze()</code> returns <code>false</code>), an empty
@@ -150,5 +151,12 @@ public interface IProjectContentEntry {
    * 
    * @return a Set of resources, never null.
    */
-  Set<? extends IProjectContentResource> getSourceResources();
+  Collection<? extends IProjectContentResource> getSourceResources();
+
+  /**
+   * @param path
+   * @param type
+   * @return
+   */
+  IProjectContentResource getResource(String path, ResourceType type);
 }

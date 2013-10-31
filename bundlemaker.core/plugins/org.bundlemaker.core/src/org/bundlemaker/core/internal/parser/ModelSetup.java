@@ -12,20 +12,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.FutureTask;
 
+import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.common.ZipFileCache;
 import org.bundlemaker.core.common.collections.GenericCache;
 import org.bundlemaker.core.common.utils.StopWatch;
-import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.internal.api.project.IInternalBundleMakerProject;
-import org.bundlemaker.core.internal.api.resource.IResourceStandin;
 import org.bundlemaker.core.internal.modelext.ModelExtFactory;
-import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.internal.resource.Resource;
-import org.bundlemaker.core.internal.resource.ZipFileCache;
 import org.bundlemaker.core.parser.IProblem;
 import org.bundlemaker.core.project.AnalyzeMode;
 import org.bundlemaker.core.project.IProjectContentEntry;
 import org.bundlemaker.core.project.IProjectContentResource;
+import org.bundlemaker.core.project.internal.IResourceStandinNEW;
+import org.bundlemaker.core.project.internal.ProjectContentEntry;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.bundlemaker.core.spi.parser.IParsableResource;
 import org.bundlemaker.core.spi.parser.IParser;
@@ -47,16 +46,16 @@ import org.eclipse.core.runtime.SubMonitor;
  */
 public class ModelSetup {
 
-  public static final boolean         LOG          = true;
+  public static final boolean LOG          = true;
 
   /** THREAD_COUNT */
-  private static final int            THREAD_COUNT = Runtime.getRuntime().availableProcessors();
+  private static final int    THREAD_COUNT = Runtime.getRuntime().availableProcessors();
 
   /** the bundle maker project */
-  private IInternalBundleMakerProject _bundleMakerProject;
+  private IBundleMakerProject _bundleMakerProject;
 
   /**  */
-  private List<IParser[]>             _parsers4threads;
+  private List<IParser[]>     _parsers4threads;
 
   /**
    * <p>
@@ -96,11 +95,6 @@ public class ModelSetup {
 
     // create the sub-monitor
     final SubMonitor progressMonitor = SubMonitor.convert(mainMonitor, 100);
-
-    //
-    for (IParserFactory parserFactory : Activator.getDefault().getParserFactoryRegistry().getParserFactories()) {
-      parserFactory.initialize(_bundleMakerProject);
-    }
 
     //
     setupParsers();
@@ -155,25 +149,11 @@ public class ModelSetup {
         }
       });
 
-      // ***********************************************************************************************
-      // STEP 4: Setup the resource content
-      // ***********************************************************************************************
-      mainMonitor.subTask("Set up model...");
-      Map<IProjectContentResource, Resource> newMap = resourceCache.getCombinedMap();
-
-      // set up binary resources
-      FunctionalHelper.associateResourceStandinsWithResources(_bundleMakerProject.getBinaryResourceStandins(), newMap,
-          false, progressMonitor);
-
-      // set up binary resources
-      FunctionalHelper.associateResourceStandinsWithResources(_bundleMakerProject.getSourceResourceStandins(), newMap,
-          true, progressMonitor);
-
       //
       for (IProjectContentEntry contentEntry : projectContents) {
         ModelExtFactory.getModelExtensionFactory().resourceModelSetupCompleted(contentEntry,
-            (Set<IModuleResource>) contentEntry.getBinaryResources(),
-            (Set<IModuleResource>) contentEntry.getSourceResources());
+            (Collection<IModuleResource>) contentEntry.getBinaryResources(),
+            (Collection<IModuleResource>) contentEntry.getSourceResources());
       }
 
       progressMonitor.worked(1);
@@ -184,11 +164,6 @@ public class ModelSetup {
 
     //
     notifyParseStop();
-
-    //
-    for (IParserFactory parserFactory : Activator.getDefault().getParserFactoryRegistry().getParserFactories()) {
-      parserFactory.dispose(_bundleMakerProject);
-    }
 
     //
     return result[0];
@@ -207,8 +182,6 @@ public class ModelSetup {
       Map<IProjectContentResource, Resource> storedResourcesMap, ResourceCache resourceCache,
       IProgressMonitor mainMonitor) {
 
-    // IResourceModelLifecycleCallback callback = null;
-
     //
     List<IProblem> result = Collections.emptyList();
 
@@ -225,19 +198,10 @@ public class ModelSetup {
       // zip files open while parsing the content
       ZipFileCache.instance().activateCache();
 
-      // TODO: prepare model
-      // callback.prepare(_bundleMakerProject);
-
-      //
+      // ITERATE OVER ALL THE CONTENT ENTRIES
       for (IProjectContentEntry projectContent : projectContents) {
 
         SubMonitor contentMonitor = subMonitor.newChild(1);
-
-        //
-        resourceCache.getProjectContentSpecificUserAttributes().clear();
-
-        // we only have check resource content
-        // if (projectContent.isAnalyze()) {
 
         //
         if (LOG) {
@@ -249,12 +213,12 @@ public class ModelSetup {
             .size() + projectContent.getSourceResources().size()));
 
         // step 4.1: compute new and modified resources
-        Set<IResourceStandin> newAndModifiedBinaryResources = FunctionalHelper.computeNewAndModifiedResources(
+        Set<IResourceStandinNEW> newAndModifiedBinaryResources = FunctionalHelper.computeNewAndModifiedResources(
             ((ProjectContentEntry) projectContent).getBinaryResourceStandins(), storedResourcesMap, resourceCache,
             new NullProgressMonitor());
 
         //
-        Set<IResourceStandin> newAndModifiedSourceResources = Collections.emptySet();
+        Set<IResourceStandinNEW> newAndModifiedSourceResources = Collections.emptySet();
 
         //
         if (AnalyzeMode.BINARIES_AND_SOURCES.equals(projectContent.getAnalyzeMode())) {
@@ -274,14 +238,6 @@ public class ModelSetup {
               .log(String.format("   - new/modified source resources: %s", newAndModifiedSourceResources.size()));
         }
 
-        // step 4.2:
-        for (IModuleResource resourceStandin : newAndModifiedBinaryResources) {
-          resourceCache.getOrCreateResource(resourceStandin);
-        }
-        for (IModuleResource resourceStandin : newAndModifiedSourceResources) {
-          resourceCache.getOrCreateResource(resourceStandin);
-        }
-
         // TODO: setup model
         ModelExtFactory.getModelExtensionFactory().prepareStoredResourceModel(projectContent, storedResourcesMap);
 
@@ -289,14 +245,14 @@ public class ModelSetup {
         int remaining = newAndModifiedSourceResources.size() + newAndModifiedBinaryResources.size();
         resourceContentMonitor.setWorkRemaining(remaining);
 
-        ModelExtFactory.getModelExtensionFactory().beforeParseResourceModel(projectContent, resourceCache,
+        ModelExtFactory.getModelExtensionFactory().beforeParseResourceModel(projectContent,
             newAndModifiedBinaryResources,
             newAndModifiedSourceResources);
 
         result = multiThreadedReparse(storedResourcesMap, newAndModifiedSourceResources,
             newAndModifiedBinaryResources, resourceCache, projectContent, resourceContentMonitor.newChild(remaining));
 
-        ModelExtFactory.getModelExtensionFactory().afterParseResourceModel(projectContent, resourceCache,
+        ModelExtFactory.getModelExtensionFactory().afterParseResourceModel(projectContent,
             newAndModifiedBinaryResources,
             newAndModifiedSourceResources);
 
@@ -310,9 +266,6 @@ public class ModelSetup {
       // deactivate the zip cache.
       ZipFileCache.instance().deactivateCache();
 
-      //
-      // callback.cleanUp(_bundleMakerProject);
-
       subMonitor.done();
     }
 
@@ -320,7 +273,7 @@ public class ModelSetup {
   }
 
   private List<IProblem> multiThreadedReparse(Map<IProjectContentResource, Resource> storedResourcesMap,
-      Collection<IResourceStandin> sourceResources, Collection<IResourceStandin> binaryResources,
+      Collection<IResourceStandinNEW> sourceResources, Collection<IResourceStandinNEW> binaryResources,
       ResourceCache resourceCache, IProjectContentEntry fileBasedContent, IProgressMonitor monitor) {
 
     List<IProblem> result = new LinkedList<IProblem>();
@@ -339,10 +292,10 @@ public class ModelSetup {
       };
 
       //
-      for (IResourceStandin resourceStandin : binaryResources) {
+      for (IResourceStandinNEW resourceStandin : binaryResources) {
         directories.getOrCreate(resourceStandin.getDirectory()).addBinaryResource(resourceStandin);
       }
-      for (IResourceStandin resourceStandin : sourceResources) {
+      for (IResourceStandinNEW resourceStandin : sourceResources) {
         directories.getOrCreate(resourceStandin.getDirectory()).addSourceResource(resourceStandin);
       }
 
@@ -479,7 +432,7 @@ public class ModelSetup {
   private void setupParsers() throws CoreException {
 
     // get the registered parser factories
-    List<IParserFactory> parserFactories = Activator.getDefault().getParserFactoryRegistry().getParserFactories();
+    List<IParserFactory> parserFactories = XYZService.instance().getParserFactoryRegistry().getParserFactories();
 
     // no parsers defined
     if (parserFactories.isEmpty()) {
@@ -495,7 +448,7 @@ public class ModelSetup {
     // ... setup
     for (IParser[] parsers : parsers4threads) {
       for (int i = 0; i < parsers.length; i++) {
-        parsers[i] = parserFactories.get(i).createParser(_bundleMakerProject);
+        parsers[i] = parserFactories.get(i).createParser();
       }
     }
 
@@ -525,7 +478,12 @@ public class ModelSetup {
       for (IParser parser : parsers) {
 
         // notify 'start'
-        parser.parseBundleMakerProjectStart(_bundleMakerProject);
+        try {
+          parser.batchParseStart(_bundleMakerProject);
+        } catch (Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
     }
   }
@@ -543,7 +501,12 @@ public class ModelSetup {
       for (IParser parser : parsers) {
 
         // notify 'stop'
-        parser.parseBundleMakerProjectStop(_bundleMakerProject);
+        try {
+          parser.batchParseStop(_bundleMakerProject);
+        } catch (Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
     }
   }
@@ -557,13 +520,13 @@ public class ModelSetup {
   public static class Directory {
 
     /** - */
-    private List<IResourceStandin> _binaryResources;
+    private List<IResourceStandinNEW> _binaryResources;
 
     /** - */
-    private List<IResourceStandin> _sourceResources;
+    private List<IResourceStandinNEW> _sourceResources;
 
     /** - */
-    private int                    _count = 0;
+    private int                       _count = 0;
 
     /**
      * <p>
@@ -571,8 +534,8 @@ public class ModelSetup {
      * </p>
      */
     public Directory() {
-      _binaryResources = new LinkedList<IResourceStandin>();
-      _sourceResources = new LinkedList<IResourceStandin>();
+      _binaryResources = new LinkedList<IResourceStandinNEW>();
+      _sourceResources = new LinkedList<IResourceStandinNEW>();
     }
 
     /**
@@ -581,7 +544,7 @@ public class ModelSetup {
      * 
      * @param resourceStandin
      */
-    public void addBinaryResource(IResourceStandin resourceStandin) {
+    public void addBinaryResource(IResourceStandinNEW resourceStandin) {
       _binaryResources.add(resourceStandin);
       _count++;
     }
@@ -592,7 +555,7 @@ public class ModelSetup {
      * 
      * @param resourceStandin
      */
-    public void addSourceResource(IResourceStandin resourceStandin) {
+    public void addSourceResource(IResourceStandinNEW resourceStandin) {
       _sourceResources.add(resourceStandin);
       _count++;
     }
@@ -603,7 +566,7 @@ public class ModelSetup {
      * 
      * @return
      */
-    public List<IResourceStandin> getBinaryResources() {
+    public List<IResourceStandinNEW> getBinaryResources() {
       return _binaryResources;
     }
 
@@ -613,7 +576,7 @@ public class ModelSetup {
      * 
      * @return
      */
-    public List<IResourceStandin> getSourceResources() {
+    public List<IResourceStandinNEW> getSourceResources() {
       return _sourceResources;
     }
 

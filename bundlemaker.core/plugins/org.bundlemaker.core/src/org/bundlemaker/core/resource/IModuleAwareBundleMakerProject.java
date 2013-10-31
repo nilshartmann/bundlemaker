@@ -11,7 +11,6 @@
 package org.bundlemaker.core.resource;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.bundlemaker.core.project.IProjectDescriptionAwareBundleMakerProject;
 import org.eclipse.core.runtime.CoreException;
@@ -104,21 +103,21 @@ public interface IModuleAwareBundleMakerProject extends IProjectDescriptionAware
    */
   void deleteModularizedSystemWorkingCopy(String name) throws CoreException;
 
-  /**
-   * <p>
-   * Returns a list with all binary resources that are contained in this project.
-   * </p>
-   * 
-   * @return a list with all binary resources that are contained in this project.
-   */
-  List<IModuleResource> getBinaryResources();
-
-  /**
-   * <p>
-   * Returns a list with all source resources that are contained in this project.
-   * </p>
-   * 
-   * @return a list with all source resources that are contained in this project.
-   */
-  List<IModuleResource> getSourceResources();
+  // /**
+  // * <p>
+  // * Returns a list with all binary resources that are contained in this project.
+  // * </p>
+  // *
+  // * @return a list with all binary resources that are contained in this project.
+  // */
+  // List<IModuleResource> getBinaryResources();
+  //
+  // /**
+  // * <p>
+  // * Returns a list with all source resources that are contained in this project.
+  // * </p>
+  // *
+  // * @return a list with all source resources that are contained in this project.
+  // */
+  // List<IModuleResource> getSourceResources();
 }
