@@ -33,6 +33,7 @@ import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.osgi.utils.JarFileManifestWriter;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -184,7 +185,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
         additionalResources.addAll(resourceKeys);
         
         // add sources
-        Set<? extends IModuleResource> sources = getCurrentModule().getResources(ResourceType.SOURCE);
+        Set<? extends IProjectContentResource> sources = getCurrentModule().getResources(ResourceType.SOURCE);
         additionalResources.addAll(wrapSourceResources(sources));
       } else {
         
@@ -215,7 +216,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
    * @param sources
    * @return
    */
-  private Collection<? extends IResource> wrapSourceResources(Set<? extends IModuleResource> sources) {
+  private Collection<? extends IResource> wrapSourceResources(Set<? extends IProjectContentResource> sources) {
     
     Set<IResource> movedSources = new HashSet<IResource>();
     

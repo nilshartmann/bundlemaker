@@ -1,10 +1,10 @@
-package org.bundlemaker.core.internal.resource;
+package org.bundlemaker.core.project.internal.movableunit;
 
 import java.util.List;
 
 import org.bundlemaker.core.common.utils.AbstractBundleMakerExtensionRegistry;
 import org.bundlemaker.core.common.utils.IBundleMakerExtensionRegistry;
-import org.bundlemaker.core.spi.movableunit.IMovableUnitCreator;
+import org.bundlemaker.core.project.spi.IMovableUnitCreator;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;

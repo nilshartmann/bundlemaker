@@ -27,6 +27,7 @@ import org.bundlemaker.core.jtype.IReference;
 import org.bundlemaker.core.jtype.IType;
 import org.bundlemaker.core.jtype.ITypeArtifact;
 import org.bundlemaker.core.jtype.ITypeModularizedSystem;
+import org.bundlemaker.core.project.IMovableUnit;
 import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
@@ -46,17 +47,17 @@ import org.eclipse.core.runtime.Path;
 /**
  * 
  */
-public class AdapterType2IArtifact extends AbstractArtifact implements IModuleAwareMovableUnit,
-    ITypeArtifact, IReferencingArtifact, IReferencedArtifact {
+public class AdapterType2IArtifact extends AbstractArtifact implements IModuleAwareMovableUnit, ITypeArtifact,
+    IReferencingArtifact, IReferencedArtifact {
 
   /** the bundle maker type */
   private IType                    _type;
 
   /** - */
-  private TypeArtifactCache             _artifactCache;
+  private TypeArtifactCache        _artifactCache;
 
   /** - */
-  private IModuleAwareMovableUnit             _movableUnit;
+  private IMovableUnit             _movableUnit;
 
   /** - */
   private ReferencingArtifactTrait _referencingArtifact;
@@ -260,7 +261,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IModuleAw
    */
   @Override
   public IModule getAssoicatedModule(IModularizedSystem modularizedSystem) {
-    return _movableUnit.getAssoicatedModule(modularizedSystem);
+    return ((IModuleAwareMovableUnit)_movableUnit).getAssoicatedModule(modularizedSystem);
   }
 
   /**
@@ -268,7 +269,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IModuleAw
    */
   @Override
   public boolean hasModule(IModularizedSystem modularizedSystem) {
-    return _movableUnit.hasModule(modularizedSystem);
+    return ((IModuleAwareMovableUnit)_movableUnit).hasModule(modularizedSystem);
   }
 
   /**
@@ -281,8 +282,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IModuleAw
     IBundleMakerArtifact artifact = getParent(IModuleArtifact.class);
 
     //
-    if (!(artifact instanceof IModuleArtifact)
-        && ((IModuleArtifact) artifact).getAssociatedModule().isResourceModule()) {
+    if (!(artifact instanceof IModuleArtifact) && ((IModuleArtifact) artifact).getAssociatedModule().isResourceModule()) {
       return false;
     }
 
@@ -396,10 +396,8 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IModuleAw
         .getType(_type.getFullyQualifiedName()))) {
 
       //
-      Set<IType> referringTypes = getModularizedSystem()
-          .adaptAs(ITypeModularizedSystem.class)
-          .getTypeNameToReferringCache().get(
-              _type.getFullyQualifiedName());
+      Set<IType> referringTypes = getModularizedSystem().adaptAs(ITypeModularizedSystem.class)
+          .getTypeNameToReferringCache().get(_type.getFullyQualifiedName());
 
       //
       if (referringTypes != null) {

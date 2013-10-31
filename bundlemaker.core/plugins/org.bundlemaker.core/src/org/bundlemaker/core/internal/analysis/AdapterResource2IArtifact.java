@@ -17,6 +17,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
+import org.bundlemaker.core.project.IMovableUnit;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
@@ -33,13 +34,13 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     IModuleAwareMovableUnit {
 
   /** the bundle maker resource */
-  private IModuleResource         _resource;
+  private IModuleResource _resource;
 
   /** - */
-  private boolean                 _isSourceResource;
+  private boolean         _isSourceResource;
 
   /** - */
-  private IModuleAwareMovableUnit _movableUnit;
+  private IMovableUnit    _movableUnit;
 
   /**
    * <p>
@@ -92,7 +93,7 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
    */
   @Override
   public IModule getAssoicatedModule(IModularizedSystem modularizedSystem) {
-    return _movableUnit.getAssoicatedModule(modularizedSystem);
+    return ((IModuleAwareMovableUnit) _movableUnit).getAssoicatedModule(modularizedSystem);
   }
 
   /**
@@ -100,7 +101,7 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
    */
   @Override
   public boolean hasModule(IModularizedSystem modularizedSystem) {
-    return _movableUnit.hasModule(modularizedSystem);
+    return ((IModuleAwareMovableUnit) _movableUnit).hasModule(modularizedSystem);
   }
 
   @Override

@@ -30,6 +30,7 @@ import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 
 import org.bundlemaker.core.osgi.manifest.IManifestConstants;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
@@ -173,7 +174,7 @@ public class ManifestUtils {
     return match;
   }
 
-  public static ManifestContents readManifestContents(IModuleResource manifestResource) throws IOException {
+  public static ManifestContents readManifestContents(IProjectContentResource manifestResource) throws IOException {
 
     ManifestContents originalManifestContents;
 

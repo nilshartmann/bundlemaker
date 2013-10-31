@@ -15,6 +15,8 @@ import java.util.Set;
 
 import org.bundlemaker.core.common.IGenericAdaptable;
 import org.bundlemaker.core.common.ResourceType;
+import org.bundlemaker.core.project.IMovableUnit;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.eclipse.core.runtime.IPath;
 
 /**
@@ -116,7 +118,7 @@ public interface IModule extends IGenericAdaptable {
    * @param conentType
    * @return
    */
-  IModuleResource getResource(String path, ResourceType conentType);
+  IProjectContentResource getResource(String path, ResourceType conentType);
 
   /**
    * <p>
@@ -125,7 +127,7 @@ public interface IModule extends IGenericAdaptable {
    * @param conentType
    * @return
    */
-  Set<? extends IModuleResource> getResources(ResourceType conentType);
+  Set<IProjectContentResource> getResources(ResourceType conentType);
 
   /**
    * <p>
@@ -133,5 +135,5 @@ public interface IModule extends IGenericAdaptable {
    * 
    * @return
    */
-  Set<? extends IModuleAwareMovableUnit> getMovableUnits();
+  Set<? extends IMovableUnit> getMovableUnits();
 }

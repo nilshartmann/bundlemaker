@@ -26,6 +26,7 @@ import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ITemplateProvider;
 import org.bundlemaker.core.mvn.content.MvnArtifactType;
 import org.bundlemaker.core.mvn.internal.MvnArtifactConverter;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -105,7 +106,7 @@ public class MvnProjectModuleExporter extends AbstractExporter {
     File resourceJavaDirectory = new File(versionDirectory, SRC_RESOUCRCES_DIRECTORY_NAME);
 
     // copy the source
-    for (IModuleResource resource : getCurrentModule().getResources(ResourceType.SOURCE)) {
+    for (IProjectContentResource resource : getCurrentModule().getResources(ResourceType.SOURCE)) {
 
       if (!resource.getPath().startsWith("META-INF")) {
 

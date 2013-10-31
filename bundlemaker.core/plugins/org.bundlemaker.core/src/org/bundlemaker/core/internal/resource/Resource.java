@@ -16,12 +16,13 @@ import java.util.Set;
 
 import org.bundlemaker.core.common.FlyWeightStringCache;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
+import org.bundlemaker.core.project.IMovableUnit;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.project.internal.DefaultProjectContentResource;
 import org.bundlemaker.core.project.internal.IResourceStandinAwareProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
-import org.bundlemaker.core.resource.IModuleAwareMovableUnit;
 import org.bundlemaker.core.spi.parser.IParsableResource;
 
 /**
@@ -49,7 +50,7 @@ public class Resource extends DefaultProjectContentResource implements IParsable
   private transient ResourceStandin _resourceStandin;
 
   /** - */
-  private transient MovableUnit     _movableUnit;
+  private transient IMovableUnit    _movableUnit;
 
   /**
    * <p>
@@ -124,7 +125,7 @@ public class Resource extends DefaultProjectContentResource implements IParsable
    * {@inheritDoc}
    */
   @Override
-  public IModuleAwareMovableUnit getMovableUnit() {
+  public IMovableUnit getMovableUnit() {
     return _movableUnit;
   }
 
@@ -135,7 +136,7 @@ public class Resource extends DefaultProjectContentResource implements IParsable
    * @param movableUnit
    *          the movableUnit to set
    */
-  public void setMovableUnit(MovableUnit movableUnit) {
+  public void setMovableUnit(IMovableUnit movableUnit) {
     _movableUnit = movableUnit;
   }
 
@@ -185,7 +186,7 @@ public class Resource extends DefaultProjectContentResource implements IParsable
   }
 
   @Override
-  public int compareTo(IModuleResource arg0) {
+  public int compareTo(IProjectContentResource arg0) {
 
     //
     if (_resourceStandin == null) {

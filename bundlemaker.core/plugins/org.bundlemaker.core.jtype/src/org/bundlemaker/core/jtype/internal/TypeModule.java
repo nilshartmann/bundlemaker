@@ -22,6 +22,7 @@ import org.bundlemaker.core.jtype.IReference;
 import org.bundlemaker.core.jtype.IType;
 import org.bundlemaker.core.jtype.ITypeModule;
 import org.bundlemaker.core.jtype.ITypeResource;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
 import org.eclipse.core.runtime.Assert;
@@ -172,13 +173,13 @@ public class TypeModule implements ITypeModule {
     Set<IReference> result = new HashSet<IReference>();
 
     // iterate over all resources
-    for (IModuleResource resource : _module.getResources(ResourceType.BINARY)) {
+    for (IProjectContentResource resource : _module.getResources(ResourceType.BINARY)) {
       for (IReference reference : resource.adaptAs(ITypeResource.class).getReferences()) {
         result.add(reference);
       }
     }
 
-    for (IModuleResource resource : _module.getResources(ResourceType.SOURCE)) {
+    for (IProjectContentResource resource : _module.getResources(ResourceType.SOURCE)) {
       for (IReference reference : resource.adaptAs(ITypeResource.class).getReferences()) {
         result.add(reference);
       }

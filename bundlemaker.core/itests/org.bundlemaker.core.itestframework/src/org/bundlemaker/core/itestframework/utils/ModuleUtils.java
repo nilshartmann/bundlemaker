@@ -9,6 +9,8 @@ import org.bundlemaker.core.common.ResourceType;
 import org.bundlemaker.core.jtype.IReference;
 import org.bundlemaker.core.jtype.IType;
 import org.bundlemaker.core.jtype.ITypeResource;
+import org.bundlemaker.core.project.IProjectContentEntry;
+import org.bundlemaker.core.project.IProjectContentResource;
 import org.bundlemaker.core.resource.IModularizedSystem;
 import org.bundlemaker.core.resource.IModule;
 import org.bundlemaker.core.resource.IModuleResource;
@@ -25,7 +27,7 @@ public class ModuleUtils {
     builder.append("\n");
     builder.append("Source-Content: \n");
 
-    for (IModuleResource resource : asSortedList((Set<IModuleResource>)module.getResources(ResourceType.SOURCE))) {
+    for (IProjectContentResource resource : asSortedList((Set<IProjectContentResource>)module.getResources(ResourceType.SOURCE))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : asSortedList(resource.adaptAs(ITypeResource.class).getReferences())) {
@@ -43,16 +45,16 @@ public class ModuleUtils {
 
     builder.append("\n");
     builder.append("Binary-Content: \n");
-    for (IModuleResource resource : asSortedList((Set<IModuleResource>)module.getResources(ResourceType.BINARY))) {
+    for (IProjectContentResource resource : asSortedList((Set<IProjectContentResource>)module.getResources(ResourceType.BINARY))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : asSortedList(resource.adaptAs(ITypeResource.class).getReferences())) {
         builder.append(" * " + reference.toString() + "\n");
       }
 
-      for (IModuleResource stickyResources : asSortedList((Set<IModuleResource>)resource.getStickyResources())) {
-        builder.append(" ~sticky~ " + stickyResources.getPath() + "\n");
-      }
+//      for (IProjectContentResource stickyResources : asSortedList((Set<IProjectContentResource>)resource.getStickyResources())) {
+//        builder.append(" ~sticky~ " + stickyResources.getPath() + "\n");
+//      }
 
       for (IType type : asSortedList(resource.adaptAs(ITypeResource.class).getContainedTypes())) {
         builder.append(" - " + type.getFullyQualifiedName() + "\n");
