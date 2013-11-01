@@ -38,6 +38,19 @@ public class TestFrameworkActivator implements BundleActivator {
    * @throws Exception
    */
   private void installMacOsLaunchingBundle(BundleContext context) throws Exception {
+    
+    Bundle[] bundles = context.getBundles();
+    
+    for (Bundle bundle : bundles) {
+      if (bundle.getSymbolicName().startsWith("org.eclipse.jdt.launching.macosx")) {
+        
+        System.out.printf("MacOs launching bundle '%s_%s' already installed with id %d%n", bundle.getSymbolicName(),bundle.getVersion(),bundle.getBundleId());
+        
+        // Bundle already installed => OK
+        return;
+      }
+    }
+    
     String osgiFramework = System.getProperty("osgi.framework");
     URI uri = new URI(osgiFramework);
     File osgiFrameworkBundle = new File(uri);
@@ -53,7 +66,6 @@ public class TestFrameworkActivator implements BundleActivator {
     Bundle installedBundle = context.installBundle(macosLaunchingBundle.toURI().toString());
     System.out.printf("Starting MacOs launching bundle '%s'%n", installedBundle);
     installedBundle.start();
-
   }
 
   /**
