@@ -34,6 +34,8 @@ public class InnerClassTest extends AbstractBundleMakerModelTest {
    */
   @Test
   public void testInnerClass() throws CoreException {
+    
+    System.out.println(" ## START testInnerClass() ##");
 
     //
     IModule resourceModule = getModularizedSystem().getModule("InnerClassTest", "1.0.0");
@@ -61,9 +63,13 @@ public class InnerClassTest extends AbstractBundleMakerModelTest {
     IModuleResource bSourceResource = bType.getSourceResource();
     Assert.assertSame(aSourceResource, bSourceResource);
 
+    System.out.println(" ## testInnerClass()::rootArtifact ##");
+
     // transform the model
     IRootArtifact rootArtifact = AnalysisCore.getAnalysisModel(getModularizedSystem(),
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+
+    System.out.println(" ## testInnerClass()::dumpRootArtifact ##");
 
     System.out.println(ArtifactTestUtil.toString(rootArtifact));
     

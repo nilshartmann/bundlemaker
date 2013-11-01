@@ -61,6 +61,7 @@ public class JdtProjectHelper {
 
       // step 1: get the associated JDT project
       IJavaProject javaProject = getAssociatedJavaProject(project);
+      System.out.println("Created Test Project at " + javaProject.getProject().getLocation());
 
       // step 2: 'unset' the class path
       javaProject.setRawClasspath(null, null);
@@ -70,7 +71,9 @@ public class JdtProjectHelper {
 
       // step 3.1: add the vm path
       IVMInstall vmInstall = VMInstallUtils.getIVMInstall(project.getProjectDescription().getJRE());
+      System.out.println("IVMInstall: " + vmInstall);
       IPath path = JavaRuntime.newJREContainerPath(vmInstall);
+      System.out.println("newJREContainerPath: " + path);
       IClasspathEntry classpathEntry = JavaCore.newContainerEntry(path);
       entries.add(classpathEntry);
 
@@ -260,6 +263,11 @@ public class JdtProjectHelper {
   }
 
   public static void deleteAssociatedProjectIfNecessary(final IProject resource) {
+    
+    System.out.println("DO NOT DELETE ASSOCIATED PROJECT!!!!");
+    if (true) {
+      return;
+    }
 
     try {
 
