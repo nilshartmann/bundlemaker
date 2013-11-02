@@ -94,7 +94,6 @@ public class JdtParser extends AbstractParser {
 
     try {
       _parser.setSource(new String(resource.getContent()).toCharArray());
-      _parser.setCompilerOptions(CoreParserJdt.getCompilerOptionsWithComplianceLevel(null));
       _parser.setResolveBindings(true);
 
       if (isBatchParse) {
@@ -103,6 +102,9 @@ public class JdtParser extends AbstractParser {
         IJavaProject javaProject = JdtProjectHelper.getAssociatedJavaProject(projectContent.getProvider()
             .getBundleMakerProject());
         _parser.setProject(javaProject);
+        
+        // Override (default) Compiler Options from Java Project with 'our' options
+        _parser.setCompilerOptions(CoreParserJdt.getCompilerOptionsWithComplianceLevel(javaProject.getOptions(true)));
         _parser.setUnitName("/" + javaProject.getProject().getName() + "/" + resource.getPath());
 
       } else {
