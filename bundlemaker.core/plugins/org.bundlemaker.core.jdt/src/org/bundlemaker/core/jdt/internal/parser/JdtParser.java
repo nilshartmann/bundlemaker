@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.jdt.internal.parser;
 
+import java.util.Map;
+
 import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
 import org.bundlemaker.core.jdt.parser.CoreParserJdt;
 import org.bundlemaker.core.jtype.IParsableTypeResource;
@@ -22,6 +24,7 @@ import org.bundlemaker.core.spi.parser.AbstractParser;
 import org.bundlemaker.core.spi.parser.IParsableResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -47,6 +50,22 @@ public class JdtParser extends AbstractParser {
 
     // create the AST parser
     _parser = ASTParser.newParser(AST.JLS4);
+    _parser.setCompilerOptions(getCompilerOptions());
+  }
+
+  /**
+   * @return
+   */
+  private Map<Object, String> getCompilerOptions() {
+    
+    @SuppressWarnings("unchecked")
+    Map<Object, String> javaCoreOptions = JavaCore.getOptions();
+    
+    javaCoreOptions.put(JavaCore.COMPILER_COMPLIANCE, "1.5");
+    javaCoreOptions.put(JavaCore.COMPILER_SOURCE, "1.5");
+    javaCoreOptions.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, "1.5");
+    
+    return javaCoreOptions;
   }
 
   @Override
